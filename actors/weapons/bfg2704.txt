@@ -1,0 +1,139 @@
+// BFG 2704
+actor BFG2704 : AOWWeapon replaces BFG9000 {
+	+WEAPON.NOAUTOFIRE
+	Inventory.PickupMessage "$GOTBFG2704"
+	Inventory.RespawnTics 10500
+	Weapon.SelectionOrder 2800
+	Weapon.AmmoUse 0
+	Weapon.AmmoType ""
+	Weapon.AmmoGive 0
+	Weapon.PreferredSkin "MarineBFG"
+	Weapon.UpSound "weapons/up/bfg"
+	Tag "BFG 2704"
+	DropItem ""
+	States {
+	Spawn:
+		BFUG A -1
+		stop
+	Ready:
+		BFGG A 1 A_WeaponReady
+		wait
+	Deselect:
+		BFGG A 1 offset (-5, 34)
+		BFGG A 1 offset (-16, 38)
+		BFGG A 1 offset (-23, 45)
+		BFGG A 1 offset (-32, 56)
+		BFGG A 1 offset (-42, 66)
+		BFGG A 1 offset (-51, 73)
+		BFGG A 1 offset (-63, 87)
+		BFGG A 1 offset (-78, 97)
+		BFGG A 1 offset (-88, 111)
+		BFGG A 1 offset (-99, 121)
+		BFGG A 1 offset (-112, 133)
+		BFGG A 1 offset (-125, 154)
+		BFGG A 0 offset (-1, 33)
+		BFGG A 0 A_Lower
+		wait
+	Select:
+		BFGG A 1 offset (-125, 154)
+		BFGG A 1 offset (-112, 133)
+		BFGG A 1 offset (-99, 121)
+		BFGG A 1 offset (-88, 111)
+		BFGG A 1 offset (-78, 97)
+		BFGG A 1 offset (-63, 87)
+		BFGG A 1 offset (-51, 73)
+		BFGG A 1 offset (-42, 66)
+		BFGG A 1 offset (-32, 56)
+		BFGG A 1 offset (-23, 45)
+		BFGG A 1 offset (-16, 38)
+		BFGG A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		BFGG A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		BFGG A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		BFGG A 20 A_BFGSound
+		BFGG B 10 A_GunFlash
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 1 A_FireCustomMissile("BFGBetaShot1", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG B 0 A_FireCustomMissile("BFGBetaShot2", (random(-10, 10) * 0.75), 0, 0, 8, 0, (random(-10, 10) * 0.9))
+		BFGG C 10
+		BFGG C 0 Damagething(20)
+		BFGG C 10
+		BFGG B 0 A_ReFire
+		goto Ready
+	Flash:
+		BFGF A 11 Bright A_Light1
+		BFGF B 6 Bright A_Light2
+		goto LightDone
+	}
+}
+
+Actor BFGBetaShot1 : PlasmaBall
+{
+	Damage 4
+	Obituary "$OB_BFG2704"
+	damagetype "Energy"
+	seesound "imp/attack"
+	+HERETICBOUNCE
+	bouncecount 256
+	bouncefactor 1.0
+	States
+	{
+	Spawn:
+		PLS1 AB 6 Bright
+	Loop
+	Death:
+		PLS1 CDEFG 4 Bright
+		Stop
+	}
+}
+
+Actor BFGBetaShot2 : BFGBetaShot1
+{
+	States
+	{
+	Spawn:
+		PLS2 AB 6 Bright
+		Loop
+	Death:
+		PLS2 CDE 4 Bright
+		Stop
+	}
+}

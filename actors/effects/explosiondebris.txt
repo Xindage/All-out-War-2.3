@@ -1,0 +1,93 @@
+Actor DebrisSpawner : RandomSpawner {
+  DropItem "DebrisBaseSpawn" 255 7
+  DropItem "Debris2Spawn" 255 4
+  DropItem "Debris3Spawn" 255 4
+  DropItem "Debris4Spawn" 255 7
+  DropItem "Debris5Spawn" 255 5
+  DropItem "Debris6Spawn" 255 5
+  DropItem "Debris7Spawn" 255 1
+  DropItem "Debris8Spawn" 255 1
+  DropItem "Debris9Spawn" 255 1
+  DropItem "Debris10Spawn" 255 1
+  DropItem "Debris11Spawn" 255 5
+  DropItem "Debris12Spawn" 255 4
+  DropItem "Debris13Spawn" 255 5
+}
+
+Actor DebrisBaseSpawn : RandomSpawner {
+  DropItem "DebrisBase" 255 8
+  DropItem "DebrisBase2", 255, 2
+  DropItem "DebrisBase3", 255, 1
+}
+
+Actor Debris2Spawn : RandomSpawner {
+  DropItem "Debris2" 255 8
+  DropItem "Debris2b" 255 2
+  DropItem "Debris2c" 255 1
+}
+
+Actor Debris3Spawn : RandomSpawner {
+  DropItem "Debris3" 255 8
+  DropItem "Debris3b" 255 2
+  DropItem "Debris3c" 255 1
+}
+
+Actor Debris4Spawn : RandomSpawner {
+  DropItem "Debris4" 255 8
+  DropItem "Debris4b" 255 2
+  DropItem "Debris4c" 255 1
+}
+
+Actor Debris5Spawn : RandomSpawner {
+  DropItem "Debris5" 255 8
+  DropItem "Debris5b" 255 2
+  DropItem "Debris5c" 255 1
+}
+
+Actor Debris6Spawn : RandomSpawner {
+  DropItem "Debris6" 255 8
+  DropItem "Debris6b" 255 2
+  DropItem "Debris6c" 255 1
+}
+
+Actor Debris7Spawn : RandomSpawner {
+  DropItem "Debris7" 255 8
+  DropItem "Debris7b" 255 2
+  DropItem "Debris7c" 255 1
+}
+
+Actor Debris8Spawn : RandomSpawner {
+  DropItem "Debris8" 255 8
+  DropItem "Debris8b" 255 2
+  DropItem "Debris8c" 255 1
+}
+
+Actor Debris9Spawn : RandomSpawner {
+  DropItem "Debris9" 255 8
+  DropItem "Debris9b" 255 2
+  DropItem "Debris9c" 255 1
+}
+
+Actor Debris10Spawn : RandomSpawner {
+  DropItem "Debris10" 255 8
+  DropItem "Debris10b" 255 2
+  DropItem "Debris10c" 255 1
+}
+
+Actor Debris11Spawn : RandomSpawner {
+  DropItem "Debris11" 255 8
+  DropItem "Debris11b" 255 2
+  DropItem "Debris11c" 255 1
+}
+
+Actor Debris12Spawn : RandomSpawner {
+  DropItem "Debris12" 255 8
+  DropItem "Debris12b" 255 2
+  DropItem "Debris12c" 255 1
+}
+
+Actor Debris13Spawn : RandomSpawner {
+  DropItem "Debris13" 255 8
+  DropItem "Debris13b" 255 2
+  DropItem "Debris13c" 255 1
+}

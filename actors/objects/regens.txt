@@ -1,0 +1,228 @@
+// Regens
+actor Utility_GlobalMedicCacheRed {
+	tag "Red Health Regenerator"
+	+SOLID +SHOOTABLE
+	+NOBLOOD +DONTGIB
+	+NOICEDEATH +NOGRAVITY
+	+ISMONSTER +QUICKTORETALIATE
+	DesignatedTeam 1
+	damagefactor "Fist", 0.2
+	damagefactor "Bullet", 0.5
+	damagefactor "Rifle", 0.5
+	damagefactor "Explosion", 0.75
+	damagefactor "Fire", 0.6
+	damagefactor "Chemical", 0.75
+	damagefactor "Energy", 1.0
+	damagefactor "AntiArmor", 0.25
+	damagefactor "Time", 1.0
+	damagefactor "Disarm", 0.0
+	damagefactor "Superweapon", 0.0
+	damagefactor "MassDriver", 0.75
+	damagefactor "Mechstomp", 0.0
+	damagefactor "Monster", 0.0
+	radius 8
+	height 64
+	speed 100 // used for base hud!
+	health 8750
+	renderstyle Translucent
+	alpha 0.0
+	scale 0.65
+	mass 0x7FFFFFFF
+	painchance 255
+	
+	states {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 902)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Approved:
+		CACH A 0 A_ChangeFlag("NOCLIP", 0)
+		CACH A 0 A_SetSolid
+		CACH A 0 A_SpawnItemEx("MedicalCacheFlare",0,0,48,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/i_pkup")
+		CACH A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	Pain:
+		CACH A 0 ACS_ExecuteAlways (930, 0, BUILDING_HEALTHREGEN, TEAM_RED)
+		CACH A 1 A_Stop
+		goto Working
+	Death:  
+		TC4T A 0 
+		TC4T A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32, 0, 0, 0, 0, 128, 0)
+		TC4T A 0 A_PlaySound("weapons/rocklx")
+		TC4T A 0 bright A_Explode(64,128)
+		TNT1 A 4 bright 
+		stop
+	Disapproved:
+	Death.Deconstruction:
+		"----" A 2 A_PlaySound ("utility/deconstruct")
+		"----" AAAAAAAAAA 2 A_Fadeout(0.1)
+		stop
+	}
+}
+
+actor Utility_GlobalMedicCacheBlue : Utility_GlobalMedicCacheRed {
+	tag "Blue Health Regenerator"
+	DesignatedTeam 0
+	States {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 903)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity
+		stop
+	Pain:
+		CACH A 0 ACS_ExecuteAlways (930, 0, BUILDING_HEALTHREGEN, TEAM_BLUE)
+		CACH A 1 A_Stop
+		goto Working
+	}
+}
+
+ACTOR Utility_GlobalAmmoCacheRed : Utility_GlobalMedicCacheRed {
+	tag "Red Ammo Regenerator"
+	States {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 904)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Approved:
+		CACH A 0 A_ChangeFlag("NOCLIP", 0)
+		CACH A 0 A_SetSolid
+		CACH A 0 A_SpawnItemEx("AmmoCacheFlare",0,0,48,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/i_pkup")
+		CACH A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	Pain:
+		CACH A 0 ACS_ExecuteAlways (930, 0, BUILDING_AMMOREGEN, TEAM_RED)
+		CACH A 1 A_Stop
+		goto Working
+	}
+}
+
+ACTOR Utility_GlobalAmmoCacheBlue : Utility_GlobalAmmoCacheRed  {
+	tag "Blue Ammo Regenerator"
+	DesignatedTeam 0
+	States {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 905)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity
+		stop
+	Approved:
+		CACH A 0 A_ChangeFlag("NOCLIP", 0)
+		CACH A 0 A_SetSolid
+		CACH A 0 A_SpawnItemEx("AmmoCacheFlare",0,0,48,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/i_pkup")
+		CACH A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Pain:
+		CACH A 0 ACS_ExecuteAlways (930, 0, BUILDING_AMMOREGEN, TEAM_BLUE)
+		CACH A 1 A_Stop
+		goto Working
+	}
+}
+
+actor AmmoRegenerationPack : AmmoPack {
+	states {
+	Spawn:
+		TNT1 A 1
+		Stop
+	Pickup:
+		TNT1 A 0 A_GiveInventory("NewClipAmmo", 5)
+		TNT1 A 0 A_GiveInventory("RifleAmmo", 5)
+		TNT1 A 0 A_GiveInventory("RifleGrenadeAmmo", 1)
+		TNT1 A 0 A_GiveInventory("MachineGunAmmo", 10)
+		TNT1 A 0 A_GiveInventory("LaserRifleAmmo", 5)
+		//TNT1 A 0 A_GiveInventory ("MortarAmmo", 2)
+		TNT1 A 0 A_GiveInventory("FlamerAmmo", 10)
+		TNT1 A 0 A_GiveInventory("GrenadeAmmo", 2)
+		TNT1 A 0 A_GiveInventory("MissileAmmo", 2)
+		TNT1 A 0 A_GiveInventory("GaussRifleAmmo", 2)
+		TNT1 A 0 A_GiveInventory("ChemicalAmmo", 10)
+		TNT1 A 0 A_GiveInventory("LaserChaingunAmmo", 10)
+		TNT1 A 0 A_GiveInventory("ShotgunAmmo", 5)
+		TNT1 A 0 A_GiveInventory("SniperAmmo", 2)
+		TNT1 A 0 A_GiveInventory("GeneporiumCharge",10)
+		TNT1 A 0 A_GiveInventory("TE21CalAmmo", 10)
+		TNT1 A 0 A_GiveInventory("FA21CalAmmo", 10)
+		TNT1 A 0 A_GiveInventory("ArtilleryShellAmmo", 1)
+		TNT1 A 0 A_GiveInventory("PlasmaRifleAmmo", 10)
+		TNT1 A 0 A_GiveInventory("Nails", 20)
+		TNT1 A 0 A_PlaySound("none")
+		stop
+	}
+}
+
+actor Utility_PowerGeneratorRed : Utility_GlobalMedicCacheRed {
+	tag "Red Power Generator"
+	States {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 906)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Approved:
+		CACH A 0 A_ChangeFlag("NOCLIP", 0)
+		CACH A 0 A_SetSolid
+		CACH A 0 A_SpawnItemEx("SuperCacheFlare",0,0,48,0,0,0,128,0)
+		CACH A 35 A_PlaySound("turret/sight")
+		CACH A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	Death:	
+		TNT1 A 0 
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain", 0, 0, 32, 0, 0, 0, 0, 128, 0)
+		TNT1 A 0 ACS_Execute (345, 0, 20)
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 0 bright A_Explode(64,128)
+		TNT1 A 4 bright 
+		stop
+	}
+}
+
+actor Utility_PowerGeneratorBlue : Utility_GlobalMedicCacheBlue {
+	tag "Blue Power Generator"
+	States {
+	Spawn:
+		CACH AA 0 Thing_ChangeTID(0, 907)
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Approved:
+		CACH A 0 A_ChangeFlag("NOCLIP", 0)
+		CACH A 0 A_SetSolid
+		CACH A 0 A_SpawnItemEx("SuperCacheFlare",0,0,48,0,0,0,128,0)
+		CACH A 35 A_PlaySound("turret/sight")
+		CACH A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	Death:	
+		TNT1 A 0 
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain", 0, 0, 32, 0, 0, 0, 0, 128, 0)
+		TNT1 A 0 ACS_Execute (345, 0, 20)
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 0 bright A_Explode(64,128)
+		TNT1 A 4 bright 
+		stop
+	}
+}

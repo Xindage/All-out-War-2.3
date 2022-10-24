@@ -1,0 +1,405 @@
+//New Animations
+
+fader GoAway3
+{
+	DecayStart	1.0
+	DecayTime	10.0
+}
+
+fader DecalFade //Fade for smaller decals that occur commonly, like flame and bullet decals
+{
+	DecayStart	30.0
+	DecayTime	30.0
+}
+
+colorchanger ToBlack2
+{
+	FadeStart	3.0
+	FadeTime	12.0
+}
+
+Combiner FlameAnim
+{
+	ToBlack
+	DecalFade
+}
+
+Combiner ChemAnim
+{
+	ToBlack2
+	DecalFade
+}
+
+///////////////////////////////////////////
+// For shotguns, smgs, etc. No rifle weps.
+///////////////////////////////////////////
+decal BigBulletChip
+{
+	pic CHIP1
+	shade "00 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	animator DecalFade
+	randomflipx
+	randomflipy
+}
+
+
+decal BulletChip
+{
+	Pic PUFFA0
+	Add 1.0
+	FullBright
+	Animator GoAway
+	X-scale 0.45
+	Y-scale 0.45
+	LowerDecal BigBulletChip
+	RandomFlipx
+	RandomFlipy
+}
+
+///////////////////////////////////////////
+// For heavy bullets, ie rifles.
+///////////////////////////////////////////
+decal BiggerBulletChip
+{
+	pic CHIP1
+	shade "00 00 00"
+	x-scale 0.75
+	y-scale 0.75
+	animator DecalFade
+	randomflipx
+	randomflipy
+}
+
+decal BulletChipBig
+{
+	Pic PUFFA0
+	Add 1.0
+	FullBright
+	Animator GoAway
+	X-scale 0.57
+	Y-scale 0.57
+	LowerDecal BiggerBulletChip
+	RandomFlipx
+	RandomFlipy
+}
+
+decal PulseScorch
+{
+	pic CBALSCR1
+	shade "00 00 00"
+	x-scale 0.4
+	y-scale 0.3
+	animator DecalFade
+	randomflipx
+	randomflipy
+}
+
+decal NukeScorch 100 //This decal could be used directly in a map.
+{
+	pic SCORCH1
+	shade "00 00 00"
+	x-scale 5.0
+	y-scale 5.0
+	randomflipx
+	randomflipy
+}
+
+// [Dusk] for Titan's 100mm shell
+decal BiggerScorch 101 {
+	pic SCORCH1
+	shade "00 00 00"
+	x-scale 1.5
+	y-scale 1.5
+	randomflipx
+	randomflipy
+}
+
+decal PCScorch1
+{
+	pic BFGSCRC1
+	x-scale 2
+	y-scale 2
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+}
+
+decal PCScorch2
+{
+	pic BFGSCRC2
+	x-scale 2
+	y-scale 2
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+}
+
+decalgroup PCScorch
+{
+	PCScorch1		1
+	PCScorch2		1
+}
+
+decal PCLightning1
+{
+	pic BFGLITE1
+	shade "40 80 ff"
+	fullbright
+	x-scale 2.0
+	y-scale 2.0
+	randomflipx
+	animator GoAway3
+	lowerdecal PCScorch
+}
+
+decal PCLightning2
+{
+	pic BFGLITE2
+	shade "40 80 ff"
+	fullbright
+	x-scale 2.0
+	y-scale 2.0
+	randomflipy
+	animator GoAway3
+	lowerdecal PCScorch
+}
+
+decalgroup PCLightning
+{
+	PCLightning1	1
+	PCLightning2	1
+}
+
+decal PC2Lightning1
+{
+	pic BFGLITE1
+	shade "40 80 ff"
+	fullbright
+	randomflipx
+	animator GoAway2
+	lowerdecal BFGScorch
+}
+
+decal PC2Lightning2
+{
+	pic BFGLITE2
+	shade "40 80 ff"
+	fullbright
+	randomflipy
+	animator GoAway2
+	lowerdecal BFGScorch
+}
+
+decalgroup PC2Lightning
+{
+	PC2Lightning1	1
+	PC2Lightning2	1
+}
+
+decal PCLightning1Red
+{
+	pic BFGLITE1
+	shade "ff 40 40"
+	fullbright
+	x-scale 2.0
+	y-scale 2.0
+	randomflipx
+	animator GoAway3
+	lowerdecal PCScorch
+}
+
+decal PCLightning2Red
+{
+	pic BFGLITE2
+	shade "ff 40 40"
+	fullbright
+	x-scale 2.0
+	y-scale 2.0
+	randomflipy
+	animator GoAway3
+	lowerdecal PCScorch
+}
+
+decalgroup PCLightningRed
+{
+	PCLightning1Red	1
+	PCLightning2Red	1
+}
+
+decal PC2Lightning1Red
+{
+	pic BFGLITE1
+	shade "ff 40 40"
+	fullbright
+	randomflipx
+	animator GoAway2
+	lowerdecal BFGScorch
+}
+
+decal PC2Lightning2Red
+{
+	pic BFGLITE2
+	shade "ff 40 40"
+	fullbright
+	randomflipy
+	animator GoAway2
+	lowerdecal BFGScorch
+}
+
+decalgroup PC2LightningRed
+{
+	PC2Lightning1Red	1
+	PC2Lightning2Red	1
+}
+
+decal VoltageScorch1 {
+	pic BFGLITE1
+	shade "00 00 00"
+	fullbright
+	x-scale 0.25
+	y-scale 0.25
+	randomflipx
+	animator VoltageAnim
+}
+
+decal VoltageScorch2 {
+	pic BFGLITE1
+	shade "00 00 00"
+	fullbright
+	x-scale 0.25
+	y-scale 0.25
+	randomflipy
+}
+
+decalgroup VoltageScorch {
+	VoltageScorch1	1
+	VoltageScorch2	1
+}
+
+decal GaussScorch {
+	pic BFGLITE1
+	shade "00 00 00"
+	fullbright
+	x-scale 0.75
+	y-scale 0.75
+	randomflipx
+	randomflipy
+	animator VoltageAnim
+}
+
+decal LaserScorch
+{
+	Pic BFGLITE1
+	Shade "00 00 00"
+	FullBright
+	X-Scale 0.15
+	Y-Scale 0.15
+	RandomFlipX
+	RandomFlipY
+}
+
+decal FlameScorch1
+{
+	pic CBALSCR1
+	translucent 0.15
+	shade "20 10 00"
+	fullbright
+	x-scale 1.25
+	y-scale 1.25
+	randomflipx
+	randomflipy
+	animator FlameAnim
+}
+
+decal FlameScorch2
+{
+	pic CBALSCR2
+	translucent 0.15
+	shade "20 10 00"
+	fullbright
+	x-scale 1.25
+	y-scale 1.25
+	randomflipx
+	randomflipy
+	animator FlameAnim
+}
+
+decalgroup FlameScorch
+{
+	FlameScorch1	1
+	FlameScorch2	1
+}
+
+decal ChemScorch1
+{
+	pic CBALSCR1
+	translucent 0.15
+	shade "00 ff 00"
+	fullbright
+	randomflipx
+	randomflipy
+	x-scale 1.5
+	y-scale 1.5
+	animator ChemAnim
+}
+
+decal ChemScorch2
+{
+	pic CBALSCR2
+	translucent 0.15
+	shade "00 ff 00"
+	fullbright
+	randomflipx
+	randomflipy
+	x-scale 1.5
+	y-scale 1.5
+	animator ChemAnim
+}
+
+// [Dusk] chemical grenade
+decal ChemScorchStrong {
+	pic CBALSCR1
+	shade "00 ff 00"
+	fullbright
+	randomflipx
+	randomflipy
+	x-scale 1.5
+	y-scale 1.5
+	animator ChemAnim
+}
+
+decalgroup ChemScorch
+{
+	ChemScorch1	1
+	ChemScorch2	1
+}
+
+//Decal Generators; better than editing the DECORATE directly
+// [Dusk] I disagree. TODO: move these to the actors.
+/*
+Generator MiniNuke NukeScorch
+Generator IonBomb NukeScorch
+Generator FlameThrowerFire FlameScorch
+Generator ChemicalShot ChemScorch
+
+Generator PlasmaCannonBall PCLightningRed
+Generator PlasmaCannonBallSmall PC2LightningRed
+Generator PlasmaCannonBallBlue PCLightning
+Generator PlasmaCannonBallSmallBlue PC2Lightning
+
+Generator Handgun BulletChip
+Generator Boomstick BulletChip
+Generator DoubleShotgun BulletChip
+Generator SubMachineGun BulletChip
+Generator GatlingGun BulletChip
+Generator MachineGun BulletChip
+Generator LaserRifle BulletChip
+Generator LaserChaingun BulletChip
+//Generator AutoShotgun BulletChip
+Generator Rifle BulletChipBig
+Generator SniperRifle BulletChipBig
+Generator SniperRifleWeak BulletChipBig
+//Generator AdvancedSniperRifle BulletChipBig
+*/

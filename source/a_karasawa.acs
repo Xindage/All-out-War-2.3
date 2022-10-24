@@ -1,0 +1,202 @@
+/*
+TODO
+
+Convert inventory items to double array.
+*/
+
+/*
+	[JD] Code for Karasawa's chain lightning abilities.
+		-	jdagenet.
+*/
+#define KARASAWA_TARGETRANGE 	320 // [JD] The maximum range for target selection (in map units).
+#define KARASAWA_CHAINDAMAGE	75 // [JD] Chained damage.
+#define	KARASAWA_DIRECTDAMAGE	100 // [JD] Direct hit damage.
+
+int KarasawaTargetTracker[MAXPLAYERS][MAXPLAYERS];
+#define	KSAW_TARGET_SELECT		1
+#define	KSAW_TARGET_HIT			2
+
+/*==============================================================================
+*
+*	Functions
+*
+*=============================================================================*/
+
+// [JD] To cut down on the possibility of spots being forgotten, we spawn locations in the map to refer back to.
+function void Karasawa_TemporaryLocation (int x, int y, int z, int tid)
+{
+	SpawnForced("KsawTempLocation", x, y, z, tid);
+	ACS_NamedExecuteAlways("SC_KARASAWA_FREETEMPLOCATION", 0, tid, 0, 0);
+}
+
+// [JD] Checks to see if there are still players with the target item.
+function bool Karasawa_TargetSelectCheck (int caller)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (KarasawaTargetTracker[caller][i] == KSAW_TARGET_SELECT)
+				return true;
+	
+	return false;
+}
+
+function void Karasawa_ClearTargets (int caller)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+		KarasawaTargetTracker[caller][i] = 0;
+}
+
+/*==============================================================================
+*
+*	Scripts
+*
+*=============================================================================*/
+
+// [JD] This script is called from the projectile upon death.
+script "SC_KARASAWA_TARGETSELECTION" (int from, int ExecutedFromProjectile)
+{
+	int CallerPlayer;
+	if (!from)
+	{
+		int ProjTID = UniqueTID();
+		Thing_ChangeTID(0, ProjTID);
+		
+		// [JD] First, get the player that shot the weapon.
+		SetActivatorToTarget(0);
+		int OriginalActivator = 3800 + PlayerNumber();
+		CallerPlayer = OriginalActivator - 3800;
+		
+		SetActivator(ProjTID, AAPTR_TRACER); // [JD] We hit something -- get that something.
+		
+		if (!PlayerInGame(PlayerNumber())) // [JD] Basically: if the target we hit isn't a player then don't do anything.
+			terminate;
+		
+		int Target = PlayerNumber();
+		KarasawaTargetTracker[CallerPlayer][Target] = KSAW_TARGET_HIT; // [JD] Mark this player as a hit target so that way we don't retarget him.
+		
+		int TargetSpotx, TargetSpoty, TargetSpotz;
+		TargetSpotx = GetActorX(0);
+		TargetSpoty = GetActorY(0);
+		TargetSpotz = GetActorZ(0) + (GetActorProperty(0, APROP_HEIGHT) / 2);
+		
+		int TargetTempTID = UniqueTID;
+		Karasawa_TemporaryLocation(TargetSpotx, TargetSpoty, TargetSpotz, TargetTempTID);
+		from = TargetTempTID;
+		
+		SetActivator(OriginalActivator);
+		Thing_Damage2(3800 + Target, KARASAWA_DIRECTDAMAGE, "Energy");
+	}
+	
+	else
+		CallerPlayer = PlayerNumber();
+	
+	// [JD] First thing we have to do is check each player to see if they qualify for targetting.
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (GetActorHealth(3800 + i) > 0 &&
+			!CheckActorInventory(3800 + i, "IsMech") &&
+			KarasawaTargetTracker[CallerPlayer][i] != KSAW_TARGET_HIT &&
+			CheckActorDistance(from, 3800 + i, KARASAWA_TARGETRANGE) &&
+			CheckSight(from, 3800 + i, 0))
+				KarasawaTargetTracker[CallerPlayer][i] = KSAW_TARGET_SELECT;
+	
+	if (ExecutedFromProjectile && Karasawa_TargetSelectCheck(CallerPlayer))
+	{
+		Delay(8);
+		ACS_NamedExecuteAlways("SC_KARASAWA_TARGETCHAIN", 0, from, 0, 0);
+	}
+}
+
+script "SC_KARASAWA_TARGETCHAIN" (int originateFrom)
+{
+	int MyTeam = GetPlayerInfo(PlayerNumber(), PLAYERINFO_TEAM); // [JD] This is so we don't target our own team mates or ourselves.
+	int OriginalActivator = 3800 + PlayerNumber();
+	
+	while (Karasawa_TargetSelectCheck(PlayerNumber()))
+	{
+		// [JD] Similar to target selection, we scan each and every player and see which ones were selected.
+		for (int i = 0; i < MAXPLAYERS; i++)
+		{
+			if (GetActorHealth(3800 + i) > 0 &&
+			KarasawaTargetTracker[PlayerNumber()][i] == KSAW_TARGET_SELECT &&
+			CheckSight(originateFrom, 3800 + i, 0) &&
+			GetPlayerInfo(i, PLAYERINFO_TEAM) != MyTeam)
+			{	
+				KarasawaTargetTracker[PlayerNumber()][i] = KSAW_TARGET_HIT;
+				
+				ACS_NamedExecuteAlways("SC_CL_KARASAWA_CHAINEFFECT", 0, originateFrom, 3800 + i, MyTeam); // [JD] Lightning visual effect.
+				
+				int Spotx, Spoty, Spotz;
+				Spotx = GetActorX(3800 + i);
+				Spoty = GetActorY(3800 + i);
+				Spotz = GetActorZ(3800 + i) + (GetActorProperty(3800 + i, APROP_HEIGHT) / 2);
+				
+				// [JD] Determine the position.
+				int tempTID = UniqueTID();
+				Karasawa_TemporaryLocation(Spotx, Spoty, Spotz, tempTID);
+				originateFrom = tempTID; // [JD] This is to specify our next point of origin when the script runs another time.
+				
+				// [JD] Depending on our team it will spawn different FX.
+				if (MyTeam == TEAM_BLUE)
+					SpawnForced("KsawBoltDecayFXBlue", Spotx, Spoty, Spotz);
+				
+				else
+					SpawnForced("KsawBoltDecayFXRed", Spotx, Spoty, Spotz);
+				
+				PlaySound(3800 + i, "Weapons/KarasawaArc"); // [JD] Electrocution sound.
+				SetActivator(3800 + i);
+				ACS_NamedExecuteAlways("SC_CL_KARASAWA_SCREENEFFECT", 0, 3800 + i, MyTeam, 0);
+				SetActivator(OriginalActivator);
+				Delay(1); // [JD] For some reason if we don't delay the killing our chaining effect messes up :/
+				Thing_Damage2(3800 + i, KARASAWA_CHAINDAMAGE, "Energy"); // [JD] Damage is dealt here.
+				
+				ACS_NamedExecuteAlways("SC_KARASAWA_TARGETSELECTION", 0, originateFrom, 0, 0);
+				
+				Delay(7); // [JD] Spread the chaining effect out.
+			}
+		}
+		
+		Karasawa_ClearTargets(PlayerNumber());
+		
+		Delay(1);
+	}
+}
+
+// [JD] This has to be handled on the client because it uses up A TON of memory on the server.
+script "SC_CL_KARASAWA_CHAINEFFECT" (int source, int destination, int team) CLIENTSIDE
+{
+	if (team == TEAM_BLUE)
+		SpawnTrail(source, destination, "KsawChainFX", 32, 16, 0, 0, 0, -6.0, 6.0, 36.0);
+		
+	else
+		SpawnTrail(source, destination, "KsawChainFXRed", 32, 16, 0, 0, 0, -6.0, 6.0, 36.0);
+}
+
+// [JD] This script will remove the temporary locations from the map after time.
+script "SC_KARASAWA_FREETEMPLOCATION" (int tempLocationTID)
+{	
+	// [JD] If the thing doesn't exist then we don't need to continue.
+	if (!ThingCount(0, tempLocationTID))
+		terminate;
+	
+	Delay(TICRATE);
+	
+	Thing_Remove(tempLocationTID);
+}
+
+script "SC_CL_KARASAWA_SCREENEFFECT" (int who, int team) CLIENTSIDE
+{
+	if (!who)
+		terminate;
+	
+	//SetActivator(who);
+	if (team == TEAM_RED)
+	{
+		FadeTo(255, 128, 128, 1.0, 0.0);
+		FadeTo(255, 128, 128, 0.0, 0.5);
+	}
+	
+	else
+	{
+		FadeTo(128, 128, 255, 1.0, 0.0);
+		FadeTo(128, 128, 255, 0.0, 0.5);
+	}
+}

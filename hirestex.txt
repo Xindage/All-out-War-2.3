@@ -1,0 +1,132 @@
+remap m_doom m_doomhi
+
+//Volt sparks
+remap VOLXA0 VHRXA0
+remap VOLXB0 VHRXB0
+remap VOLXC0 VHRXC0
+remap VOLXD0 VHRXD0
+remap VOLXE0 VHRXE0
+remap VOLXF0 VHRXF0
+
+//Fire sprites
+remap FLMBA0 FLMBA0H
+remap FLMBB0 FLMBB0H
+remap FLMBC0 FLMBC0H
+remap FLMBD0 FLMBD0H
+remap FLMBE0 FLMBE0H
+remap FLMBF0 FLMBF0H
+remap FLMBG0 FLMBG0H
+remap FLMBH0 FLMBH0H
+
+//Frag Grenade
+remap FRGIA0 FRGIA0H
+remap FRGSA0 FRGSA0H
+remap FRGSB0 FRGSB0H
+remap FRGSC0 FRGSC0H
+remap FRGSD0 FRGSD0H
+remap FRGSE0 FRGSE0H
+remap FRGSF0 FRGSF0H
+remap FRG1A0 FRG1A0H
+remap FRG1B0 FRG1B0H
+remap FRG1C0 FRG1C0H
+remap FRG1D0 FRG1D0H
+remap FRG1E0 FRG1E0H
+remap FRG1F0 FRG1F0H
+remap FRG1G0 FRG1G0H
+remap FRG1H0 FRG1H0H
+remap FRG1I0 FRG1I0H
+remap FRG1J0 FRG1J0H
+remap FRG1K0 FRG1K0H
+remap FRG2A0 FRG2A0H
+remap FRG2B0 FRG2B0H
+remap FRG2C0 FRG2C0H
+remap FRG2D0 FRG2D0H
+remap FRG2E0 FRG2E0H
+remap FRG2F0 FRG2F0H
+remap FRG2G0 FRG2G0H
+remap FRG3A0 FRG3A0H
+remap FRG3B0 FRG3B0H
+remap FRG3C0 FRG3C0H
+remap FRG3D0 FRG3D0H
+remap FRG3E0 FRG3E0H
+
+
+//Pulse
+remap PLGXA0 PBLST_A0
+remap PLGXB0 PBLST_A1
+remap PLGXC0 PBLST_A2
+remap PLGXD0 PBLST_A3
+remap PLGXE0 PBLST_A4
+remap PPCXA0 UTFLARE3
+remap E21XA1A5 E21HA1A5
+remap E21XA2A8 E21HA2A8
+remap E21XA3A7 E21HA3A7
+remap E21XA4A6 E21HA2A8
+remap CACHB0 UTFLARE4
+remap CACHC0 UTFLARE5
+remap CACHD0 UTFLARE6
+
+//Tiberium
+remap TIBEA0 TIBEA0H
+
+//Mini-nuke
+remap NKE1A0 NKE2A0
+remap NKE1B0 NKE2B0
+remap NKE1C0 NKE2C0
+remap NKE1D0 NKE2D0
+remap NKE1E0 NKE2E0
+remap NKE1F0 NKE2F0
+remap NKE1G0 NKE2G0
+remap NKE1H0 NKE2H0
+remap NKE1I0 NKE2I0
+remap NKE1J0 NKE2J0
+remap NKE1K0 NKE2K0
+remap NKE1L0 NKE2L0
+remap NKE1M0 NKE2M0
+remap NKE1N0 NKE2N0
+remap NKE1O0 NKE2O0
+remap NKE1P0 NKE2P0
+remap NKE1Q0 NKE2Q0
+remap NKE1R0 NKE2R0
+remap NKE1S0 NKE2S0
+remap NKE1T0 NKE2T0
+remap NKE1U0 NKE2U0
+
+//Gauss rifle
+//Blue & Pickup
+remap gauba0 gauxa0
+remap gaubb0 gauxb0
+remap gaubc0 gauxc0
+remap gaubd0 gauxd0
+remap gaube0 gauxe0
+remap gaubf0 gauxf0
+remap gaubg0 gauxg0
+remap gaubh0 gauxh0
+remap gaubi0 gauxi0
+remap gaubj0 gauxj0
+remap gaubk0 gauxk0
+remap gaubl0 gauxl0
+remap gaubm0 gauxm0
+remap gaubn0 gauxn0
+remap gaubo0 gauxo0
+
+//Pickup
+remap gausx0 gausx0
+
+//Red
+
+remap gausa0 gauya0
+remap gausb0 gauyb0
+remap gausc0 gauyc0
+remap gausd0 gauyd0
+remap gause0 gauye0
+remap gausf0 gauyf0
+remap gausg0 gauyg0
+remap gaush0 gauyh0
+remap gausi0 gauyi0
+remap gausj0 gauyj0
+remap gausk0 gauyk0
+remap gausl0 gauyl0
+remap gausm0 gauym0
+remap gausn0 gauyn0
+remap gauso0 gauyo0

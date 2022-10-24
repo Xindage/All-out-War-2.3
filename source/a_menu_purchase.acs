@@ -1,0 +1,353 @@
+// =============================================================================
+// MENU INIT
+script 702 (void) CLIENTSIDE {
+	// If the menu-class table hasn't been built yet, do so now
+	if (!(MenuTables & MTABLE_CLASSES))
+		BuildMenuClasses ();
+	
+	MenuName = "PURCHASE TERMINAL";
+	MenuCategories[0] = "GENERIC";
+	MenuCategories[1] = "COMBAT";
+	MenuCategories[2] = "POWER";
+	MenuCategories[3] = "SUPPORT";
+	MenuCategories[4] = "ADD-ONS";
+	MenuCategories[5] = "RESIGN";
+	MenuCategories[6] = "SURRENDER";
+	
+	int i, j, c;
+	
+	// Names of classes
+	for (i = 0; i <= 3; i++) 
+	{
+		for (j = 0; j < MAX_MENU_ITEMS; j++) 
+		{
+			c = MenuClasses[i][j];
+			
+			if (c >= 0 && c < NUMCLASSES)
+				MenuItems[i][j] = Classes_str[c][CK_NAME];
+		}
+	}
+	
+	// Add-ons
+	for (i = 0; i < MAX_ADDONS; i++)
+		MenuItems[4][i] = GetAddOnName (i);
+}
+
+// =============================================================================
+// MENU DRAW
+script 703 (int m0, int m1, int y) CLIENTSIDE {
+	int id = MenuClasses[m0][m1];
+	if (id < 0 || id > NUMCLASSES)
+		terminate;
+	
+	switch (m0) {
+	case 0: case 1:
+	case 2: case 3:
+		// Display discount, if any
+		ACS_ExecuteWithResult (330, Classes_int[id][CK_COST]);
+		
+		int armor = Classes_int[id][CK_ARMOR];
+		int armod = Classes_int[id][CK_ARMOD];
+		
+		str item0 = Items_Str[Classes_int[id][CK_ITEM0]][IK_NAME];
+		str item1 = Items_str[Classes_int[id][CK_ITEM1]][IK_NAME];
+		str item2 = Items_str[Classes_int[id][CK_ITEM2]][IK_NAME];
+		str item3 = Items_str[Classes_int[id][CK_ITEM3]][IK_NAME];
+		str item4 = Items_str[Classes_int[id][CK_ITEM4]][IK_NAME];
+		str item5 = Items_str[Classes_int[id][CK_ITEM5]][IK_NAME];
+		
+		// Determine strengths and weaknesses
+		int dtype;
+		int weaktype;
+		str weakness;
+		
+		if (armod == ARMOD_NOCHANGE) {
+			// If we don't have any armor type, we're not really
+			// weak per se towards anything. And if we don't have an
+			// armor type we usually deal bullet damage (unless we're
+			// support, in which case these aren't displayed anyway)
+			// Therefore, our weakness is bullets.
+			dtype = ARMOD_BULLETPROOF;
+			weaktype = ARMOD_BULLETPROOF;
+		} else {
+			dtype = armod;
+			weaktype = ArmorWeaknesses[dtype];
+		}
+		
+		weakness = strparam (s:ArModColor (weaktype), s:ArModName (weaktype));
+		
+		// We're strong against whatever is weak against us.
+		str strength = "";
+		for (int i = 1; i < ARMOD_NONE; i++)
+			if (ArmorWeaknesses[i] == dtype)
+				strength = strparam (s:strength, s:" ", s:ArModColor (i), s:ArModName (i));
+		
+		// TODO: Break this down to individual hudmessages for flexibility
+		str classinfo;
+		classinfo = strparam (s:"Speed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16,
+			s:"\cQ%\nPrice: \cQ$\cD", d:Classes_int[id][CK_COST],
+			s:"\nArmor: \cDGrade ", s:ArmorColor (armor), d:armor, s:" ", s:ArModColor (armod), s:ArModName (armod));
+			
+		// Unless we're a support class, write down strengths and weaknesses
+		if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop) {
+			classinfo = strparam (s:classinfo,
+				s:"\nStrength: ", s:strength,
+				s:"\nWeakness: ", s:weakness);
+		}
+		
+		// Write down the rest of the info
+		classinfo = strparam (s:classinfo,
+			s:"\nGrenades: \cD", d:Classes_int[id][CK_FRAGS],
+			s:"\nC4: \cD", d:Classes_int[id][CK_C4],
+			s:"\n----\n\cD",
+			s:item0, s:"\n\cD", s:item1, s:"\n\cD", s:item2, s:"\n\cD",
+			s:item3, s:"\n\cD", s:item4, s:"\n\cD", s:item5, s:"\n\cD");
+		
+		// Draw it now.
+		HudMessage (s:classinfo; HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		break;
+	case 4:
+		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST]);
+		HudMessage (s:"Price: \cQ$\cD", d:Addons_int[m1][ADK_COST];
+			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		break;
+	case 5:
+		// Resign description
+		HudMessage (s:"Resigns you of your\n",
+				s:"current class. You\n",
+				s:"will lose your entire,\n",
+				s:"inventory in the process\n",
+				s:"sans add-on weapons and\n",
+				s:"items.";
+			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		break;
+	case 6:
+		// surrender descript
+		HudMessage (s:"Lets you cast a vote\n",
+				s:"to surrender. You need\n",
+				s:"at least 50% of your team\n",
+				s:"to vote yes to surrender.\n",
+				s:"This can be activated\n",
+				s:"again to cancel your\n",
+				s:"vote.";
+			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		break;
+	}
+	
+	SetResultValue (y);
+}
+
+// =============================================================================
+// MENU SELECT
+script 709 (int m0, int m1) {
+	SetResultValue (0);
+	
+	// Classes
+	if (m0 <= 3) 
+	{
+		// Find class ID from the table
+		int id = MenuClasses[m0][m1];
+		
+		// Try buy it
+		if (!PurchaseClass (id)) {
+			// Couldn't
+			MenuResponse (MSGTYPE_ERROR, g_Error);
+			terminate;
+		}
+	} 
+	
+	else if (m0 == 4) 
+	{
+		// Add-ons
+		BuyAddon (m1);
+		
+		// The add-on purchase can change the menu appearance.
+		// Thus tell the client to redisplay it
+		SYNC_RefreshMenu ();
+		
+		SetResultValue (0);
+		terminate;
+	} 
+	
+	else if (m0 == 5) 
+	{
+		// Resign
+		ACS_ExecuteAlways (95, 0);
+		SYNC_RefreshMenu ();
+		terminate;
+	} 
+	
+	else if (m0 == 6) 
+	{
+		// Surrender
+		VoteSurrender ();
+		terminate;
+	}
+	
+	SetResultValue (1);
+}
+
+// =============================================================================
+// MENU LIMIT
+script 713 (int m0, int m1, int y) CLIENTSIDE {
+	int limited;
+	if (m0 <= 3) 
+	{
+		limited = !CheckClassAvailability (MenuClasses[m0][m1]);
+	} 
+	else 
+	{
+		if (CheckInventory (Items_Str[Addons_int[m1][ADK_ITEM]][IK_ITEM0]))
+			limited = true; // Must not have it already
+		else if (CheckInventory ("Credit") < Addons_int[m1][ADK_COST])
+			limited = true; // Must afford it
+		else if 
+		(
+			(Addons_int[m1][ADK_ITEM] == ITEM_BEACON) &&
+			(CheckInventory ("IonCannonBeacon") || CheckInventory ("NuclearStrikeBeacon"))
+		) 
+		{
+			// Beacons need to check the actual beacon items as the item name is a shortcut.
+			limited = true;
+		}
+	}
+	
+	SetResultValue (limited);
+}
+
+function void BuyAddon (int id) {
+	if (id < 0 || id > MAX_ITEMS) {
+		MenuResponse (MSGTYPE_Error, "Bad item!");
+		return;
+	}
+	
+	str name = AddOns_str[id][ADK_NAME];
+	int cost = AddOns_int[id][ADK_COST];
+	int item = AddOns_int[id][ADK_ITEM];
+	
+	// Check if the player already has this
+	if (CheckInventory (Items_str[item][IK_ITEM0])) {
+		MenuResponse (MSGTYPE_ERROR, "You already have this!");
+		return;
+	}
+	
+	// [Cata] Moved this here to avoid logical errors where people could buy nukes/ions without enough money
+	// Check cost
+	if (GetCredits () < cost - CalcDiscount(cost)) {	// [SG] calculate discount when checking for the price
+		MenuResponse (MSGTYPE_ERROR, "You need more credits!");
+		return;
+	}
+	
+	// Item-specific checks
+	switch (item) {
+	case ITEM_PlasmaCannon:
+		// === Plasma cannon
+		// Gamemasters go past all this
+		if (IsAdmin[PlayerNumber()])
+			break;
+		
+		// Check cooldown
+		if (PlasmaCooldown[PlayerNumber()] > Timer()) {
+			int wait = ((PlasmaCooldown[PlayerNumber()] - Timer()) / 35) + 1;
+			LocalAmbientSound ("misc/nope", 127);
+			HudMessage(s:"You must wait \cF", d:wait, s:" seconds\c- before\n",
+				s:"purchasing another \cNplasma cannon!";
+				HUDMSG_FADEOUT, MENU_HID + 100, CR_RED, UMENU_X5, UMENU_Y5, 2.0, 1.0);
+			return;
+		}
+		
+		int max = GetCVAR ("zeta_maxcannonsperteam");
+		if (NumPlasmaCannons[PlayerTeam()] >= max && max != -1) {
+			MenuResponse (MSGTYPE_ERROR, "Your team already has too many of those!");
+			return;
+		}
+		
+		int CannonPurchaseDelay = GetCVAR ("zeta_plasmapurchasedelay") * MINUTETICS;
+		if (Timer() < CannonPurchaseDelay) {
+			LocalAmbientSound ("misc/nope", 127);
+			HudMessage(s:"You must wait \cF", d:(CannonPurchaseDelay - Timer()) / 60,
+				s:" seconds\nbefore you can get one of these!";
+				HUDMSG_FADEOUT, MENU_HID + 100, CR_RED, UMENU_X5, UMENU_Y5, 2.0, 1.0);
+			return;
+		}
+		break;
+	
+	case ITEM_Beacon:
+		if (IsAdmin[PlayerNumber()])
+			break;
+		
+		// Check if we already have the beacon
+		if (CheckInventory ("IonCannonBeacon") || CheckInventory ("NuclearStrikeBeacon")) {
+			MenuResponse (MSGTYPE_ERROR, "You already have that!");
+			return;
+		}
+		
+		// Check cooldown
+		int time = (intHolder[i_BeaconPurchaseDelay] - (Timer() - LastPurchasedBeacon[PlayerTeam()]) / 35);
+		if (time > 0) {
+			int mins = intHolder[i_BlueBeaconTime]/60 - Timer()/(35*60);
+			int secs = 59 - (Timer()/35)%60;
+			
+			LocalAmbientSound ("misc/nope", 127);
+			HudMessage (s:"You must wait \cF", d:time, s:" seconds\nbefore you can get one of these!";
+				HUDMSG_FADEOUT, MENU_HID + 100, CR_RED, UMENU_X5, UMENU_Y5, 2.0, 1.0);
+			return;
+		}
+		
+		// BeaconItem doesn't seem to work when given as an item..?
+		// Give the beacon manually to ensure the player gets it.
+		GiveInventory (cond (PlayerTeam() == TEAM_Blue, "IonCannonBeacon", "NuclearStrikeBeacon"), 1);
+		break;
+	}
+	
+	// Item is good, give it to the player
+	SpendCredits (cost);
+	GiveItem (item, true);
+	
+	str dname = GetAddOnName (id);
+	
+	// Inform teammates of important addons
+	if (item == ITEM_Beacon || ITEM_PlasmaCannon)
+		TeamMessage (TMSG_ADDONPURCHASE, id, playernumber());
+	
+	Log (n:0, s:" purchases ", s:dname, s:".");
+	
+	// Tell the player he got the item
+	SetFont ("SMALLFONT");
+	LocalAmbientSound ("c4/use", 127);
+	HudMessage (s:"You got the \cf", s:dname, s:"\c-!";
+		HUDMSG_FADEOUT, MENU_HID + 100, CR_GREEN, UMENU_X4, UMENU_Y4 - 0.2, 3.0, 1.0);
+	
+	// Item-specific behavior
+	switch (item) {
+	case ITEM_CHAINSAW:
+		HudMessage (s:"Use Alt-Fire to throw the chainsaw!";
+			HUDMSG_FADEOUT, MENU_HID + 101, CR_White, UMENU_X4, UMENU_Y4 - 0.225, 4.0, 1.0);
+		break;
+	
+	case ITEM_Plasma:
+		IntelMessage (strparam (s:"\cGWarning: ", s:TeamColors[PlayerTeam() + 2], s:TeamNames[PlayerTeam()],
+			s:"\cJ player has \cNPlasma Cannon!"), true);
+		
+		RecountPlasma ();
+		break;
+	
+	case ITEM_BEACON:
+		if (PlayerTeam () == TEAM_BLUE)
+			IntelMessage ("\cGWarning: \cNBlue\cJ team has \cNIon Cannon Beacon!", true);
+		else
+			IntelMessage ("\cGWarning: \cARed\cJ team has \cANuclear Strike Beacon!", true);
+		
+		LastPurchasedBeacon[PlayerTeam()] = Timer();
+		
+		if (GetCVar ("zeta_nukesurpreme"))
+			HudMessage (s:"\cFSUPER BEACONS ARE ENABLED\n\nPlant this in the enemy base and guard it for\n\ck",
+				d:GetCVar ("zeta_nukecountdown"), s:" seconds\c- for absolute devastation!";
+				HUDMSG_FADEOUT, MENU_HID + 101, CR_White, UMENU_X4, UMENU_Y4 - 0.225, 8.0, 1.0);
+		else
+			HudMessage (s:"Place this in front of an enemy MCT and guard\n",
+				s:"it for \cU", d:GetCVar ("zeta_nukecountdown"), s:" seconds\c- to destroy it!";
+				HUDMSG_FADEOUT, MENU_HID + 101, CR_White, UMENU_X4, UMENU_Y4 - 0.225, 8.0, 1.0);
+		break;
+	}
+}

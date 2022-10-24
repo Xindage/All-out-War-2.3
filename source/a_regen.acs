@@ -1,0 +1,72 @@
+//REGENERATION
+script 343 OPEN {
+	int n, r;
+	for (n = 0; n < MAXPLAYERS; n++) {
+		if (!PlayerInGame (n))
+			continue;
+		
+		if (GetPlayerRank (n) < 3) continue;
+		if (CheckActorInventory (3800+n, "IsMech"))
+			r = 20;
+		else
+			r = 5;
+		
+		if (GetActorHealth (3800 + n) + r <= GetActorSpawnHealth (3800 + n))
+			SetActorHealth (3800 + n, GetActorHealth (3800+n) + r);
+	}
+
+	delay (35 * 5);
+	restart;
+}
+
+// MEDIC REGENERATION
+script 352 (void) {
+	if (GetHealth() <= 0 || !CheckInventory("IsMedic") || !PlayerInGame (PlayerNumber()))
+		terminate;
+	
+	if (GetHealth() < GetSpawnHealth()) {
+		if (CheckInventory("IsMech"))
+			HealThing (6);
+		else
+			HealThing (3);
+	}
+	
+	delay (35);
+	restart;
+}
+
+// HP/AMMO REGENERATION
+script 354 OPEN {
+	int i, hp, shp;
+	int counter;
+	
+	while (1) {
+		if (GlobalMedic[0] || GlobalMedic[1]) {
+			for (i = 0; i < MAXPLAYERS; i++) {
+				if (GlobalMedic[1 - GetPlayerInfo(i, PLAYERINFO_TEAM)]) {
+					hp = GetActorHealth (3800+i);
+					shp = GetActorSpawnHealth (3800+i);
+					
+					if (hp >= shp)
+						continue;
+					
+					if (CheckActorInventory (3800+i, "IsMech"))
+						hp += 2;
+					else
+						hp++;
+					
+					SetActorHealth (3800+i, hp);
+				}
+			}
+		}
+		
+		if (!counter && (GlobalAmmo[0] || GlobalAmmo[1]))
+			for (i = 0; i < MAXPLAYERS; i++)
+				if (GlobalAmmo[1 - GetPlayerInfo(i, PLAYERINFO_TEAM)])
+					GiveActorInventory (3800+i, "AmmoRegenerationPack", 1);
+		
+		counter++;
+		if (counter >= 10) {counter = 0;}
+		delay(35);
+	}
+}

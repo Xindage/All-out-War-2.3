@@ -1,0 +1,293 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 teleporter node script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// [Dusk] Teleporter nodes.
+
+// ============================================================================
+function int GetTeleporterNodeDestination (int idx) {
+	switch (idx) {
+		case 0: return 1;
+		case 1: return 0;
+		case 2: return 3;
+		case 3: return 2;
+	}
+	
+	return -1;
+}
+
+// ============================================================================
+function int GetTeleNodeTeam (int idx) {
+	switch (idx) {
+		case 0:
+		case 1:
+			return TEAM_BLUE;
+	}
+	
+	return TEAM_RED;
+}
+
+// Teleporter nodes use this to request TIDs.
+script SC_TELENODE_TIDREQUEST (int team) {
+	if (team == TEAM_RED) {
+		if (!ThingCount (0, TID_TELENODE_RED1)) {Thing_ChangeTID (0, TID_TELENODE_RED1); terminate;}
+		if (!ThingCount (0, TID_TELENODE_RED2)) {Thing_ChangeTID (0, TID_TELENODE_RED2); terminate;}
+	} else {
+		if (!ThingCount (0, TID_TELENODE_BLUE1)) {Thing_ChangeTID (0, TID_TELENODE_BLUE1); terminate;}
+		if (!ThingCount (0, TID_TELENODE_BLUE2)) {Thing_ChangeTID (0, TID_TELENODE_BLUE2); terminate;}
+	}
+	
+	// If we get here, something's horribly wrong.
+	FatalError1f ("Tried to request teleporter node TID for %s team with both nodes active!", TeamNames[team]);
+}
+
+script SC_TELENODE_INIT (void) {
+	int disapproved, tid, idx, z2;
+	int x = GetActorX (0);
+	int y = GetActorY (0);
+	int z = GetActorFloorZ (0);
+	int angle = GetActorAngle (0);
+	
+	// Check the actor's size by attempting to spawn a check actor.
+	// This actor has the same radius and height as the actual portal but removes
+	// itself instantly. If it fails to spawn, the actual portal doesn't have
+	// enough space either.
+	
+	if (!Spawn ("TeleporterNodeCheck", x + (cos(angle)*128), y + (sin(angle)*128), z)) disapproved = 2;
+	delay (10);
+	
+	// Determine the idx of this portal
+	idx = -1;
+	if (ThingCount (0, TID_TELENODE_BLUE1) == 1 && !TeleporterNodes[0] && PlayerTeam() == TEAM_BLUE) idx = 0;
+	if (ThingCount (0, TID_TELENODE_BLUE2) == 1 && !TeleporterNodes[1] && PlayerTeam() == TEAM_BLUE) idx = 1;
+	if (ThingCount (0, TID_TELENODE_RED1) == 1 && !TeleporterNodes[2] && PlayerTeam() == TEAM_RED) idx = 2;
+	if (ThingCount (0, TID_TELENODE_RED2) == 1 && !TeleporterNodes[3] && PlayerTeam() == TEAM_RED) idx = 3;
+	if (idx == -1) {
+		// This should NEVER happen during normal gameplay!
+		FatalError ("Failed to determine teleporter node IDX during init!");
+	}
+	
+	tid = TID_TELENODE_BLUE1 + idx;
+	
+	// Determine destination
+	int dest = GetTeleporterNodeDestination (idx);
+	
+	// [JD] Sanity check for teleporting out of bounds
+	//==========================================================================
+
+	int tempTID = UniqueTID();
+	
+	int dummyX = GetActorX(tid);
+	int dummyY = GetActorY(tid);
+	int dummyZ = GetActorFloorZ(tid);
+	int dummyAngle = GetActorAngle(tid);
+	
+	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.00)*64), dummyY + (sin(dummyAngle+0.00)*64), dummyZ, tempTID + 0, dummyAngle >> 8);
+	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.325)*64), dummyY + (sin(dummyAngle+0.325)*64), dummyZ, tempTID + 1, (dummyAngle+0.325) >> 8);
+	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.50)*64), dummyY + (sin(dummyAngle+0.50)*64), dummyZ, tempTID + 2, (dummyAngle+0.50) >> 8);
+	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.675)*64), dummyY + (sin(dummyAngle+0.675)*64), dummyZ, tempTID + 3, (dummyAngle+0.675) >> 8);
+	
+	delay(1);
+	
+	for (int i = 0; i <= 3; i++)
+	{
+		if (CheckActorInventory(tempTID + i, "TeleporterNodeNotInSight"))
+			disapproved = 5;
+			
+		Thing_Remove(tempTID + i);
+	}
+
+	//==========================================================================
+	
+	// Check that the portals are not too close to each other.
+	int PortalMinDistance = 192;
+	if (idx == 0 && TeleporterNodes[1] && CheckActorDistance(TID_TELENODE_BLUE1, TID_TELENODE_BLUE2, PortalMinDistance))
+		disapproved = 4;
+	else if (idx == 1 && TeleporterNodes[0] && CheckActorDistance(TID_TELENODE_BLUE2, TID_TELENODE_BLUE1, PortalMinDistance))
+		disapproved = 4;
+	else if (idx == 2 && TeleporterNodes[3] && CheckActorDistance(TID_TELENODE_RED1, TID_TELENODE_RED2, PortalMinDistance))
+		disapproved = 4;
+	else if (idx == 3 && TeleporterNodes[2] && CheckActorDistance(TID_TELENODE_RED2, TID_TELENODE_RED1, PortalMinDistance))
+		disapproved = 4;
+	
+	// Check sight - this may not be built into void!
+	// The actor gives itself this if it can't see any players.
+	if (CheckActorInventory (tid, "TeleporterNodeNotInSight")) disapproved = 5;
+	
+	// Not into space either... though this assumes no map uses F_SKY1 as a walkable flat
+	// This is needed so that portals won't appear in AOW10's outer space sectors.
+	if (CheckActorFloorTexture (tid, "F_SKY1")) disapproved = 5;
+	
+	if (disapproved) {
+		SetActorState (tid, "Disapproved");
+		
+		switch (disapproved) {
+		case 2:
+			IntelMessage ("The node needs more space than that...", false);
+			break;
+		case 4:
+			IntelMessage ("The other node is too close!", false);
+			break;
+		case 5:
+			IntelMessage ("You can't put that there.", false);
+			break;
+		default:
+			IntelMessage ("Initialization failed!", false);
+			break;
+		}
+		delay (3*35);
+		RefundCredits (-1, 175);
+		terminate;
+	}
+	
+	// Sanity checks complete - the portal is good now!
+	TeleporterNodes[idx] = true;
+	SetThingSpecial (tid, ACS_ExecuteAlways, SC_TELENODE_FUNCTION, 0, idx);
+	
+	// What sphere color should we use?
+	int spheretype, fxtype;
+	if (idx >= 2) {
+		spheretype = "TeleporterNodeSphereRed";
+		fxtype = "TeleporterNodeFX";
+	} else {
+		spheretype = "TeleporterNodeSphereBlue";
+		fxtype = "TeleporterNodeFXBlue";
+	}
+	
+	int tid_teledest = TID_TELENODE_TELEDEST + idx;
+	int tid_effects = TID_TELENODE_FX + idx;
+	
+	// Spawn the other needed actors now.
+	// [JD] TeleportDest3 will allow the nodes to function properly on top of 3D floors
+	x = GetActorX (tid); y = GetActorY (tid); z = GetActorFloorZ (tid); angle = GetActorAngle (tid);
+	Spawn ("TeleportDest3", x + (cos(angle+0.00)*64), y + (sin(angle+0.00)*64), z, tid_teledest, angle >> 8);
+	Spawn ("TeleportDest3", x + (cos(angle+0.325)*64), y + (sin(angle+0.325)*64), z, tid_teledest, (angle+0.325) >> 8);
+	Spawn ("TeleportDest3", x + (cos(angle+0.50)*64), y + (sin(angle+0.50)*64), z, tid_teledest, (angle+0.50) >> 8);
+	Spawn ("TeleportDest3", x + (cos(angle+0.675)*64), y + (sin(angle+0.675)*64), z, tid_teledest, (angle+0.675) >> 8);
+	
+	Spawn ("TeleporterNodeStand", x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 32.0, tid_effects);
+	Spawn ("TeleporterNodeStand", x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 32.0, tid_effects);
+	
+	Spawn (spheretype, x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 56.0, tid_effects);
+	Spawn (spheretype, x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 56.0, tid_effects);
+	Spawn (fxtype, x, y, z+56.0, tid_effects);
+	
+	TeamMessage (TMSG_CONSTRUCT, 3, playernumber());
+	
+	delay (1);
+	
+	// Does this portal have a link? If yes, send them both
+	// to active. Otherwise, set this inactive.
+	if (TeleporterNodes[dest]) {
+		SetActorState (tid, "Active");
+		SetActorState (tid_effects, "Init.Active");
+		
+		SetActorState (TID_TELENODE_BLUE1 + dest, "Active");
+		SetActorState (TID_TELENODE_FX + dest, "Active");
+		Log (n:0, s:" constructs a teleporter and establishes a link.");
+		
+		TeamMessage (TMSG_TELELINK, 0, playernumber());
+	} else {
+		SetActorState (tid, "Inactive");
+		SetActorState (tid_effects, "Init.Inactive");
+		Log (n:0, s:" constructs a teleporter node.");
+	}
+	
+	// update the hud
+	SYNC_UpdateBuildingHealth (BUILDING_PORTAL1, PlayerTeam ());
+	SYNC_UpdateBuildingHealth (BUILDING_PORTAL2, PlayerTeam ());
+}
+
+// Teleport function
+script SC_TELENODE_FUNCTION (int idx) {
+	int dest = GetTeleporterNodeDestination (idx);
+	int tid = TID_TELENODE_BLUE1 + idx;
+	
+	// This script gets executed on both bump and death
+	if (!ThingCount (0, tid)) {
+		Log (n:0, s:" destroys a teleporter node.");
+		
+		// Reward for destroying the enemy portal
+		if (idx >= 2 && PlayerTeam () == TEAM_BLUE || idx < 2 && PlayerTeam () == TEAM_RED) {
+			ACS_ExecuteAlways (324, 0, 1); // 50xp
+			AwardCredits (200);
+		}
+		
+		TeleporterNodes[idx] = false;
+		Thing_Remove (TID_TELENODE_TELEDEST + idx);
+		Thing_Remove (TID_TELENODE_FX + idx);
+		// SetActorState (TID_TELENODE_FX + idx, "Remove");
+		
+		// Tell the possible now-defunct destination
+		// that it lost connection.
+		if (TeleporterNodes[dest]) {
+			SetActorState (TID_TELENODE_BLUE1 + dest, "Inactive");
+			SetActorState (TID_TELENODE_FX + dest, "Inactive");
+			
+			TeamMessage (TMSG_TELELINK, 1, playernumber());
+		}
+		
+		// update the hud
+		// ACS_ExecuteAlways (930, 0, BUILDING_PORTAL, PlayerTeam());
+		SYNC_UpdateBuildingHealth (BUILDING_PORTAL1, PlayerTeam ());
+		SYNC_UpdateBuildingHealth (BUILDING_PORTAL2, PlayerTeam ());
+		
+		terminate;
+	}
+	
+	// Prevent players from executing this multiple times
+	if (HasTeleported[PlayerNumber()])
+		terminate;
+	
+	if (CheckInventory ("IsHarvester")) {
+		DisplayCross();
+		SetFont ("BIGFONT");
+		HudMessage(s:"You can't go through\nportals as a harvester!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(),
+			CR_RED, 0.5, 0.45, 2.0, 1.0);
+		HasTeleported[PlayerNumber()] = true;
+		delay (35);
+		HasTeleported[PlayerNumber()] = false;
+		terminate;
+	}
+	
+	if (CheckInventory ("IsMech")) {
+		DisplayCross();
+		SetFont ("BIGFONT");
+		HudMessage(s:"You can't go through\nportals in a mech!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(),
+			CR_RED, 0.5, 0.45, 2.0, 1.0);
+		HasTeleported[PlayerNumber()] = true;
+		delay (35);
+		HasTeleported[PlayerNumber()] = false;
+		terminate;
+	}
+	
+	// Check that a destination exists - this is by now only
+	// a sanity check as inactive portals are non-solid
+	if (!ThingCount (0, 1500+dest)) {
+		DisplayCross();
+		SetFont ("BIGFONT");
+		HudMessage(s:"There is no destination portal!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(),
+			CR_RED, 0.5, 0.45, 2.0, 1.0);
+		HasTeleported[PlayerNumber()] = true;
+		delay (35);
+		HasTeleported[PlayerNumber()] = false;
+		terminate;
+	}
+	
+	Teleport (TID_TELENODE_TELEDEST + dest, 0, 0);
+	
+	// Cool down for half a second to prevent players from getting
+	// teleported multiple times.
+	HasTeleported[PlayerNumber()] = true;
+	delay (18);
+	HasTeleported[PlayerNumber()] = false;
+}

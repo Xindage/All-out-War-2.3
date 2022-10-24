@@ -1,0 +1,1035 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 miscallenous script functions
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// ============================================================================
+// MATH FUNCTIONS
+function int abs (int n) {
+	if (n < 0)
+		return -n;
+	return n;
+}
+
+function int msqr (int n) {
+	return n * n;
+}
+
+// Check functions
+
+// ============================================================================
+// Returns 1 if player has $price money, discount taken into account
+// if not, prints the error message and returns 0
+function int CanAfford (int price) {
+	price = ACS_ExecuteWithResult (330, price);
+	return (IsAdmin[PlayerNumber()] || GetCredits () >= price);
+}
+
+// ============================================================================
+function str ArmorColor (int a) {
+	switch (a) {
+		case -1: return "\cU";
+		case 0: return "\cC";
+		case 1: return "\cQ";
+		case 2: return "\cD";
+		case 3: return "\cF";
+		case 4: return "\cI";
+		case 5: return "\cG";
+	}
+	
+	return "";
+}
+
+// ============================================================================
+function str ArModColor (int a) {
+	switch (a) {
+		case ARMOD_NONE:
+		case ARMOD_NOCHANGE:
+			return "\cC";
+		case ARMOD_FIRE: return "\cG";
+		case ARMOD_CHEM: return "\cD";
+		case ARMOD_EXPLO: return "\cF";
+		case ARMOD_ENERGY: return "\cN";
+		case ARMOD_BULLETPROOF: return "\cU";
+	}
+	
+	return "";
+}
+
+// ============================================================================
+function str ArModName (int a) {
+	switch (a) {
+		case ARMOD_FIRE: return "Fire";
+		case ARMOD_CHEM: return "Chem";
+		case ARMOD_EXPLO: return "Flak";
+		case ARMOD_ENERGY: return "Energy";
+		case ARMOD_BULLETPROOF: return "Bullet";
+	}
+	
+	return " ";
+}
+
+// ============================================================================
+// [Dusk] Tick display
+// atm only plays the sound as the graphic GTFO'd
+function void DisplayTick (void) {
+	LocalAmbientSound ("c4/use", 255);
+	// SETFONT("TICK");
+	// HudMessage(s:"a"; HUDMSG_FADEOUT, 2100+PlayerNumber(), CR_DarkRed, 0.5, 0.5, 2.0, 1.0);
+}
+
+// ============================================================================
+// Same for cross
+function void DisplayCross (void) {
+	LocalAmbientSound ("misc/nope", 127);
+	// SETFONT("NOENTRY");
+	// HudMessage(s:"a"; HUDMSG_FADEOUT, 2100+PlayerNumber(), CR_DarkRed, 0.5, 0.5, 2.0, 1.0);
+}
+
+// ============================================================================
+// [Dusk] Barracks check
+function int CheckBarracks (int Team) {
+	return (GotBarracks[Team] || IsAdmin[PlayerNumber()]);
+}
+
+// ============================================================================
+// [Dusk] Research Centre check
+function int CheckPlant (int Team) {
+	return (GotPlant[Team] || IsAdmin[PlayerNumber()]);
+}
+
+// ============================================================================
+// [Dusk] Refinery check
+function int CheckRefinery (int Team) {
+	return (GotRefinery[Team] || IsAdmin[PlayerNumber()]);
+}
+
+// ============================================================================
+// [Dusk] War Factory check
+function int CheckFactory (int Team) {
+	return (GotFactory[Team] || IsAdmin[PlayerNumber()]);
+}
+
+// ============================================================================
+// [Dusk] Check for advanced mech research
+function int CheckAdvMechResearch (int Team) {
+	return (AdvancedMechs[Team] || IsAdmin[PlayerNumber()]);
+}
+
+// ============================================================================
+// [Dusk] Give inventory to all players.
+function void GiveToAll (str what, int amount) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame (i))
+			continue;
+		
+		GiveActorInventory (3800 + i, what, amount);
+	}
+}
+
+// ============================================================================
+function bool MitigateDoublePress(void) {
+	if (Timer() - LastMenu[PlayerNumber()] < 5)
+		return true; // [SP] This is to fix the "double cost" bug
+	LastMenu[PlayerNumber()] = Timer();
+	return false;
+}
+
+// ============================================================================
+// [Dusk] Freezes all players
+function void FreezeBold (void) {
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (PlayerInGame(i) && !IsAdmin[i])
+			SetPlayerProperty (i, PROP_TOTALLYFROZEN, true);
+}
+
+// ============================================================================
+// [Dusk] Reverse action for above
+function void DefrostBold (void) {
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (PlayerInGame(i) && !IsAdmin[i])
+			SetPlayerProperty (i, PROP_TOTALLYFROZEN, false);
+}
+
+// ============================================================================
+// [Dusk] Refresh time cop limit
+function void RecountTimeCops (void) {
+	NumTimeCops[0] = 0; NumTimeCops[1] = 0;
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame(i)) continue;
+		if (CheckActorInventory(3800+i, "TimeGun")) {
+			if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_RED)
+				NumTimeCops[0]++;
+			else if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
+				NumTimeCops[1]++;
+		}
+	}
+}
+// ============================================================================
+
+// ============================================================================
+// [JD] Refresh the Karasawa limit
+function void RecountKarasawas (void)
+{
+	NumKarasawas[0] = 0;
+	NumKarasawas[1] = 0;
+	
+	for (int i = 0; i < MAXPLAYERS; i++)
+	{
+		if (!PlayerInGame(i))
+			continue;
+		
+		if (CheckActorInventory(3800 + i, "Karasawa"))
+		{
+			if (GetPlayerInfo(i, PLAYERINFO_TEAM) == TEAM_RED)
+				NumKarasawas[0]++;
+			
+			else if (GetPlayerInfo(i, PLAYERINFO_TEAM) == TEAM_BLUE)
+				NumKarasawas[1]++;
+		}
+	}
+}
+// ============================================================================
+
+function void RecountUtilityGuy (void)
+{
+	NumUtilityGuy[0] = 0;
+	NumUtilityGuy[1] = 0;
+	
+	for (int i = 0; i < MAXPLAYERS; i++)
+	{
+		if (!PlayerInGame(i))
+			continue;
+		
+		if (CheckActorInventory(3800 + i, "UtilityGun"))
+			NumUtilityGuy[GetPlayerTeam(i)]++;
+	}
+}
+
+// ============================================================================
+// [Dusk] Recounts plasma cannons into NumPlasmaCannons[] array.
+function void RecountPlasma (void) {
+	NumPlasmaCannons[0] = 0; NumPlasmaCannons[1] = 0;
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame(i) || !CheckActorInventory(3800+i, "PlasmaCannon"))
+			continue;
+		NumPlasmaCannons[GetPlayerTeam (i)]++;
+	}
+}
+
+// ============================================================================
+// This sets tickets to given values, and ends the game if ticket
+// loss is detected.
+function void TakeTickets (int team, int count) {
+	if (!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool])
+		return;
+	
+	int delta;
+	
+	// Decrease the tickets
+	SetTickets (team, Tickets[team] - count);
+	
+	// Handle ticket loss here. If tickets fall to 0, the team loses the game. Har har.
+	if (Tickets[team] <= 0) {
+		// Calculate points delta. By giving the enemy team the delta, points become even. Atop
+		// this, we add 50 to make the enemy team win.
+		delta = GetTeamProperty (team, TPROP_Score) - GetTeamProperty (!team, TPROP_Score);
+		if (delta < 0)
+			delta = 0;
+		
+		// Announce the ticket loss
+		SetFont ("BIGFONT");
+		HudMessageBold (s:TeamColors[team], s:TeamNames[team], s:" team\cJ loses out of ticket loss";
+			HUDMSG_FADEOUT, 0, CR_YELLOW, 0.5, 0.3, 2.0, 1.0);
+		Log (s:TeamNames[team], s:" loses out of ticket loss");
+		
+		// End the game
+		intHolder[i_gameover] = true;
+		ConsoleCommand (strparam (s:"pointlimit ", d:GetTeamProperty (!team, TPROP_Score) + 50));
+		Team_GivePoints (!team, delta + 50, 0);
+	}
+}
+
+// ============================================================================
+function void SetTickets (int team, int count) {
+	// Don't set tickets if they are not used.
+	if (!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool])
+		return;
+	
+	Tickets[team] = count;
+	
+	// [JD] Don't let tickets go above the initial amount.
+	if (Tickets[team] > GetCVAR("zeta_tickets"))
+		Tickets[team] = GetCVAR("zeta_tickets");
+	
+	// Update the new ticket count to clients
+	SYNC_UpdateTicketCount (team);
+}
+
+// ============================================================================
+// Returns color code by fraction of perc/max
+function str FractionColor (int perc, int max) {
+	if (perc > max) // > 100%
+		return "\cQ";
+	else if (perc == max) // 100%
+		return "\cQ";
+	else if ((perc*4)/3 >= max) // 75%
+		return "\cD";
+	else if (perc*2 >= max) // 50%
+		return "\cF";
+	else if (perc*4 >= max) // 25%
+		return "\cI";
+	else if (perc > 0) // 24-1%
+		return "\cR";
+	return "\cM"; // 0%
+}
+
+// ============================================================================
+// shortcuts
+function void SetFragGrenades (int grenades) 
+{
+	if (!CheckInventory ("FragGrenade"))
+		GiveInventory ("FragGrenade", 1);
+		
+	SetAmmoCapacity ("FragGrenadeAmmo", grenades);
+	
+	if (CheckInventory ("FragGrenadeAmmo") < grenades) 
+	{
+		GiveInventory ("FragGrenadeAmmo", grenades);
+	} 
+	
+	else if (CheckInventory ("FragGrenadeAmmo") > grenades) 
+	{
+		TakeInventory ("FragGrenadeAmmo", 10);
+		GiveInventory ("FragGrenadeAmmo", grenades);
+	}
+}
+
+function void SetFlashbangs (int flashnades) {
+	if (!CheckInventory ("Flashbang"))
+		GiveInventory ("Flashbang", 1);
+	SetAmmoCapacity ("FlashbangAmmo", flashnades);
+	if (CheckInventory ("FlashbangAmmo") < flashnades) {
+		GIveInventory ("FlashbangAmmo", flashnades);
+	} else if (CheckInventory ("FlashbangAmmo") > flashnades) {
+		TakeInventory("FlashbangAmmo", 10);
+		GiveInventory("FlashbangAmmo", flashnades);
+	}
+}
+
+// ============================================================================
+// [Dusk] Convenience functions
+function int GetHealth (void) {return GetActorProperty (0, APROP_HEALTH);}
+function void SetHealth (int hp) {SetActorProperty (0, APROP_Health, hp);}
+function int GetActorHealth (int tid) {return GetActorProperty (tid, APROP_HEALTH);}
+function void SetActorHealth (int tid, int hp) {SetActorProperty (tid, APROP_HEALTH, hp);}
+function int GetSpawnHealth (void) {return GetActorProperty (0, APROP_SPAWNHEALTH);}
+function void SetSpawnHealth (int shp) {SetActorProperty (0, APROP_SPAWNHEALTH, shp);}
+function int GetActorSpawnHealth (int tid) {return GetActorProperty (tid, APROP_SPAWNHEALTH);}
+function void SetActorSpawnHealth (int tid, int shp) {SetActorProperty (tid, APROP_SPAWNHEALTH, shp);}
+function int GetActorSpeed (int tid) {return GetActorProperty (tid, APROP_SPEED);}
+function void SetActorSpeed (int tid, int value) {SetActorProperty (tid, APROP_SPEED, value);}
+function void GivePoints (int p) {Team_GivePoints (PlayerTeam(), p, false);}
+function int GetPlayerTeam (int p) {return GetPlayerInfo (p, PLAYERINFO_TEAM);}
+
+// ============================================================================
+// [SG] Base Crasher & Base Miracle checks
+
+function int CheckBaseCrasher (int team)
+{
+	if( (intHolder[i_SuddenDeath]) || (GetConfig(CONFIG_TOURNAMENTMODE)) || (GetCVar("zeta_suddendeathtime") <= 5) || (CheckMinutes(GetCVar("zeta_suddendeathtime") - 5)) )
+		return 0;	// not in tournament mode, or beyond 5 minutes before sudden death
+		
+	if(!team)		// not if any building is at low health on this team
+	{
+		if( (GotBarracks[0]) && (GetActorHealth(TID_BARRACKS_BLUE) < GetActorSpawnHealth(TID_BARRACKS_BLUE) / 2) )
+			return 0;
+		
+		if( (GotRefinery[0]) && (GetActorHealth(TID_REFINERY_BLUE) < GetActorSpawnHealth(TID_REFINERY_BLUE) / 2) )
+			return 0;
+		
+		if( (GotPlant[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 2 / 5) )
+			return 0;
+		
+		if( (GotFactory[0]) && (GetActorHealth(TID_FACTORY_BLUE) < GetActorSpawnHealth(TID_FACTORY_BLUE) * 2 / 5) )
+			return 0;
+		
+		if( (GotObelisk[0]) && (GetActorHealth(TID_OBELISK_BLUE) < GetActorSpawnHealth(TID_OBELISK_BLUE) / 2) )
+			return 0;
+	}
+	// yes, this could be simplified, but it's best kept this way in case TIDs are eventually changed	
+	else
+	{
+		if( (GotBarracks[1]) && (GetActorHealth(TID_BARRACKS_RED) < GetActorSpawnHealth(TID_BARRACKS_RED) / 2) )
+			return 0;
+		
+		if( (GotRefinery[1]) && (GetActorHealth(TID_REFINERY_RED) < GetActorSpawnHealth(TID_REFINERY_RED) / 2) )
+			return 0;
+		
+		if( (GotPlant[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 2 / 5) )
+			return 0;
+		
+		if( (GotFactory[1]) && (GetActorHealth(TID_FACTORY_RED) < GetActorSpawnHealth(TID_FACTORY_RED) * 2 / 5) )
+			return 0;
+		
+		if( (GotObelisk[1]) && (GetActorHealth(TID_OBELISK_RED) < GetActorSpawnHealth(TID_OBELISK_RED) / 2) )
+			return 0;
+	}
+	
+	return 1;
+}
+
+function int CheckBaseMiracle (int team)
+{
+	if( (intHolder[i_SuddenDeath]) || (GetConfig(CONFIG_TOURNAMENTMODE)) || (GetCVar("zeta_suddendeathtime") <= 5) || (CheckMinutes(GetCVar("zeta_suddendeathtime") - 5)) )
+		return 0;	// not in tournament mode, or beyond 5 minutes before sudden death
+		
+	if(!team)		// not if all buildings are already at full health
+	{
+		if( (GotBarracks[0]) && (GetActorHealth(TID_BARRACKS_BLUE) < GetActorSpawnHealth(TID_BARRACKS_BLUE) * 99 / 100) )
+			return 1;
+		
+		if( (GotRefinery[0]) && (GetActorHealth(TID_REFINERY_BLUE) < GetActorSpawnHealth(TID_REFINERY_BLUE) * 99 / 100) )
+			return 1;
+		
+		if( (GotPlant[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 99 / 100) )
+			return 1;
+		
+		if( (GotFactory[0]) && (GetActorHealth(TID_FACTORY_BLUE) < GetActorSpawnHealth(TID_FACTORY_BLUE) * 99 / 100) )
+			return 1;
+		
+		if( (GotObelisk[0]) && (GetActorHealth(TID_OBELISK_BLUE) < GetActorSpawnHealth(TID_OBELISK_BLUE) * 99 / 100) )
+			return 1;
+	}
+	
+	else
+	{
+		if( (GotBarracks[1]) && (GetActorHealth(TID_BARRACKS_RED) < GetActorSpawnHealth(TID_BARRACKS_RED) * 99 / 100) )
+			return 1;
+		
+		if( (GotRefinery[1]) && (GetActorHealth(TID_REFINERY_RED) < GetActorSpawnHealth(TID_REFINERY_RED) * 99 / 100) )
+			return 1;
+		
+		if( (GotPlant[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 99 / 100) )
+			return 1;
+		
+		if( (GotFactory[1]) && (GetActorHealth(TID_FACTORY_RED) < GetActorSpawnHealth(TID_FACTORY_RED) * 99 / 100) )
+			return 1;
+		
+		if( (GotObelisk[1]) && (GetActorHealth(TID_OBELISK_RED) < GetActorSpawnHealth(TID_OBELISK_RED) * 99 / 100) )
+			return 1;
+	}
+	
+	return 0;
+}
+
+// ============================================================================
+// [Dusk] Returns the `display name` of the player with id pn
+// This function must cater for client-side ACS!
+function str DisplayName (int pn) {
+	int tid = 3800+pn;
+	int i;
+	
+	if (pn < 0 || pn > 31)
+		tid = ActivatorTID();
+	
+	// Check for special things first
+	if (CheckActorInventory (tid, "IsMech")) { // Mech morphs
+		if (CheckActorInventory (tid, "OrcaWeapons"))
+			return"\cCOrca";
+		else if (CheckActorInventory (tid, "RavenWeapons"))
+			return"\cCRaven";
+		else if (CheckActorInventory (tid, "MastodonWeapons"))
+			return"\cCMastodon";
+		else if (CheckActorInventory (tid, "WolverineWeapons"))
+			return"\cCWolverine";
+		else if (CheckActorInventory (tid, "MadCatWeapons"))
+			return"\cCMadCat";
+		else if (CheckActorInventory (tid, "TitanWeapons"))
+			return"\cCTitan";
+		else if (CheckActorInventory (tid, "JuggernautWeapons"))
+			return"\cCJuggernaut MKII";
+		else if (CheckActorInventory (tid, "TortoiseWeapons"))
+			return"\cCTortoise";
+		else if (CheckActorInventory (tid, "LancerWeapons"))
+			return"\cCLancer";
+		else
+			return"\cCERR: DisplayName()";
+	} else if (CheckActorInventory (tid, "PowerBerserk")) // Berserk
+		return "\cGBerserker";
+	else if (CheckActorInventory (tid, "IsAdmin")) // Admin morph
+		return "\cJAdministrator";
+	
+	// Get the class name
+	int cid = GetPlayerClass (tid - 3800);
+	
+	if (cid == CLASS_None)
+		return "No class";
+	
+	if (cid < CLASS_None || cid >= NUMCLASSES)
+		return "\cgERROR: BAD CLASS"; // Shouldn't happen
+	
+	return Classes_str[cid][CK_NAME];
+}
+
+// ============================================================================
+// [Dusk] Sets the inventory count of stuff to an explicit value.
+function int SetInventory (str item, int count) {
+	int n = count - CheckInventory (item);
+	if (n > 0)
+		GiveInventory (item, n);
+	else if (n < 0)
+		TakeInventory (item, -1*n);
+	
+	// I'm not sure whether this is actually needed, but.
+	return n;
+}
+
+function int SetActorInventory (int tid, str item, int count) {
+	int n = count - CheckActorInventory (tid, item);
+	if (n > 0)
+		GiveActorInventory (tid, item, n);
+	else if (n < 0)
+		TakeActorInventory (tid, item, -1*n);
+	return n;
+}
+
+// ============================================================================
+// [Dusk] InvCount: Counts the amount of players who have the certain item.
+function int InvCount (str item) {
+	return TeamInvCount (item, -1);
+}
+
+function int TeamInvCount (str item, int team) {
+	int n;
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (team != -1 && GetPlayerInfo (i, PLAYERINFO_TEAM) != team)
+			continue;
+		
+		if (!CheckActorInventory (3800+i, item))
+			continue;
+		
+		n++;
+	}
+	return n;
+}
+
+// ============================================================================
+// [Dusk] Generic error
+function void GenericError (str text) {
+	if (text == "")
+		return;
+	
+	LocalAmbientSound ("misc/nope", 127);
+	SetFont ("BIGFONT");
+	HudMessage (s:text; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_DarkRed, 0.5, 0.45, 2.0, 1.0);
+}
+
+// ============================================================================
+script 806 (int text) {
+	SetActivatorToTarget (0);
+	SetFont ("BIGFONT");
+	HudMessage (s:text; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_Untranslated, 0.5, 0.45, 2.0, 1.0);
+}
+
+function void TargetMessage (str text) {
+	ACS_ExecuteAlways (806, 0, text);
+}
+
+// ============================================================================
+function void ReddenSector (int tag) {
+	Sector_SetColor (tag, 255, 150, 150);
+}
+
+// ============================================================================
+function int GetConfig (int c) {
+	if (c < 0 || c >= MAX_CONFIG)
+		return 0;
+	
+	return Config[c][netstate == NETSTATE_Server];
+}
+
+// ============================================================================
+// Acquire target information. This is encapsulated in a script so
+// as not to interfere with the original script's activator.
+script SC_TargetInfo (int type, int value) {
+	SetActivatorToTarget (0);
+	SetResultValue (0);
+	
+	switch (type) {
+	case TARGETINFO_X:
+		SetResultValue (GetActorX (0));
+		break;
+	case TARGETINFO_Y:
+		SetResultValue (GetActorY (0));
+		break;
+	case TARGETINFO_Z:
+		SetResultValue (GetActorZ (0));
+		break;
+	case TARGETINFO_Health:
+		SetResultValue (GetHealth ());
+		break;
+	case TARGETINFO_Angle:
+		SetResultValue (GetActorAngle (0));
+		break;
+	case TARGETINFO_TID:
+		SetResultValue (ActivatorTID ());
+		break;
+	case TARGETINFO_PlayerNum:
+		SetResultValue (PlayerNumber ());
+		break;
+	case TARGETINFO_SpawnHealth:
+		SetResultValue (GetSpawnHealth ());
+		break;
+	case TARGETINFO_Team:
+		SetResultValue (PlayerTeam ());
+		break;
+	case TARGETINFO_WeaponCheck:
+		SetResultValue (CheckWeapon (value));
+		break;
+	case TARGETINFO_Name:
+		SetResultValue (strparam (n:0));
+		break;
+	case TARGETINFO_ArmorType:
+		SetResultValue(GetPlayerArmorModifier(PlayerNumber()));
+		break;
+	}
+}
+
+function int GetTargetInfo (int type) {
+	return ACS_ExecuteWithResult (SC_TARGETINFO, type);
+}
+
+function int CheckTargetWeapon (str type) {
+	return ACS_ExecuteWithResult (SC_TARGETINFO, TARGETINFO_WeaponCheck, type);
+}
+
+// ============================================================================
+// [Dusk] GiveToTarget
+script SC_GiveToTarget (int type, int value) {
+	if (!SetActivatorToTarget (0))
+		terminate;
+	
+	if (value > 0)
+		GiveInventory (type, value);
+	else if (value < 0)
+		TakeInventory (type, -value);
+}
+
+function void GiveToTarget (str type, int amount) {
+	ACS_ExecuteAlways (SC_GiveToTarget, 0);
+}
+
+// ============================================================================
+// [Dusk] Modulo with fixed point numbers. Oneliners FTW! :)
+function int FixedMod (int f, int g) {
+	return (f - FixedMul (((FixedDiv (f, g) >> 16) << 16), g));
+}
+
+// ============================================================================
+function int CheckMinutes (int m) {
+	return (Timer() > (m * MINUTETICS));
+}
+
+// ============================================================================
+// Does a given building exist?
+function int CheckBuilding (int b, int t) {
+	return ThingCount (T_NONE, BaseTIDs[2*b + t]);
+}
+
+// ============================================================================
+function int TemporaryTID (void) {
+	int i = 0;
+	while (ThingCount (T_NONE, TID_TEMP+i) && i < MAX_TEMPTID)
+		i++;
+	
+	if (i >= MAX_TEMPTID) {
+		Log (s:"TemporaryTID: Out of TIDs!");
+		return 0;
+	}
+	
+	return TID_TEMP+i;
+}
+
+// =============================================================================
+// Returns the team of the console player
+function int ConsoleTeam (void) {
+	return GetPlayerInfo (intHolder[i_consoleplayer], PLAYERINFO_TEAM);
+}
+
+// ============================================================================
+function void ClearHudMessage (int i) {
+	HudMessage (s:""; HUDMSG_PLAIN, i, CR_UNTRANSLATED, 0.0, 0.0, 0.01);
+}
+
+// ============================================================================
+// [Dusk] {9/6/12} The panic button. Only use for unrecoverable errors!
+function void FatalError (str text) {
+	ConsoleCommand (strparam (s:"error \"ACS: FATAL ERROR: ", s:text, s:"\""));
+}
+
+// ============================================================================
+// [Dusk] {9/6/12} AproxDistance: Doom's P_AproxDistance, converted to ACS.
+// It's faster, but less accurate than distance().
+function int AproxDistance (int t1, int t2) {
+	int dx = abs (GetActorX (t1) - GetActorX (t2));
+	int dy = abs (GetActorY (t1) - GetActorY (t2));
+	if (dx < dy)
+		return dy + (dx>>1);
+	return dx + (dy>>1);
+}
+
+// ============================================================================
+// [Dusk] {9/6/12} EstimateLocation: Make an educated guess of the actor's location
+function int EstimateLocation (int tid) {
+	int maxdist = 0x7FFFFFFF;
+	int location = -1;
+	
+	// If the guy has IsInSpawnRoom, he should be exactly there.
+	if (CheckActorInventory (tid, "IsInSpawnRoom"))
+		return 19;
+	
+	// Loop through all known locations and approximate distances to them.
+	// The one that is closest to us should be our location. If even the
+	// closest object is 768 units away, we're not really near anything.
+	for (int i = 0; i < NUM_LOCATIONS; i++) {
+		// Can't be near anything that doesn't exist
+		if (!ThingCount (T_NONE, Locations[i]))
+			continue;
+		
+		int d = AproxDistance (tid, Locations[i]);
+		if (d < maxdist && d < 768.0)
+			location = i;
+	}
+	
+	return location;
+}
+
+// ============================================================================
+// [Dusk] {9/6/12} Generic intel message
+function void _IntelMessage (str text, bool bold, bool nolog) {
+	// Check if it's multi-line
+	int multiline = false;
+	for (int c = 0; c < strlen (text) && !multiline; c++)
+		if (GetChar (text, c) == '\n')
+			multiline = true;
+	
+	// Determine y-pos
+	int ypos = INTEL_YPOS;
+	//if (multiline)
+		//ypos = INTEL_YPOS2;
+	
+	// [Dusk] {10/30/12} Don't log it to console if not desired.
+	int flags = HUDMSG_FADEOUT;
+	if (!nolog)
+		flags |= HUDMSG_LOG;
+	
+	
+	// [Cata] Adding support for multiple intel messages on hud.
+	if(bold == true)
+	{
+		int i;
+		for(i = 0; i < intel_maxMessages; i++)
+			if(intel_activeMsg[i] == 0)
+				break;
+		
+		intel_activeMsg[i] = (35 * 4) + 10;
+		if(multiline)
+		{
+			intel_activeMsg[i+1] = (35 * 4) + 10;
+		}		
+	}
+	
+	setfont("smallfont");
+	if (bold)
+		HudMessageBold (s:text;
+			flags, intel_msgBaseID + i, CR_WHITE,
+			INTEL_XPOS, ypos + fixedmul(intel_msgSpacing, i << 16), 3.0, 1.0);
+	else
+		HudMessage (s:text;
+			flags, intel_msgBaseID + intel_maxMessages + 1, CR_WHITE,
+			intel_xposlocal, intel_yposlocal, 3.0, 1.0);
+}
+
+function void IntelMessage (str text, bool bold) {
+	_IntelMessage (text, bold, false);
+}
+
+function void IntelMessageNoLog (str text, bool bold) {
+	_IntelMessage (text, bold, true);
+}
+
+// ============================================================================
+// [Dusk] {9/10/12}
+function void CallEvent (int evnt, int team) {
+	if (!CheckMapFlags (MAPF_EVENTSCRIPTS))
+		return;
+	
+	ACS_ExecuteAlways (960, 0, evnt, team);
+}
+
+function void ArchiveCVAR (str cvar) {
+	ConsoleCommand (strparam (s:"archivecvar ", s:cvar));
+}
+
+// ============================================================================
+// [Dusk] {10/30/12} Substitute for the missing ternary operator..
+function int cond (int a, int b, int c) {
+	if (a)
+		return b;
+	return c;
+}
+
+// ============================================================================
+// [Dusk] {11/10/12} Check distance to console player.
+script SC_CONSOLEPLAYERDISTANCE (int max) {
+	if (!PlayerInGame (intHolder[i_consoleplayer])) {
+		SetResultValue (0);
+		terminate;
+	}
+	
+	max <<= 16;
+	if (max == 0)
+		max = 96.0;
+	
+	int dist = AproxDistance (0, 3800 + intHolder[i_consoleplayer]);
+	SetResultValue (dist <= max);
+}
+
+// ============================================================================
+// [Dusk] {12/17/12} Get class name by TID
+script 811 (int tid) {
+	str name;
+	
+	if (!SetActivator (tid)) // was not found
+		name = "(null)";
+	else if (PlayerNumber() != -1) // The strparam method would give the player name here
+		name = "Player";
+	else
+		name = strparam (n:0);
+	
+	SetResultValue (name);
+}
+
+function str GetActorClass_X (int tid) {
+	return ACS_ExecuteWithResult (811, tid);
+}
+
+// ============================================================================
+// [Dusk] Build the version string
+function str VersionString (void) {
+	// Major version
+	str msg = strparam (s:"v", d:VERSION_MAJOR);
+	
+	// Patch version or beta
+	if (VERSION_MINOR > 50)
+		msg = strparam (s:msg, s:" beta ", d:(100 - VERSION_MINOR));
+	else if (VERSION_MINOR >= 1)
+		msg = strparam (s:msg, s:".", d:VERSION_MINOR);
+	
+	// SVN revision. SVN_REVISION is defined in a_svnrevision.acs which is
+	// automatically generated on build time.
+	msg = strparam (s:msg, s:" (r", s:SVN_REVISION, s:")");
+	return msg;
+}
+
+// ============================================================================
+function void RefillC4 (void) {
+	SetInventory ("RemoteC4Ammo", 4);
+	if (CheckInventory ("ProxyMineCount") > 0)
+		SetInventory ("ProxyMine", CheckInventory ("ProxyMineCount"));
+	if (CheckInventory ("TimedC4Count") > 0)
+		SetInventory ("TimedC4", CheckInventory ("TimedC4Count"));
+}
+
+function void refillFrags (void)
+{
+	if (!CheckInventory("FragGrenade") || !CheckInventory("Flashbang"))
+	{
+		GiveInventory("FragGrenade", 1);
+		GiveInventory("Flashbang", 1);
+	}
+
+	SetInventory("FragGrenadeAmmo", 4);
+	SetInventory("FlashbangAmmo", 4);
+}
+
+// ============================================================================
+script SC_SuperNukeCheck (void) {
+	SetResultValue (GetCVar ("zeta_nukesurpreme"));
+}
+
+// ============================================================================
+script SC_SillyThings (void) {
+	SetResultValue (GetCVar ("zeta_sillythings"));
+}
+
+// ============================================================================
+function void CheckAndRemove (str Type) {
+	if (CheckInventory (Type))
+		TakeInventory (Type, 1);
+}
+
+// ============================================================================
+function bool CheckActorDistance(int Source, int Target, int Range) {
+	// [SP] If either object does not exist, then we're really not close to anything.
+	if (ThingCount(T_NONE,Target) == 0 || ThingCount(T_NONE,Source) == 0)
+		return false;
+	// [SP] Check the distance between two objects using Pythagorean theorum -
+	// except do not root the squares, it makes the check faster
+	int Dist = msqr(GetActorX(Source) - GetActorX(Target) >> 16);
+	Dist += msqr(GetActorY(Source) - GetActorY(Target) >> 16);
+	Dist += msqr(GetActorZ(Source) - GetActorZ(Target) >> 16);
+	
+	if (Dist <= msqr(Range) && GetCVar("zeta_debug") == 1)
+		Log(s:"I'm close to object ",d:Target);
+	if (Dist <= msqr(Range))
+		return true;
+	return false;
+}
+
+// ============================================================================
+function void GiveFullRefill (int silent) {
+
+	for (int i = 0; i < MAXPLAYERS; i++)
+	{
+		if (CheckInventory("IsMech"))
+		{
+			GiveInventory("OrcaAmmoPackage", 1);
+			GiveInventory("RavenAmmoPackage", 1);
+			GiveInventory("TortoiseAmmoPackage", 1);
+			GiveInventory("WolverineAmmoPackage", 1);
+			GiveInventory("LancerAmmoPackage", 1);
+			GiveInventory("MadcatAmmoPackage", 1);
+			GiveInventory("TitanAmmoPackage", 1);
+			GiveInventory("JuggernautAmmoPackage", 1);
+			GiveInventory("MastodonAmmoPackage", 1);
+		}
+		
+		GiveInventory("AmmoCachePack", 9999);
+		GiveInventory("PhosphorusGrenadeAmmo", 1);
+		GiveInventory("ChemicalGrenadeAmmo", 1);
+		GiveInventory("NailBombs", 1);
+	}
+	
+	// Restore medication fields
+	if (CheckInventory ("MedicationFieldCount") > 0)
+		SetInventory ("MedicationFieldItem", CheckInventory ("MedicationFieldCount"));
+	
+	// Refill all C4
+	RefillC4 ();
+	
+	// [JD] Refill Frag Grenades and Flashbangs.
+	refillFrags();
+	
+	// Jetpack fuel
+	if (CheckInventory ("Jetpack"))
+		GiveInventory ("JetpackFuel", 40);
+	
+	// Reset health unless in a mech
+	if (!CheckInventory ("IsMech") && GetHealth() < GetSpawnHealth())
+		SetHealth (GetSpawnHealth ());
+	
+	// Self-heal
+	GiveInventory ("SelfHealItem", 1);
+	
+	if (!silent) {
+		SetFont ("BIGFONT");
+		HudMessage(s:"Refilled!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_YELLOW, 0.5, 0.45, 2.0, 1.0);
+		ActivatorSound("misc/ammo_pkup",255);
+	}
+}
+
+// ============================================================================
+// SERVER INTERACTION
+// Script #970 - server prepares client to menu usage
+function void ActivateMenu (int menu) {
+	ACS_ExecuteAlways (SC_MENU_SERVERINIT, 0, menu);
+}
+
+// ============================================================================
+// [Dusk] Set desired font for HUD display
+function void SetHUDFont (void) {
+	if (GetCVar ("zeta_cl_confonthud"))
+		SetFont ("DOOMFONT");
+	else
+		SetFont ("SMALLFONT");
+}
+
+// =============================================================================
+// [Dusk] Calculate the amount of buildings still standing.
+function int CalcBaseLeft (int team) {
+	return GotBarracks[team] +
+		GotFactory[team] +
+		GotObelisk[team] +
+		GotPlant[team] +
+		GotRefinery[team];
+}
+
+// =============================================================================
+Function bool StrCmpZan (str s1, str s2)
+{
+   int c1 = GetChar(s1, 0);
+   int c2 = GetChar(s2, 0);
+   if (c1 == c2)
+      return false;
+   return true;
+}
+
+// =============================================================================
+Function int AToI (str s)
+{
+   str a = "";
+   int i, i2, n;
+   int l = StrLen(s);
+   for (i = 0; i < l; i++)
+   {
+      for (i2 = 0; i2 < 10; i2++)
+      {
+         a = StrParam(i:i2);
+         if (!StrCmpZan(StrParam(c:GetChar(s, i)), a))
+            n += i2 * Power(10, l - i - 1);
+      }
+   }
+   return n;
+}
+
+// =============================================================================
+
+Function int Power (int num, int pwr)
+{
+   int n = num;
+   if (pwr == 0)
+      return 1;
+   for (int i = 1; i < pwr; i++)
+      num *= n;
+   return num;
+}
+
+// [JD] Filters through the array and adds up and returns how many players are currently repairing whatever building was passed as the argument.
+script "SC_RETURNMAXREPAIRERS" (int WhatBuilding)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (Repairing_int[WhatBuilding * 2][i] == 1)
+			Repairing_int[WhatBuilding * 2][MAXPLAYERS]++;
+	
+	SetResultValue(Repairing_int[WhatBuilding * 2][MAXPLAYERS]);
+	
+	Repairing_int[WhatBuilding * 2][MAXPLAYERS] = 0;
+}
+
+// [JD] Script waits on the player to release their fire or altfire keys and then tells the game they're no longer repairing.
+script "SC_FREEREPAIRING" (int WhatBuilding, int who)
+{
+	while (GetPlayerInput(who, INPUT_BUTTONS) & BT_ATTACK ||
+			GetPlayerInput(who, INPUT_BUTTONS) & BT_ALTATTACK)
+		Delay(1);
+		
+	Repairing_int[WhatBuilding * 2][who] = 0;
+}

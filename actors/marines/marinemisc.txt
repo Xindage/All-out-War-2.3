@@ -1,0 +1,49 @@
+Actor ClearTarget : Inventory //Adds 1 each 16th tic (after every PLAY ABCD frames).
+{
+	Game Doom
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor SSGFireCooldown : Powerup
+{
+	Powerup.Duration 59
+}
+
+Actor TiberiumRifleCooldown : Powerup
+{
+	Powerup.Duration 15
+}
+
+Actor BazookaCooldown : Powerup
+{
+	Powerup.Duration 68
+}
+
+Actor TE21CallAmmoAI : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 6
+}
+
+
+Actor NoPlayerInSight : Inventory //Same as above.
+{
+	Game Doom
+	Inventory.Amount 1
+	Inventory.MaxAmount 128
+}
+
+Actor MoveBackwardsThreshold : Inventory //Adds or cleats when the momentum is 0 every 16th tic. See "CheckIfStuck" states.
+{
+	Game Doom
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+
+//-----------------------------------------------------------------------
+
+
+// [Dusk] Is the marine spawned because of compensation?
+actor IsCompensationMarine : Inventory {}

@@ -1,0 +1,130 @@
+// =============================================================================
+// MENU INIT
+script 700 (void) CLIENTSIDE {
+	// Top-level name
+	MenuName = "UTILITY GUN";
+	
+	// Name the categories
+	MenuCategories[0] = "CACHES";
+	MenuCategories[1] = "PICKUPS";
+	MenuCategories[2] = "DEFENSES";
+	MenuCategories[3] = "GEOMETRY";
+	
+	// Names of items
+	for (int x = 0; x < MAX_PARTICLEFUSER_DATA; x++) {
+		if (!g_ParticleFuserData_str[x][UK_NAME])
+			continue;
+		
+		int i = g_ParticleFuserData_int[x][UK_MENUCATEGORY];
+		int j = g_ParticleFuserData_int[x][UK_MENUELEMENT];
+		MenuItems[i][j] = g_ParticleFuserData_str[x][UK_NAME];
+	}
+}
+
+// =============================================================================
+// MENU DRAW
+script 701 (int m0, int m1, int y) CLIENTSIDE {
+	int x = PF_FindDefByMenuCoords (m0, m1);
+	
+	// Description
+	HudMessage (s:g_ParticleFuserData_str[x][UK_DESCRIPTION];
+		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= 0.1;
+	
+	// Price
+	if (g_ParticleFuserData_int[x][UK_COST] > 0)
+		HudMessage (s:"Cost: \cq$\cd", d:g_ParticleFuserData_int[x][UK_COST];
+			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+	else
+		HudMessage (s:"Cost: \cdfree!";
+			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= MENU_SPACING;
+	
+	// Build time
+	if (g_ParticleFuserData_int[x][UK_BUILDTIME] > 0) {
+		HudMessage (s:"Build time: \cd", f:g_ParticleFuserData_int[x][UK_BUILDTIME], s:" \cqseconds";
+			HUDMSG_PLAIN, MENU_HID + 23, CR_WHITE, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING;
+	}
+	
+	// Display the limit, if there is any
+	int lcur, lmax;
+	switch (x) {
+	case PF_KLAXONTURRET:
+	case PF_RIFLETURRET:
+	case PF_REPAIRTURRET:
+	case PF_ARTILLERYTURRET:
+	case PF_FLAMETURRET:
+	case PF_CHEMTURRET:	
+	case PF_GUNTURRET:
+	case PF_MECHTURRET:
+		lcur = CountTurrets ();
+		lmax = GetConfig (CONFIG_MAXTURRETS_BLUE + ConsoleTeam ());
+		break;
+	case PF_PROXYMINE:
+		lcur = MineLimit ();
+		lmax = MAX_PROXYMINE;
+		break;
+	case PF_MINIRAVEN:
+		lcur = MiniRavenLimit ();
+		lmax = MAX_MINIRAVENS;
+		break;
+	/*case PF_RAZORWIRE:
+		lcur = CountRazorWire ();
+		lmax = MAX_RAZORWIRE;
+		break;*/
+	}
+	
+	if (lmax != 0) {
+		str c1 = FractionColor (lmax-lcur, lmax);
+		
+		int c2 = CR_White;
+		if (lcur >= lmax)
+			c2 = CR_Red;
+		
+		HudMessage (s:"Limit: ", s:c1, d:lcur, s:"\c-/", s:c1, d:lmax;
+			HUDMSG_PLAIN, MENU_HID + 50, c2, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING;
+	} else
+		ClearHudMessage (MENU_HID + 50);
+	
+	// Display a limit error in case it's outstanding.
+	if (!PF_CheckLimits (x)) {
+		HudMessage (s:g_Error; HUDMSG_PLAIN, MENU_HID + 51, CR_Red, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING;
+	} else
+		ClearHudMessage (MENU_HID + 51);
+	
+	SetResultValue (y);
+}
+
+// =============================================================================
+// MENU SELECT
+script 708 (int m0, int m1) {
+	// Utility-specific stuff
+	int x = PF_FindDefByMenuCoords (m0, m1);
+	
+	// Check limit
+	if (!PF_CheckLimits (x)) {
+		MenuResponse (MSGTYPE_ERROR, g_Error);
+		terminate;
+	}
+	
+	// Configure the utility gun based on selection
+	ActivatorSound ("switch/pulse", 127);
+	SetInventory ("MenuSelection", m0);
+	SetInventory ("MenuSelection2", m1);
+	
+	// Convenience.
+	if (intHolder[i_Developer])
+		GiveInventory ("Utility_Percent", 75);
+	
+	SetResultValue (1);
+}
+
+// =============================================================================
+// MENU LIMIT
+script 712 (int m0, int m1) CLIENTSIDE {
+	int x = PF_FindDefByMenuCoords (m0, m1);
+	SetResultValue (!PF_CheckLimits (x));
+}

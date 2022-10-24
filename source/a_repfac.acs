@@ -1,0 +1,107 @@
+// All Out War 2 Repair Facility scripts
+// Credit to VoltlocK for originally creating the engine
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+script 106 (int team) {
+	if (team == PlayerTeam()) terminate; // inverse values, bah
+	if (CheckInventory ("InRepairs")) terminate;
+	GiveInventory("InRepairs",1);
+	delay(1);
+	ACS_ExecuteAlways (107, 0);
+}
+
+
+script 107 (void) {
+	if (!CheckInventory("InRepairs"))
+		terminate;
+	int hp, i;
+	int ChargeAmount, MechWeight;
+	
+	if (CheckInventory("IsMech"))
+	{
+		MechWeight = Mechs_int[getMechIndex()][MK_WEIGHT];
+		if (MechWeight != MECHWEIGHT_LIGHT)
+			ChargeAmount = REPAIRPAD_MECHCHARGEAMOUNT;
+		
+		else
+			ChargeAmount = REPAIRPAD_LIGHTCHARGEAMOUNT;
+	}
+	
+	// [JD] Went ahead and rewrote this code because the previous version wasn't very efficient.
+	while (CheckInventory("InRepairs"))
+	{
+		for (i = 0; i <= 2; i++)
+			{
+				if (!CheckInventory ("InRepairs"))
+					terminate;
+					
+				delay (5);
+			}
+		
+		if (GetHealth() < GetSpawnHealth())
+		{	
+			// [JD] Infantry.
+			if (!CheckInventory("IsMech"))
+			{
+				GiveInventory ("RepairEffectPlayer", 1);
+				if (GotRepair[1-PlayerTeam()])
+				{
+					SetHealth (GetHealth() + 3);
+					GiveInventory ("AmmoCachePack", 1);
+				}
+				
+				else
+					SetHealth (GetHealth() + 1);
+				
+				if (GetHealth () > GetSpawnHealth()) SetHealth (GetSpawnHealth());
+				if (GetHealth () <= 0) terminate;
+			}
+			
+			// [JD] Mechs.
+			if (CheckInventory("IsMech") && GetCredits() >= ChargeAmount)
+			{
+				GiveInventory("RepairEffectMech",1);
+				if (GotRepair[1-PlayerTeam()])
+				{
+					RepairPadMechHPStore[PlayerNumber()] += 22;
+					SetHealth (GetHealth() + 22);
+					GiveInventory("MechAmmoStuffSmall",1);
+				}
+				
+				else
+				{
+					RepairPadMechHPStore[PlayerNumber()] += 66;
+					SetHealth (GetHealth() + 66);
+				}
+				
+				if (GetHealth () > GetSpawnHealth()) SetHealth (GetSpawnHealth());
+				if (GetHealth () <= 0) terminate;
+				
+				if (RepairPadMechHPStore[PlayerNumber()] >= 100)
+				{
+					//SpendCredits(ChargeAmount);
+					TakeCredits(-1, ChargeAmount, true);
+					LocalAmbientSound ("c4/use", 127);
+					RepairPadMechHPStore[PlayerNumber()] = 0;
+				}
+			}
+			
+			else if (GetCredits() < ChargeAmount)
+				GenericError("You need more credits!");
+		}
+		
+		else if (GetHealth() >= GetSpawnHealth())
+		{
+			if (!CheckInventory("IsMech"))
+				GiveInventory ("AmmoCachePack", 1);
+			
+			else
+				GiveInventory("MechAmmoStuffSmall", 1);
+		}
+	}
+}
+
+script 108 (void) TakeInventory ("InRepairs", 1);

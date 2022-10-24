@@ -1,0 +1,208 @@
+/* [Dusk] AOW2 variable synchronization
+ * Stuff synchronized:
+ *
+ * - Experience
+ * - Building health
+ * - Tickets
+ * - Config[][]
+ */
+
+// ============================================================================
+// Buildings
+function void SYNC_UpdateAllBuildings (void) {
+	for (int i = 0; i < MAX_BUILDINGS; i++) {
+		SYNC_UpdateBuildingHealth (i, TEAM_BLUE);
+		SYNC_UpdateBuildingHealth (i, TEAM_RED);
+	}
+}
+
+// Updates a building health value to the client
+function void SYNC_UpdateBuildingHealth (int what, int team) {
+	int tid = BaseTIDs[what*2 + team];
+	int exists = ThingCount (T_NONE, tid);
+	
+	// Calculate the percentage
+	int perc = 0;
+	
+	if (exists)
+		perc = GetActorHealth (tid) * 99 / GetActorSpawnHealth (tid) + 1;
+	
+	if (perc < 0)
+		perc = 0;
+	
+	if (perc != GetActorSpeed (tid)) {
+		// Set the speed of the actor. This value is transferred to clients.
+		SetActorSpeed (tid, perc);
+		
+		// Tell clients to update the HUD.
+		ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
+	}
+}
+
+// [Dusk] Note: This script doubles as the updatehud CCMD
+script SC_CL_UPDATEHUD (void) NET CLIENTSIDE
+	UpdateHUD ();
+
+// ============================================================================
+// Configuration
+
+// [SERVERSIDE]
+function void SYNC_UpdateConfig (int var) {
+	ACS_ExecuteAlways (SC_CL_SYNCCONFIG, 0, var, Config[var][PEER_SERVER]);
+}
+
+// [CLIENTSIDE]
+script SC_CL_SYNCCONFIG (int var, int value) CLIENTSIDE {
+	// Sanity check
+	if (var < 0 || var >= MAX_CONFIG)
+		terminate;
+	
+	// Set the variable
+	Config[var][PEER_CLIENT] = value;
+	
+	// Individual variable handing
+	switch (var) {
+	case CONFIG_ALTEXP:
+		// We got alternate experience stuff. This affects the
+		// credits/exp hud, so refresh it.
+		DisplayStatusHUD ();
+		break;
+	}
+}
+
+// ============================================================================
+// Tickets
+
+// [SERVERSIDE]
+function void SYNC_UpdateTicketCount (int team) {
+	// If offline, just update the HUD
+	if (netstate == NETSTATE_Offline) {
+		CL_DisplayBuildingHud ();
+		return;
+	}
+	
+	// Must be a proper team
+	if (team < 0 || team > 1)
+		return;
+	
+	// Tell the client of the new values
+	ACS_ExecuteAlways (SC_CL_SYNCTICKETS, 0, team, Tickets[team]);
+}
+
+// [CLIENTSIDE]
+script SC_CL_SYNCTICKETS (int team, int value) CLIENTSIDE {
+	// Must be a proper team
+	if (team < 0 || team > 1)
+		terminate;
+	
+	// Tickets can't be negative
+	if (value < 0)
+		value = 0;
+	
+	Tickets[team] = value;
+	
+	// Update the HUD.
+	CL_DisplayBuildingHud ();
+}
+
+/* ============================================================================
+ * SNAPSHOTS
+ * 
+ * Without snapshots, newly connecting clients are left in the blank
+ * of existing player information. Because this stuff can be pretty floody,
+ * and because it has to be NET, there's a limit of how often one can call it.
+ * 
+ * If a client triggers this limit, they will call for snapshot later on.
+ * 
+ * I kind of wish I wouldn't absolutely have to resort to something as messy
+ * as this. :'(
+ * 
+ * [Dusk] {1/3/13} Alright, I'm going to use inventory-based approaches, so this
+ * is going to no longer be needed after everything has been migrated.
+ */
+function void SYNC_SendSnapshot (void) {
+	int i;
+	
+	// Update all configuration
+	for (i = 0; i < MAX_CONFIG; i++)
+		SYNC_UpdateConfig (i);
+	
+	// Update tickets
+	SYNC_UpdateTicketCount (TEAM_RED);
+	SYNC_UpdateTicketCount (TEAM_BLUE);
+}
+
+// [SERVERSIDE] Client calls for a snapshot
+script SC_SYNC_GETSNAPSHOT (void) NET {
+	if (netstate == NETSTATE_Offline)
+		terminate;
+	
+	// [Dusk] If this happens during the first 10 seconds, delay it by
+	// 5 seconds and only do it once. This prevents the stuff being
+	// given multiple times after `map` changes.
+	// Quite hacky.. but without a better way to do this, no can do!
+	if (Timer() < 10 * 35) {
+		if (SnapShotTime[0] == 0) {
+			for (int i = 0; i < MAXPLAYERS; i++)
+				SnapShotTime[i] = 10 * 35;
+			
+			delay (5*35);
+			
+			SYNC_SendSnapshot ();
+			ACS_Execute (sC_CL_SYNC_GETSNAPSHOT, 0, PlayerNumber (), 0);
+		}
+	}
+	
+	int t = (SnapShotTime[PlayerNumber()] + (SNAPSHOT_DELAY * 35)) - Timer();
+	
+	if (t > 0) {
+		// The client got throttled, tell it to wait
+		ACS_Execute (sC_CL_SYNC_GETSNAPSHOT, 0, PlayerNumber (), (t/35 + 1));
+		terminate;
+	}
+	
+	SnapshotTime[PlayerNumber ()] = Timer();
+	SYNC_SendSnapshot ();
+	
+	// Tell the client that it was given the snapshot
+	ACS_Execute (sC_CL_SYNC_GETSNAPSHOT, 0, PlayerNumber (), 0);
+}
+
+// [CLIENTSIDE] Server tells us results of snapshotting
+script sC_CL_SYNC_GETSNAPSHOT (int player, int time) CLIENTSIDE {
+	// If it wasn't us, ignore
+	if (player != intHolder[i_consoleplayer])
+		terminate;
+	
+	// If there was no limit time, snapshotting was successful
+	if (!time) {
+		intHolder[i_GotSnapshot] = true;
+		terminate;
+	}
+	
+	// Hm. We hit the limit while asking for the snapshot, but we never
+	// got one in the first place. Wait a while and ask again
+	if (!intHolder[i_GotSnapshot]) {
+		SetActivator (-1);
+		delay (time*35);
+		CL_RequestSnapshot ();
+		terminate;
+	}
+	
+	// If we already have a first snapshot, this was called
+	// from CCMD by the user. Display error message.
+	Log (s:"Couldn't acquire snapshot. Please wait ", d:time, s:" seconds.");
+}
+
+function void CL_RequestSnapshot (void) {
+	RequestScriptPuke(SC_SYNC_GETSNAPSHOT, 0, 0, 0);
+}
+
+// ============================================================================
+function void SYNC_RefreshMenu (void) {
+	ACS_ExecuteAlways (SC_CL_UPDATEMENU, 0);
+}
+
+script SC_CL_UPDATEMENU (void) CLIENTSIDE {
+	DrawMenu ();
+}

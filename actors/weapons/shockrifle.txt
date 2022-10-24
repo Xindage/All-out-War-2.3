@@ -1,0 +1,364 @@
+// Shock rifle
+actor ShockRifle : AOWWeapon 21068 {
+	//$Category Weapons
+	Tag "Shock Rifle"
+	Obituary "$OB_SHOCKRIFLE"
+	AttackSound "voltrifle/fire"
+	Decal "voltageScorch"
+	Inventory.PickupMessage "You got the shock rifle!"
+	Weapon.SelectionOrder 4
+	Weapon.KickBack 100
+	Weapon.AmmoType "GeneporiumCharge"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 40
+	Weapon.PreferredSkin "MarineShockRifle"
+	Weapon.UpSound "weapons/up/shockrifle"
+	States {
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("IsRed", 1, "ReadyRed")
+		VOLB ABCDCB 3 A_WeaponReady
+		loop
+	ReadyRed:
+		VOLR ABCDCB 3 A_WeaponReady
+		Goto Ready
+	Deselect:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("IsRed", 1, "DeselectRed")
+		VOLB A 1 offset (-5, 34)
+		VOLB A 1 offset (-16, 38)
+		VOLB A 1 offset (-23, 45)
+		VOLB A 1 offset (-32, 56)
+		VOLB A 1 offset (-42, 66)
+		VOLB A 1 offset (-51, 73)
+		VOLB A 1 offset (-63, 87)
+		VOLB A 1 offset (-78, 97)
+		VOLB A 1 offset (-88, 111)
+		VOLB A 1 offset (-99, 121)
+		VOLB A 1 offset (-112, 133)
+		VOLB A 1 offset (-125, 154)
+		VOLB A 0 offset (-1, 33)
+		VOLB A 0 A_Lower
+		wait
+	Select:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("IsRed", 1, "SelectRed")
+		VOLB A 1 offset (-125, 154)
+		VOLB A 1 offset (-112, 133)
+		VOLB A 1 offset (-99, 121)
+		VOLB A 1 offset (-88, 111)
+		VOLB A 1 offset (-78, 97)
+		VOLB A 1 offset (-63, 87)
+		VOLB A 1 offset (-51, 73)
+		VOLB A 1 offset (-42, 66)
+		VOLB A 1 offset (-32, 56)
+		VOLB A 1 offset (-23, 45)
+		VOLB A 1 offset (-16, 38)
+		VOLB A 1 offset (-5, 34)
+		goto ready
+	DeselectRed:
+		VOLR A 1 offset (-5, 34)
+		VOLR A 1 offset (-16, 38)
+		VOLR A 1 offset (-23, 45)
+		VOLR A 1 offset (-32, 56)
+		VOLR A 1 offset (-42, 66)
+		VOLR A 1 offset (-51, 73)
+		VOLR A 1 offset (-63, 87)
+		VOLR A 1 offset (-78, 97)
+		VOLR A 1 offset (-88, 111)
+		VOLR A 1 offset (-99, 121)
+		VOLR A 1 offset (-112, 133)
+		VOLR A 1 offset (-125, 154)
+		VOLR A 0 offset (-1, 33)
+		VOLR A 0 A_Lower
+		wait
+	SelectRed:
+		VOLR A 1 offset (-125, 154)
+		VOLR A 1 offset (-112, 133)
+		VOLR A 1 offset (-99, 121)
+		VOLR A 1 offset (-88, 111)
+		VOLR A 1 offset (-78, 97)
+		VOLR A 1 offset (-63, 87)
+		VOLR A 1 offset (-51, 73)
+		VOLR A 1 offset (-42, 66)
+		VOLR A 1 offset (-32, 56)
+		VOLR A 1 offset (-23, 45)
+		VOLR A 1 offset (-16, 38)
+		VOLR A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory("IsRed", 1, "FireRed")
+		VOBF ABC 3 bright
+		VOBF A 0 bright A_ReFire
+		VOBF CBA 3 bright
+		goto Ready	
+	FireRed:
+		TNT1 A 0
+		VORF ABC 3 bright
+		VORF A 0 bright A_ReFire
+		VORF CBA 3 bright
+		goto Ready
+	Hold:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "EndFire")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "EndFire")
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "HoldRed")
+		// VOBF E 0 bright A_FireBullets (0, 0, 1, 0, "VoltageTrailPuff", 0, 1024)
+		VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 2, "VoltagePuff", 0, 128)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(129,255))
+		VOBF E 0 bright A_FireBullets (1, 1, -1, 2, "VoltagePuff", 0, 256)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(257,383))
+		VOBF E 0 bright A_FireBullets (2, 2, -1, 2, "VoltagePuff", 0, 384)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(385,511))
+		VOBF E 0 bright A_FireBullets (3, 3, -1, 2, "VoltagePuff", 0, 512)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(513,639))
+		VOBF E 0 bright A_FireBullets (2, 2, -1, 1, "VoltagePuff", 0, 640)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(641,767))
+		VOBF E 0 bright A_FireBullets (1.5, 1.5, -1, 1, "VoltagePuff", 0, 768)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(769,895))
+		VOBF E 0 bright A_FireBullets (1, 1, -1, 1, "VoltagePuff", 0, 896)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(897,1023))
+		VOBF E 1 bright A_FireBullets (0.5, 0.5, -1, 1, "VoltagePuff", 1, 1024)
+		VOBF D 2 bright
+		VOBF C 0 bright A_ReFire
+		Goto EndFire
+		
+	HoldRed:
+	// VOBF E 0 bright A_FireBullets (0, 0, 1, 0, "VoltageTrailPuff", 0, 1024)
+		VORF E 0 bright A_FireBullets (0.5, 0.5, -1, 2, "VoltagePuffRed", 0, 128)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(129,255))
+		VORF E 0 bright A_FireBullets (1, 1, -1, 2, "VoltagePuffRed", 0, 256)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(257,383))
+		VORF E 0 bright A_FireBullets (2, 2, -1, 2, "VoltagePuffRed", 0, 384)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(385,511))
+		VORF E 0 bright A_FireBullets (3, 3, -1, 2, "VoltagePuffRed", 0, 512)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(513,639))
+		VORF E 0 bright A_FireBullets (2, 2, -1, 1, "VoltagePuffRed", 0, 640)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(641,767))
+		VORF E 0 bright A_FireBullets (1.5, 1.5, -1, 1, "VoltagePuffRed", 0, 768)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(769,895))
+		VORF E 0 bright A_FireBullets (1, 1, -1, 1, "VoltagePuffRed", 0, 896)
+		//VOBF E 0 bright A_FireBullets (0.5, 0.5, -1, 0, "VoltagePuff", 0, random(897,1023))
+		VORF E 1 bright A_FireBullets (0.5, 0.5, -1, 1, "VoltagePuffRed", 1, 1024)
+		VORF D 2 bright
+		VORF C 0 bright A_ReFire
+		Goto EndFireRed
+	EndFire:
+		VOBF CBA 3 bright
+		goto Ready
+	EndFireRed:
+		VORF CBA 3 bright
+		goto Ready
+	Spawn:
+		VOLF X -1
+		stop
+	}
+}
+
+actor VoltagePuff {
+	renderstyle Add
+	alpha 0.5
+	+PUFFONACTORS
+	+ALWAYSPUFF
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	DamageType "Energy"
+	decal "VoltageScorch"
+	Scale 0.3
+	states {
+	Spawn:
+		VOLX A 2 bright
+		VOLX A 0 A_SpawnItemEx("VoltageDecay",0,0,0,0,0,0,0,128,192)
+		//VOLX A 0 A_SpawnItemEx("VoltagePlasmah",0,0,0,0,random(-4,4)/2.8,random(-4,4)/2.8,random(-4,4)/9.33,SXF_CLIENTSIDE|SXF_ABSOLUTEMOMENTUM,140)
+		VOLX BCDEFEDCB 2 bright
+		VOLX A 1 A_FadeOut
+		wait
+	}
+}
+
+actor VoltagePuff2 : VoltagePuff {
+	states {
+	Spawn:
+		VOLX A 2 bright
+		goto Super::Spawn+2
+	}
+}
+
+actor VoltageDecay { //Now with extra hi-res funk!
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	renderstyle Add
+	alpha 1
+	Scale 0.375
+	states {
+	Spawn:
+		TNT1 AA 0 A_PlaySound("voltrifle/decay")
+		TNT1 A 0 A_Jump(128,"AltSpawn")
+		VOLX AABBCCDDEEFFEECCB 2 bright A_SpawnItemEx("VoltageSpark",0,0,0,random(-3,3)/2,random(-3,3)/2,random(-3,3)/1.25,random(-180,180),128,64)
+		VOLX A 1 A_FadeOut
+		wait
+	AltSpawn:
+		VOLX AACCBBDDFFEECCB 2 bright A_SpawnItemEx("VoltageSpark",0,0,0,random(-3,3)/1.85,random(-3,3)/1.85,random(-3,3),random(-180,180),128,64)
+		VOLX A 1 A_FadeOut
+		wait
+	}
+}
+
+
+actor VoltageSpark {
+	PROJECTILE
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+NOCLIP +NONETID
+	renderstyle Add
+	alpha 0.8
+	Scale 0.6
+	Speed 10
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "LowFX")
+		TNT1 A 0 A_Jump(96,"Die")
+		TNT1 A 0 A_Jump(128,"AltSpawn")
+		VOLX ABCDEFCB 2 bright
+		VOLX A 1 A_FadeOut
+		wait
+	AltSpawn:
+		VOLX ACBDFECB 2 bright
+		VOLX A 1 A_FadeOut
+		wait
+	LowFx:
+		TNT1 A 0 A_Jump(128,1)
+		goto Spawn+2
+	Die:
+		VOLX A 0
+		stop
+	}
+}
+
+actor VoltageTrailFX : VoltageSpark {scale 0.25}
+//Actor VoltageTrailFXRed : VoltageTrailFX {Translation "192:207=224:247"}
+
+//==============================================================================
+actor VoltagePuffRed : VoltagePuff {
+	Translation "192:207=224:247"
+	
+	states {
+	Spawn:
+		VOLX A 2 bright
+		VOLX A 0 A_SpawnItemEx("VoltageDecayRed",0,0,0,0,0,0,0,128,192)
+		//VOLX A 0 A_SpawnItemEx("VoltagePlasmah",0,0,0,0,random(-4,4)/2.8,random(-4,4)/2.8,random(-4,4)/9.33,SXF_CLIENTSIDE|SXF_ABSOLUTEMOMENTUM,140)
+		VOLX BCDEFEDCB 2 bright
+		VOLX A 1 A_FadeOut
+		wait
+	}
+}
+
+actor VoltagePuff2Red : VoltagePuffRed {
+Translation "192:207=224:247"
+	states {
+	Spawn:
+		VOLX A 2 bright
+		goto Super::Spawn+2
+	}
+}
+
+actor VoltageDecayRed : VoltageDecay { //Now with extra hi-res funk!
+Translation "192:207=224:247"
+
+states {
+	Spawn:
+		TNT1 AA 0 A_PlaySound("voltrifle/decay")
+		TNT1 A 0 A_Jump(128,"AltSpawn")
+		VOLX AABBCCDDEEFFEECCB 2 bright A_SpawnItemEx("VoltageSparkRed",0,0,0,random(-3,3)/2,random(-3,3)/2,random(-3,3)/1.25,random(-180,180),128,64)
+		VOLX A 1 A_FadeOut
+		wait
+	AltSpawn:
+		VOLX AACCBBDDFFEECCB 2 bright A_SpawnItemEx("VoltageSparkRed",0,0,0,random(-3,3)/1.85,random(-3,3)/1.85,random(-3,3),random(-180,180),128,64)
+		VOLX A 1 A_FadeOut
+		wait
+		}
+}
+
+
+actor VoltageSparkRed : VoltageSpark {
+Translation "192:207=224:247"
+}
+
+actor VoltageTrailFXRed : VoltageSpark {
+scale 0.25
+Translation "192:207=224:247"
+}
+//==============================================================================
+
+/*actor VoltagePlasmah {
+	+CLIENTSIDEONLY -ACTIVATEIMPACT
+	-ACTIVATEPCROSS +NOBLOCKMAP
+	+FORCEXYBILLBOARD +NOGRAVITY
+	+NOCLIP +NONETID +DOOMBOUNCE
+	renderstyle Add
+	alpha 0.73
+	Radius 8
+	Height 8
+	Scale 0.69
+	VSpeed 0.33
+	states {
+	Spawn:
+		TNT1 A 0
+		E_P2 A 0 A_JumpIf (ACS_ExecuteWithResult(910, 0) == 0,"Software") //If software, go to special reduction state.
+		E_P2 ABCDEFGHIJJKKKLLLMMM 2 A_FadeOut(0.04)
+		stop
+	Death:
+		TNT1 A 0
+		stop
+	Software:
+		E_P2 A 0 A_Jump(152,1) //This would be where we'd have a "effect reduction" CVAR. The more, the less the chance of it appearing! :D
+		stop
+		E_P2 A 0
+		Goto Spawn+2
+	}
+}*/
+
+actor VoltageTrailPuff : BulletPuff {
+	+PUFFGETSOWNER
+	+ALWAYSPUFF
+	+PUFFONACTORS
+	-ALLOWPARTICLES
+	states {
+	Spawn:
+		TNT1 A 1
+		// TNT1 A 1 ACS_ExecuteAlways (915, 0, 0)
+		stop
+	}
+}
+
+// DECAY CLUSTERS (power generator)
+
+actor VoltageDecayClusterDamage {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+NOINTERACTION
+	damagetype "Energy"
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAAAA 5 A_Explode (5, 96)
+		stop
+	}
+}
+
+actor VoltageDecayClusterFX {
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+NOINTERACTION
+	damagetype "Energy"
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAAAA 5 A_SpawnItemEx ("VoltageDecay", random (-48, 48), random (-48, 48), random (0, 96))
+		stop
+	}
+}

@@ -1,0 +1,40 @@
+// =============================================================================
+// [Dusk] BOT SUPPORT
+
+#define MAX_BOTCLASSES 16
+int BotClasses[MAX_BOTCLASSES] = {
+	CLASS_Gunman,
+	CLASS_Minigunner,
+	CLASS_DoubleShotgunner,
+	CLASS_Flamer,
+	CLASS_Grenadier,
+	CLASS_GaussGunner,
+	CLASS_ChemWarrior,
+	CLASS_TiberiumAutorifleman,
+	CLASS_Artillery,
+	CLASS_ShockTrooper,
+	CLASS_Commando,
+	CLASS_LaserChaingunner,
+	CLASS_PlasmaGunner,
+	CLASS_CombustionGunner,
+	CLASS_Machinegunner,
+	CLASS_Shotgunner,
+};
+
+script SC_BotEnter ENTER {
+	if (!PlayerIsBot (PlayerNumber()))
+		terminate;
+	
+	int i;
+	delay (35);
+	
+	// Find a good class to take
+	do {
+		i = BotClasses[random (0, MAX_BOTCLASSES)];
+		delay (5);
+	} while (!PurchaseClass (i));
+}
+
+script SC_BotRespawn RESPAWN {
+	ACS_ExecuteAlways (SC_BotEnter, 0);
+}

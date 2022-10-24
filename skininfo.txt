@@ -1,0 +1,234 @@
+/////////////////////////////////////////NEW DOOM MARINES
+{
+name = "MarineKnife"
+sprite = PKNI
+CrouchSprite=PKNC
+}
+
+{
+name = "MarineChainsaw"
+sprite = PLA0
+CrouchSprite=PL8C
+}
+
+{
+name = "MarineAdmin"
+sprite = ADMN
+}
+
+{
+name = "MarineTimegun"
+sprite = PTGN
+CrouchSprite=PSNC
+}
+
+{
+name = "MarineShockRifle"
+sprite = PLRF
+CrouchSprite=PLRC
+}
+
+
+/////////////////////////////////////////DOOM MARINES
+{
+name = "MarineMedic"
+sprite = PMED
+}
+
+{
+name = "MarineFist"
+sprite = PLA1
+CrouchSprite=PL1C
+}
+
+{
+name = "MarinePistol"
+sprite = PLA2
+CrouchSprite=PL2C
+}
+
+{
+name = "MarineShotgun"
+sprite = PLA3
+CrouchSprite=PL3C
+}
+
+{
+name = "MarineSSG"
+sprite = PLA9
+CrouchSprite=PL9C
+}
+
+{
+name = "MarineChaingun"
+sprite = PLA4
+CrouchSprite=PL4C
+}
+
+{
+name = "MarineRockets"
+sprite = PLA5
+CrouchSprite=PL5C
+}
+
+{
+name = "MarinePlasma"
+sprite = PLA6
+CrouchSprite=PL6C
+}
+
+{
+name = "MarineBFG"
+sprite = PLA7
+CrouchSprite=PL7C
+}
+
+{
+name = "MarineMinigun"
+sprite = PL42
+CrouchSprite=P42C
+}
+
+{
+name = "MarineGrenade"
+sprite = PGRN
+CrouchSprite=PGRC
+}
+
+{
+name = "MarineRailgun"
+sprite = PRAI
+CrouchSprite=PRAC
+}
+
+{
+name = "MarineBFG10k"
+sprite = PB10
+CrouchSprite=P10C
+}
+
+{
+name = "MarineBackpack"
+sprite = PBAK
+CrouchSprite=PBPC
+}
+
+{
+name = "MarineSMG"
+sprite = PSMG
+CrouchSprite=PSMC
+}
+
+{
+name = "MarineMachineGun"
+sprite = MGMR
+CrouchSprite=PMGC
+}
+
+{
+name = "MarineAssaultGrenade"
+sprite = PAGR
+CrouchSprite=PAGC
+}
+
+{
+name = "MarineSRockets"
+sprite = PL5S
+CrouchSprite=P5SC
+}
+
+{
+name = "MarineFlamer"
+sprite = PFLM
+CrouchSprite=PFLC
+}
+
+{
+name = "MarineSniper"
+sprite = PSNP
+CrouchSprite=PSPC
+}
+
+{
+name = "MarineKarasawa"
+sprite = PKSW
+CrouchSprite=PKWC
+}
+
+{
+name = "Quad_Shotgun_Marine"
+sprite = PQST
+crouchsprite = PLYCA
+}
+
+{
+name = "Nailgun(MG)_Marine"
+sprite = PNLG
+crouchsprite = PLYCA
+}
+
+{
+name = "MarineChem"
+sprite = PBIC
+CrouchSprite=PBCC
+}
+
+
+{
+	name = "MarineAutoShotty"
+	sprite = PASG
+	CrouchSprite = PASC
+}
+
+ /*// [SG] Mech classes have +NOSKIN, these only cause problems
+/////////////////////////////////////////MECHS
+{
+name = "RavenMech"
+sprite = RAVN
+scale = 0.5
+class = "Raven"
+hidden = True
+}
+
+{
+name = "WolverineMech"
+sprite = ROB1
+scale = 1.75
+class = "Wolverine"
+hidden = True
+}
+
+{
+name = "TitanMech"
+sprite = ROB3
+scale = 1.1
+class = "Titan"
+hidden = True
+}
+
+{
+name = "MadCatMech"
+sprite = MADC
+scale = 0.6
+class = "MadCat"
+hidden = True
+}
+
+
+{
+name = "OrcaVTOL"
+sprite = ORCV
+scale = 0.5
+class = "Orca"
+hidden = True
+}
+
+
+{
+name = "Juggernaut"
+sprite = TERM
+scale = 1.8
+class = "Juggernaut"
+hidden = True
+}
+*/

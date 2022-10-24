@@ -1,0 +1,584 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 core mechanism scripts
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// =============================================================================
+// GAME INITIALIZATION
+// Anything that needs to be done on the SERVER side right at game start should
+// go here.
+script SC_GAMEINIT OPEN {
+	delay (1);
+	
+	// [Dusk] Network state
+	NetState |= NETSTATE_Server;
+	
+	for (int i = 0; i <= 1; i++) {
+		GotRefinery[i] = True;
+		GotBarracks[i] = True;
+		GotFactory[i] = True;
+		GotPlant[i] = True;
+		GotRepair[i] = True;
+		GotObelisk[i] = True;
+	}
+	
+	intHolder[i_StartingTickets] = GetCVAR ("zeta_tickets");
+	
+	SetLineSpecial (159, ACS_Execute, 342);
+	
+	// Seems like the initial speeds for buildings are bogus. Correct them!
+	SYNC_UpdateAllBuildings ();
+	
+	// For some reasons, the class and item arrays can get
+	// bogus values. Attempt to fix them.
+	//FixFuckedUpArrays ();
+	
+	// Activate developer mode if the proper cvar is set.
+	if (GetCVAR ("zeta_developer")) {
+		intHolder[i_DeveloperSafetyLock] = 0x7FFFFFFF;
+		ACS_ExecuteAlways (SC_DEVELOPERMODE, 0);
+	}
+	
+	// If we have ticket pool active, set the initial tickets now.
+	if (intHolder[i_TicketPool]) {
+		SetTickets (TEAM_Blue, GetCVAR ("zeta_tickets"));
+		SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
+	}
+	
+	// Map markers
+	SpawnSpotForced ("CrateMapMarker", TID_CRATE, 0, 0);
+	SpawnSpotForced ("TiberiumMapMarker", TID_TIBERIUM, 0, 0);
+	
+	// [Dusk] It's possible that the war factory isn't present.
+	if (ThingCount (0, TID_FACTORY_BLUE) * ThingCount (0, TID_FACTORY_RED) == 0) {
+		SetMapFlags (MAPF_NoMechs);
+		GotFactory[0] = false;
+		GotFactory[1] = false;
+		
+		// [Dusk] Remove any WF terminals in the map
+		Thing_Remove (TID_FACTORY_BLUE);
+		Thing_Remove (TID_FACTORY_RED);
+	}
+	
+	// Record initial building healths
+	for (i = 0; i < MAX_BUILDINGS * 2; i++)
+		RecordedBuildingHealths[i] = GetActorSpawnHealth (BaseTIDs[i]);
+	
+	// Build various data tables
+	InitClasses();
+	
+	BuildMenuClasses ();
+	BuildMenuResearches ();
+	BuildMenuMechs ();
+	InitParticleFuserData ();
+	CR_InitCrateList ();
+	
+	// [Dusk] These maps are too small to have portals.
+	// TODO: move this to map scripts
+	switch (GetLevelInfo (LEVELINFO_LEVELNUM)) {
+	case 2:
+	case 3:
+		intHolder[i_UseTeleporterNodes] = 0;
+		break;
+	}
+	// [SG] With these moved to CVarInfo, this is no longer needed
+	/*
+	
+	// Archive some server CVars here
+	delay (35);
+	ArchiveCVAR ("zeta_credflow");
+	ArchiveCVAR ("zeta_startcredits");
+	ArchiveCVAR ("zeta_creditfrag");
+	ArchiveCVAR ("zeta_bonusamount");
+	ArchiveCVAR ("zeta_bonustime");
+	ArchiveCVAR ("zeta_medicbonusneed");
+	ArchiveCVAR ("zeta_repairbonus");
+	ArchiveCVAR ("zeta_juggernautlimit");
+	ArchiveCVAR ("zeta_ticketpool");
+	ArchiveCVAR ("zeta_teamstaytime");
+	ArchiveCVAR ("zeta_plasmapurchasedelay");
+	ArchiveCVAR ("zeta_maxcannonsperteam");
+	ArchiveCVAR ("zeta_plasmacooldown");
+	ArchiveCVAR ("zeta_nukepurchasedelay");
+	ArchiveCVAR ("zeta_maxtimecopsperteam");
+	ArchiveCVAR ("zeta_c4delay");
+	ArchiveCVAR ("zeta_suddendeathtime");
+	ArchiveCVAR ("zeta_degeneration");
+	ArchiveCVAR ("zeta_degenerationinterval");
+	ArchiveCVAR ("zeta_tournamentmode");
+	ArchiveCVAR ("zeta_disablemechs");
+	ArchiveCVAR ("zeta_surrendermode");
+	ArchiveCVAR ("zeta_buildingpoints");
+	ArchiveCVAR ("zeta_tiberium_self");
+	ArchiveCVAR ("zeta_tiberium_other");
+	ArchiveCVAR ("zeta_tiberium_advperc");
+	ArchiveCVAR ("zeta_creditcap");
+	ArchiveCVAR ("zeta_nomechs");
+	ArchiveCVAR ("zeta_noradar");
+	ArchiveCVAR ("zeta_noteamswitcher");
+	ArchiveCVAR ("zeta_nospawninvul");
+	ArchiveCVAR ("zeta_nodisconnectdonate");
+	ArchiveCVAR ("zeta_donatewait");
+	ArchiveCVAR ("zeta_nukecountdown");
+	ArchiveCVAR ("zeta_nukesurpreme");
+	
+	*/
+	
+	// If we're offline, set the game to multiplayer emulation
+	// for more accurate netgame emulation.
+	if (netstate == NETSTATE_Offline)
+		ConsoleCommand ("netgame");
+}
+
+function void SetConfig (int key, str val) {
+	int changed = (Config[key][PEER_SERVER] != val);
+	Config[key][PEER_SERVER] = val;
+	if (netstate == NETSTATE_Offline) {
+		// Syncing is not done in offline mode. Furthermore, we're
+		// both the "client" and the "server", so just set the values
+		// here.
+		Config[key][PEER_CLIENT] = Config[key][PEER_SERVER];
+	} else if (changed) {
+		// Log (s:name, s:" is now ", d:val);
+		
+		// The value changed, inform clients about it!
+		SYNC_UpdateConfig (key);
+	}
+}
+
+// Server settings
+script SC_SERVERSETTINGS OPEN 
+{
+	// ==================================
+	// DMFLAGS
+	if (!GetCVAR ("sv_weapondrop"))
+		ConsoleCommand ("sv_weapondrop 1");
+	
+	if (!GetCVAR ("sv_itemrespawn"))
+		ConsoleCommand ("sv_itemrespawn 1");
+	
+	if (!GetCVAR ("compat_limited_airmovement"))
+		ConsoleCommand ("compat_limited_airmovement 1");
+	
+	// [Dusk] sv_nofov is true to eliminate gauss sniping
+	if (!GetCVAR ("sv_nofov"))
+		ConsoleCommand ("sv_nofov 1");
+	
+	// [Dusk] Enforce no pointlimit until game is considered over. However, the pointlimit
+	// is also used to end the game when needed.
+	if (!intHolder[i_gameover] && GetCVAR ("pointlimit") != 0)
+		ConsoleCommand ("pointlimit 0");
+	
+	// [Dusk] Weapon stay must be disabled to prevent infinite weapons
+	if (GetCVAR ("sv_weaponstay"))
+		ConsoleCommand ("sv_weaponstay 0");
+	
+	
+	if (GetCVAR ("sv_nomedals"))
+		ConsoleCommand ("sv_nomedals 0");
+		
+	if (GetCVAR("sv_nomonsters"))
+		ConsoleCommand("sv_nomonsters 0");
+	
+	// [JD] Prevents players from dropping their weapons on-command
+	if (!GetCVAR("sv_nodrop"))
+		ConsoleCommand("sv_nodrop 1");
+		
+	/*if (!GetCVAR("sv_noidentifytarget"))
+		ConsoleCommand("sv_noidentifytarget 1");*/
+	
+	// [SG] With these moved to CVarInfo, this is no longer needed
+	/*
+	
+	// ==================================
+	// CUSTOM CVARS
+	// w/ sanity checks
+	if (!GetCVAR ("zeta_credflow")) ConsoleCommand ("set zeta_credflow 4");
+	if (GetCVAR ("zeta_startcredits") <= 0) ConsoleCommand ("set zeta_startcredits 300");
+	if (GetCVAR ("zeta_creditfrag") <= 0) ConsoleCommand ("set zeta_creditfrag 50");	
+	if (GetCVAR ("zeta_bonusamount") <= 0) ConsoleCommand ("set zeta_bonusamount 300");	
+	if (GetCVAR ("zeta_bonustime") <= 0) ConsoleCommand ("set zeta_bonustime 5");
+	if (GetCVAR ("zeta_medicbonusneed") <= 0) ConsoleCommand ("set zeta_medicbonusneed 175");
+	if (GetCVAR ("zeta_repairbonus") <= 0) ConsoleCommand ("set zeta_repairbonus 1");	
+	if (GetCVAR ("zeta_juggernautlimit") <= 0) ConsoleCommand ("set zeta_juggernautlimit 2");
+	if (GetCVAR ("zeta_ticketpool") <= 0)
+		ConsoleCommand ("set zeta_ticketpool 0");
+	//[SP]How long you can stay on a team before you are never switched.
+	if (GetCVAR ("zeta_teamstaytime") <= 0) ConsoleCommand("set zeta_teamstaytime 2");
+	
+	if (GetCVAR ("zeta_tickets") <= 0)
+		ConsoleCommand ("set zeta_tickets 75");
+	
+	// Plasma Cannon initial delay
+	if (!GetCVAR ("zeta_plasmapurchasedelay")) ConsoleCommand("set zeta_plasmapurchasedelay 5");
+	//[SP]Maximum number of plasma cannons per team. (Set to -1 for unlimited)
+	if (!GetCVAR ("zeta_maxcannonsperteam")) ConsoleCommand("set zeta_maxcannonsperteam 4");
+	// [Dusk] Time (in minutes) to determine plasma cannon cooldown. Use -1 to disable
+	if (!GetCVAR ("zeta_plasmacooldown")) ConsoleCommand("set zeta_plasmacooldown 3");
+	
+	//[SP]How long you have to wait to buy a new superweapon beacon. (Minutes) (Set to -1 to disable wait)
+	if (!GetCVAR ("zeta_nukepurchasedelay"))ConsoleCommand("set zeta_nukepurchasedelay 5");
+	
+	// [SP]Maximum number of time cops per team. (Set to -1 for unlimited)
+	if (!GetCVAR ("zeta_maxtimecopsperteam")) ConsoleCommand("set zeta_maxtimecopsperteam 1");
+	
+	// [Dusk] How many minutes until +1 Timed C4 can be purchased. (-1 to disable)
+	if (!GetCVAR ("zeta_c4delay")) ConsoleCommand("set zeta_c4delay 5");
+	
+	//[SP] Time (in minutes) before sudden death.
+	// [Dusk] changed default to 45, -1 means immediate
+	if (GetCVAR ("zeta_suddendeathtime") == 0)
+		ConsoleCommand("set zeta_suddendeathtime 45");
+	
+	// [Dusk] Sudden death degeneration
+	if (GetCVAR ("zeta_degeneration") <= 0)
+		ConsoleCommand("set zeta_degeneration 0");
+	if (GetCVAR ("zeta_degenerationinterval") <= 0)
+		ConsoleCommand("set zeta_degenerationinterval 10");
+	
+	if (GetCVAR ("zeta_tournamentmode") <= 0)
+		ConsoleCommand("set zeta_tournamentmode 0");
+	if (GetCVAR ("zeta_disablemechs") <= 0)
+		ConsoleCommand("set zeta_disablemechs 0");
+	if (GetCVAR ("zeta_surrendermode") <= 0)
+		ConsoleCommand("set zeta_surrendermode 0");
+	
+	// [Dusk] Tiberium amounts
+	if (!GetCVAR ("zeta_tiberium_self"))
+		ConsoleCommand ("set zeta_tiberium_self 225");
+	if (!GetCVAR ("zeta_tiberium_other"))
+		ConsoleCommand ("set zeta_tiberium_other 75");
+	if (!GetCVAR ("zeta_tiberium_advperc"))
+		ConsoleCommand ("set zeta_tiberium_advperc 300");
+	
+	// [Dusk] Alternate experience mode. In altexp, exp needs are lowered
+	// to a third, but experience is reset upon death.
+	if (GetCVAR ("zeta_altexp") <= 0)
+		ConsoleCommand ("set zeta_altexp 0");
+	
+	// [Dusk] {9/6/12} Maximum amount of credits a player can possess.
+	//     0 = infinite (well, as infinite as integers go..)
+	// [Dusk] {1/16/13} Cap at 30k because of networking issues. The HUD
+	// overflows otherwise. If this cap is to be increased, the networking
+	// will have to be increased to something.. hackier.
+	if (GetCVAR ("zeta_creditcap") == 0 || GetCVAR ("zeta_creditcap") > 30000)
+		ConsoleCommand ("set zeta_creditcap 30000");
+	
+	// [Dusk] {9/10/12} Server config for absolutely no mechs
+	if (GetCVAR ("zeta_nomechs") <= 0)
+		ConsoleCommand ("set zeta_nomechs 0");
+	
+	// [Dusk] {9/10/12} Server config for no radar. Safety measure
+	// in case the radar breaks up and bad things happen.
+	if (GetCVAR ("zeta_noradar") <= 0)
+		ConsoleCommand ("set zeta_noradar 0");
+	
+	// [Dusk] {10/26/12} If true, the team switcher is disabled.
+	if (GetCVAR ("zeta_noteamswitcher") <= 0)
+		ConsoleCommand ("set zeta_noteamswitcher 0");
+	
+	// [Dusk] {10/27/12} If true, players do not get spawn invulnerability upon respawn
+	if (GetCVAR ("zeta_nospawninvul") <= 0)
+		ConsoleCommand ("set zeta_nospawninvul 0");
+	
+	// [Dusk] {11/2/12} Toggle disconnect donate (donation of all money upon disconnect)
+	if (GetCVAR ("zeta_nodisconnectdonate") <= 0)
+		ConsoleCommand ("set zeta_nodisconnectdonate 0");
+	
+	// [Dusk] {11/19/12} How many seconds must the player be in game until they can donate?
+	if (GetCVAR ("zeta_donatewait") == 0)
+		ConsoleCommand ("set zeta_donatewait 0");
+	
+	// [Dusk] {1/16/13} How many seconds does a beacon take to detonate?
+	if (GetCVAR ("zeta_nukecountdown") <= 0)
+		ConsoleCommand ("set zeta_nukecountdown 60");
+	
+	// [Dusk] {2/16/13} Use more powerful nukes? These ones have half the health but
+	// come with a DEVASTATING blast that can easily obliterate MULTIPLE buildings.
+	if (GetCVar ("zeta_nukesurpreme") <= 0)
+		ConsoleCommand ("set zeta_nukesurpreme 0");
+		
+	*/
+	
+	// [Cata] Set air control so ladders are not glitchy.
+	if(getcvar("sv_aircontrol") == 0) ConsoleCommand ("sv_aircontrol 0.00390625");
+	if(getcvar("sv_nocrouch") == 1) ConsoleCommand ("sv_nocrouch false");
+	
+	// TODO: get rid of these variables and replace with direct GetCVAR calls
+	intHolder[i_CreditFragAward] = GetCVAR("zeta_creditfrag");
+	intHolder[i_CreditAwardTime] = GetCVAR("zeta_bonustime");
+	intHolder[i_CreditAwardAmount] = GetCVAR("zeta_bonusamount");
+	intHolder[i_CreditRepairAmount] = GetCVAR("zeta_repairbonus");
+	intHolder[i_TicketPool] = GetCVAR("zeta_ticketpool");
+	intHolder[i_TournamentMode] = GetCVAR("zeta_tournamentmode");
+	intHolder[i_BeaconPurchaseDelay] = GetCVAR("zeta_nukepurchasedelay") * 60;
+	intHolder[i_PlasmaCooldownTime] = GetCVAR("zeta_plasmacooldown") * MINUTETICS;
+	intHolder[i_MedicBonusNeed] = GetCVAR ("zeta_medicbonusneed");
+	
+	// ======================================================================
+	// [Dusk] Synchronized configurations!
+	SetConfig (CONFIG_ALTEXP, GetCVAR ("zeta_altexp"));
+	SetConfig (CONFIG_STARTTICKETS, GetCVAR ("zeta_tickets"));
+	SetConfig (CONFIG_MECHS, (!CheckMapFlags (MAPF_NOMECHS) && !GetCVAR ("zeta_nomechs")));
+	SetConfig (CONFIG_TOURNAMENTMODE, intHolder[i_TournamentMode]);
+	SetConfig (CONFIG_MAXTIMECOPS, GetCVAR ("zeta_maxtimecopsperteam"));
+	SetConfig (CONFIG_JUGGERNAUTLIMIT, GetCVAR ("zeta_juggernautlimit"));
+	SetConfig (CONFIG_C4DELAY, GetCVAR ("zeta_c4delay"));
+	SetConfig (CONFIG_NORADAR, GetCVAR ("zeta_noradar"));
+	SetConfig (CONFIG_CREDITCAP, GetCVAR ("zeta_creditcap"));
+	
+	// [Dusk] {9/6/12} Are these needed in this function? They're updated upon research anyway.
+	SetConfig (CONFIG_ADVTURRETS_BLUE, AdvancedTurrets[TEAM_BLUE]);
+	SetConfig (CONFIG_ADVTURRETS_RED, AdvancedTurrets[TEAM_RED]);
+	SetConfig (CONFIG_MAXTURRETS_BLUE, MaxTurrets[TEAM_BLUE]);
+	SetConfig (CONFIG_MAXTURRETS_RED, MaxTurrets[TEAM_RED]);
+	
+	// [JD] Check to see if we use all the mechs or only the light ones.
+	SetConfig(CONFIG_LIGHTMECHS, ThingCountName("CONFIG_LightMechsOnly", 0));
+	SetConfig(CONFIG_MAXUTILITYGUY, GetCvar("zeta_maxutilityguy"));
+	SetConfig(CONFIG_MAXKARASAWAS, GetCvar("zeta_maxkarasawasperteam"));
+	
+	delay (35);
+	restart;
+}
+
+//Setting Player scripts
+script SC_PLAYERRESPAWN RESPAWN 
+{
+	if (StartTime[PlayerNumber()] == 0)
+		InitPlayer();
+	
+	GiveInventory("IsInSpawnRoom", 1);
+	if(PlayerTeam() == TEAM_BLUE)
+		GiveInventory ("IsBlue",1);
+	else if(PlayerTeam() == TEAM_RED)
+		GiveInventory ("IsRed",1);
+	
+	Thing_ChangeTID (0, PlayerNumber()+3800);
+	
+	if(GetPlayerInfo(PlayerNumber(),PLAYERINFO_GENDER) == 1) {
+		SetActorProperty(0,APROP_DeathSound,"female/death");
+		GiveInventory("IsFemale",1);
+	}
+	
+	ACS_ExecuteAlways (97, 0);
+	
+	if (!CheckWeapon ("Unarmed"))
+		SetWeapon ("Unarmed");
+	
+	GiveInventory ("Credit", Credits[PlayerNumber()]);
+	GiveInventory ("Experience", Experience[PlayerNumber()]);
+	
+	SetInventory ("IsAdmin", IsAdmin[PlayerNumber()]);
+	
+	// [Cata] Set player health for consistency.
+	acs_executealways(91, 0, 0, 0, 0);
+	delay(5);
+	SetHealth (GetSpawnHealth ());
+}
+
+script SC_CL_Respawn RESPAWN CLIENTSIDE {
+	// [Dusk] Mark down if we respawned
+	if (PlayerNumber() == intHolder[i_consoleplayer])
+		intHolder[i_consoledead] = false;
+}
+
+script SC_PLAYERENTER ENTER {
+	InitPlayer ();
+	
+	ACS_ExecuteAlways (SC_PLAYERRESPAWN, 0);
+	
+	// [Dusk] Check team balance now as the player's
+	// entrance may have caused surplus in team counts.
+	// We need an one-tic delay first, however.
+	delay (1);
+	CheckTeamBalance ();
+}
+
+Script SC_PLAYERDISCONNECT (int gone) DISCONNECT {
+	// [Dusk] {11/2/12} Donate all credits to teammates. This
+	// has to be done before the block below which resets credits!
+	if (!GetCVar ("zeta_nodisconnectdonate")) {
+		int team = PlayersTeam[gone];
+		int teammates = GetTeamProperty (team, TPROP_NumPlayers);
+		if (teammates > 0) {
+			int cred = Credits[gone];
+			int share = cred / teammates;
+			int donater = PlayerNumber();
+			for (int i = 0; i < MAXPLAYERS; i++) {
+				if (!PlayerInGame (i) || GetPlayerTeam (i) != team)
+					continue;
+				
+				GivePlayerCredits (i, share);
+			}
+		}
+	}
+	
+	IsAdmin[gone] = false;
+	SetPlayerCredits (gone, 0);
+	Experience[gone] = 0;
+	Surrender[gone] = 0;
+	PlasmaCooldown[gone] = 0;
+	StartTime[gone] = 0;
+	
+	Thing_ChangeTID (3800 + gone, 0);
+	
+	// [Dusk] There is no longer anybody sitting in the team's hanger.
+	if (MechGetter[PlayersTeam[gone]] == gone && GettingMech[PlayersTeam[gone]])
+		GettingMech[PlayersTeam[gone]] = false;
+	
+	if (Surrender[Gone]) {
+		Surrender[Gone] = false;
+		if (PlayersTeam[Gone] == TEAM_RED) {
+			IntelMessage (strparam (s:"\cD", d:SurrenderCount (TEAM_RED), s:"\cQ/\cD", d:RedCount(), s:" ",
+				s:"\cJof \cARed Team\cJ\n have voted to surrender"), true);
+		} else if (PlayersTeam[Gone] == TEAM_BLUE) {
+			IntelMessage (strparam (s:"\cD", d:SurrenderCount (TEAM_BLUE), s:"\cQ/\cD", d:BlueCount(), s:" ",
+				s:"\cJof \cNBlue Team\cJ\n have voted to surrender"), true);
+		}
+	}
+	else // % of players surrendering could now be higher. Al demands a recount!
+		ACS_Execute(751, 0);
+	
+	// [Dusk] Check team balance now, this disconnect may
+	// have unbalanced them.
+	CheckTeamBalance ();
+}
+
+// =============================================================================
+// Client-side end
+script SC_CL_PLAYERENTER ENTER CLIENTSIDE {
+
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		terminate;
+	
+	// START UP MESSAGES
+	int y = 0.3;
+	
+	SetFont ("BIGFONT");
+	HudMessage(s:"Welcome to \cFAll Out War 2!";
+		HUDMSG_FADEINOUT|HUDMSG_LOG, IntroMsgID, CR_WHITE, 0.5, y, 7.0, 0.5, 1.0);
+	y += 0.15;
+	
+	SetHUDFont ();
+	
+	// [Cata] No being overwhelmed with messages. It's just ugh.
+	/*
+	HUDMessage (s:"You are running version ", s:VersionString ();
+		HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_WHITE, 0.5, y, 7.0, 0.5, 1.0);
+	y += SMALLSPACE;
+	
+	HudMessage (s:"\nSee \cFOptions \cN-> \cFCustomise Controls\c- for keybinds!";
+		HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_WHITE, 0.5, y, 7.0, 0.5, 1.0);
+	y += SMALLSPACE;
+	*/
+	if (GetConfig (CONFIG_ALTEXP)) {
+		HudMessage (s:"This server uses alternate experience mode.\n",
+			s:"Rank needs are down to a third\n",
+			s:"\cGbut you lose it all when you die!";
+			HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_GOLD, -0.25, 0.6, 12.0, 0.5, 1.0);
+		y += 0.25;
+	}
+	
+	if (VERSION_MINOR > 50 && netstate == NETSTATE_Client) {
+		// This is running a beta version
+		HudMessage (s:"This is a beta release, bear in mind that\n",
+			s:"everything might not be working properly!\n\n",
+			s:"If you do experience bugs/glitches be sure to contact jdagenet";
+			HUDMSG_FADEINOUT|HUDMSG_LOG, IntroMsgID+1, CR_GOLD, 0.5, y, 7.0, 0.5, 1.0);
+		y += 0.25;
+	}
+	
+	delay (20);
+	
+	if (netstate == NETSTATE_Client)
+		LocalAmbientSound ("voltlock/welcome", 127);
+	
+	// =========================================================================
+	// [Dusk] We joined the game - refresh the HUD
+	if (PlayerNumber () == intHolder[i_consoleplayer]) {
+		DisplayStatusHUD ();
+		// DrawTeamLogHeader ();
+	}
+}
+
+// [Dusk] Dummy script, maps call this :/
+script 92 (void) {}
+
+// [Dusk]
+script SC_CL_PLAYERDISCONNECT (int gone) DISCONNECT CLIENTSIDE {
+	// If we DISCONNECTed, yet this script executed,
+	// we became a spectator.
+	if (gone == intHolder[i_consoleplayer]) {
+		// We're no longer dead
+		intHolder[i_consoledead] = false;
+		
+		// Refresh the HUD to clear out the credits/exp display.
+		DisplayStatusHUD ();
+		
+		// Also clear the menu
+		ClearMenu ();
+		
+		// HACK: For some reason disconnecting causes OPEN CLIENTSIDE scripts
+		// to be terminated. Get around this by re-executing affected scripts.
+		delay (1);
+		ACS_Execute (SC_HUDDaemon, 0);
+	}
+}
+
+function void InitPlayer (void) {
+	SetCredits (GetCVAR ("zeta_startcredits"));
+	Experience[PlayerNumber()] = 0;
+	Surrender[PlayerNumber()] = False;
+	PlayersTeam[PlayerNumber()] = PlayerTeam();
+	StartTime[PlayerNumber()] = Timer();
+	HasTeleported[PlayerNumber()] = false;
+	RepairBonus[PlayerNumber()] = 0;
+	MedicBonus[PlayerNumber()] = 0;
+	UnawardedDamage[PlayerNumber ()] = 0;
+	
+	// [Dusk] If we're in developer mode, make him gamemaster.
+	if (intHolder[i_Developer]) {
+		IsAdmin[PlayerNumber()] = true;
+		
+		SetFont ("BIGFONT");
+		HudMessage(s:"This game is in developer mode. You have gamemaster access.";
+			HUDMSG_FADEINOUT, 0, CR_BLUE, 0.5, 0.2, 7.0, 0.5, 1.0);
+	}
+}
+
+// =============================================================================
+// [Dusk] This script checks for the game-over condition and ends the game if so.
+script SC_GameOver (int team, int small) {
+	SetActivator (-1);
+	
+	if (CalcBaseLeft (!team))
+		terminate;
+	
+	// No buildings left standing, thus the game is over.
+	intHolder[i_gameover] = true;
+	Delay (1);
+	
+	// Give the end-of-game points to the winning team.
+	// This ensures that the correct team actually wins.
+	int winpoints = GetTeamProperty (!team, TPROP_PointCount) - GetTeamProperty (team, TPROP_PointCount);
+	if (winpoints < 0) // Don't let it be negative.
+		winpoints = 0;
+	
+	winpoints += 5;
+	
+	// Set the pointlimit accordingly. `pointlimit 1` works for now but
+	// it could be seen as a bug (there's actually a ticket on the tracker
+	// about this at the time of this writing) so I'm dynamically setting the
+	// points so that the winning team has just about enough score to reach it.
+	int pointlimit = GetTeamProperty (team, TPROP_PointCount) + winpoints;
+	ConsoleCommand (strparam (s:"pointlimit ", d:pointlimit));
+	
+	// Give the final points to the winning team. This line ends the game.
+	Team_GivePoints (team, winpoints, false);
+}

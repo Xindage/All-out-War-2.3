@@ -1,0 +1,165 @@
+actor Utility_ArtilleryTurretRed : Utility_TurretBase {
+	obituary "%o was torn to shreds by a \cGRed\c- artillery turret."
+	health 400
+	speed 0
+	painchance 50
+	damagefactor "Explosion", 0.75
+	damagefactor "MassDriver", 0.75
+	activesound "turret/sight"
+	deathsound "weapons/rocklx"
+	states {
+	Spawn:
+		CIGN FF 0 A_CheckSight("Death.Deconstruction")
+		CIGN F 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
+	Idle:
+		CIGN F 6 A_Look
+		wait
+	See:
+		CIGN F 0 A_GiveInventory("IsRed",1)
+		CIGN F 2 A_ChangeFlag("FRIENDLY",0)
+		CIGN G 12 A_StopSoundEx("SoundSlot6")
+		CIGN F 2 A_JumpIfTargetInLOS("Missile")
+		CIGN F 2 A_ClearTarget
+		goto Spawn+3
+	Clear:
+		CIGN F 2 A_ClearTarget
+		goto See
+	Missile:
+		CIGN F 0 
+		CIGN F 1 A_JumpIfInTargetInventory("IsBlue", 1, 1) 
+		goto Clear
+		CIGN F 1 A_JumpIfInTargetInventory("IsMech", 1, 1)
+		goto Clear
+		CIGN F 1 A_JumpIfCloser(6000,"MissileGo")
+		CIGN F 0 
+		goto Clear
+	MissileGo:
+		CIGN F 0 A_SpawnItemEx ("KlaxonMarker", 0,0,0,0,0,0,0, 32)
+		CIGN F 10 A_PlaySound("misc/alarm")
+		CIGN G 0 A_FaceTarget
+		CIGN G 0 A_CPosRefire
+		CIGN G 0 A_PlayWeaponSound ("80mm/fire")
+		CIGN G 2 A_CustomMissile ("ArtilleryTurretShell", random(39, 43), random(-2, 2))
+		CIGN G 0 A_SpawnItemEx ("Flash")
+		CIGN G 0 A_FaceTarget
+		CIGN G 3 BRIGHT 
+		CIGN GG 3 BRIGHT A_ChangeFlag("FRIENDLY",0)
+		CIGN G 0 A_ClearTarget
+		CIGN G 20 A_ChangeFlag ("NOPAIN",1)
+		CIGN G 0 A_PlayWeaponSound ("80mm/reload")
+		CIGN G 0 A_ChangeFlag ("NOPAIN", 0)
+		goto See
+	Pain:
+		CIGN G 0 A_ClearTarget
+		CIGN G 3
+		goto See
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32)
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_SpawnItemEx("FlameWallDecay")
+		TNT1 A 4
+		stop
+	}
+}
+
+actor Utility_ArtilleryTurretBlue : Utility_TurretBase {
+	obituary "%o was torn to shreds by a \cHBlue\c- artillery turret."
+	health 400
+	speed 0
+	painchance 50
+	activesound "turret/sight"
+	deathsound "weapons/rocklx"
+	damagefactor "Explosion", 0.75
+	damagefactor "MassDriver", 0.75
+	states {
+	Spawn:
+		CIGN FF 0 A_CheckSight("Death.Deconstruction")
+		CIGN F 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
+	Idle:
+		CIGN F 6 A_Look
+		wait
+	See:
+		CIGN F 0 A_GiveInventory("IsBlue",1)
+		CIGN F 2 A_ChangeFlag("FRIENDLY",0)
+		CIGN G 12 A_StopSoundEx("SoundSlot6")
+		CIGN F 2 A_JumpIfTargetInLOS("Missile")
+		CIGN F 2 A_ClearTarget
+		goto Spawn+3
+	Clear:
+		CIGN F 2 A_ClearTarget
+		goto See
+	Missile:
+		CIGN F 0 
+		CIGN F 1 A_JumpIfInTargetInventory("IsRed", 1, 1) 
+		goto Clear
+		CIGN F 1 A_JumpIfInTargetInventory("IsMech", 1, 1)
+		goto Clear
+		CIGN F 1 A_JumpIfCloser(6000,"MissileGo")
+		CIGN F 0 
+		goto Clear
+	MissileGo:
+		CIGN F 0 A_SpawnItemEx ("KlaxonMarker", 0,0,0,0,0,0,0, 32)
+		CIGN F 10 A_PlaySound("misc/alarm")
+		CIGN G 0 A_FaceTarget
+		CIGN G 0 A_CPosRefire
+		CIGN G 0 A_PlayWeaponSound ("80mm/fire")
+		CIGN G 2 A_CustomMissile ("ArtilleryTurretShellBlue", random(39, 43), random(-2, 2))
+		CIGN G 0 A_SpawnItemEx("Flash")
+		CIGN G 0 A_FaceTarget
+		CIGN G 3 BRIGHT 
+		CIGN GG 3 BRIGHT A_ChangeFlag("FRIENDLY",0)
+		CIGN G 0 A_ClearTarget
+		CIGN G 20 A_ChangeFlag ("NOPAIN",1)
+		CIGN G 0 A_PlayWeaponSound ("80mm/reload")
+		CIGN G 0 A_ChangeFlag ("NOPAIN", 0)
+		goto See
+	Pain:
+		CIGN G 0 A_ClearTarget
+		CIGN G 3
+		goto See
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32)
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_SpawnItemEx("FlameWallDecay")
+		TNT1 A 4
+		stop
+	}
+}
+
+actor ArtilleryTurretShell : ArtilleryShell {
+	+NOGRAVITY // these things just fail actually hitting anything otherwise
+	obituary "%o was torn to shreds by a \cGRed\c- artillery turret."
+	speed 80
+	damage (160)
+	damagetype "AntiArmor"
+	states {
+	Spawn:
+		SHRP A 0
+		SHRP A 0 bright A_PlaySoundEx ("ambient/shell", "Body", 1, -1)
+		SHRP AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		SHRP A 1 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		wait
+	Death:
+		TNT1 A 0 A_NoGravity
+		TNT1 A 0 A_PlaySoundEx ("blanksnd", "Body",0)
+		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-32,32), random(-32,32), 4)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (25, 96, 1)
+		stop
+	}
+}
+
+actor ArtilleryTurretShellBlue : ArtilleryTurretShell {
+	damagetype "AntiArmor"
+	states {
+	Death:
+		TNT1 A 0 A_NoGravity
+		TNT1 A 0 A_PlaySoundEx ("blanksnd", "Body",0)
+		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-32,32), random(-32,32), 4)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (25, 96, 1)
+		stop
+	}
+}

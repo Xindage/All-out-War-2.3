@@ -1,0 +1,4 @@
+// [cata] Gameinfo lump, thanks Zdoom.
+STARTUPTITLE = "All Out War 2.2"
+STARTUPCOLORS = "00 ff 00", "00 00 00" // Green text, black background.
+IWAD = doom2.wad

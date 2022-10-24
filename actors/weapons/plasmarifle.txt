@@ -1,0 +1,279 @@
+// Plasma Gun
+ACTOR PlasmaGun : AOWWeapon replaces PlasmaRifle 21087 {
+	//$Category Weapons
+	tag "Plasma Gun"
+	Inventory.PickupMessage "You got the plasma gun!"
+	Obituary "$OB_PLASMARIFLE"
+	Weapon.AmmoType "PlasmaRifleAmmo"
+	Weapon.AmmoGive 25
+	Weapon.AmmoUse 1
+	Weapon.AmmoType2 "PlasmaHeat"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 0
+	Weapon.Kickback 25
+	Weapon.SelectionOrder 5
+	Weapon.PreferredSkin "MarinePlasma"
+	Weapon.UpSound "weapons/up/plasmagun"
+	States  { 
+	Spawn:
+		PLAS A -1
+		stop
+	Ready: 
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("OverheatItem", 1, "CoolDown")
+		TNT1 A 0 A_TakeInventory("FiringPlasmaRifle")
+		ENRG A 0 A_JumpIfInventory("IsBlue",1,"ReadyBlue")
+		ENRG A 3 A_WeaponReady
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENRG A 3 A_WeaponReady
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",3)
+		ENRG A 3 A_WeaponReady
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENRG A 3 A_WeaponReady
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",3)
+		Goto WarningRemove
+	ReadyBlue:
+		ENBG A 3 A_WeaponReady
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENBG A 3 A_WeaponReady
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",3)
+		ENBG A 3 A_WeaponReady
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENBG A 3 A_WeaponReady
+		//NBG A 0 A_TakeInventory("PlasmaHeat",3)
+		Goto WarningRemove
+	Deselect:
+		ENRG A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
+		ENRG A 1 offset (-5, 34)
+		ENRG A 1 offset (-16, 38)
+		ENRG A 1 offset (-23, 45)
+		ENRG A 1 offset (-32, 56)
+		ENRG A 1 offset (-42, 66)
+		ENRG A 1 offset (-51, 73)
+		ENRG A 1 offset (-63, 87)
+		ENRG A 1 offset (-78, 97)
+		ENRG A 1 offset (-88, 111)
+		ENRG A 1 offset (-99, 121)
+		ENRG A 1 offset (-112, 133)
+		ENRG A 1 offset (-125, 154)
+		ENRG A 0 offset (-1, 33)
+		ENRG A 0 A_Lower
+		wait
+	DeselectBlue:
+		ENBG A 1 offset (-5, 34)
+		ENBG A 1 offset (-16, 38)
+		ENBG A 1 offset (-23, 45)
+		ENBG A 1 offset (-32, 56)
+		ENBG A 1 offset (-42, 66)
+		ENBG A 1 offset (-51, 73)
+		ENBG A 1 offset (-63, 87)
+		ENBG A 1 offset (-78, 97)
+		ENBG A 1 offset (-88, 111)
+		ENBG A 1 offset (-99, 121)
+		ENBG A 1 offset (-112, 133)
+		ENBG A 1 offset (-125, 154)
+		ENBG A 0 offset (-1, 33)
+		ENBG A 0 A_Lower
+		wait
+	Select:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("PRScriptInitiated", 1, 3)
+		TNT1 A 0 A_GiveInventory("PRScriptInitiated")
+		TNT1 A 0 ACS_NamedExecuteAlways("SC_PLASMARIFLEHEAT", 0, 0, 0, 0)
+		ENRG A 0 A_JumpIfInventory("IsBlue",1,"SelectBlue")
+		ENRG A 1 offset (-125, 154)
+		ENRG A 1 offset (-112, 133)
+		ENRG A 1 offset (-99, 121)
+		ENRG A 1 offset (-88, 111)
+		ENRG A 1 offset (-78, 97)
+		ENRG A 1 offset (-63, 87)
+		ENRG A 1 offset (-51, 73)
+		ENRG A 1 offset (-42, 66)
+		ENRG A 1 offset (-32, 56)
+		ENRG A 1 offset (-23, 45)
+		ENRG A 1 offset (-16, 38)
+		ENRG A 1 offset (-5, 34)
+		goto ready
+	SelectBlue:
+		ENBG A 1 offset (-125, 154)
+		ENBG A 1 offset (-112, 133)
+		ENBG A 1 offset (-99, 121)
+		ENBG A 1 offset (-88, 111)
+		ENBG A 1 offset (-78, 97)
+		ENBG A 1 offset (-63, 87)
+		ENBG A 1 offset (-51, 73)
+		ENBG A 1 offset (-42, 66)
+		ENBG A 1 offset (-32, 56)
+		ENBG A 1 offset (-23, 45)
+		ENBG A 1 offset (-16, 38)
+		ENBG A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		ENRG A 0 A_JumpIfInventory("PlasmaHeat",100,"Overheat")
+		ENRG A 0 A_GiveInventory("FiringPlasmaRifle")
+		ENRG A 0 A_JumpIfInventory("IsBlue",1,"FireBlue")
+		ENRG A 0 A_PlaySound ("Weapons/PlasmaShot", CHAN_WEAPON)
+		ENRG A 1 Offset(5, 35) A_FireCustomMissile("PlasmaShotRed",Random(-3, 3) * 0.5,1,5,0)
+		TNT1 A 0 A_SetPitch(pitch-0.2)
+		ENRG A 1 Offset(10, 45) A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.2)
+		ENRG A 1 Offset(7, 40) A_GiveInventory("PlasmaHeat",2)
+		ENRG A 0 A_JumpIfInventory("PlasmaHeat",75,"Warning")
+		ENRG A 1 Offset(5, 35) A_Refire
+		Goto Ready
+	FireBlue:
+		ENBG A 0 A_PlaySound ("Weapons/PlasmaShot", CHAN_WEAPON)
+		ENBG A 1 Offset(5, 35) A_FireCustomMissile("PlasmaShotBlue",Random(-3, 3) * 0.5,1,5,0)
+		TNT1 A 0 A_SetPitch(pitch-0.2)
+		ENBG A 1 Offset(10, 45) A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.2)
+		ENBG A 1 Offset(7, 40) A_GiveInventory("PlasmaHeat",2)
+		ENBG A 0 A_JumpIfInventory("PlasmaHeat",75,"Warning")
+		ENBG A 1 Offset(5, 35) A_Refire
+		Goto Ready
+	Overheat:
+		ENRG A 0 A_PlaySound ("Plasma/FailFire", 6)
+		ENRG A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TNT1 A 0 A_GiveInventory("OverheatItem", 1)
+		TNT1 A 0 A_TakeInventory("FiringPlasmaRifle")
+		TNT1 A 0 A_JumpIfInventory("IsBlue", 1, "OverheatBlue")
+		ENRG AAAAAAA 2 A_FireCustomMissile("OverheatSmokeSpawner",0,0,6,-2)
+		/*ENRG AAAAAAAAAAAAAAAAAAAAAAAAA 3 A_TakeInventory("PlasmaHeat",2)
+		ENRG AAAAAAAAAAAAAAAAAAAA 2 A_TakeInventory("PlasmaHeat",2)*/
+		Goto CoolDown
+	CoolDown:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("PlasmaHeat", 1, 2)
+		TNT1 A 0 A_TakeInventory("OverheatItem", 1)
+		Goto Ready
+		ENRG A 0 A_JumpIfInventory("IsBlue",1,"CoolDownBlue")
+		ENRG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENRG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",3)
+		ENRG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENRG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENRG A 0 A_TakeInventory("PlasmaHeat",3)
+		Loop
+		
+	CoolDownBlue:
+		ENBG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENBG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",3)
+		ENBG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",2)
+		ENBG A 3 A_WeaponReady(WRF_NOFIRE)
+		//ENBG A 0 A_TakeInventory("PlasmaHeat",3)
+		Goto CoolDown
+	OverheatBlue:
+		ENBG AAAAAAA 2 A_FireCustomMissile("OverheatSmokeSpawner",0,0,6,-2)
+		/*ENBG AAAAAAAAAAAAAAAAAAAAAAAAA 3 A_TakeInventory("PlasmaHeat",2)
+		ENBG AAAAAAAAAAAAAAAAAAAA 2 A_TakeInventory("PlasmaHeat",2)*/
+		Goto CoolDown
+	WarningRemove:
+		ENRG A 0 A_TakeInventory("WarningChecker", 1)
+		goto Ready
+	Flash: 
+		RPRL B 0 A_JumpIfInventory ("IsRed", 1, "Flash.Red")
+		ENRF A 1 bright A_Light1
+		//ENRF B 1 bright A_Light2
+		//ENRF C 1 bright A_Light1
+		ENRF C 0 A_Light0
+		Stop
+	Flash.Red:
+		ENRR A 1 bright A_Light1
+		//ENRR B 1 bright A_Light2
+		//ENRR C 1 bright A_Light1
+		ENRR C 0 A_Light0
+		Stop
+	Warning:
+		ENRG AA 0 A_JumpIfInventory("WarningChecker",1,"Ready")
+		ENRG A 0 A_PlaySound("Plasma/Warning",CHAN_VOICE)
+		ENRG A 0 A_GiveInventory("WarningChecker",1)
+		Goto Ready
+	}
+}
+
+Actor OverheatItem : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor FiringPlasmaRifle : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor PRScriptInitiated : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+actor PlasmaShotBlue {
+	PROJECTILE
+	-RANDOMIZE
+	Radius 12
+	Height 8
+	Scale 0.7
+	Speed 28
+	Damage (15)
+	RenderStyle Add
+	Alpha 0.75
+	Translation "224:247=192:207"
+	DeathSound "weapons/plasmax"
+	DamageType "Energy"
+	Decal "PulseScorch"
+	Obituary "$OB_PLASMARIFLE"
+	States {
+	Spawn:
+		PLSB A -1 Bright
+		stop
+	Death:
+		PLSE A 0 A_SpawnItemEx ("PulseBallSmokePuff", 0,0,0, 0,0,1)
+		PLSE ABCD 3 Bright
+		PLSE E 1 A_FadeOut(0.04)
+		wait
+	}
+}
+
+Actor PlasmaShotRed : PlasmaShotBlue {
+	Translation "192:207=224:246"
+	States {
+		PLSR A -1 Bright
+		stop
+	}
+}
+
+actor PlasmaHeat : Ammo {
+	+IGNORESKILL
+	inventory.amount 0
+	inventory.maxamount 100
+	ammo.backpackamount 0
+	ammo.backpackmaxamount 100
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor WarningChecker : Inventory {}
+
+ACTOR OverheatSmokeSpawner {
+	PROJECTILE
+	+CLIENTSIDEONLY
+	speed 25
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("PulseBallSmokePuff",0,0,-2,0,0,0.1*Random(0,10))
+		Stop
+	}
+}

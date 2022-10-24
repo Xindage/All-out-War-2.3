@@ -1,0 +1,140 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 jetpack code
+ * Credit to VoltlocK for originally creating the engine
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// Jetpack toggle
+int MoveUpWarnings[MAXPLAYERS];
+#define MOVEUP_TOLERANCE 5
+script SC_JetpackToggle (void) NET {
+	// Not without jetpacks!
+	if (!CheckInventory ("Jetpack"))
+		terminate;
+	
+	// Don't activate twice
+	if (CheckInventory ("JetpackStartup"))
+		terminate;
+	
+	if (!CheckInventory ("JetpackActive")) {
+		// Start up
+		
+		// Can't startup without fuels
+		if (CheckInventory ("JetpackFuel") < 5)
+			terminate;
+		
+		// Reset the warnings
+		MoveUpWarnings[PlayerNumber()] = 0;
+		
+		SetInventory ("JetpackStartup", 1);
+		ActivatorSound ("jumpjet/start", 127);
+		
+		// Activate jet quake
+		ACS_ExecuteAlways (SC_CL_JETPACKQUAKE, 0);
+		
+		// Wait 2 seconds. If the player dies during liftoff, we need to cancel
+		// the jetpack or the player's new body will be able to fly.
+		for (int i = 0; i < 2; i++) {
+			delay (35);
+			if (GetHealth() <= 0)
+				terminate;
+		}
+		
+		GiveInventory ("JetpackStart", 1);
+		SetInventory ("JetpackActive", 1);
+		SetPlayerProperty (0, true, PROP_Fly);
+		SetInventory ("JetpackStartup", 0);
+		
+		// Begin fuel drain
+		int p = 0;
+		int delaytime = 3;
+		while (CheckInventory ("JetpackActive") &&
+			CheckInventory ("JetpackFuel") > 0 &&
+			GetHealth() > 0)
+		{
+			// Every second, take 1 fuel
+			if (!(p % (35 / delaytime)))
+				TakeInventory ("JetpackFuel", 1);
+			
+			// [Dusk] HAX TIME! Since +moveup and +movedown based flight with
+			// jumpjet has reached bs-level status, this is now disallowed
+			// and using it results in the jetpack being shut down. With
+			// +moveup/+movedown, z-velocity is +/- 5.50781 always, which is
+			// 360 960 in integers. We check it five times to filter out
+			// accidental matches, since it's perfectly possible that someone
+			// would somehow hit this velz momentum. Five times in a row should
+			// only happen with the +moveup/+movedown commands.
+			//     {10/2/12} Using GetPlayerInput with BT_MOVEUP/MOVEDOWN
+			// would be the proper solution here instead of a velocity check,
+			// but that would need clients to send full button info. I'm not
+			// ready for take that into use just yet.
+			if (abs (GetActorVelZ (0)) == 360960) {
+				if (++MoveUpWarnings[PlayerNumber()] > 5) {
+					// Restart to send it to shutdown state
+					restart;
+				}
+			} else {
+				// Reset the counter, this was a false alarm.
+				MoveUpWarnings[PlayerNumber()] = 0;
+			}
+			
+			delay (delaytime);
+			p++;
+		}
+		
+		// If we broke out of the loop with the jetpack
+		// still active, deactivate it now.
+		if (CheckInventory ("JetpackActive"))
+			restart; 
+	} else {
+		// Shut down
+		SetInventory ("JetpackStartup", 1);
+		SetInventory ("JetpackActive", 0);
+		ActivatorSound ("jumpjet/stop", 127);
+		SetPlayerProperty (0, false, PROP_Fly);
+		SetActorProperty (0, APROP_Gravity, 0.5);
+		GiveInventory ("JetpackEnd1", 1);
+		
+		delay (70);
+		
+		SetActorProperty (0, APROP_Gravity, 1.0);
+		GiveInventory ("JetpackEnd2", 1);
+		SetInventory ("JetpackStartup", 0);
+	}
+}
+
+// Quake the view while jetting
+script SC_CL_JETPACKQUAKE (void) CLIENTSIDE {
+	// But not if it's not us.
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		terminate;
+	
+	int i;
+	
+	// Jet starts up
+	for (i = 1; i < 5; i++) {
+		Radius_Quake (i, 16, 0, 4, 0);
+		delay (16);
+		
+		// If we die during liftoff, cancel out now.
+		if (GetHealth () < 0)
+			terminate;
+	}
+	
+	Radius_Quake (i, 6, 0, 4, 0);
+	delay (6);
+	
+	while (CheckInventory ("JetpackActive") && GetHealth() > 0) {
+		Radius_Quake (5, 8, 0, 4, 0);
+		delay (8);
+	}
+	
+	// Jetpack deactivates, wear the quake off
+	for (i = 4; i > 0; i--) {
+		Radius_Quake (i, 16, 0, 4, 0);
+		delay (16);
+	}
+}

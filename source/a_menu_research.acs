@@ -1,0 +1,51 @@
+// =============================================================================
+// MENU INIT
+script 704 (void) CLIENTSIDE {
+	if (!(MenuTables & MTABLE_RESEARCHES))
+		BuildMenuResearches ();
+	
+	MenuName = "RESEARCH CENTRE";
+	MenuCategories[0] = "UPGRADES";
+	MenuCategories[1] = "EXTENSIONS";
+	MenuCategories[2] = "ADD-ONS";
+	
+	int i, j;
+	for (i = 0; i <= 2; i++) {
+		for (j = 0; j < MAX_MENU_ITEMS; j++) {
+			int r = MenuResearches[i][j];
+			
+			if (r < 0 || r >= NUM_RESEARCHES)
+				continue;
+			
+			MenuItems[i][j] = Researches_str[r][RCK_NAME];
+		}
+	}
+}
+
+// =============================================================================
+// MENU DRAW
+script 705 (int m0, int m1, int y) CLIENTSIDE {
+	HudMessage (s:Researches_str[MenuResearches[m0][m1]][RCK_DESCRIPTION];
+		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= 0.1;
+		
+	// Price
+	HudMessage (s:"Cost: \cq$\cd", d:Researches_int[MenuResearches[m0][m1]][RCK_COST];
+		HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= MENU_SPACING;
+	
+	SetResultValue (y);
+}
+
+// =============================================================================
+// MENU SELECT
+script 710 (int m0, int m1) {
+	RC_PurchaseResearch (MenuResearches[m0][m1]);
+	SetResultValue (0);
+}
+
+// =============================================================================
+// MENU LIMIT
+script 714 (int m0, int m1) CLIENTSIDE {
+	SetResultValue (!CheckResearch (MenuResearches[m0][m1]));
+}

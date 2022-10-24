@@ -1,0 +1,357 @@
+// All ammunition definitions, defined as the ammo expended to operate a weapon,
+// and whose values are safe to change without breaking operation of the weapon.
+// This document does not include definitions for "decorate token" ammo; those
+// will be found in the document the weapon relies on. 
+// [Dusk] Are all of these really necessary?
+
+////Bullet Weapons////
+
+//9x19mm Bullets; Handgun/SMG.
+actor NewClipAmmo : Ammo {
+	Inventory.Amount 30
+	Inventory.MaxAmount 400
+	Ammo.BackpackAmount 30
+	Ammo.BackpackMaxAmount 400
+}
+
+//5.56x45mm Bullets; Machinegun/Gatling Gun
+actor MachineGunAmmo : Ammo {
+	inventory.amount 30
+	inventory.maxamount 400
+	ammo.backpackamount 30
+	ammo.backpackmaxamount 400
+}
+
+//7.62x51mm Bullets/40mm HE Grenades; Rifle
+actor RifleAmmo : Ammo {
+	inventory.amount 8
+	inventory.maxamount 50
+	ammo.backpackamount 10
+	ammo.backpackmaxamount 50
+}
+
+actor RifleGrenadeAmmo : Ammo {
+	inventory.amount 1
+	inventory.maxamount 8
+	ammo.backpackamount 1
+	ammo.backpackmaxamount 8
+}
+
+//.416 Remington Magnum; Sniper Rifle
+actor SniperAmmo : Ammo {
+	inventory.amount 4
+	inventory.maxamount 40
+	ammo.backpackamount 4
+	ammo.backpackmaxamount 40
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+//Magical revolver invisible death ray bullets from space; Blood Revolver
+actor BloodRevolverAmmo : Ammo {
+	+IGNORESKILL
+	Inventory.Amount 1
+	Inventory.MaxAmount 3
+	Ammo.BackpackAmount 0
+	Ammo.BackpackMaxAmount 3
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+//12-gauge Shotshells; Shotgun/Doubleshotgun
+actor ShotgunAmmo : Ammo {
+	inventory.amount 5
+	inventory.maxamount 50
+	ammo.backpackamount 5
+	ammo.backpackmaxamount 50
+}
+
+////Explosive Weapons////
+
+//M67 Fragmentation Grenades; 
+// [Dusk] These are dropped by the frag grenade `weapon`.
+actor FragGrenadeAmmo : Ammo {
+	Inventory.PickupMessage "Picked up a frag grenade."
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	Ammo.BackpackAmount 1
+	Ammo.BackpackMaxAmount 1
+	Scale 0.25
+	States {
+	Spawn:
+		FRGP A -1
+		stop
+	}
+}
+
+//Flashbangs
+actor FlashbangAmmo : Ammo 
+{
+	Inventory.PickupMessage "Picked up a flashbang."
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	Ammo.BackpackAmount 1
+	Ammo.BackpackMaxAmount 1
+	Scale 0.15
+	States {
+	Spawn:
+		FLSH X -1
+		stop
+	}
+}
+
+//Karasawa Ammo
+Actor KarasawaAmmo : Ammo
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 15
+    Ammo.BackpackAmount 1
+    Ammo.BackpackMaxAmount 15
+	+IGNORESKILL
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+  }
+}
+
+//40mm HEDP Grenades; Grenade Launcher
+actor GrenadeAmmo : Ammo {
+	 Inventory.Amount 6
+	 Inventory.MaxAmount 40
+	 Ammo.BackpackAmount 5
+	 Ammo.BackpackMaxAmount 40
+	 states {
+	 Spawn:
+		TNT1 A 0
+		stop
+	 }
+}
+
+//AM Guided Missiles; Missile Launcher
+actor MissileAmmo : Ammo {
+	+IGNORESKILL
+	inventory.amount 15
+	inventory.maxamount 15
+	ammo.backpackamount 15
+	ammo.backpackmaxamount 15
+}
+
+//50mm/80mm Howitzer Shells; Artillery Gun
+actor ArtilleryShellAmmo : Ammo {
+	Inventory.Amount 2
+	Inventory.MaxAmount 30
+	Ammo.BackpackAmount 2
+	Ammo.BackpackMaxAmount 30
+}
+
+//Artillery-Class Plasma Battery Charge; Plasma Cannon (Yes, all of its damage is actually Explosive/Fire)
+actor PlasmaCannonAmmo : Ammo {
+	inventory.amount 0
+	inventory.maxamount 10
+	ammo.backpackamount 1
+	ammo.backpackmaxamount 10
+	+IGNORESKILL
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+////Laser Weapons////
+
+//Laser Battery Charge; Laser Rifle
+actor LaserRifleAmmo : Ammo {
+	inventory.amount 20
+	inventory.maxamount 200
+	ammo.backpackamount 20
+	ammo.backpackmaxamount 200
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+//Super-High Density Laser Battery Charge; Laser Chaingun
+actor LaserChaingunAmmo : Ammo {
+	inventory.amount 50
+	inventory.maxamount 400
+	ammo.backpackamount 50
+	ammo.backpackmaxamount 400
+	states {
+	Spawn:
+		CELL A -1
+		stop
+	}
+}
+
+//Dual-Purpose Gauss Slugs; Gauss Rifle
+actor GaussRifleAmmo : Ammo {
+	inventory.amount 5
+	inventory.maxamount 40
+	ammo.backpackamount 5
+	ammo.backpackmaxamount 40
+}
+
+//Voltlandian Electric-Bird Extract (Geneporium); Shock Rifle
+// [Dusk] heh
+actor GeneporiumCharge : Ammo {
+	inventory.amount 20
+	inventory.maxamount 500
+	ammo.backpackamount 20
+	ammo.backpackmaxamount 500
+}
+
+//UAC Plasma Cell Charge; Plasma Rifle
+actor PlasmaRifleAmmo : Ammo {
+	inventory.amount 40
+	inventory.maxamount 300
+	ammo.backpackamount 40
+	ammo.backpackmaxamount 300
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+////Weaponized Flame Weapons////
+
+//Flammable Aerosol Mix/Phosphorus Incendiary Grenades; Flamethrower
+actor FlamerAmmo : Ammo {
+	inventory.amount 100
+	inventory.maxamount 400
+	ammo.backpackamount 100
+	ammo.backpackmaxamount 400
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor PhosphorusGrenadeAmmo : Ammo {
+	inventory.amount 1
+	inventory.maxamount 4
+	ammo.backpackamount 1
+	ammo.backpackmaxamount 4
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+//Heavily Compressed Magical Hydrogen Pellets; Combustion Autorifle
+actor FA21CalAmmo : Ammo {
+	+IGNORESKILL
+	inventory.amount 20
+	inventory.maxamount 120
+	ammo.backpackamount 20
+	ammo.backpackmaxamount 120
+}
+
+////Weaponized Tiberium Weapons////
+
+//Tiberium-Explosive .21 Cal Darts; Tiberium Automatic Rifle
+actor TE21CalAmmo : Ammo {
+	+IGNORESKILL
+	inventory.amount 20
+	inventory.maxamount 120
+	ammo.backpackamount 20
+	ammo.backpackmaxamount 120
+}
+
+//Tiberium Particulate/Tiberium-Explosive Grenades; Chemical Sprayer
+actor ChemicalAmmo : Ammo {
+	inventory.amount 50
+	inventory.maxamount 400
+	ammo.backpackamount 50
+	ammo.backpackmaxamount 400
+}
+
+actor ChemicalGrenadeAmmo : Ammo {
+	inventory.amount 1
+	inventory.maxamount 4
+	ammo.backpackamount 1
+	ammo.backpackmaxamount 4
+}
+
+////Others And Inventory////
+
+//Personal Cloak Field Generator Power; Stealth Laser Rifle
+actor StealthCharge : Ammo {
+	+IGNORESKILL
+	inventory.amount 0
+	inventory.maxamount 100
+	ammo.backpackamount 5
+	ammo.backpackmaxamount 100
+}
+
+//Timespace... Magic; Time Gun
+actor TimeGunAmmo : Ammo {
+	+IGNORESKILL
+	inventory.amount 175
+	inventory.maxamount 175
+	ammo.backpackamount 0
+	ammo.backpackmaxamount 175
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor ChronoBolt : Ammo {
+	Inventory.Amount 2
+	Inventory.MaxAmount 25
+	Ammo.BackpackMaxAmount 25
+}
+
+
+/*actor MortarAmmo : Ammo 
+{
+	 Inventory.Amount 5
+	 Inventory.MaxAmount 50
+	 Ammo.BackpackAmount 5
+	 Ammo.BackpackMaxAmount 50
+	 states {
+	 Spawn:
+		TNT1 A 0
+		stop
+	 }
+}*/
+
+Actor Nails : Ammo
+{
+  Inventory.Amount 40
+  Inventory.MaxAmount 250
+  Ammo.BackpackAmount 40
+  Ammo.BackpackMaxAmount 250
+  States
+  {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor NailBombs : Ammo {
+	inventory.amount 1
+	inventory.maxamount 4
+	ammo.backpackamount 1
+	ammo.backpackmaxamount 4
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}

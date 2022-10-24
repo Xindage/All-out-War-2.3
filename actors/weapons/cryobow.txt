@@ -1,0 +1,249 @@
+// The CryoBow, shoots ice bolts and generally freezes stuff badly. By zrrion the insect, Blox and Xaser
+
+// [SG] Cryo Bow charges considerably faster, and its "Time" damage projectiles ignore armor.
+// However, the blast radius has been reduced somewhat, and the class moves 5% slower.
+
+actor ChronoBow : AOWWeapon {
+	Weapon.AmmoType "ChronoBolt"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 10
+	Weapon.SelectionOrder 1
+	Weapon.AmmoType2 "ChronoBowPower"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 0
+	Inventory.PickupMessage "You got the chrono bow!"
+	Weapon.UpSound "weapons/up/chrono"
+	Obituary "$OB_CHRONOBOW"
+	DropItem "CryoBow"
+	Tag "CryoBow"
+	States {
+	Spawn:
+		TNT1 A 0
+		WBOW A -1
+		Stop
+	Deselect:
+		BOWG A 1 offset (5, 34)
+		BOWG A 1 offset (16, 38)
+		BOWG A 1 offset (23, 45)
+		BOWG A 1 offset (32, 56)
+		BOWG A 1 offset (42, 66)
+		BOWG A 1 offset (51, 73)
+		BOWG A 1 offset (63, 87)
+		BOWG A 1 offset (78, 97)
+		BOWG A 1 offset (88, 111)
+		BOWG A 1 offset (99, 121)
+		BOWG A 1 offset (112, 133)
+		BOWG A 1 offset (125, 154)
+		BOWG A 0 offset (1, 33)
+		BOWG A 0 A_Lower
+		wait
+	Select:
+		BOWG A 1 offset (125, 154)
+		BOWG A 1 offset (112, 133)
+		BOWG A 1 offset (99, 121)
+		BOWG A 1 offset (88, 111)
+		BOWG A 1 offset (78, 97)
+		BOWG A 1 offset (63, 87)
+		BOWG A 1 offset (51, 73)
+		BOWG A 1 offset (42, 66)
+		BOWG A 1 offset (32, 56)
+		BOWG A 1 offset (23, 45)
+		BOWG A 1 offset (16, 38)
+		BOWG A 1 offset (5, 34)
+		goto ready
+	Ready:
+		BOWG ABCDCB 3 Bright A_WeaponReady
+		Loop
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		TNT1 A 0 A_TakeInventory ("ChronoBowPower", 100)
+		BOWG A 1 Offset (0, 36)
+		BOWG A 1 Offset (0, 39)
+		BOWG A 1 Offset (0, 42)
+		BOWG A 1 Offset (0, 45)
+	Hold:
+		BOWG A 2 A_GiveInventory ("ChronoBowPower", 5)
+		BOWG A 1 A_ReFire
+		// -----------------------
+		BOWG A 1 Offset (0, 40)
+		BOWG A 1 Offset (0, 35)
+		BOWG A 1 Offset (0, 32)
+		BOWG A 0 Bright A_GunFlash
+		BOWG A 0 Bright A_Recoil(4.0)
+		BOWG A 0 Bright A_PlaySound ("weapons/cryobowshot")
+		BOWG A 0 Bright A_PlaySound ("weapons/cryobowfire", CHAN_WEAPON)
+		BOWG A 0 A_JumpIfInventory ("ChronoBowPower", 100, "Fire6")
+		BOWG A 0 A_JumpIfInventory ("ChronoBowPower", 80, "Fire5")
+		BOWG A 0 A_JumpIfInventory ("ChronoBowPower", 60, "Fire4")
+		BOWG A 0 A_JumpIfInventory ("ChronoBowPower", 40, "Fire3")
+		BOWG A 0 A_JumpIfInventory ("ChronoBowPower", 20, "Fire2")
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt1", 0, 1)
+		goto FireEnd
+	Fire2:
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt2", 0, 1)
+		goto FireEnd
+	Fire3:
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt3", 0, 1)
+		goto FireEnd
+	Fire4:
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt4", 0, 1)
+		goto FireEnd
+	Fire5:
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt5", 0, 1)
+		goto FireEnd
+	Fire6:
+		BOWF A 0 A_FireCustomMissile ("ChronoBolt6", 0, 1)
+		goto FireEnd
+	FireEnd:
+		BOWF A 1 Bright Offset (0, 36)
+		BOWF A 1 Bright Offset (0, 39)
+		BOWF B 1 Bright Offset (0, 42)
+		BOWF B 1 Bright Offset (0, 45)
+		BOWF CD 2 Bright Offset (0, 47)
+		BOWF E 8
+		BOWF E 2 Offset (0, 46) A_PlaySound ("weapons/cryobowreload")
+		BOWF E 2 Offset (0, 45)
+		BOWF F 2 Offset (0, 43)
+		BOWF F 2 Offset (0, 41)
+		BOWF G 2 Offset (0, 37)
+		BOWF HI 1 Offset (0, 35) A_TakeInventory ("ChronoBowPower", 100)
+		BOWG CDB 4 Bright Offset (0, 32)
+		Goto Ready
+	Flash:
+		TNT1 A 2 Bright A_Light1
+		TNT1 A 2 Bright A_Light2
+		TNT1 A 1 Bright A_Light1
+		Goto LightDone
+	}
+}
+
+// [Dusk] If this is made to inherit from FastProjectile, the actor seems to
+// never execute the Spawn state. Why?
+actor ChronoBoltBase /* : FastProjectile */ {
+	PROJECTILE
+	+FORCERADIUSDMG
+	Radius 4
+	Height 8
+	Speed 75
+	Damage 0
+	RenderStyle Add
+	Alpha 0.9
+	DeathSound "weapons/cryobowhit"
+	Decal "PlasmaScorchLower"
+	DamageType "Time"
+	States {
+	Spawn:
+		TNT1 A 0
+		BXPL A 0 Bright A_PlaySound("weapons/cryobowflyby", CHAN_BODY, 1.0, 1)
+		goto Idle
+	Idle:
+		// [Dusk] Converted from FastProjectile's MissileType to SpawnItemEx
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -90, 0, (-momz / 10) * 9)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -80, 0, (-momz / 10) * 8)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -70, 0, (-momz / 10) * 7)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -60, 0, (-momz / 10) * 6)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -50, 0, (-momz / 10) * 5)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -40, 0, (-momz / 10) * 4)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -30, 0, (-momz / 10) * 3)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -20, 0, (-momz / 10) * 2)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -10, 0, (-momz / 10) * 1)
+		BXPL A 0 A_SpawnItemEx ("ChronoBoltFX", -0, 0, (-momz / 10) * 0)
+		BXPL A 1 Bright //A_ScaleVelocity (1.05)
+		loop
+	Death:
+		BXPL A 0 A_StopSound(CHAN_BODY)
+		// [Dusk] Damage dealt is directly proportional to X/Y momentum
+		//BXPL A 0 A_Explode (health / 2, 24, 0) // Simulated impact damage
+		BXPL A 0 A_Explode (health / 2, 128, 0) // Radius damage.
+		BXPL AAAAAA 0 A_SpawnItemEx("ChronoBoltSmoke", 0, 0, 0, random(10, 30)*0.1, 0, random(0, 14)*0.1, random(1,360), SXF_NOCHECKPOSITION)
+		BXPL AAAA 0 A_SpawnItemEx("ChronoBoltSmoke2", 0, 0, 0, random(10, 30)*0.04, 0, random(0, 10)*0.04, random(1,360), SXF_NOCHECKPOSITION,64)
+		BXPL ABCDEFGH 1 Bright
+		BXPL IJKLM 1 Bright A_FadeOut(0.1)
+		Stop
+	}
+}
+
+actor ChronoBowPower : Ammo {
+	+IGNORESKILL
+	inventory.amount 0
+	inventory.maxamount 100
+	ammo.backpackamount 0
+	ammo.backpackmaxamount 100
+}
+
+actor ChronoBolt1  : ChronoBoltBase {
+	Speed 42
+	health 26
+	damage (26)
+}
+actor ChronoBolt2 : ChronoBoltBase {
+	Speed 67
+	health 33
+	damage (33)
+}
+actor ChronoBolt3 : ChronoBoltBase {
+	Speed 92
+	health 43
+	damage (43)
+}
+actor ChronoBolt4 : ChronoBoltBase {
+	Speed 117
+	health 54
+	damage (54)
+}
+actor ChronoBolt5 : ChronoBoltBase {
+	Speed 142
+	health 65
+	damage (65)
+}
+actor ChronoBolt6 : ChronoBoltBase {
+	Speed 192
+	health 76
+	damage (76)
+}
+
+actor ChronoBoltFX {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	Radius 4
+	Height 8
+	Renderstyle Add
+	Alpha 0.5
+	States {
+	Spawn:
+		BSHT AABBCDEFG 1 Bright
+		Stop
+	}
+}
+
+actor ChronoBoltSmoke {
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+CLIENTSIDEONLY
+	Radius 2
+	Height 2
+	RenderStyle Shaded
+	StencilColor "A0 A0 A0"
+	Alpha 1.0
+	Scale 0.4
+	States {
+	Spawn:
+		TNT1 A 0
+		CMOK A 2 A_FadeOut (0.05)
+		Wait
+	}
+}
+
+actor ChronoBoltSmoke2 : ChronoBoltSmoke { 
+	StencilColor "DD DD DD"
+	Scale 0.7
+	Alpha 0.5
+	VSpeed 2.5
+	States {
+	Spawn:
+		TNT1 A 0
+		CMOK A 6 A_FadeOut (0.04)
+		Wait
+	}
+}

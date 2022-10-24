@@ -1,0 +1,483 @@
+// A building is hit!
+script SC_BUILDINGDAMAGE (void) {
+	int what, team, found;
+	for (int i = 0; i < MAX_BUILDINGS * 2 && !found; i++) {
+		if (ActivatorTID() == BaseTIDs[i]) {
+			what = i / 2;
+			team = i % 2;
+			found = true;
+		}
+	}
+	
+	if (!found)
+		terminate;
+	
+	AwardBuildingDamage (what, team);
+	
+	// Update the health to clients
+	SYNC_UpdateBuildingHealth (what, team);
+}
+
+#define SCORE_MIN_RATIO 0.0
+#define SCORE_MAX_RATIO 1.5
+#define SCORE_DENOMINATOR 450
+function void AwardBuildingDamage (int what, int team) {
+	int tid = BaseTIDs[what*2 + team];
+	SetActivator (tid);
+	
+	int lasthealth = RecordedBuildingHealths[what*2 + team];
+	int health = GetHealth ();
+	int spawnhealth = GetSpawnHealth ();
+	
+	if (health < 0)
+		health = 0;
+	
+	// Save the current health now.
+	RecordedBuildingHealths[what*2 + team] = GetHealth ();
+	
+	SetActivatorToTarget (0); // target: building -> player
+	
+	// The amount of points given is dependant on the health of the victim building.
+	int damagescored = (lasthealth - health) << 16;
+	int ratio = SCORE_MAX_RATIO - FixedMul ((SCORE_MAX_RATIO - SCORE_MIN_RATIO), ((health<<16) / spawnhealth));
+	damagescored = FixedMul (damagescored, ratio);
+	int points;
+	
+	// Calculate points. Remainder goes to unawarded damage counter
+	if (damagescored >= 0) {
+		UnawardedDamage[PlayerNumber ()] += damagescored;
+		points = (UnawardedDamage[PlayerNumber ()] / SCORE_DENOMINATOR) >> 16;
+	}
+	
+	UnawardedDamage[PlayerNumber ()] = FixedMod (UnawardedDamage[PlayerNumber ()], SCORE_DENOMINATOR<<16);
+	
+	/*
+	print4f ("\cF%f \ch%f \cD%d \cG%f",
+		ratio, damagescored, points, UnawardedDamage[PlayerNumber ()]);
+	*/
+	
+	// Award the player
+	if (points > 0) {
+		AddExperience (points * 25);
+		GiveCredits (points * 60);
+		Team_GivePoints (PlayerTeam (), points, false);
+	}
+}
+
+// [SG] Building deaths now award tickets to the opposite team
+
+//---------------------------BLUE BARRACKS DEATH
+script 101 (VOID)
+{
+	Thing_Destroy(100,0);
+	Thing_Destroy(101,0);
+	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
+	GotBarracks[TEAM_BLUE] = False;
+	
+	// [Dusk] {9/10/12} Check MAPF_NODEFEVENTS before reddening anything.
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(1,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(1,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		//SetLineTexture(3,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3"); // [Cata] Deprecated
+		ReddenSector (1);
+		//ReddenSector (2); [Cata] Deprecated.
+	}
+	
+	SetFont("BIGFONT");
+	HudMessageBold(s:"The \chBlue Barracks\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Blue Barracks.");
+	
+	AwardBuildingDamage (BUILDING_BARRACKS, TEAM_BLUE);
+	AwardBuildingDestruction (TEAM_RED, false);
+	SYNC_UpdateBuildingHealth (BUILDING_BARRACKS, TEAM_BLUE);
+	CallEvent (ACTION_DESTROY_BARRACKS, TEAM_BLUE);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_barracks"));
+}
+
+//---------------------------BLUE REFINERY DEATH
+script 102 (VOID)
+{
+	Thing_Destroy(102,0);
+	Thing_Destroy(103,0);
+	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
+	GotRefinery[TEAM_BLUE] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(5,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(5,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		ReddenSector (5);
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \chBlue Refinery\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Blue Refinery.");
+	AwardBuildingDamage (BUILDING_REFINERY, TEAM_BLUE);
+	AwardBuildingDestruction (TEAM_RED, false);
+	SYNC_UpdateBuildingHealth (BUILDING_REFINERY, TEAM_BLUE);
+	CallEvent (ACTION_DESTROY_REFINERY, TEAM_BLUE);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_refinery"));
+}
+
+//---------------------------BLUE RESEARCH CENTRE DEATH
+script 103 (void) {
+	Thing_Destroy(104,0);
+	Thing_Remove(104);
+	Thing_Destroy(105,0);
+	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
+	GotPlant[TEAM_BLUE] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(7,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(3,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
+		SetLineTexture(7,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(3,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
+		ReddenSector (7);
+		//ReddenSector (2); [Cata] Don't know why this is here, but deprecated.
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \chBLUE Research Centre\cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Blue Research Centre.");
+	AwardBuildingDestruction (TEAM_RED, false);
+	AwardBuildingDamage (BUILDING_RESCENTRE, TEAM_BLUE);
+	SYNC_UpdateBuildingHealth (BUILDING_RESCENTRE, TEAM_BLUE);
+	CallEvent (ACTION_DESTROY_PLANT, TEAM_BLUE);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_rescentre"));
+}
+
+//---------------------------BLUE WAR FACTORY DEATH
+script 104 (VOID)
+{
+	if (!GotFactory [TEAM_BLUE])
+		terminate;
+	
+	Thing_Destroy(106,0);
+	Thing_Destroy(107,0);
+	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
+	GotFactory[TEAM_BLUE] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(9,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(9,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		ReddenSector (9);
+		ReddenSector (10);
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \chBlue War Factory\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Blue War Factory.");
+	AwardBuildingDestruction (TEAM_RED, false);
+	AwardBuildingDamage (BUILDING_FACTORY, TEAM_BLUE);
+	SYNC_UpdateBuildingHealth (BUILDING_FACTORY, TEAM_BLUE);
+	CallEvent (ACTION_DESTROY_FACTORY, TEAM_BLUE);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_warfactory"));
+}
+
+//---------------------------BLUE REPAIR FACILITY DEATH
+script 105 (VOID)
+{
+	//Thing_Remove(109);
+	GotRepair[TEAM_BLUE] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		ReddenSector (13);
+		ReddenSector (14);
+	}
+	
+	SetActorProperty(109,APROP_Health,0);
+	
+	// SetFont("BIGFONT");
+	// HudMessageBold(s:"The \chBlue Repair Facility\cd has been destroyed!!";
+	// 	HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	CallEvent (ACTION_DESTROY_REPAIR, TEAM_BLUE);
+	SetFont ("SMALLFONT");
+	IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cNBlue \cFRepair Facility!"), true);
+	Log(n:0, s:" destroys Blue Repair Facility.");
+	SYNC_UpdateBuildingHealth (BUILDING_REPAIR, TEAM_BLUE);
+	AwardBuildingDamage (BUILDING_REPAIR, TEAM_BLUE);
+	AwardBuildingDestruction (TEAM_RED, true);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_repairpad"));
+}
+
+//---------------------------BLUE OBELISK DEATH
+script 114 (VOID)
+{
+	Thing_Destroy(114,0);
+	Thing_Destroy(115,0);
+	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
+	GotObelisk[TEAM_BLUE] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		ReddenSector (19);
+		SetLineTexture(11,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(11,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \chBlue Obelisk\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Blue Obelisk.");
+	AwardBuildingDestruction (TEAM_RED, false);
+	SYNC_UpdateBuildingHealth (BUILDING_OBELISK, TEAM_BLUE);
+	AwardBuildingDamage (BUILDING_OBELISK, TEAM_BLUE);
+	CallEvent (ACTION_DESTROY_OBELISK, TEAM_BLUE);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_RED, Tickets[TEAM_RED] + GetCVar ("zeta_tickets_obelisk"));
+}
+
+//---------------------------RED BARRACKS DEATH
+script 201 (VOID)
+{
+	Thing_Destroy(200,0);
+	Thing_Destroy(201,0);
+	ACS_ExecuteAlways (99, 0, TEAM_RED);
+	
+	GotBarracks[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(2,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		//SetLineTexture(4,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3"); [Cata] Deprecated.
+		
+		SetLineTexture(2,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		//SetLineTexture(4,SIDE_BACK,TEXTURE_MIDDLE,"MCT3"); [Cata] Deprecated.
+		
+		ReddenSector (3);
+		//ReddenSector (4); [Cata] Deprecated
+	}
+	
+	SetFont("BIGFONT");
+	HudMessageBold(s:"The \cgRED Barracks\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Red Barracks.");
+	AwardBuildingDestruction (TEAM_BLUE, false);
+	SYNC_UpdateBuildingHealth (BUILDING_BARRACKS, TEAM_RED);
+	AwardBuildingDamage (BUILDING_BARRACKS, TEAM_RED);
+	CallEvent (ACTION_DESTROY_BARRACKS, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_barracks"));
+}
+
+//---------------------------RED REFINERY DEATH
+script 202 (VOID)
+{
+	Thing_Destroy(202,0);
+	Thing_Destroy(203,0);
+	ACS_ExecuteAlways(99, 0, TEAM_RED);
+	GotRefinery[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(6,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(6,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		ReddenSector (6);
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \cgRed Refinery\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Red Refinery.");
+	AwardBuildingDestruction (TEAM_BLUE, false);
+	SYNC_UpdateBuildingHealth (BUILDING_REFINERY, TEAM_RED);
+	AwardBuildingDamage (BUILDING_REFINERY, TEAM_RED);
+	CallEvent (ACTION_DESTROY_REFINERY, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_refinery"));
+}
+
+//---------------------------RED RESEARCH CENTRE DEATH
+script 203 (VOID)
+{
+	Thing_Destroy(204,0);
+	Thing_Destroy(205,0);
+	ACS_ExecuteAlways(99, 0, TEAM_RED);
+	GotPlant[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		SetLineTexture(8,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(4,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
+		
+		SetLineTexture(8,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(4,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
+		ReddenSector (8);
+		//ReddenSector (4); [Cata] Don't know why this is here, but gone now.
+	}
+	
+	SetFont("BIGFONT");
+	HudMessageBold(s:"The \cgRED Research Centre\cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Red Research Centre.");
+	AwardBuildingDestruction (TEAM_BLUE, false);
+	SYNC_UpdateBuildingHealth (BUILDING_RESCENTRE, TEAM_RED);
+	AwardBuildingDamage (BUILDING_RESCENTRE, TEAM_RED);
+	CallEvent (ACTION_DESTROY_PLANT, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_rescentre"));
+}
+
+//---------------------------RED WAR FACTORY DEATH
+script 204 (VOID)
+{
+	if (!GotFactory [TEAM_RED])
+		terminate;
+	
+	Thing_Destroy(206,0);
+	Thing_Destroy(207,0);
+	ACS_ExecuteAlways(99, 0, TEAM_RED);
+	GotFactory[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) 
+	{
+		SetLineTexture(10,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(10,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+		ReddenSector (11);
+		ReddenSector (12);
+	}
+	
+	SYNC_UpdateBuildingHealth (BUILDING_FACTORY, TEAM_RED);
+	CallEvent (ACTION_DESTROY_FACTORY, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_warfactory"));
+	
+	SetFont("BIGFONT");
+		
+	HudMessageBold(s:"The \cgRed War Factory\cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Red War Factory.");
+	AwardBuildingDestruction (TEAM_BLUE, false);
+	AwardBuildingDamage (BUILDING_FACTORY, TEAM_RED);
+}
+
+//---------------------------RED REPAIR FACILITY DEATH
+script 205 (VOID) {
+	GotRepair[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		ReddenSector (15);
+		ReddenSector (16);
+	}
+	
+	SetActorProperty(209,APROP_Health,0);
+	
+	/*SetFont("BIGFONT");
+	HudMessageBold(s:"The \cgRed Repair Facility\cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);*/
+	CallEvent (ACTION_DESTROY_REPAIR, TEAM_RED);
+	
+	SYNC_UpdateBuildingHealth (BUILDING_REPAIR, TEAM_RED);
+	SetFont ("SMALLFONT");
+	IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cARed \cFRepair Facility!"), true);
+	Log(n:0, s:" destroys Red Repair Facility.");
+	AwardBuildingDestruction (TEAM_BLUE, true);
+	AwardBuildingDamage (BUILDING_REPAIR, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_repairpad"));
+}
+
+//---------------------------RED OBELISK DEATH
+script 214 (VOID)
+{
+	Thing_Destroy(214,0);
+	Thing_Destroy(215,0);
+	ACS_ExecuteAlways(99, 0, TEAM_RED);
+	GotObelisk[TEAM_RED] = False;
+	
+	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+		ReddenSector (20);
+		SetLineTexture(12,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+		SetLineTexture(12,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+	}
+	
+	SetFont("BIGFONT");
+	
+	HudMessageBold(s:"The \cgRed Obelisk\cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+	Log(n:0, s:" destroys Red Obelisk.");
+	AwardBuildingDestruction (TEAM_BLUE, false);
+	SYNC_UpdateBuildingHealth (BUILDING_OBELISK, TEAM_RED);
+	AwardBuildingDamage (BUILDING_OBELISK, TEAM_RED);
+	CallEvent (ACTION_DESTROY_OBELISK, TEAM_RED);
+	
+	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
+		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_obelisk"));
+}
+
+script 97 (int Structure, int Team) {
+	// stfu during degeneration
+	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate;
+	
+	if ( Timer() > intHolder[i_LastAttackMessage]+35*15 ) {
+		if(Structure == 1 && Team == 0)
+			AmbientSound("red/barracks",255);
+		if(Structure == 2 && Team == 0)
+			AmbientSound("red/refinery",255);
+		if(Structure == 3 && Team == 0)
+			AmbientSound("red/powerplant",255);
+		if(Structure == 4 && Team == 0)
+			AmbientSound("red/factory",255);
+		if(Structure == 6 && Team == 0)
+			AmbientSound("red/obelisk",255);
+		if(Structure == 1 && Team == 1)
+			AmbientSound("blue/barracks",255);
+		if(Structure == 2 && Team == 1)
+			AmbientSound("blue/refinery",255);
+		if(Structure == 3 && Team == 1)
+			AmbientSound("blue/powerplant",255);
+		if(Structure == 4 && Team == 1)
+			AmbientSound("blue/factory",255);
+		if(Structure == 6 && Team == 1)
+			AmbientSound("blue/obelisk",255);
+		intHolder[i_LastAttackMessage] = Timer();
+	}
+}
+
+script 99 (int team) NET CLIENTSIDE {
+	if (team == TEAM_RED) {
+		AmbientSound("red/destroyed",255);
+		AmbientSound("red/destroyed",255);
+	} else {
+		AmbientSound("blue/destroyed",255);
+		AmbientSound("blue/destroyed",255);
+	}
+}
+
+// =============================================================================
+// [Dusk] BTOs call this to cause external damage, this way the attacker is
+// properly rewarded for the damage done.
+script 652 (int tid, int damage) {
+	SetActivatorToTarget (0);
+	Thing_Damage (tid, damage, 0);
+}
+
+// =============================================================================
+function void AwardBuildingDestruction (int team, int small) {
+	// [Dusk] Is keeping the below block still a good idea?
+	int activator = ActivatorTID();
+	for (int k = 0; k < MAXPLAYERS; k++) {
+		if (PlayerInGame(k) && GetPlayerInfo(k,PLAYERINFO_TEAM) == Team) {
+			SetActivator(3800+k);
+			ACS_ExecuteAlways (318,0);
+			GiveCredits (500);
+		}
+	}
+	
+	// Check the game-over conditions
+	ACS_ExecuteAlways (SC_GAMEOVER, 0, team, small);
+}

@@ -1,0 +1,295 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 net scripts
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// =============================================================================
+// [SP] This allows a spectator to spawn outside of the team selection room
+// [Dusk] This now alternates between 1 and 2 rather than randomly.
+int SpectatorTeleportNumber = 1;
+script SC_CL_SPECTATORTELEPORT (void) NET CLIENTSIDE {
+	if (PlayerNumber() != intHolder[i_consoleplayer] || PlayerInGame (intHolder[i_consoleplayer]))
+		terminate;
+	
+	SpectatorTeleportNumber = !SpectatorTeleportNumber;
+	Teleport (SpectatorTeleportNumber + 1);
+}
+
+// =============================================================================
+// [SG] For quickly throwing frag grenades/flashbangs, or detonating remote C4s
+
+/*
+str whichnadeweap[3] = { "FragGrenade", "Flashbang", "RemoteC4" };
+str whichnadeammo[3] = { "FragGrenadeAmmo", "FlashbangAmmo", "RemoteC4" }; // you can detonate remotes with no ammo left
+str whichnadedinv[3] = { "IsUsingBindFragGrenade", "IsUsingBindFlashbang", "IsUsingBindRemoteC4" }; */
+//str throwBindOldWep[64];
+
+script "SC_USEGRENADEWEPSWITCH" (void)
+{
+	/*if(checkinventory("IsUsingBindFragGrenade") || checkinventory("IsUsingBindFlashbang") || checkinventory("IsUsingBindRemoteC4"))
+		terminate;*/
+		
+	SetWeapon(throwBindOldWep[playernumber()]);
+	throwBindOldWep[playernumber()] = "";
+}
+
+script SC_USEGRENADE (int whichnade) NET {
+	// this copypaste is only here because of static variable limits, else the above arrays would've been used
+	
+	/*
+	if( (!CheckInventory(whichnadeweap[whichnade])) || (!CheckInventory(whichnadeammo[whichnade])) || (CheckInventory(whichnadedinv[whichnade])) )
+		terminate;	// Do nothing if the player lacks the requested item, ammo for it, or has just used this
+	
+	GiveInventory(whichnadedinv[whichnade],1);
+	SetWeapon(whichnadeweap[whichnade]); */
+	
+	if (CheckInventory("InMenu") ||
+		CheckInventory("IsInSpawnRoom") ||
+		CheckInventory("IsUsingBindFragGrenade") ||
+		CheckInventory("IsUsingBindFlashbang") ||
+		CheckInventory("IsUsingBindRemoteC4") ||
+		CheckInventory("SelfHeal"))
+		terminate;
+	
+	throwBindOldWep[playernumber()] = GetWeapon();
+	
+	switch(whichnade)
+	{
+	
+		default:
+		case 0:
+		
+			if( (!CheckInventory("FragGrenade")) || (!CheckInventory("FragGrenadeAmmo")) | (CheckInventory("IsUsingBindFragGrenade")) )
+				terminate;
+				
+			GiveInventory("IsUsingBindFragGrenade",1);
+			SetWeapon("FragGrenade");
+			
+			break;
+			
+			
+		case 1:
+		
+			if( (!CheckInventory("Flashbang")) || (!CheckInventory("FlashbangAmmo")) | (CheckInventory("IsUsingBindFlashbang")) )
+				terminate;
+				
+			GiveInventory("IsUsingBindFlashbang",1);
+			SetWeapon("Flashbang");
+			
+			break;
+			
+			
+		case 2:
+		
+			if( (!CheckInventory("RemoteC4")) || (CheckInventory("IsUsingBindRemoteC4")) )
+				terminate;
+				
+			SetWeapon("RemoteC4");
+			GiveInventory("IsUsingBindRemoteC4",1);
+			
+			break;
+	}
+}
+	
+
+// =============================================================================
+// [Dusk] This allows players to switch to the losing team
+script SC_CCMD_TEAMSWITCH (void) NET {
+	if (!PlayerInGame (PlayerNumber()))
+		terminate;
+	
+	// Not during warm-up
+	if (CheckMinutes (5)) {
+		GenericError ("Too early to use this!");
+		terminate;
+	}
+	else if(checkinventory("isMech"))
+	{
+		GenericError ("You can't do that in a mech!");
+		terminate;
+	}
+	
+	int basediff = abs (CalcBaseLeft (TEAM_BLUE) - CalcBaseLeft (TEAM_RED));
+	int newteam = !PlayerTeam ();
+	int oldcount = GetTeamProperty (PlayerTeam(), TPROP_NumPlayers);
+	int newcount = GetTeamProperty (newteam, TPROP_NumPlayers);
+	
+	if (newcount + 1 >= oldcount) {
+		GenericError (strparam (s:"There are already enough players on ", s:TeamNames[newteam], s:"!"));
+		terminate;
+	}
+	
+	int score = oldcount - newcount - 1 + (basediff * 2);
+	
+	SetInventory ("IsBlue", newteam == TEAM_Blue);
+	SetInventory ("IsRed", newteam == TEAM_Red);
+	
+	// Tell teammates goodbye
+	TeamMessage (TMSG_TEAMSWITCH, false, playernumber());
+	
+	// Actually change the team now
+	Player_SetTeam (newteam);
+	
+	// Teleport into our new home
+	Teleport (70 + PlayerTeam());
+	GiveInventory("IsInSpawnRoom",1);
+	
+	// Resign, if necessary
+	if (GetClass() != CLASS_None)
+		SetClass (CLASS_None, 0);
+	
+	// Logs and notices
+	str newcolor = cond (newteam == TEAM_Blue, "\cN", "\cA");
+	IntelMessage (strparam (n:0, s:" switches to the\nweaker ", s:newcolor, s:TeamNames[newteam], s:"\c- Team"), true);
+	Log (n:0, s:" switches to weaker ", s:TeamNames[newteam], s:" team. (Score: ", d:score, s:")");
+	
+	// Tell new teammates hi
+	TeamMessage (TMSG_TEAMSWITCH, true, playernumber());
+	
+	// Reward the player for his deed of balancing out the teams
+	delay (35 * 2);
+	AddExperience (score * 50);
+	delay (35);
+	LocalAmbientSound ("powerup/credsound", 127);
+	AwardCredits (score * 200);
+}
+
+// =============================================================================
+// [Dusk] This allows players to sell weapons. See a_classes.acs for
+// SellCurrentWeapon() body.
+script SC_CCMD_SELLWEAPON (void) NET {
+	// Must be in game to have a weapon to sell
+	if (!PlayerInGame (PlayerNumber())) {
+		GenericError ("... join up first.");
+		terminate;
+	}
+	
+	if (GetHealth() <= 0)
+	{
+		GenericError("You must be alive!");
+		terminate;
+	}
+	
+	// Can't sell mechs
+	if (CheckInventory ("IsMech")) {
+		GenericError ("You can't sell a mech!");
+		terminate;
+	}
+	
+	// Try find the meta index of the weapon
+	for (int id = 1; id < MAX_ITEMS; id++)
+		if (CheckWeapon (Items_str[id][IK_ITEM0]))
+			break;
+	
+	// If it's not in the item table, no meta exists for it.
+	// Therefore, we don't know what weapon the player has and
+	// how much to give for it, therefore it can't be sold.
+	// This happens with, for instance, fists or the self-heal
+	// syringe.
+	if (id >= MAX_ITEMS) {
+		GenericError ("You can't sell that!");
+		terminate;
+	}
+	
+	// Get the meta information
+	str name = Items_str[id][IK_NAME];
+	str weapon = Items_str[id][IK_ITEM0];
+	int value = Items_int[id][IK_VALUE];
+	
+	// Invaluable weapons cannot be sold
+	if (!value) {
+		GenericError ("You can't sell that!");
+		terminate;
+	}
+
+	// All good, sell it.
+	TakeInventory (weapon, 1);
+	GiveCredits (value);
+	
+	LocalAmbientSound ("powerup/credsound", 127);
+	IntelMessage (strparam (s:"You have sold your ", s:name, s:" for \cq$\cd", d:value), false);
+	
+	//Log (n:0, s:" sells ", s:name, s:" for $", d:value);
+}
+
+// =============================================================================
+// [Dusk] This allows players to see their speed factor.
+function int GetSpeedFactor (void) {
+	int f = GetActorProperty (0, APROP_SPEED);
+	
+	if (CheckInventory ("PowerSpeedUpgrade"))
+		f = FixedMul (f, 1.25);
+	
+	if (CheckInventory ("PowerFatigue"))
+		f = FixedMul (f, 0.55);
+	
+	if (CheckInventory ("PowerTimeGunBoost"))
+		f = FixedMul (f, 1.4);
+	
+	if (CheckInventory ("PowerTimeGunSlow"))
+		f = FixedMul (f, 0.6);
+	
+	return f;
+}
+
+script SC_CL_SHOWSPEEDFACTOR (void) NET CLIENTSIDE {
+	Log (s:"My speed is ", f:GetSpeedFactor ());
+}
+
+// =============================================================================
+// [Dusk] Checks for killer's health if allowed to
+script SC_KILLERHEALTH (void) NET {
+	if (!PlayerInGame (PlayerNumber ()) || !CanCheckKillerHealth[PlayerNumber ()])
+		terminate;
+	
+	// Can only check it once.
+	CanCheckKillerHealth[PlayerNumber ()] = false;
+	
+	int hp = GetTargetInfo (TARGETINFO_Health);
+	int shp = GetTargetInfo (TARGETINFO_SpawnHealth);
+	str name = GetTargetInfo (TARGETINFO_Name);
+	int armorType = GetTargetInfo(TARGETINFO_ArmorType);
+	str armorTypeName = "";
+	
+	switch(armorType)
+	{
+		default:
+		case ARMOD_NOCHANGE:
+			armorTypeName = "no";
+			break;
+			
+		case ARMOD_CHEM:
+			armorTypeName = "\cDchemical resistance";
+			break;
+			
+		case ARMOD_FIRE:
+			armorTypeName = "\cGfire resistance";
+			break;
+			
+		case ARMOD_BULLETPROOF:
+			armorTypeName = "\cUbullet proof";
+			break;
+			
+		case ARMOD_ENERGY:
+			armorTypeName = "\cNlaser resistance";
+			break;
+			
+		case ARMOD_EXPLO:
+			armorTypeName = "\cFexplosive resistance";
+			break;
+	}
+	
+	SetFont ("SMALLFONT");
+	HudMessage (s:"Killer ", s:name, s:"\c- has ", s:FractionColor (hp, shp), d:hp, s:"%\c- health", s:"\c- and ", s:armorTypeName, s:"\c- armor";
+		HUDMSG_LOG|HUDMSG_FADEOUT, 0, CR_DARKRED, 0.5, 0.7, 2.0, 1.0);
+}
+
+// =============================================================================
+script SC_AOWVERSIONINFO (void) NET CLIENTSIDE {
+	Log (s:"Current version: ", s:VersionString ());
+}

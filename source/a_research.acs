@@ -1,0 +1,225 @@
+// All Out War 2 Research purchase scripts
+// Credit to VoltlocK for originally creating the engine
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// =============================================================================
+// Can a research be purchased?
+function bool CheckResearch (int r) {
+	// No RC, no purchase
+	if (!CheckBuilding (BUILDING_RESCENTRE, PlayerTeam())) {
+		g_Error = "Your research centre has been destroyed!";
+		return false;
+	}
+	
+	// Research-dependant checks
+	switch (r) {
+	case RESEARCH_ENHANCEDREFINING:
+		if (GetConfig (CONFIG_ENHANCEDREFINING_BLUE + PlayerTeam())) {
+			g_Error = "You already have that!";
+			return false;
+		}
+		break;
+	case RESEARCH_ADVANCEDMECHS:
+		if (!GetConfig (CONFIG_MECHS)) {
+			g_Error = "Mechs are disabled!";
+			return false;
+		}
+		
+		if (GetConfig(CONFIG_LIGHTMECHS))
+		{
+			g_Error = "Only light mechs can be used!";
+			return false;
+		}
+		
+		if (GetConfig (CONFIG_ADVMECHS_BLUE + PlayerTeam())) {
+			g_Error = "You already have that!";
+			return false;
+		}
+		
+		break;
+	case RESEARCH_HEALTHREGEN:
+		if (CheckBuilding (BUILDING_HEALTHREGEN, PlayerTeam())) {
+			g_Error = "This has already been built!";
+			return false;
+		}
+		break;
+	case RESEARCH_AMMOREGEN:
+		if (CheckBuilding (BUILDING_AMMOREGEN, PlayerTeam())) {
+			g_Error = "This has already been built!";
+			return false;
+		}
+		break;
+	case RESEARCH_C4:
+		// Not before 5 minutes.
+		if (!TimeDelay (GetConfig (CONFIG_C4DELAY), false)) {
+			g_Error = "It is too early to buy this!";
+			return false;
+		}
+		
+		// Classes that don't have C4 aren't supposed to buy any
+		// [Cata] Deprecated.
+		/*
+		if (!CheckInventory ("TimedC4Count")) 
+		{
+			g_Error = "You don't have any C4 to add up to!";
+			return false;
+		}
+		*/
+		
+		if (CheckInventory ("TimedC4Count") >= ITEM_maxC4) {
+			g_Error = "You have the maximum amount of c4's!";
+			return false;
+		}
+		break;
+	case RESEARCH_REPAIRUPGRADE:
+		if (CheckInventory("RepairGunUpgrade")) {
+			g_Error = "You already have an upgraded repair gun!";
+			return false;
+		}
+		
+		if (!CheckInventory("RepairGun")) {
+			g_Error = "You must have a repair gun!";
+			return false;
+		}
+		break;
+	case RESEARCH_ADVTURRETS:
+		if (GetConfig (CONFIG_ADVTURRETS_BLUE + PlayerTeam())) {
+			g_Error = "You already have that!";
+			return false;
+		}
+		break;
+	case RESEARCH_MORETURRETS:
+		// MAX_TURRETS is the initial turret cap. If the turret cap is
+		// above this, the research was already purchased.
+		if (GetConfig (CONFIG_MAXTURRETS_BLUE + PlayerTeam()) > MAX_TURRETS) {
+			g_Error = "You already have that!";
+			return false;
+		}
+		break;
+	case RESEARCH_FRAGNADE:
+		if (GetAmmoCapacity ("FragGrenadeAmmo") >= ITEM_maxGrenades) {
+			g_Error = "You already have four!";
+			return false;
+		}
+		break;
+	case RESEARCH_FLASHBANG:
+		if (GetAmmoCapacity ("FlashbangAmmo") >= ITEM_maxFlashBangs) {
+			g_Error = "You already have four!";
+			return false;
+		}
+		break;
+	/*case RESEARCH_ENHANCEDC4:
+		if (GetConfig (CONFIG_ENHANCEDC4_BLUE + PlayerTeam())) {
+			g_Error = "You already have that!";
+			return false;
+		}
+		break;*/
+	}
+	
+	// Must afford it
+	if (GetCredits() < Researches_int[r][RCK_COST]) {
+		g_Error = "You need more credits!";
+		return false;
+	}
+	
+	return true;
+}
+
+function bool RC_PurchaseResearch (int r) {
+	if (!CheckResearch (r)) {
+		MenuResponse (MSGTYPE_ERROR, g_Error);
+		return false;
+	}
+	
+	SpendCredits (Researches_int[r][RCK_COST]);
+	
+	// Category-dependant notices and display a notice
+	switch (Researches_int[r][RCK_CATEGORY]) {
+	case RC_CAT_UPGRADE:
+		AddExperience (150);
+		GivePoints (RESEARCHPOINTS);
+		
+		MenuResponse (MSGTYPE_SUCCESS, "Research complete!");
+		
+		SetFont("SMALLFONT");
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam (s:"\cARed Team\cJ researches \cD", s:Researches_Str[r][RCK_NAME], s:"!"), true);
+		else
+			IntelMessage (strparam (s:"\cNBlue Team\cJ researches \cD", s:Researches_Str[r][RCK_NAME], s:"!"), true);
+		
+		
+		Log (n:0, s:" researches ", s:Researches_str[r][RCK_NAME], s:" for ", s:TeamNames[PlayerTeam()], s:" team.");
+		TeamMessage (TMSG_RESEARCH, r, playernumber());
+		break;
+	case RC_CAT_EXTENSION:
+		MenuResponse (MSGTYPE_SUCCESS, "Construction Complete!");
+		break;
+	}
+	
+	if (Researches_int[r][RCK_CATEGORY] != RC_CAT_UPGRADE)
+		Log (n:0, s:" purchases ", s:Researches_str[r][RCK_NAME]);
+	
+	// Research-dependent effects
+	switch (r) {
+	case RESEARCH_ENHANCEDREFINING:
+		EnhancedRefining[PlayerTeam()] = true;
+		SetConfig (CONFIG_ENHANCEDREFINING_BLUE + PlayerTeam(), EnhancedRefining[PlayerTeam()]);
+		break;
+	case RESEARCH_ADVANCEDMECHS:
+		AdvancedMechs[PlayerTeam()] = true;
+		SetConfig (CONFIG_ADVMECHS_BLUE + PlayerTeam(), AdvancedMechs[PlayerTeam()]);
+		break;
+	case RESEARCH_HEALTHREGEN:
+		ACS_ExecuteAlways(344, 0, 6);
+		if (PlayerTeam() == TEAM_RED)
+			SpawnSpot("Utility_GlobalMedicCacheRed", 212);
+		else
+			SpawnSpot("Utility_GlobalMedicCacheBlue", 112);
+		break;
+	case RESEARCH_AMMOREGEN:
+		ACS_ExecuteAlways(344, 0, 8);
+		if (PlayerTeam() == TEAM_RED)
+			SpawnSpot("Utility_GlobalAmmoCacheRed", 213);
+		else
+			SpawnSpot("Utility_GlobalAmmoCacheBlue", 113);
+		break;
+	case RESEARCH_C4:
+		MenuResponse (MSGTYPE_SUCCESS, "Got extra C4!");
+		GiveInventory ("Refunds", 50);
+		GiveInventory ("TimedC4Count", 1);
+		GiveInventory("TimedC4", 1);
+		//SetInventory ("TimedC4", CheckInventory ("TimedC4Count"));
+		break;
+	case RESEARCH_REPAIRUPGRADE:
+		MenuResponse (MSGTYPE_SUCCESS, "Upgraded the Repair Gun!");
+		GiveInventory ("RepairGunUpgrade", 1);
+		SetWeapon ("RepairGun");
+	case RESEARCH_ADVTURRETS:
+		AdvancedTurrets[PlayerTeam()] = true;
+		SetConfig (CONFIG_ADVTURRETS_BLUE + PlayerTeam(), AdvancedTurrets[PlayerTeam()]);
+		break;
+	case RESEARCH_MORETURRETS:
+		MaxTurrets[PlayerTeam()] += 5;
+		SetConfig (CONFIG_MAXTURRETS_BLUE + PlayerTeam(), MaxTurrets[PlayerTeam()]);
+		break;
+	case RESEARCH_FRAGNADE:
+		MenuResponse (MSGTYPE_SUCCESS, "Got a frag grenade!");
+		SetFragGrenades (GetAmmoCapacity ("FragGrenadeAmmo") + 1);
+		break;
+	case RESEARCH_FLASHBANG:
+		MenuResponse (MSGTYPE_SUCCESS, "Got a flashbang!");
+		SetFlashBangs (GetAmmoCapacity ("FlashbangAmmo") + 1);
+		break;
+	/*case RESEARCH_ENHANCEDC4:
+		EnhancedC4[PlayerTeam()] = true;
+		SetConfig (CONFIG_ENHANCEDC4_BLUE + PlayerTeam(), EnhancedC4[PlayerTeam()]);
+		break;*/
+	}
+	
+	SYNC_RefreshMenu ();
+	CallEvent (ACTION_ResearchPurchase, r);
+	return true;
+}

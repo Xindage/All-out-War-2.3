@@ -1,0 +1,151 @@
+// Floating Platform
+actor FloatingPlatform : InvisibleBridge {
+	+SHOOTABLE +NOBLOOD
+	radius 92
+	height 14
+	health 2000
+	mass 0x7FFFFFFF
+	damagefactor "Disarm", 0.0
+	damagefactor "Flash", 0.0
+	damagefactor "Fist", 0.5
+	damagefactor "Mechstomp", 0.0
+	DamageFactor "StealthKnife", 2.5
+	
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (750, 0) == 0, "Nope")
+	Idle:
+		TNT1 A 0 A_JumpIfHealthLower (400, "IdleDamaged")
+		TNT1 A 30 A_SpawnItemEx ("FloatingPlatformVisual")
+		loop
+	IdleDamaged:
+		TNT1 A 30 A_SpawnItemEx ("FloatingPlatformVisualDamaged")
+		loop
+	Death:
+		TC4T A 0 
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformExplosion")
+		TNT1 A 4 bright 
+		stop
+	Nope:
+	Death.StealthKnife:
+	Death.Deconstruction:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 2 A_PlaySound ("utility/deconstruct")
+		stop
+	}
+}
+
+actor FloatingPlatformVisual {
+	+CLIENTSIDEONLY +NOGRAVITY
+	+NOBLOCKMAP +NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -84, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -28, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 28, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 84, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -56, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 0, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 56, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -84, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -28, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 28, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 84, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -56, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 0, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 56, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -84, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -28, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 28, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 84, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -56, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 0, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 56, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -84, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", -28, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 28, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnit", 84, 84, 0)
+		stop
+	}
+}
+
+actor FloatingPlatformVisualDamaged {
+	+CLIENTSIDEONLY +NOGRAVITY
+	+NOBLOCKMAP +NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -84, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -28, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 28, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 84, -84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -56, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 0, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 56, -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -84, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -28, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 28, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 84, -28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -56, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 0, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 56, 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -84, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -28, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 28, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 84, 28, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -56, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 0, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 56, 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -84, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", -28, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 28, 84, 0)
+		TNT1 A 0 A_SpawnItemEx ("FloatingPlatformVisualUnitDamaged", 84, 84, 0)
+		stop
+	}
+}
+
+actor FloatingPlatformVisualUnit {
+	+CLIENTSIDEONLY +NOGRAVITY
+	+NOBLOCKMAP +NOINTERACTION
+	scale 0.25
+	states {
+	Spawn:
+ 		USTP B 35
+		stop
+	}
+}
+
+actor FloatingPlatformVisualUnitDamaged : FloatingPlatformVisualUnit {
+	states {
+	Spawn:
+ 		USTP C 35
+		stop
+	}
+}
+
+actor FloatingPlatformExplosion {
+	+CLIENTSIDEONLY +NOGRAVITY
+	+NOBLOCKMAP +NOINTERACTION
+ 	reactiontime 2
+	states {
+	Spawn:
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-84,-48), random(-84,-48))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-32, 32), random(-84, 48))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random( 48, 84), random(-84, 48))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-84,-48), random(-32, 32))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-32, 32), random(-32, 32))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random( 48, 84), random(-32, 32))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-84,-48), random( 48, 84))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random(-32, 32), random( 48, 84))
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", random( 48, 84), random( 48, 84))
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 10 A_CountDown
+		loop
+	Death:
+		TNT1 A 0
+		stop
+	}
+}

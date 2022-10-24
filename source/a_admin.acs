@@ -1,0 +1,264 @@
+// [SP] NOTICE: This is an administrator 'puke' script. USE WITH CARE! This can be abused very easily.
+script SC_ADMIN_RCON (int Player,int Action) {
+	// [Dusk] {9/11/12} Since Zandronum now stupidly claims that the rcon user is a cheater,
+	// display a hudmessage showing the real nature of this script command. The only other
+	// option is a rather crude hack and I'd probably invoke a flamewar if I did that.
+	if (NetState == NETSTATE_Server) {
+		HudMessage (s:"This script is invoked from an RCON alias. ",
+		s:"An admin is probably doing cleanup work";
+			HUDMSG_PLAIN|HUDMSG_LOG, 12345, CR_GRAY, 0, 0, 0);
+		ClearHudMessage (12345);
+	}
+	
+	SetActivator(3800 + Player);
+	switch(Action)
+	{
+	case 3:
+		if ( ThingCount(T_NONE,3800 + Player) == 0 ) {
+			Log(s:"Player #",d:Player,s:" not found!");
+			terminate;
+		}
+		if (PlayerIsBot (Player)) {
+			Log (s:"Player #", d:Player, s:" \"", n:Player+1, s:"\c-\" is a bot.");
+			terminate;
+		}
+		//Player_SetTeam(255);
+		SetPlayerProperty(0,1,1);
+		SetPlayerProperty(0,1,2);
+		SetPlayerProperty(0,1,3);
+		SetFont("BIGFONT");
+		HudMessageBold (n:0, s:"\c- becomes an \cGadministrator";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+		Log(s:"*** \caWARNING!\c- Game Master mode activated for ",n:Player+1,s:" \c-(IDX ",d:Player,s:") - this has been logged in the server console.");
+		Log(s:"*** To deactivate this mode, you (or target) must either spectate or call a_exit in console.");
+		Log(s:"*** Please don't abuse this! Do what you need to do, then exit this mode immediately.");
+		GiveInventory("AdministratorSwitch",1);
+		IsAdmin[Player] = true;
+		GiveInventory ("IsAdmin", 1);
+		break;
+	case 1:
+		if ( ThingCount(T_NONE,3800 + Player) == 0 )
+		{
+			Log(s:"Player ",d:Player,s:" not found!");
+			terminate;
+		}
+		if ( PlayerTeam() == 0 )
+		{
+			Log(s:"Player ",d:Player,s:" named ",n:0,s:" is already on Blue.");
+			terminate;
+		}
+		SetFont("BIGFONT");
+		HudMessage (n:Player, s:"\c- has been forced to\n\cKchange team\c- by an \cQadmin.";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+		Player_SetTeam(0);
+		Log(n:0,s:" forced to change to Blue by admin.");
+		delay(1);
+		Teleport(70);
+		GiveInventory("HasClass",1);
+		ACS_ExecuteAlways(95,0,0,0,0);
+		TakeInventory("IsRed",1);
+		GiveInventory("IsBlue",1);
+		StartTime[Player] = -0x7FFFFFFF;
+		break;
+	case 2:
+		if ( ThingCount(T_NONE,3800 + Player) == 0 )
+		{
+			Log(s:"Player ",d:Player,s:" not found!");
+			terminate;
+		}
+		if ( PlayerTeam() == 1 )
+		{
+			Log(s:"Player ",d:Player,s:" named ",n:0,s:" is already on Red.");
+			terminate;
+		}
+		SetFont("BIGFONT");
+		HudMessage (n:Player, s:"\c- has been forced to\n\cKchange team\c- by an \cQadmin.";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+		Player_SetTeam(1);
+		Log(n:0,s:" forced to change to Red by admin.");
+		delay(1);
+		Teleport(71);
+		GiveInventory("HasClass",1);
+		ACS_ExecuteAlways(95,0,0,0,0);
+		TakeInventory("IsBlue",1);
+		GiveInventory("IsRed",1);
+		StartTime[Player] = -0x7FFFFFFF;
+		break;
+	case 0:
+		switch(Player)
+		{
+		case 3:
+			Log(s:"Usage: gamemaster <IDX> (use 'playerinfo' to get IDX numbers)");
+		case 1:
+			Log(s:"Usage: forceblue <IDX> (use 'playerinfo' to get IDX numbers)");
+		case 2:
+			Log(s:"Usage: forcered <IDX> (use 'playerinfo' to get IDX numbers)");
+		default:
+			Log(s:"Please don't puke this script directly! Use the provided ccmd's - it's for your sanity's own good!");
+		}
+	default:
+		Log(s:"Unknown action!");
+	}
+}
+script SC_ADMIN_CLIENT (int Arg1, int Arg2, int Arg3) NET
+{
+	if ( IsAdmin[PlayerNumber()] == false )
+		terminate;
+	switch(Arg1)
+	{
+	case 0:
+		// help!
+		break;
+	case 1:
+		// Warp
+		/*Spawn("TeleportDest",Arg2<<16,Arg3<<16,0,6003);
+		delay(1);
+		Teleport_NoFog(6003);
+		delay(1);
+		Thing_Remove(6003);*/
+		// [Dusk] this should be more reliable
+		SetActorPosition (0, arg2<<16, arg3<<16, 0, false);
+		break;
+	case 2:
+		// Teleport to spot
+		if (arg2 <= 0) {
+			HudMessage (s:"Usage: a_teleport <tid>\n",
+				s:"TIDs of interest:\n",
+				s:"1: blue base\t\t2: red base\n",
+				s:"70: blue spawn room\t71: red spawn room\n",
+				s:"108: blue wf hanger\t208: red wf hanger\n",
+				s:"110: blue mech room\t210: red mech room\n",
+				s:"111: blue res room\t211: red res room\n"; HUDMSG_PLAIN|HUDMSG_LOG, 9000, 0, 0, 0, 0);
+			HudMessage (s:""; HUDMSG_PLAIN, 9000, 0, 0, 0, 0.1);
+			terminate;
+		}
+		Teleport_NoFog(Arg2);
+		break;
+	case 3:
+		// Activate crate
+		ACS_ExecuteAlways (309, 0, Arg2, Arg3);
+		break;
+	case 4:
+	case 5:
+		break;
+	case 6:
+		// Toggle berserk
+		if (CheckInventory ("PowerBerserk")) {
+			TakeInventory ("PowerBerserk", 1);
+			delay (5);
+			TakeInventory ("PowerBerserkHue", 1);
+			delay (3);
+			GiveInventory ("RedHueRemover", 1);
+		} else {
+			GiveInventory ("BerserkSwitch", 1);
+			delay (5);
+			GiveInventory ("BerserkHue", 1);
+		}
+		break;
+	case 7:
+		// Instant resign
+		if(PlayerTeam() == TEAM_RED)
+			Teleport(71);
+		else
+			Teleport(70);
+		ACS_ExecuteAlways (95, 0);
+		break;
+	case 8:
+		// Give beacon item
+		GiveInventory("BeaconItem",1);
+		break;
+	case 9:
+		// Become Admin Player Again - or remove it
+		if (CheckInventory("PowerAdministrator")) {
+			TakeInventory("PowerAdministrator",1);
+			SetPlayerProperty(0,0,1);
+			SetPlayerProperty(0,0,2);
+			SetPlayerProperty(0,0,3);
+		} else {
+			GiveInventory("AdministratorSwitch",1);
+			SetPlayerProperty(0,1,1);
+			SetPlayerProperty(0,1,2);
+			SetPlayerProperty(0,1,3);
+		}
+		break;
+	case 10:
+		// Set Team
+		Player_SetTeam(Arg2);
+		if (Arg2 == TEAM_BLUE) {
+			TakeInventory("IsRed",1);
+			GiveInventory("IsBlue",1);
+		} else {
+			GiveInventory("IsRed",1);
+			TakeInventory("IsBlue",1);
+		}
+		break;
+	case 11:
+		// Give utility gun
+		GiveInventory ("RepairGun", 1);
+		GiveInventory ("UtilityGun", 1);
+		break;
+	case 12:
+		// Set speed
+		SetActorProperty(0, APROP_SPEED, 0.01 * Arg2);
+		break;
+	case 13:
+		// Admin pistol - rotate fire
+		if (CheckInventory ("AdminPistolRotation") == 2)
+			TakeInventory ("AdminPistolRotation", 2);
+		else
+			GiveInventory ("AdminPistolRotation", 1);
+		
+		switch (CheckInventory ("AdminPistolRotation")) {
+		case 0:
+			HudMessage (s:"Normal mode";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 1.0, 0.5);
+			break;
+		case 1:
+			HudMessage (s:"\cJRepair / Disarm mode";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 1.0, 0.5);
+			break;
+		case 2:
+			HudMessage (s:"Deconstruction mode";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 1.0, 0.5);
+			break;
+		}
+		break;
+	case 14:
+		// Open Deck
+		GiveInventory ("OpenDeck", 1);
+		break;
+	case 15:
+		// Notarget
+		SetActorProperty (0, APROP_NoTarget, !GetActorProperty (0, APROP_NoTarget));
+		break;
+	case 16:
+		// Exit admin mode
+		SetPlayerProperty (0, 0, 1);
+		SetPlayerProperty (0, 0, 2);
+		SetPlayerProperty (0, 0, 3);
+		SetActorProperty (0, APROP_NoTarget, 0);
+		SetFont("BIGFONT");
+		HudMessageBold (s:"Admin ", n:0, s:"\c- becomes a regular player again.";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+		Log (n:0, s:" (#", d:PlayerNumber(), s:") exits admin mode.");
+		IsAdmin[PlayerNumber()] = false;
+		ACS_ExecuteAlways (96, 0, 1-PlayerTeam()); // teleport to spawn room
+		delay (5);
+		ACS_ExecuteAlways (95, 0); // resign
+		break;
+	case 17:
+		// Set health
+		if (arg2 <= 0) break;
+		SetActorProperty (0, APROP_Health, Arg2);
+		break;
+	case 18:
+		// Fly
+		if (CheckInventory ("PowerFlight"))
+			TakeInventory ("PowerFlight", 1);
+		else
+			GiveInventory ("AdminFlight", 1);
+		break;
+	default:
+		Log(s:"Unknown action!");
+	}
+}

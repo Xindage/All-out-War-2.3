@@ -1,0 +1,93 @@
+[enu default]
+// =============================================================================
+// Item pickups... not very populated here.
+GOTBFG2704 = "You swiped the prototype BFG2704! And those nerds in R&D thought a glass wall would stop you...";
+
+// =============================================================================
+// Miscallenous/environment obits
+OB_FALLING = "%o butted heads with gravity.";
+OB_CRUSH = "%o was flattened.";
+OB_WATER = "%o swam like a brick."; // Psychic
+OB_AIRSTRIKE = "%o couldn't hide from an airstrike.";
+
+// =============================================================================
+// Weapon obits
+OB_ADMIN = "%o was taught discipline by %k.";
+OB_ARTILLERYCANNON = "%o was demolished by %k's artillery cannon.";
+OB_BERSERK = "\cG%o \cGgot %p shit punched the FUCK out by %k.";
+OB_BFG2704 = "%o was recognized posthumously by the UAC for %p contributions to %k's unauthorized BFG 2704 testing.";
+OB_BOMBPACK = "%o \cIwas wiped off the face of Earth by %k.";
+OB_DOUBLESHOTGUN = "%o was splattered by %k's double shotgun.";
+OB_CHAINSAW = "%o was shredded down by %k's chainsaw.";
+OB_CHAINSAW_ALT = "%o\cG was mutilated to bits by %k\cG's thrown chainsaw!";
+OB_CHEMICALS = "%o chokes in %k's chemicals.";
+OB_CHEMSPRAYER = "%o was poisoned by %k's chemical sprayer.";
+OB_CHEMSPRAYER_GRENADE = "%o was mutated by %k's chemical grenade.";
+OB_CHRONOBOW = "%o was torn out of timestream by %k's chrono bow.";
+OB_FIREDECAY = "%o burns in %k's firestorm.";
+OB_FIST = "%o was knocked out hard by %k.";
+OB_FLAMER = "%o was reduced to ashes by %k's flamethrower.";
+OB_FLAMER_GRENADE = "%o was set ablaze by %k's phosphorus grenade.";
+OB_GATLING = "%o was drilled by %k's gatling gun.";
+OB_GAUSS = "%o had %p torso busted by %k's gauss rifle.";
+OB_GRENADE = "%o gulped down %k's grenade.";
+OB_GRENADE_ALT = "%o tripped over %k's grenade.";
+OB_IONCANNON = "%o was obliterated by %k's \chIon Cannon.";
+OB_LASERCHAINGUN = "%o was incinerated by %k's laser chaingun.";
+OB_LASERRIFLE = "%o was burned by %k's laser rifle.";
+OB_KAMIKAZE = "%k make %o go boom!";
+OB_KARASAWA = "%o was fried by %k's karasawa.";
+OB_KNIFE = "%o \cKwas cut up by %k!";
+OB_MACHINEGUN = "%o was perforated by %k's machinegun.";
+OB_MINIRAVEN_RED = "%o was pecked by a \cgRed\c- mini-Raven.";
+OB_MINIRAVEN_BLUE = "%o was pecked by a \chBlue\c- mini-Raven.";
+OB_MISSILELAUNCHER = "%o was blown out of %p boots by %k's missile.";
+OB_MINE = "%o tripped over a proxy mine.";
+OB_MINEBARREL = "%o was mined down into the ground by %k.";
+OB_NUKE = "%o was disintegrated by %k's \cgNuclear Strike.";
+OB_OBELISK_BLUE = "%o couldn't hide from the \chBlue Obelisk\c-.";
+OB_OBELISK_RED = "%o couldn't hide from the \cgRed Obelisk\c-.";
+OB_PLASMARIFLE = "%o was melted to a slab by %k's plasma gun.";
+OB_PLASMACANNON_RED = "%o was annihilated by %k's \caplasma cannon.";
+OB_PLASMACANNON_BLUE = "%o was annihilated by %k's \cnplasma cannon.";
+OB_PLASMACANNON_ALT_RED = "%o couldn't escape %k's \caplasma cannon.";
+OB_PLASMACANNON_ALT_BLUE = "%o couldn't escape %k's \cnplasma cannon.";
+OB_REVOLVER = "%o was executed Western-style by %k.";
+OB_REMOTEC4 = "%o couldn't spot %k's Remote C4.";
+OB_RIFLE = "%o was crippled by %k's rifle.";
+OB_RIFLEGRENADE = "%o was popped by %k's rifle grenade.";
+OB_SEEKERMISSILE = "%o was sought and destroyed by %k's seeker missile.";
+OB_SHOCKRIFLE = "%o was overloaded by %k's shock rifle.";
+OB_SHOTGUN = "%o was smacked by %k's shotgun.";
+OB_SNIPER = "%o found %k's bullet in %p head.";
+OB_SUBBY = "%o was whittled down by %k's sub-machinegun.";
+OB_FRAGGRENADE = "%o was blown to pieces by %k's frag grenade.";
+OB_FRAGGRENADESHRAPNEL = "%o was finished off by %k's frag grenade shrapnel.";
+OB_FLASHBANG = "%o was blinded to death by %k's flashbang.";
+OB_TIBAUTORIFLE = "%o was skewered by %k's tiberium autorifle.";
+OB_TIBAUTORIFLEEXPLOSION = "%o was mutated by %k's tiberium autorifle.";
+OB_COMBAUTORIFLE = "%o was ignited by %k's combustion autorifle.";
+OB_COMBAUTORIFLEEXPLOSION = "%o was set ablaze by %k's combustion autorifle.";
+OB_QUAD_SHOTGUN = "%o was blown 4 new holes by %k's quad shotgun.";
+OB_NAILMACHINEGUN = "%o was nailed by %k.";
+
+// =============================================================================
+// Mech obits
+OB_ORCA = "%o was pinned down by %k's Orca.";
+OB_RAVEN = "%o was pecked by %k's Raven.";
+OB_MADCAT = "%o was shocked out by %k's Mad Cat.";
+OB_TITAN = "%o was crushed by %k's Titan.";
+OB_JUGGERNAUT = "%o was ground to bits by %k's Juggernaut MKII.";
+OB_TORTOISE = "%o couldn't crack the shell of %k's Tortoise.";
+
+OB_MECHJUNK = "%o was caught playing with %k's junk!";
+OB_MECHEXPLOSION = "%o chose the wrong day to inspect %k's mech.";
+
+// =============================================================================
+// AI marine obits
+OB_MARINE_ROCKET_BLUE = "%o was blown out of %p boots by a \chBlue marine's\c- missile.";
+OB_MARINE_ROCKET_RED = "%o was blown out of %p boots by \cgRed marine's\c- missile.";
+OB_MARINE_SSG_BLUE = "%o was splattered by a \chBlue marine's\c- double shotgun.";
+OB_MARINE_SSG_RED = "%o was splattered by a \cgRed marine's\c- double shotgun.";
+OB_MARINE_TIBRIFLE_BLUE = "%o was skewered by a \chBlue marine's\c- tiberium autorifle.";
+OB_MARINE_TIBRIFLE_RED = "%o was skewered by a \cgRed marine's\c- tiberium autorifle.";

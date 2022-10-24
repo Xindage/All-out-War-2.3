@@ -1,0 +1,400 @@
+// All Out War 2 HUD scripts
+// Credit to VoltlocK for originally creating the engine
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// [Dusk] Do watch out, things get a little messy here!
+
+/* Because information does not travel instantly,
+ * refresh the hud unconditionally a few times
+ * over the first three seconds. This should 
+ * accommondate for 6000 ping.
+ * 
+ * Also this is where the client sends initial
+ * request for a snapshot.
+ */
+script SC_CL_HUDINIT (void) NET CLIENTSIDE {
+	// Allow ConsolePlayer to init properly
+	delay (5);
+	
+	CL_DisplayBuildingHud ();
+	DisplayStatusHUD ();
+	
+	// Send the server a request for a snapshot, so
+	// that we get existing player information.
+	CL_RequestSnapshot ();
+	
+	for (int i = 0; i <= 6; i++) {
+		CL_DisplayBuildingHud ();
+		DisplayStatusHUD ();
+		
+		delay (17);
+	}
+}
+
+// ============================================================================
+// [Dusk] HUD variable interpolator
+#define INTERPOLATE_DELTA 5
+
+// By how much should we interpolate?
+function int InterpolationDelta (int i) {
+	// Initial speed
+	int d = INTERPOLATE_DELTA;
+	
+	// Interpolation speed depends on the amount in the counter
+	int av = abs (HUDInterpolationCounter[i]);
+	if (av < 15)
+		d = 2;
+	else
+		d *= (av / 25) + 1;
+	
+	// Interpolation can be negative
+	if (HUDInterpolationCounter[i] < 0)
+		d = -d;
+	
+	// Delta must be clamped, otherwise overflows
+	if ((d > 0 && d > HUDInterpolationCounter[i]) ||
+		(d < 0 && d < HUDInterpolationCounter[i]))
+		d = HUDInterpolationCounter[i];
+	
+	return d;
+}
+
+// ============================================================================
+script SC_HUDINTERPOLATOR (void) NET CLIENTSIDE {
+	// Server does not interpolate anything
+	if (netstate == NETSTATE_Server)
+		terminate;
+	
+	// Only one interpolator may be ever active
+	if (intHolder[i_InterpolatorActive])
+		terminate;
+	
+	// If we want less effects, disable interpolation
+	// In this case, apply counters instantly and exit
+	if (GetCVar ("zeta_cl_fx") < 0) {
+		HUDInterpolationCounter[0] = 0;
+		HUDInterpolationCounter[1] = 0;
+		DisplayStatusHUD ();
+		terminate;
+	}
+	
+	intHolder[i_InterpolatorActive] = true;
+	bool done = false;
+	int d;
+	
+	// Set activator to world to prevent premature termination.
+	SetActivator (-1);
+	
+	while (!done) {
+		done = true;
+		
+		// Interpolate credits
+		if (HUDInterpolationCounter[0]) {
+			d = InterpolationDelta (0);
+			HUDInterpolationCounter[0] -= d;
+			done = false;
+		}
+		
+		// Interpolate experience
+		if (HudInterpolationCounter[1]) {
+			d = InterpolationDelta (1);
+			HUDInterpolationCounter[1] -= d;
+			done = false;
+		}
+		
+		// Update the HUD
+		if (!done)
+			DisplayStatusHUD ();
+		
+		delay (1);
+	}
+	
+	intHolder[i_InterpolatorActive] = false;
+}
+
+// ============================================================================
+// [Dusk] This function displays the credits/experience hud to the player
+
+// [Dusk] Calculate widescreen offset.
+function int HUDX (int a) {
+	int xw = (4 * GetCVar ("vid_defheight") / 3);
+	int vw = GetCVar ("vid_defwidth");
+	
+	// [Dusk] Yay, maths
+	return -((xw << 16) - (vw << 16) - (-a * xw)) / (-vw);
+}
+
+// =============================================================================
+function void DisplayStatusHUD (void) {
+	if (netstate == NETSTATE_Server)
+		return;
+	
+	// [Dusk] If we want no hud, clear it
+	if (GetCVar ("zeta_cl_nohud")) {
+		ClearHudMessage (50);
+		ClearHudMessage (5000);
+		return;
+	}
+	
+	// [Dusk] Don't update the HUD when dead. When the player is dead, his credits
+	// appear to be zero.
+	if (intHolder[i_consoledead])
+		return;
+	
+	// [Dusk] Set appropriate font for the HUD
+	SetHUDFont ();
+	
+	// [Dusk] Use brick color when in red team
+	str col = "\cN";
+	if (ConsoleTeam () == TEAM_RED)
+		col = "\cA";
+	
+	// [Dusk] We're not in game, display a different HUD
+	if (!PlayerInGame (intHolder[i_consoleplayer])) {
+		HudMessage (s:"Credits: \cQ$\cD----\n",
+			s:"Experience: \cD-\cQ/\cD- XP\n\cJ----";
+			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+		return;
+	}
+	
+	int moni = CheckActorInventory (3800 + intHolder[i_consoleplayer], "Credit");
+	int xp = CheckActorInventory (3800 + intHolder[i_consoleplayer], "Experience");
+	int xpneed = GetExpNeed (GetPlayerRank (intHolder[i_consoleplayer]) + 1);
+	str rankname = RankTitles[GetPlayerRank (intHolder[i_consoleplayer])];
+	
+	// [Dusk] This code showed how much credits the player actually gained.
+	// However, it doesn't really work well with credit flow...
+/*
+	str creditDeltaInfo = "";
+	if (intHolder[i_g_CreditDelta] > 0)
+		creditDeltaInfo = strparam (s:"\\cH(+$\\cN", d:intHolder[i_g_CreditDelta], s:"\\cH)");
+	else if (intHolder[i_g_CreditDelta] < 0)
+		creditDeltaInfo = strparam (s:"\\cR(+$\\cG", d:intHolder[i_g_CreditDelta], s:"\\cR)");
+	intHolder[i_g_CreditDelta] = 0;
+	
+	HUDMessageBold (s:creditDeltaInfo; HUDMSG_FadeOut, 51, CR_White, -0.825, -0.8, 0.25, 0.5);
+*/
+	
+	if (xp < GetExpNeed (MAX_RANKS - 1)) {
+		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
+			s:col, s:"Experience: \cD",d:xp, s:"\cQ/\cD", d:xpneed, s:" XP\n",
+			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
+			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+	} else {
+		// [Dusk] We are at highest rank, so a different hud is displayed,
+		// in which there is no experience need shown. Experience also
+		// appears white to indicate maximum.
+		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
+			s:col, s:"Experience: \cJ", d:xp, s:" XP\n",
+			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
+			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+	}
+	
+	// Display rank pic
+	SetFont (GetRankPic (intHolder[i_consoleplayer]));
+	HudMessage (s:"a";
+		HUDMSG_PLAIN, 5000, CR_LIGHTBLUE, HUDX (-0.922), -0.78, 0);
+}
+
+// =============================================================================
+// [Dusk] TEAM LOG
+// TeamMessage: Server sends clients a team log message.
+function void TeamMessage (int msgtype, int x0, int pnum) 
+{
+	if (NetState == NETSTATE_Client || PlayerNumber () == -1 ||
+		!PlayerInGame (PlayerNumber ()) || msgtype >= NUM_MSGTYPES)
+	{
+		return;
+	}
+	
+	ACS_ExecuteAlways (SC_CL_TeamLog, 0, msgtype, x0, pnum); // [Cata] Hopefully fixes the null messages.
+}
+
+// =============================================================================
+// [Dusk] Script 982: Client recieves data from server about a team
+// message. Build the string from recieved information and add it to team log.
+// [Cata] pnum addon.
+script SC_CL_TeamLog (int msgtype, int x0, int pnum) NET CLIENTSIDE 
+{
+	// Print it out on the team log
+	if (GetCVar ("zeta_cl_noteamlog"))
+		terminate; // User doesn't want team intel, period.
+	
+	if (!PlayerInGame (intHolder[i_consoleplayer]) || PlayerTeam() != ConsoleTeam())
+		terminate; // Not a teammate or we're not in-game
+	
+	str ec, elc, ac, alc;
+	str cname, msg;
+	
+	if (ConsoleTeam() == TEAM_BLUE) {
+		ac = "\ch"; alc = "\cn"; // ally color
+		ec = "\cg"; elc = "\ca"; // enemy color
+	} else {
+		ac = "\cg"; alc = "\ca"; // ally color
+		ec = "\ch"; elc = "\cn"; // enemy color
+	}
+	
+	switch (x0) {
+	case 0: cname = "mini-refinery"; break;
+	case 1: cname = "health regen"; break;
+	case 2: cname = "ammo regen"; break;
+	case 3: cname = "portal node"; break;
+	}
+	
+	// Build the string from incoming data
+	switch (msgtype) 
+	{
+	case TMSG_NEWCLASS:
+		msg = strparam (n:pnum+1, s:"\c- becomes \cd", s:Classes_str[x0][CK_NAME]);
+		break;
+	case TMSG_ADDONPURCHASE:
+		msg = strparam (n:pnum+1, s:"\c- purchases \cd", s:GetAddOnName (x0));
+		break;
+	case TMSG_MECHPURCHASE:
+		msg = strparam (n:pnum+1, s:"\c- pilots \cu", s:Mechs_str[x0][MK_NAME]);
+		break;
+	case TMSG_MECHEJECT:
+		msg = strparam (n:pnum+1, s:"\c- ejects \cu", s:Mechs_str[x0][MK_NAME]);
+		break;
+	case TMSG_TIBREFINE:
+		msg = strparam (n:pnum+1, s:"\c- refines Tiberium");
+		break;
+	case TMSG_RESEARCH:
+		msg = strparam (n:pnum+1, s:"\c- researches \ci", s:Researches_str[x0][RCK_NAME]);
+		break;
+	case TMSG_RANKUP:
+		msg = strparam (n:pnum+1, s:"\c- ranks up to \cd", s:RankTitles[x0]);
+		break;
+	case TMSG_CRATE:
+		msg = strparam (n:pnum+1, s:"\c- gets \ck", s:CR_GetDisplayName (x0));
+		break;
+	case TMSG_RESIGN:
+		msg = strparam (n:pnum+1, s:"\ci resigns");
+		break;
+	case TMSG_CONSTRUCT:
+		msg = strparam (n:pnum+1, s:"\c- builds a ", s:ac, s:cname);
+		break;
+	case TMSG_DESTRUCT:
+		msg = strparam (n:pnum+1, s:"\c- destroys ", s:ec, s:"enemy ", s:cname);
+		break;
+	case TMSG_TELELINK:
+		if (!x0)
+			msg = "\cdTeleporter link becomes active";
+		else
+			msg = "\cuTeleporter link becomes inactive";
+		break;
+	case TMSG_TEAMSWITCH:
+		if (!x0)
+			msg = strparam (n:pnum+1, s:" \cuswitches away to the enemy team");
+		else
+			msg = strparam (n:pnum+1, s:" \cdswitches from the enemy team. Say hi!");
+		break;
+	case TMSG_IONNUKE:
+		// Try determine where the nuke is.
+		int location = EstimateLocation (3800 + pnum);
+		
+		// Build the message
+		if (location != -1)
+		msg = strparam (n:pnum + 1, s:"\c- has planted a beacon near \cD", s:LocationNames[location]);
+		else
+		msg = strparam (n:pnum + 1, s:"\c- has planted a beacon somewhere");
+
+		break;
+	default:
+		Log (s:"\ckACS: Recieved unknown team message (", d:msgtype, s:", ", d:x0,
+			s:", ", d:pnum, s:") (activator: #", d:PlayerNumber(), s:" - ", n:pnum+1, s:"\ck)\n",
+			s:"\ckEither the server is sending me bad data or there's a bug in the code!");
+		terminate;
+	}
+		
+	Log (s:TeamColors[ConsoleTeam ()], s:"<TEAM>\c- ", s:msg);
+}
+
+// [Cata] This script keeps track of active intel messages
+script SC_TEAMMESSAGE_TICKER open
+{
+	while(1)
+	{
+		for(int i = 0; i < intel_maxMessages; i++)
+			if(intel_activeMsg[i] >= intel_ticrate)
+				intel_activeMsg[i]-= intel_ticrate;
+		delay(intel_ticrate);
+	}
+}
+
+// =============================================================================
+// [Dusk] {9/15/12} CL_TeamMessage - Adds a new message into the team log.
+/* // [Cata] Deprecated as strings can't be passed as parameters. This was leading to broken messages.
+function void CL_TeamMessage (str incoming) {
+	if (GetCVar ("zeta_cl_noteamlog"))
+		return; // User doesn't want team intel, period.
+	
+	if (!PlayerInGame (intHolder[i_consoleplayer]) || PlayerTeam() != ConsoleTeam())
+		return; // Not a teammate or we're not in-game
+	
+	int slot, i, j;
+	str cr;
+	
+	Log (s:TeamColors[ConsoleTeam ()], s:"<TEAM>\c- ", s:incoming);
+}
+*/
+// =============================================================================
+// [Dusk] {11/1/12} Hub function for HUD updating.
+function void UpdateHUD (void) {
+	CL_DisplayBuildingHud ();
+	DisplayStatusHUD ();
+	DrawMenu ();
+}
+
+// =============================================================================
+// [Dusk] Script daemon to set up necessary inventory items for HUD display
+script SC_HUDDaemon OPEN CLIENTSIDE {
+	int oldcredits, oldexp;
+	int hp, shp;
+	
+	until (false) {
+		delay (1);
+		
+		// This all is irrelevant if we're spectating.
+		if (!PlayerInGame (intHolder[i_consoleplayer]))
+			continue;
+		
+		SetActivator (3800 + intHolder[i_consoleplayer]);
+		
+		// Set the IsConsolePlayer amount to make sure that
+		// we are always marked.
+		SetInventory ("IsConsolePlayer", 1);
+		
+		// Set health type based on health value
+		hp = GetHealth ();
+		shp = GetSpawnHealth ();
+		if (hp > shp)
+			SetInventory ("HUD_HealthType", 3);
+		else if (hp == shp)
+			SetInventory ("HUD_HealthType", 2);
+		else if (hp >= shp / 4)
+			SetInventory ("HUD_HealthType", 1);
+		else {
+			SetInventory ("HUD_HealthType", 0);
+			
+			// Blink the red health value if it's low!
+			SetInventory ("HUD_HealthBlink", (Timer () % 25 > 18));
+		}
+		
+		// If our credits change, we need to update the hud.
+		if (CheckInventory ("Credit") != oldcredits) {
+			// g_CreditDelta = (CheckInventory ("Credit") - oldcredits);
+			UpdateHUD ();
+			oldcredits = CheckInventory ("Credit");
+		}
+		
+		// Also check experience
+		if (CheckInventory ("Experience") != oldexp) {
+			UpdateHUD ();
+			oldexp = CheckInventory ("Experience");
+		}
+	}
+}

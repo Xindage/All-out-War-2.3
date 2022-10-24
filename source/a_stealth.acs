@@ -1,0 +1,122 @@
+// Stealth code
+script SC_STEALTH (int action) {
+	int a;
+	switch (action) {
+	case STEALTH_ON:
+		// Stealth in
+		if (CheckInventory ("StealthMode") != 0)
+			terminate;
+		
+		SetInventory ("StealthMode", 1);
+		GiveInventory("stealthIdentifyTargetOff", 1);
+		ActivatorSound ("misc/stealthON", 96);
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Translucent);
+		for (a = 1.0; a >= 0.0; a -= 0.05) {
+			if (CheckInventory ("StealthPain"))
+				terminate;
+			
+			if (CheckInventory ("DestealthOverride"))
+				terminate;
+			
+			SetActorProperty(0, APROP_Alpha, a);
+			delay(3);
+		}
+		SetActorProperty (0, APROP_ALPHA, 0); // [JD] Fixes the weird Software bug where you're still able to faintly see the player.
+		SetInventory ("StealthMode", 2);
+		terminate;
+	case STEALTH_OFF:
+		// Willingly destealth out
+		if (CheckInventory ("StealthMode") != 2)
+			terminate;
+		
+		SetInventory ("StealthMode", 3);
+		GiveInventory("stealthIdentifyTargetOn", 1);
+		ActivatorSound ("misc/stealthON", 96);
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Translucent);
+		
+		for (a = 0.0; a <= 1.0; a += 0.05) {
+			if (CheckInventory ("StealthPain"))
+				terminate;
+			
+			if (CheckInventory ("DestealthOverride"))
+				terminate;
+			
+			SetActorProperty(0, APROP_Alpha, a);
+			delay(2);
+		}
+		
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
+		SetInventory ("StealthMode", 0);
+		TakeInventory ("StealthFire", 1);
+		terminate;
+	case STEALTH_FLASH:
+		// Pain flash
+		if (CheckInventory ("StealthMode") == 0)
+			terminate;
+		
+		if (CheckInventory ("StealthPain"))
+			terminate;
+			
+		GiveInventory("StealthPain", 1);
+		int oldmode = CheckInventory ("StealthMode");
+		ActivatorSound ("misc/stealthON", 96);
+		SetInventory ("StealthMode", 3);
+		GiveInventory("stealthIdentifyTargetOn", 1);
+		TakeInventory ("DestealthOverride", CheckInventory ("DestealthOverride"));
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Translucent);
+		
+		for (a = 0; a < 10; a++) {
+			SetActorProperty(0, APROP_Alpha, random(2,8) * 0.1);
+			delay (4);
+		}
+		
+		TakeInventory ("StealthPain", 1);
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
+		SetInventory ("StealthMode", 0);
+		if (oldmode != 3)
+			ACS_ExecuteAlways (SC_STEALTH, 0);
+		terminate;
+	case STEALTH_FORCEOFF:
+		// Force destealth (Deselect state for instance)
+		if (CheckInventory ("StealthMode") == 0)
+			terminate;
+		
+		if (CheckInventory ("StealthMode") != 3)
+			ActivatorSound ("misc/stealthON", 96);
+		
+		SetInventory ("StealthMode", 3);
+		GiveInventory("stealthIdentifyTargetOn", 1);
+		if (CheckInventory ("StealthPain"))
+			terminate;
+		
+		GiveInventory ("DestealthOverride", 1);
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Translucent);
+		
+		for (a = GetActorProperty (0, APROP_ALPHA); a <= 1.0; a += 0.05) {
+			if (CheckInventory ("StealthPain"))
+				terminate;
+			
+			SetActorProperty (0, APROP_Alpha, a);
+			delay(1);
+		}
+		
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
+		TakeInventory ("DestealthOverride", 1);
+		SetInventory ("StealthMode", 0);
+		terminate;
+	}
+}
+
+// Debug script - renumber if uncommented!
+/*
+script 311 (void) CLIENTSIDE {
+	while (CheckWeapon ("StealthLaserRifle") || CheckWeapon ("Knife")) {
+		HudMessage (s:"StealthMode: \cD", d:CheckInventory ("StealthMode"),
+			s:"\nStealthFire: \cF", d:CheckInventory ("StealthFire"),
+			s:"\nStealthPain: \cG", d:CheckInventory ("StealthPain"),
+			s:"\nDestealthOverride: \cU", d:CheckInventory ("DestealthOverride"),
+			s:"\nAlpha: \cN", f:GetActorProperty (0, APROP_Alpha); HUDMSG_PLAIN, 31415, CR_UNTRANSLATED, 0.5, 0.3, 0.5);
+		delay (1);
+	}
+}
+*/

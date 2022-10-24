@@ -1,0 +1,215 @@
+// Hitboxes - these actors are placed around buildings. They transfer external
+// damage to the terminal, allowing buildings to be destroyed from the outside.
+
+actor BaseTerminalOutside {
+	health 99999
+	radius 0
+	height 512
+	DesignatedTeam 1
+	DamageFactor "Fist", 0.0
+	DamageFactor "Bullet", 0.0
+	DamageFactor "Rifle", 0.0
+	DamageFactor "Fire", 0.2
+	DamageFactor "Chemical", 0.0
+	DamageFactor "ChemicalSpecial", 0.0
+	DamageFactor "Energy", 0.0
+	DamageFactor "Time", 0.0
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Flash", 0.0
+	DamageFactor "Ice", 0.0
+	DamageFactor "Superweapon", 0.0
+	DamageFactor "Mechstomp", 0.0
+	DamageFactor "Monster", 0.0
+	DamageFactor "Deconstruction", 0.0
+	-SOLID
+	+SHOOTABLE
+	+NOBLOOD
+	+DONTGIB
+	+NOICEDEATH
+	+GHOST
+	+NOTARGET
+	+QUICKTORETALIATE
+	Mass 0x7FFFFFFF
+	painchance 255
+	
+	states {
+	Death:
+		TNT1 A 10
+		TNT1 A 0 A_PlayWeaponSound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("ExplosionMainLarge")
+		TNT1 A 10
+		TNT1 A 0 A_PlayWeaponSound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("ExplosionLargeNoDebris")
+		TNT1 A 10
+		TNT1 A 0 A_PlayWeaponSound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("ExplosionLargeNoDebris")
+		TNT1 A -1
+		stop
+	Idle:
+		TNT1 A -1
+		stop
+	Pain:
+		TNT1 A 0
+		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], 1)
+		goto Idle
+	Pain.Fire:
+		TNT1 A 0
+		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (3, 4))
+		goto Idle
+	Pain.MassDriver:
+	Pain.Explosion:
+	Pain.AntiArmor:
+		TNT1 A 0
+		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (20, 40))
+		goto Idle
+	Pain.Superweapon:
+		TNT1 A 0
+		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], 4000)
+		goto Idle
+	}
+}
+
+actor BaseTerminalOutsideBlue : BaseTerminalOutside {
+	DesignatedTeam 0
+}
+
+actor BTOBarracksBlue : BaseTerminalOutsideBlue 21201 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue Barracks"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 100)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 101, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOPowerPlantBlue : BaseTerminalOutsideBlue 21203 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue Research Centre"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 104)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 105, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTORefineryBlue : BaseTerminalOutsideBlue 21205 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue Refinery"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 102)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 103, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOFactoryBlue : BaseTerminalOutsideBlue 21207 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue War Factory"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 106)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 107, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOObeliskBlue : BaseTerminalOutsideBlue 21211 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue Obelisk"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 115)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 114, 0, 0)
+		TNT1 B -1
+		stop
+	}
+}
+
+actor BTOBarracksRed : BaseTerminalOutside 21202 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red Barracks"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 200)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 201, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOPowerPlantRed : BaseTerminalOutside 21204 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red Research Centre"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 204)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 205, 0,0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTORefineryRed : BaseTerminalOutside 21206 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red Refinery"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 202)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 203, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOFactoryRed : BaseTerminalOutside 21208 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red War Factory"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 206)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 207, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor BTOObeliskRed : BaseTerminalOutside 21212 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red Obelisk"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID (0, 215)
+		TNT1 A 0 Thing_SetSpecial (0, 0, 214, 0, 0)
+		TNT1 A -1
+		stop
+	}
+}
+
+actor ShortBTOObeliskBlue : BTOObeliskBlue 21311 {
+	//$Category Hitboxes
+	tag "[Hitbox] Blue Obelisk (short)"
+	height 256
+}
+actor ShortBTOObeliskRed : BTOObeliskRed 21312 {
+	//$Category Hitboxes
+	tag "[Hitbox] Red Obelis (short)"
+	height 256
+}

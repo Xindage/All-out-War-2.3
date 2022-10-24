@@ -1,0 +1,422 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 sprees/combo script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team and the Zeta team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+//******************
+// Message Variables
+//******************
+#define maxMessages 10
+#define msgBaseID 8250
+#define clientMsgBaseID 9350
+
+#define clientMsgX 0.5
+#define clientMsgY 0.2
+
+#define msgX 0.5
+#define msgY 0.25
+#define msgSpacing 0.02
+
+#define msgFadeInTime 0.5
+#define msgHoldTime 4.0
+#define msgFadeOutTime 0.5
+
+#define clientMsgFadeInTime 0.5
+#define clientMsgHoldTime 4.0
+#define clientMsgFadeOutTime 0.5
+
+#define playerAdjust 100 //dummy hitbox
+
+//******************
+// Spree Variables
+//******************
+int spreeTracker[maxPlayers]; //Tracks sprees here.
+
+#define spreeMsg 0
+#define spreeSound 1
+#define spreeMsgClient 2
+
+int spreeArr[6][3] = {
+{"\cj is on a Killing Spree.","killings","\cjKilling Spree"},
+{"\ch is on a Rampage.","rampage","\chRampage"},
+{"\cd is Dominating!","dominati","\cdDominating"},
+{"\cf is Unstoppable!","unstoppa","\cfUnstoppable"},
+{"\ck is GodLike!","godlike","\ckGodLike"},
+{"\ca is Wicked Sick!!!","wicked","\caWicked Sick"},
+};
+
+
+
+//******************
+// Core
+//******************
+script 6600 (int type, int arg1, int arg2) EVENT
+{
+	if(type == 0) //GAMEEVENT_PLAYERFRAGS
+	{
+		// Self explanatory
+		incrementComboKills(playernumber());
+		incrementSpreeTracker(playernumber());
+		
+		// End spree if we killed someone on one.
+		if(spreeTracker[arg1] >= 5)
+			clearSpreeTracker(arg1, playernumber(), false);
+		else
+			spreeTracker[arg1] = 0;
+		
+		// Do first blood...
+		if(intHolder[i_FirstBlood] == false)
+			doFirstBlood(playernumber());
+		
+		// Collatoral
+		acs_executealways(6606, 0, playernumber(), arg1, 0);
+	}
+}
+
+//******************
+// Spree Scripts
+//******************
+function void incrementSpreeTracker(int pnum)
+{
+	setactivator(pnum + 3800);
+	
+	// [JD] Sometimes the activator would be the server if the player immediately died.
+	if (ActivatorTID() != -1)
+	{
+		spreeTracker[pnum]++;
+		
+		if(spreeTracker[pnum] % 5 == 0 && spreeTracker[pnum] <= 30 && spreeTracker[pnum] >= 5)
+		{
+			setfont("bigfont");
+			hudmessage(s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient];
+			HUDMSG_FADEINOUT, clientMsgBaseID - (spreeTracker[pnum] / 5), cr_red, clientMsgX, clientMsgY, clientMsgHoldTime, clientMsgFadeInTime, clientMsgFadeOutTime);
+			LocalAmbientSound(spreeArr[(spreeTracker[pnum] / 5) - 1][spreeSound], 127);
+			int msg = strParam(n:pnum+1, s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsg]);
+			intelMessage(msg, true);
+		}
+	}
+}
+
+function void clearSpreeTracker(int pnum, int killernum, bool notPlayer)
+{
+	str msg;
+	
+	
+	if(notPlayer == true)
+			msg = strParam(n:pnum+1, s:"\cj's ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ", s:" \cjwas ended by \ct", s:GetActorClass(0));
+	else if(pnum != killernum)
+			msg = strParam(n:pnum+1, s:"\cj's ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ", s:" \cjwas ended by ", n:killernum+1);
+	else if(killernum == -1)
+			msg = strParam(n:pnum+1, s:"\cj's ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ", s:" \cjwas ended by a map hazard");
+	else
+	{
+		int gender = getPlayerInfo(pnum, PLAYERINFO_GENDER);
+		
+		if(gender == 0)
+			msg = strParam(n:pnum+1, s:"\cj took it upon himself to end his own ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ");
+		
+		else if(gender == 1)
+			msg = strParam(n:pnum+1, s:"\cj took it upon herself to end her own ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ");
+		
+		else
+			msg = strParam(n:pnum+1, s:"\cj took it upon itself to end its own ", s:spreeArr[(spreeTracker[pnum] / 5) - 1][spreeMsgClient], s:" (", d:spreeTracker[pnum], s:") ");
+	}
+	intelMessage(msg, true);
+	spreeTracker[pnum] = 0;
+}
+
+//******************
+// Combo Variables
+//******************
+#define comboKillDelay 35 * 5 			//Delay for combo-kills to register.
+int comboKillTimeTracker[maxPlayers];
+int comboKillTracker[maxPlayers];
+#define comboMsgID 4950
+#define comboMsgX 0.5
+#define comboMsgY 0.8
+#define comboMsgHoldTime 3.5
+#define comboMsgFadeOutTime 0.5
+
+#define comboMsg 0
+#define comboSound 1
+int comboArr[4][2] = 
+{
+	{"\cjDouble Kill","double"},
+	{"\cdMulti Kill","multi"},
+	{"\cfUlra Kill","ultra"},
+	{"\ckMonster Kill","monster"},
+};
+
+script 6603 open
+{
+	for(int i = 0; i < maxPlayers; i++)
+		if(comboKillTimeTracker[i] >= 1)
+		{
+			comboKillTimeTracker[i]--;
+			if(comboKillTimeTracker[i] == 0) 
+			{
+				if(comboKillTracker[i] >= 6) 
+				{
+					int msg = strParam(n:i+1, s:" \cjjust had a \ckmonster kill x", d:comboKillTracker[i]-4, s:"\cj!");
+					intelMessage(msg, true);
+				}
+				
+				comboKillTracker[i] = 0;
+			}
+		}
+	
+	delay(1);
+	restart;
+}
+
+function void incrementComboKills(int pnum)
+{
+	comboKillTracker[pnum]++;
+	comboKillTimeTracker[pnum] = comboKillDelay;
+	
+	if(comboKillTracker[pnum] == 1)
+		return;
+	
+	setfont("bigfont");
+	int msg;
+	
+	if(comboKillTracker[pnum] > 5)
+		msg = strParam(s:"\ckMonster Kill", s:" x", d:comboKillTracker[pnum]-4);
+	else
+		msg = strParam(s:comboArr[comboKillTracker[pnum] - 2][comboMsg]);
+		
+	hudmessage(s:msg;
+	HUDMSG_FADEOUT, cr_red, comboMsgID, comboMsgX, comboMsgY, comboMsgHoldTime, comboMsgFadeOutTime);
+	
+	if(comboKillTracker[pnum] > 5)
+	LocalAmbientSound(comboArr[3][comboSound], 127);
+	else
+	LocalAmbientSound(comboArr[comboKillTracker[pnum] - 2][comboSound], 127);
+}
+
+//******************
+// Achieve Variables
+//******************
+#define achieveMsgID 6650
+#define achieveMsgX 0.5
+#define achieveMsgY 0.825
+#define achieveMsgHoldTime 3.5
+#define achieveMsgFadeOutTime 0.5
+#define maxAchieveMessages 9
+#define minLongShotRange 1500
+#define tempmonid 23000
+int activeAchieveMsg[maxAchieveMessages];
+int ticKillCounter[maxplayers]; //used for collaterals.
+
+int achieveMsg[4] = {
+"\cgFirst Blood", // Get first kill, self explanatory.
+"\cfLong-Shot", // Get a kill within a certain range.
+"\cvAir Shot", //kill someone midair
+"\cbCollateral",
+};
+
+function void doFirstBlood(int killer)
+{
+	intHolder[i_FirstBlood] = true;
+
+	int msg;
+	msg = strParam(n:killer+1, s:" \cjgets \cgfirst blood\cj!");
+	intelMessage(msg, true);
+
+	setactivator(killer+3800);
+	
+	msg = strParam(s:"\cgfirst blood");
+	
+	setfont("bigfont");
+	hudmessage(s:msg;
+	HUDMSG_FADEOUT, cr_red, comboMsgID, comboMsgX, comboMsgY, comboMsgHoldTime, comboMsgFadeOutTime);
+}
+
+function void doLongShot(int who, int fdist)
+{
+	if(fdist>>16 < minLongShotRange) return;
+	int msg;
+	setactivator(who + 3800);
+	int dDist = fdist >> 16;
+	acs_executealways(6610, 0, 1, dDist, 0);
+}
+
+function void doAirShot(int who, int killed)
+{
+	int tid = killed + 3800 + playerAdjust;
+	if(getActorZ(tid) - getActorFloorZ(tid) < 64.0) return;
+	setactivator(who+3800);
+	acs_executealways(6610, 0, 0, 0, 0);
+}
+
+function int spawnDummy(int pnum)
+{
+	int tid = pnum+3800;
+	int x = getActorX(tid);
+	int y = getActorY(tid);
+	int z = getActorZ(tid);
+	spawnForced("playerDeathHelper", x, y, z, tid+playerAdjust);	
+	return tid+playerAdjust;
+}
+
+script 6606 (int who, int killed) // Collatoral
+{
+	// [Cata] Collatoral Kill 
+	ticKillCounter[who]++;
+	int max = ticKillCounter[who];
+	delay(1);	
+	if(ticKillCounter[who] < 2)
+	{
+		ticKillCounter[who] = 0; 
+		terminate;
+	}
+	else if(ticKillCounter[who] != max) terminate;
+	setactivator(who+3800);
+	int msg;
+	if(max == 2)
+	{
+		acs_executealways(6610, 0, 2, max, 0);
+		ticKillCounter[who] = 0;
+		terminate;
+	}
+	
+	msg = strParam(n:who+1, s:"\cj just got a \cbCollateral x", d:max, s:"\cj!");
+	intelMessage(msg, true);
+	
+	setactivator(who+3800);
+	acs_executealways(6610, 0, 2, max, 0);
+	ticKillCounter[who] = 0;
+}
+
+script 6607 enter clientside
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	
+	while(true)
+	{
+		for(int i = 0; i < maxAchieveMessages; i++)
+			if(activeAchieveMsg[i] >= 1)
+				activeAchieveMsg[i]--;
+		
+		delay(1);
+	}
+}
+
+// Taken from zdoom wiki
+function int fdistance (int tid1, int tid2)
+{
+	int len;
+	int y = getactory(tid1) - getactory(tid2);
+	int x = getactorx(tid1) - getactorx(tid2);
+	int z = getactorz(tid1) - getactorz(tid2);
+
+	int ang = vectorangle(x,y);
+	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
+	else len = fixeddiv(x, cos(ang));
+
+	ang = vectorangle(len, z);
+	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(z, sin(ang));
+	else len = fixeddiv(len, cos(ang));
+
+	return len;
+}
+
+script 6609 enter
+{
+	// remove test thing.
+	thing_remove(playernumber() + 3800 + playerAdjust);
+}
+
+
+// acs hackery for achieve msgs
+script 6610 (int type, int val) clientside
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+
+	int i;
+	for(i = 0; i < maxAchieveMessages; i++)
+		if(activeAchieveMsg[i] == 0)
+			break;
+
+	
+	activeAchieveMsg[i] = 35 * 6;
+	
+	int msg;
+	if(type == 0) msg = "\cvAir Shot";
+	else if(type == 1) msg = strParam(s:"\cfLong-Shot (", d:val, s:") units");
+	else if(type == 2) msg = strParam(s:"\cbCollateral x", d:val);
+	
+	setfont("smallfont");
+	hudmessage(s:"\cd+ ", s:msg;
+	HUDMSG_FADEOUT, achieveMsgID + i, cr_red, achieveMsgX, achieveMsgY + fixedmul(msgSpacing, i << 16), achieveMsgHoldTime, msgFadeInTime);
+
+}
+
+script 6611 respawn clientside
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	
+	while(true)
+	{
+		for(int i = 0; i < maxAchieveMessages; i++)
+			if(activeAchieveMsg[i] >= 1)
+				activeAchieveMsg[i]--;
+		
+		delay(1);
+	}
+}
+
+// For stuff that the event script just can't cover.
+script 6602 death
+{
+	// End the playayer's kill tracker, we set it to 1 so msg displays that his combo ended.
+	comboKillTimeTracker[playernumber()] = 1;
+	
+	// Record who died.
+	int killed = playernumber();
+	
+	// Record who killed him.
+	setactivatortotarget(0);
+	int killer = PlayerNumber();
+	
+	//Check if activator is a player.
+	if(killer != -1)
+	{	
+		// Committed sodoku
+		if(killed == killer)
+		{
+			if(spreeTracker[killed] >= 5)
+				clearSpreeTracker(killed, killer, false);
+			
+			else
+				spreeTracker[killed] = 0; // [JD] Still needs to be reset.
+				
+			terminate;
+		}
+	
+		// [Cata] Longshot
+		int tid = spawnDummy(killed); // spawns dummy where this player died.
+		delay(2);
+
+		doAirShot(playernumber(), killed);
+		//doLongShot(playernumber(), fdistance(playernumber() + 3800, tid));
+		delay(2);
+		thing_remove(tid);
+
+		terminate;
+	}
+	
+	// Is not a player.
+	else
+	{
+		if(spreeTracker[killed] >= 5)
+			clearSpreeTracker(killed, -1, true);
+	}
+	
+	
+}

@@ -1,0 +1,114 @@
+// ===================================================
+// ------------------------------------------ TIME GUN
+// ===================================================
+
+// [Dusk] Time gun effect messages and altfire rotation (in one script o.O)
+// action == 0 => intel message
+// action == 1 => altfire rotation
+// action == 2 => reward check
+script SC_TIMEGUN (int action, int type) {
+	if (action == 1) {
+		// Rotation
+		if (CheckInventory ("TimeGunRotation") == 3)
+			TakeInventory ("TimeGunRotation", 3);
+		else
+			GiveInventory ("TimeGunRotation", 1);
+		
+		ActivatorSound ("switch/pulse", 127);
+		terminate;
+	}
+	
+	if (action == 2) {
+		// [Dusk] {9/6/12} Check for a possible reward.
+		// Boosting teammates gives you 1 bonus,
+		// weakening enemies gets you 2 bonus.
+		int ttid = GetTargetInfo (TARGETINFO_TID);
+		if (ttid == ActivatorTID() || ttid < 3800 || ttid >= 3800 + MAXPLAYERS) {
+			// No valid target
+			terminate;
+		}
+		
+		int bonus = 1;
+		if (GetTargetInfo (TARGETINFO_Team) != PlayerTeam ())
+			bonus = 2;
+		
+		int pn = PlayerNumber ();
+		if (MedicBonus[pn] < intHolder[i_MedicBonusNeed]) {
+			MedicBonus[pn] += 40 * bonus;
+		} else {
+			MedicBonus[pn] = 0;
+			AddExperience (50);
+			LocalAmbientSound ("c4/use", 127);
+			GivePoints (1);
+		}
+		terminate;
+	}
+	
+	SetFont ("SMALLFONT");
+	switch (type) {
+	case 0: // boost
+		IntelMessage ("\cIYou are turbo!", false);
+		break;
+	case 1: // float
+		IntelMessage ("\cIYou feel lighter!", false);
+		break;
+	case 2: // slow
+		IntelMessage ("\cISomething pulls your legs...", false);
+		break;
+	case 3: // weaken
+		IntelMessage ("\cIYou hear something crack in your weapon...", false);
+		break;
+	}
+}
+
+// ------------
+// Time gun HUD
+script SC_CL_TIMEGUNHUD (void) NET CLIENTSIDE {
+	while (CheckWeapon ("TimeGun") && GetHealth () >= 0) {
+		SetFont ("SMALLFONT");
+		HudMessage (s:TimeHUDColor(0, 0), s:"BOOST ", s:TimeHUDColor(0, 1), s:" / ", s:TimeHUDColor (0, 2), s:"SLOW\n",
+			s:TimeHUDColor(1, 0), s:"FLOAT ", s:TimeHUDColor(1, 1), s:" / ", s:TimeHUDColor (1, 2), s:"WEAKEN\n",
+			s:TimeHUDColor(2, 0), s:"TELEPORT\n",
+			s:TimeHUDColor(3, 0), s:"HYPERSPEED\n";
+			HUDMSG_PLAIN, 0, CR_WHITE, -0.8, -0.6, 0.2);
+		
+		delay (5);
+	}
+}
+
+function str TimeHUDColor (int type, int side) {
+	if (CheckInventory ("TimeGunRotation") == type) {
+		// selected
+		switch (type) {
+			case 0:
+			case 1:
+				switch (side) {
+				case 0:
+					return "\cD";
+				case 1:
+					return "\cC";
+				}
+				return "\cG";
+			case 2:
+			case 3:
+				return "\cF";
+		}
+	} else {
+		// not selected
+		switch (type) {
+			case 0:
+			case 1:
+				switch (side) {
+				case 0:
+					return "\cQ";
+				case 1:
+					return "\cU";
+				}
+				return "\cR";
+			case 2:
+			case 3:
+				return "\cK";
+		}
+	}
+	return "";
+}

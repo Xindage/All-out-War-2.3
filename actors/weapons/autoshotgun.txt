@@ -1,0 +1,86 @@
+Actor "AutoShotgun" : AOWWeapon 21501
+{
+	radius 20
+	height 16
+	Weapon.SlotNumber 3
+	Weapon.SelectionOrder 7
+	weapon.kickback 100
+	obituary "%o was overwhelmed by %k's automatic shotgun."
+	inventory.pickupmessage "You got the automatic shotgun!"
+	weapon.ammotype2 "ShotgunAmmo"
+	weapon.ammouse2 1
+	weapon.ammotype1 "autoshellammo"
+	weapon.ammouse1 1
+	weapon.ammogive 8
+	weapon.ammogive2 16
+	weapon.MinSelectionAmmo2 1
+	decal "BulletChip"
+	weapon.preferredskin "MarineAutoShotty"
+	Weapon.UpSound "dsasgin"
+	+WEAPON.AMMO_OPTIONAL
+	scale 0.8
+	states
+	{
+		Spawn:
+			WASG A -1
+			stop
+		Ready:
+			ASGG A 1 A_WeaponReady
+			loop
+		Deselect: 
+			ASGG A 1 A_Lower
+			loop
+		Select:
+			ASGG A 1 A_Raise
+			loop
+		Fire:
+			TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+			TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+			TNT1 A 0 A_JumpIfInventory("autoshellammo", 1, "FireGo")
+			goto altfire
+		FireGo:
+			ASGG C 0 a_quake(3, 4, 0, 1)
+			ASGG B 1 A_GunFlash
+			ASGG B 0 Bright A_FireBullets (5.5, 5.5, 6, 3, "HandgunPuff", FBF_USEAMMO, 1000)
+			ASGG A 0 a_playsoundex("dsasgfir", chan_auto, 0, 0)	  
+			ASGG CDEFGH 1 bright
+			ASGG H 0 A_SpawnItemEx ("ShotgunShellCasing",cos(-pitch)*36,-6,18+(sin(-pitch)*36),cos(-pitch)*0,random(-5, -8), random(4, 5),0,0,0)
+			ASGG IJKLMN 1
+			ASGG A 1 A_ReFire
+			Goto Ready
+		Altfire:
+			TNT1 A 0 A_JumpIfInventory("autoshellammo", 0, "Ready")
+			TNT1 A 0 A_JumpIfInventory("ShotgunAmmo", 1, "Altfirego")
+			goto Ready
+		AltfireGo:
+			ASGR BCDEF 3
+			ASGR G 3 A_PlayWeaponSound("dsasgout")
+			ASGR HIJ 3
+			ASGR K 15
+			ASGR JIH 3
+		AltfireLoop:
+			TNT1 A 0 A_JumpIfInventory("autoshellammo", 0, "altfirefinish")
+			TNT1 A 0 A_TakeInventory("ShotgunAmmo", 1)
+			TNT1 A 0 A_GiveInventory("autoshellammo", 1)
+			TNT1 A 0 A_JumpIfInventory("ShotgunAmmo", 1, "altfireloop")
+		AltfireFinish:	
+			ASGR G 3 A_PlayWeaponSound("dsasgin")
+			ASGR FEDCB 3
+			ASGG A 3
+			goto ready
+		Flash:
+			NULL A 3 bright A_Light1
+			NULL A 3 bright A_Light2
+			NULL A 0 bright A_Light0
+			stop
+	}
+}
+
+
+ACTOR autoshellammo : Ammo
+{
+     Inventory.MaxAmount 8
+     Ammo.BackpackAmount 0
+     Ammo.BackpackMaxAmount 8
+     +Inventory.IgnoreSkill
+}

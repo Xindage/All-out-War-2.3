@@ -1,0 +1,166 @@
+
+// [SG] Variables are now stored here, in CVARINFO, rather than being manually
+// set via ConsoleCommand. Comments were copied over.
+
+// [SG] Renamed aow_ prefix to zeta_ on all CVars to avoid conflicts with the
+// existing CVars archived by ACS, so messing with the ini isn't needed
+
+
+////////////////////////////
+// Core game configuration
+////////////////////////////
+
+server	int		zeta_tournamentode			=		0;
+
+server	int		zeta_surrendermode			=		0;
+
+server	int		zeta_disablemechs			=		0;
+
+// [JD] Added the option for server hosts to delay the buying of mechs
+server	int		zeta_mechdelay				=		0;
+
+// [Dusk] {9/10/12} Server config for absolutely no mechs
+server	int		zeta_nomechs				=		0;
+
+// [Dusk] Alternate experience mode. In altexp, exp needs are lowered
+// to a third, but experience is reset upon death.
+server	int		zeta_altexp					=		0;
+
+// [Dusk] {9/10/12} Server config for no radar. Safety measure
+// in case the radar breaks up and bad things happen.
+server	int		zeta_noradar				=		0;
+
+// [Dusk] {10/26/12} If true, the team switcher is disabled.
+server	int		zeta_noteamswitcher			=		0;
+
+// [SP] How long you can stay on a team before you are never switched.
+server	int		zeta_teamstaytime			=		2;
+
+// [Dusk] How many minutes until +1 Timed C4 can be purchased. (-1 to disable)
+// [SG] This is also used as the delay for allowing the use of Timed C4s
+server	int		zeta_c4delay				=		-1;
+
+// [Dusk] {10/27/12} If true, players do not get spawn invulnerability upon respawn
+server	int		zeta_nospawninvul			=		1;
+	
+// [Dusk] {11/2/12} Toggle disconnect donate (donation of all money upon disconnect)
+server	int		zeta_nodisconnectdonate		=		0;
+	
+// [Dusk] {11/19/12} How many seconds must the player be in game until they can donate?
+server	int		zeta_donatewait				=		0;
+	
+// [Dusk] {1/16/13} How many seconds does a beacon take to detonate?
+server	int		zeta_nukecountdown			=		60;
+	
+// [Dusk] {2/16/13} Use more powerful nukes? These ones have half the health but
+// come with a DEVASTATING blast that can easily obliterate MULTIPLE buildings.
+server	int		zeta_nukesurpreme			=		0;
+
+// [Dusk] Tiberium amounts
+server	int		zeta_tiberium_self			=		225;
+server	int		zeta_tiberium_other			=		75;
+server	int		zeta_tiberium_advperc		=		260;
+																
+server	int		zeta_ticketpool				=		0;
+server	int		zeta_tickets				=		75;
+
+// [SP] Time (in minutes) before sudden death.
+// [Dusk] changed default to 45, -1 means immediate
+server	int		zeta_suddendeathtime		=		45;
+	
+// [Dusk] Sudden death degeneration
+server	int		zeta_degeneration			=		0;
+server	int		zeta_degenerationinterval 	=		10;
+
+// [SG] Tickets awarded for killing buildings
+
+server	int		zeta_tickets_repairpad		=		4;
+server	int		zeta_tickets_obelisk		=		5;
+server	int		zeta_tickets_barracks		=		8;
+server	int		zeta_tickets_rescentre		=		8;
+server	int		zeta_tickets_refinery		=		10;
+server	int		zeta_tickets_warfactory		=		10;
+
+
+////////////////////////////
+// Credit flow and bonuses
+////////////////////////////
+
+server	int		zeta_credflow				=		4;
+
+server	int		zeta_startcredits			=		300;
+
+server	int		zeta_creditfrag				=		50;
+
+server	int		zeta_bonusamount			=		300;
+server	int		zeta_bonustime				=		5;
+
+server	int		zeta_medicbonusneed			=		175;
+
+server	int		zeta_repairbonus			=		1;
+
+// [Dusk] {9/6/12} Maximum amount of credits a player can possess.
+//     0 = infinite (well, as infinite as integers go..)
+// [Dusk] {1/16/13} Cap at 30k because of networking issues. The HUD
+// overflows otherwise. If this cap is to be increased, the networking
+// will have to be increased to something.. hackier.
+server	int		zeta_creditcap				=		30000;
+
+
+
+////////////////////////////
+// Limits and cooldowns
+////////////////////////////
+
+server	int		zeta_juggernautlimit		=		2;
+
+// Plasma Cannon initial delay
+server	int		zeta_plasmapurchasedelay	=		-1;
+
+// [SP] Maximum number of plasma cannons per team. (Set to -1 for unlimited)
+server	int		zeta_maxcannonsperteam		=		4;
+
+// [Dusk] Time (in minutes) to determine plasma cannon cooldown. Use -1 to disable
+server	int		zeta_plasmacooldown			=		-1;
+
+// [SP] How long you have to wait to buy a new superweapon beacon. (Minutes) (Set to -1 to disable wait)
+server	int		zeta_nukepurchasedelay		=		5;
+
+// [SP]Maximum number of time cops per team. (Set to -1 for unlimited)
+server	int		zeta_maxtimecopsperteam		=		2;
+
+// [JD] Maximum number of Karasawa's per team.
+server	int		zeta_maxkarasawasperteam	=		1;
+
+server	int		zeta_maxutilityguy			=		2;
+
+
+
+////////////////////////////
+// Client variables
+////////////////////////////
+
+// Use CONFONT for HUD elements
+user	int		zeta_cl_confonthud 			=		0;
+	
+// Request information about the killer's health when we get fragged
+user	int		zeta_cl_killerhealth		=		0;
+	
+// Desired effect level (negative means less, positive means more, 0 means normal)
+user	int		zeta_cl_fx					=		0;
+	
+// Don't draw any HUD elements
+user	int		zeta_cl_nohud				=		0;
+
+// Always use the radar (but it will only show teammates)
+user	int		zeta_cl_alwaysradar			=		0;
+	
+// [Dusk] {9/15/12} Disables team log completely.
+user	int		zeta_cl_noteamlog			=		0;
+	
+// [Dusk] {10/4/12} CVAR to show team log on the screen.
+// It takes a lot of screen space so I'm disabling it by default
+user	int		zeta_cl_fullteamlog			=		0;
+	
+// [Dusk] {10/27/12} How much to donate?
+user	int		zeta_cl_donateamount		=		100;

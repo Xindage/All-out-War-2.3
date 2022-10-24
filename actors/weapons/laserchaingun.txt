@@ -1,0 +1,195 @@
+// Laser Chaingun
+actor LaserChaingun : AOWWeapon 21083 {
+	Obituary "$OB_LASERCHAINGUN" // "%o was incinerated by %k's laser chaingun."
+	AttackSound "lchaingun/fire"
+	Inventory.PickupMessage "You got the laser chaingun!"
+	Weapon.SelectionOrder 6
+	Weapon.Kickback 100
+	Weapon.AmmoType "LaserChaingunAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 25
+	Weapon.PreferredSkin "MarineMinigun"
+	Weapon.UpSound "weapons/up/laserchaingun"
+	Tag "Laser Chaingun"
+	decal "LaserScorch"
+	States {
+	Ready:
+		LCGR A 0 A_JumpIfInventory ("IsBlue", 1, "ReadyBlue")
+		LCGR A 1 A_WeaponReady
+		wait
+	ReadyBlue:
+		LCGB A 1 A_WeaponReady
+		wait
+	Deselect:
+		LCGR A 0 A_JumpIfInventory ("IsZoomed", 1, "AltFireOff")
+		LCGR A 0 A_JumpIfInventory ("IsBlue", 1, "DeselectBlue")
+		LCGR A 1 offset (-5, 34)
+		LCGR A 1 offset (-16, 38)
+		LCGR A 1 offset (-23, 45)
+		LCGR A 1 offset (-32, 56)
+		LCGR A 1 offset (-42, 66)
+		LCGR A 1 offset (-51, 73)
+		LCGR A 1 offset (-63, 87)
+		LCGR A 1 offset (-78, 97)
+		LCGR A 1 offset (-88, 111)
+		LCGR A 1 offset (-99, 121)
+		LCGR A 1 offset (-112, 133)
+		LCGR A 1 offset (-125, 154)
+		LCGR A 0 offset (-1, 33)
+		LCGR A 0 A_Lower
+		wait
+	DeselectBlue:
+		LCGB A 1 offset (-5, 34)
+		LCGB A 1 offset (-16, 38)
+		LCGB A 1 offset (-23, 45)
+		LCGB A 1 offset (-32, 56)
+		LCGB A 1 offset (-42, 66)
+		LCGB A 1 offset (-51, 73)
+		LCGB A 1 offset (-63, 87)
+		LCGB A 1 offset (-78, 97)
+		LCGB A 1 offset (-88, 111)
+		LCGB A 1 offset (-99, 121)
+		LCGB A 1 offset (-112, 133)
+		LCGB A 1 offset (-125, 154)
+		LCGB A 0 offset (-1, 33)
+		LCGB A 0 A_Lower
+		wait
+	Select:
+		LCGR AA 0 A_JumpIfInventory ("IsBlue", 1, "SelectBlue")
+		LCGR A 1 offset (-125, 154)
+		LCGR A 1 offset (-112, 133)
+		LCGR A 1 offset (-99, 121)
+		LCGR A 1 offset (-88, 111)
+		LCGR A 1 offset (-78, 97)
+		LCGR A 1 offset (-63, 87)
+		LCGR A 1 offset (-51, 73)
+		LCGR A 1 offset (-42, 66)
+		LCGR A 1 offset (-32, 56)
+		LCGR A 1 offset (-23, 45)
+		LCGR A 1 offset (-16, 38)
+		LCGR A 1 offset (-5, 34)
+		goto ready
+	SelectBlue:
+		LCGB A 1 offset (-125, 154)
+		LCGB A 1 offset (-112, 133)
+		LCGB A 1 offset (-99, 121)
+		LCGB A 1 offset (-88, 111)
+		LCGB A 1 offset (-78, 97)
+		LCGB A 1 offset (-63, 87)
+		LCGB A 1 offset (-51, 73)
+		LCGB A 1 offset (-42, 66)
+		LCGB A 1 offset (-32, 56)
+		LCGB A 1 offset (-23, 45)
+		LCGB A 1 offset (-16, 38)
+		LCGB A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		LCGR A 0 A_JumpIfInventory ("IsBlue", 1, "FireBlue")
+		LCGR A 2 Offset(1,29) A_CheckReload
+		LCGR B 0 A_GunFlash
+		LCGR B 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGR B 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuff",1,5000)
+		LCGR B 0 BRIGHT A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGR B 1 Offset(2,30) BRIGHT
+		LCGR C 2 A_CheckReload
+		LCGR A 0 A_GunFlash
+		LCGR A 0 A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGR A 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGR A 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuff",0,5000)
+		LCGR A 0 BRIGHT A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGR A 1 Offset(1,31) BRIGHT A_RailAttack(0, 4.8, 1, none, "FF 00 00", 1, 0.0, "LaserPuff")
+		LCGR B 2 Offset(0,30) A_CheckReload
+		LCGR B 0 A_GunFlash
+		LCGR C 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGR C 0 A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGR C 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuff",1,5000)
+		LCGR C 1 BRIGHT
+		LCGR A 0 A_ReFire
+		LCGR ABCABC 2
+		goto Ready
+	FireBlue:
+		LCGB A 2 Offset(1,29) A_CheckReload
+		LCGB A 0 A_GunFlash
+		LCGB B 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGB B 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuffBlue",1,5000)
+		LCGB B 0 BRIGHT A_SpawnItemEx("LaserChainGunLightBlue",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGB B 1 Offset(2,30) BRIGHT
+		LCGB C 2 A_CheckReload
+		LCGB A 0 A_GunFlash
+		LCGB A 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGB A 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuffBlue",0,5000)
+		LCGB A 0 BRIGHT A_SpawnItemEx("LaserChainGunLightBlue",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGB A 1 Offset(1,31) BRIGHT A_RailAttack(0,4.8,1,none, "00 80 FF" ,1,0.0,"LaserPuffBlue")
+		LCGB B 2 Offset(0,30) A_CheckReload
+		LCGB B 0 A_GunFlash
+		LCGB C 0 A_PlayWeaponSound("lchaingun/fire")
+		LCGB C 0 A_SpawnItemEx("LaserChainGunLightBlue",35*(1-(sin(pitch)*0.8)),4.5,34*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		LCGB C 0 A_FireBullets (1.0, 1.0, -1, 4, "LaserPuffBlue",1,5000)
+		LCGB C 1 BRIGHT
+		LCGB A 0 A_ReFire
+		LCGB ABCABC 2
+		goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		LCGR A 0 A_JumpIfInventory ("IsZoomed", 1, "AltFireOff")
+		LCGR A 0 A_JumpIfInventory ("IsBlue", 1, "AltFireBlue")
+		LCGR A 0 A_GiveInventory ("IsZoomed", 1)
+		LCGR A 18 A_ZoomFactor (2.5)
+		goto Ready
+	AltFireOff:
+		LCGR AA 0 A_JumpIfInventory ("IsBlue", 1, "AltFireOffBlue")
+		LCGR A 17 A_ZoomFactor (1.0)
+		LCGR A 0 A_TakeInventory ("IsZoomed", 1)
+		goto Ready
+	AltFireBlue:
+		LCGB A 0 A_GiveInventory ("IsZoomed", 1)
+		LCGB A 18 A_ZoomFactor (2.5)
+		goto Ready
+	AltFireOffBlue:
+		LCGB A 17 A_ZoomFactor (1.0)
+		LCGB A 0 A_TakeInventory ("IsZoomed", 1)
+		goto Ready
+	Spawn:
+		LSCL X -1
+		stop
+		
+	//External flash stuff ohoy
+	// [Dusk] oh jesus blox
+	Flash:
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(910, 0) == 0,"Flash.Software") // Ups software framerate by quite a bit.
+		TNT1 A 0 A_JumpIf(ACS_ExecuteWithResult(909,0) <= -1,"Flash.Less") //50% Less flashes with aow_fx < 0
+		TNT1 A 0 A_JumpIf(ACS_ExecuteWithResult(909,0) >= 1,"Flash.More") //MOAR with > 0
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,2)
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE) //If 0, just one.
+		Goto Flash+6 //Jump to A_Light2
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLightBlue",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 2 A_Light2
+		TNT1 A 1 A_Light1
+		goto LightDone
+	Flash.Software: 
+		TNT1 A 0 //Nothing!!
+		goto Flash+6
+	Flash.Less:
+		TNT1 A 0 A_Jump(128,"LightDone")
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,2)
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLight",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		goto LightDone
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLightBlue",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		goto LightDone
+	Flash.More:
+		TNT1 A 0 A_Light2
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,4)
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLight2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("LaserChainGunLight2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("LaserChainGunLight2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		goto Flash+7
+		TNT1 A 0 A_SpawnItemEx("LaserChainGunLightBlue2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("LaserChainGunLightBlue2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("LaserChainGunLightBlue2",35*(1-(sin(pitch)*0.8)),4.5,32*(1-(sin(pitch)*0.8)),0,0,0,0,SXF_CLIENTSIDE)
+		goto Flash+7
+	//External flash stahp
+	}
+}

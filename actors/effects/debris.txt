@@ -1,0 +1,382 @@
+Actor DebrisBase {
+  Radius 5
+  Height 5
+  +NOBLOCKMAP
+  +CLIENTSIDEONLY
+  +FORCEXYBILLBOARD
+  +DOOMBOUNCE //Bouncing doesn't work. o_O
+  +BOUNCEONACTORS
+  Renderstyle Normal
+  Alpha 1
+  Gravity 0.55
+  Scale 0.5
+  BounceFactor 0.75
+  States {
+	Spawn:
+	DEBR A 0
+	TNT1 A 0 A_JumpIf(ACS_ExecuteWithResult(909) >= 0, 1)
+	Stop
+	DEBR A 0 A_Jump(256,"Fast","Slow","Faster","Slower","Normal")
+	Normal:
+	DEBR A 210
+	goto FadeOut
+	FadeOut:
+	DEBR A 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR A 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR A 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR A 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR A 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor DebrisBase2 : DebrisBase { Scale 0.666 BounceFactor 0.666 }
+Actor DebrisBase3 : DebrisBase { Scale 1 BounceFactor 0.4 }
+
+//Copypasta zone
+
+Actor Debris2 : DebrisBase {
+  States {
+	Normal:
+	DEBR B 210
+	goto FadeOut
+	FadeOut:
+	DEBR B 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR B 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR B 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR B 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR B 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris2b : Debris2 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris2c : Debris2 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris3 : DebrisBase {
+  States {
+	Normal:
+	DEBR C 210
+	goto FadeOut
+	FadeOut:
+	DEBR C 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR C 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR C 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR C 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR C 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris3b : Debris3 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris3c : Debris3 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris4 : DebrisBase {
+  States {
+	Normal:
+	DEBR D 210
+	goto FadeOut
+	FadeOut:
+	DEBR D 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR D 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR D 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR D 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR D 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris4b : Debris4 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris4c : Debris4 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris5 : DebrisBase {
+  States {
+	Normal:
+	DEBR E 210
+	goto FadeOut
+	FadeOut:
+	DEBR E 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR E 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR E 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR E 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR E 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris5b : Debris5 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris5c : Debris5 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris6 : DebrisBase {
+  States {
+	Normal:
+	DEBR F 210
+	goto FadeOut
+	FadeOut:
+	DEBR F 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR F 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR F 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR F 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR F 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris6b : Debris6 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris6c : Debris6 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris7 : DebrisBase {
+  States {
+	Normal:
+	DEBR G 210
+	goto FadeOut
+	FadeOut:
+	DEBR G 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR G 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR G 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR G 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR G 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris7b : Debris7 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris7c : Debris7 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris8 : DebrisBase {
+  States {
+	Normal:
+	DEBR H 210
+	goto FadeOut
+	FadeOut:
+	DEBR H 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR H 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR H 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR H 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR H 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris8b : Debris8 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris8c : Debris8 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris9 : DebrisBase {
+  States {
+	Normal:
+	DEBR I 210
+	goto FadeOut
+	FadeOut:
+	DEBR I 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR I 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR I 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR I 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR I 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris9b : Debris9 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris9c : Debris9 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris10 : DebrisBase {
+  States {
+	Normal:
+	DEBR J 210
+	goto FadeOut
+	FadeOut:
+	DEBR J 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR J 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR J 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR J 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR J 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris10b : Debris10 { Scale 0.666 BounceFactor 0.666 }
+Actor Debris10c : Debris10 { Scale 1 BounceFactor 0.4 }
+
+Actor Debris11 : DebrisBase {
+  States {
+	Normal:
+	DEBR K 210
+	goto FadeOut
+	FadeOut:
+	DEBR K 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR K 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR K 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR K 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR K 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris11b : Debris11 { Scale 0.666 BounceFactor 0.6 }
+Actor Debris11c : Debris11 { Scale 0.8 BounceFactor 0.4 }
+
+Actor Debris12 : DebrisBase {
+  States {
+	Normal:
+	DEBR L 210
+	goto FadeOut
+	FadeOut:
+	DEBR L 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR L 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR L 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR L 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR L 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris12b : Debris12 { Scale 0.666 BounceFactor 0.6 }
+Actor Debris12c : Debris12 { Scale 0.8 BounceFactor 0.4 }
+
+Actor Debris13 : DebrisBase {
+  States {
+	Normal:
+	DEBR M 210
+	goto FadeOut
+	FadeOut:
+	DEBR M 1 A_FadeOut(0.04)
+	Wait
+	Fast:
+	DEBR M 210 A_ScaleVelocity(1.18)
+	goto FadeOut
+	Faster:
+	DEBR M 210 A_ScaleVelocity(1.33)
+	goto FadeOut
+	Slow:
+	DEBR M 210 A_ScaleVelocity(0.8)
+	goto FadeOut
+	Slower:
+	DEBR M 210 A_ScaleVelocity(0.666)
+	goto FadeOut
+	}
+}
+
+Actor Debris13b : Debris13 { Scale 0.666 BounceFactor 0.6 }
+Actor Debris13c : Debris13 { Scale 0.8 BounceFactor 0.4 }
+
+// [Dusk] Cluster actors
+Actor DebrisCluster {
+	//+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight ("Clear")
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DebrisSpawner",random(-8,8),random(-8,8),0,random(-7,7),random(-7,7),random(5,15),random(0,359),32,32)
+		stop
+	Clear:
+		TNT1 A 0
+		stop
+	}
+}
+
+Actor DebrisClusterSmall : DebrisCluster {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight ("Clear")
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("DebrisSpawner",random(-8,8),random(-8,8),0,random(-7,7),random(-7,7),random(5,15),random(0,359),32,40)
+		stop
+	}
+}

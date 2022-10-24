@@ -1,0 +1,99 @@
+// Quad Shotgun
+Actor "Quad Shotgun" : AOWWeapon {
+	Inventory.PickupMessage "You got the Quad Shotgun! Awesome!"
+	Obituary "$OB_QUAD_SHOTGUN"
+	Weapon.SelectionOrder 8	
+	DropItem ""
+    Weapon.AmmoType "ShotgunAmmo"
+	Weapon.AmmoUse 2
+	Weapon.AmmoGive 16
+   	weapon.kickback 400
+	decal BulletChipBig
+	Scale 0.5
+	Weapon.UpSound "weapons/up/ssg"	
+	Weapon.PreferredSkin "Quad_Shotgun_Marine"
+	Tag "Quad Shotgun"	
+	States {
+    Spawn: 
+		QSHT A -1
+		Stop
+	Ready:
+		PKS3 A 1 A_WeaponReady 
+		Loop
+	Select:
+		PKS3 A 1 offset (-125, 154)
+		PKS3 A 1 offset (-112, 133)
+		PKS3 A 1 offset (-99, 121)
+		PKS3 A 1 offset (-88, 111)
+		PKS3 A 1 offset (-78, 97)
+		PKS3 A 1 offset (-63, 87)
+		PKS3 A 1 offset (-51, 73)
+		PKS3 A 1 offset (-42, 66)
+		PKS3 A 1 offset (-32, 56)
+		PKS3 A 1 offset (-23, 45)
+		PKS3 A 1 offset (-16, 38)
+		PKS3 A 1 offset (-5, 34)
+		goto ready		
+	Deselect:
+	    PKS3 A 1 offset (-5, 34)
+		PKS3 A 1 offset (-16, 38)
+		PKS3 A 1 offset (-23, 45)
+		PKS3 A 1 offset (-32, 56)
+		PKS3 A 1 offset (-42, 66)
+		PKS3 A 1 offset (-51, 73)
+		PKS3 A 1 offset (-63, 87)
+		PKS3 A 1 offset (-78, 97)
+		PKS3 A 1 offset (-88, 111)
+		PKS3 A 1 offset (-99, 121)
+		PKS3 A 1 offset (-112, 133)
+		PKS3 A 1 offset (-125, 154)
+		PKS3 A 0 offset (-1, 33)
+		PKS3 A 0 A_Lower
+		wait		
+	Selected:
+	    PKS3 A 0 A_PlayWeaponSound ("weapons/select24")
+		PKS3 A 1 offset (120,139)
+		PKS3 A 1 offset (100,112)
+		PKS3 A 1 offset (80,89)
+		PKS3 A 1 offset (60,70)
+		PKS3 A 1 offset (40,55)
+		PKS3 A 1 offset (20,44)
+		PKS3 A 1 offset (10,37)
+		PKS3 A 1 offset (0,0)
+		Goto Ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")	
+		PKS3 A 3
+		PKS3 A 0 A_PlaySound("quadshotgun/fire", CHAN_AUTO)	
+		PKS3 A 0 Bright A_GunFlash
+		PKS3 A 0 Bright Radius_Quake(16, random (12, 24), 0, 1, 0)	
+		PKS3 AA 0 Bright A_FireBullets (15.7, 15.7, 26, 5, "HandgunPuff", 1, 750)
+        PKS3 BCDEFGHIJKLM 1
+		PKS2 A 5 A_CheckReload 
+		PKS2 B 2 A_SpawnItemEx("ShotgunShellCasing",8,8,31,random(2,4),random(2,3),random(1,3),156)
+		PKS2 C 3 A_SpawnItemEx("ShotgunShellCasing",8,8,31,random(2,4),random(2,3),random(1,3),156)
+		PKS2 D 4 A_SpawnItemEx("ShotgunShellCasing",8,8,31,random(2,4),random(2,3),random(1,3),156)
+		PKS2 E 4 A_SpawnItemEx("ShotgunShellCasing",8,8,31,random(2,4),random(2,3),random(1,3),156)
+		PKS2 F 2 A_PlayWeaponSound("doubleshotgun/open")
+		PKS2 GHI 1
+		PKS2 J 1 A_PlayWeaponSound("quadshotgun/insert1")
+		PKS2 KLMNO 3
+		PKS2 P 1 A_PlayWeaponSound("quadshotgun/insert2")
+		PKS2 QRST 3
+		PKS2 U 1 A_PlayWeaponSound("quadshotgun/insert3")
+		PKS2 VWXY 3
+		PKS2 Z 1 A_PlayWeaponSound("quadshotgun/insert4")
+		PKS1 ABCD 3
+		PKS1 E 2 A_CloseShotgun2
+		PKS1 F 3
+		PKS1 G 2
+		PKS1 H 2
+		PKS1 I 1 A_Refire
+		Goto Ready
+	Flash:
+		PKS1 J 3 Bright A_Light2
+		PKS1 K 2 Bright A_Light1
+		Goto LightDone 
+	}
+}	

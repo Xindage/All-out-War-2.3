@@ -1,0 +1,238 @@
+// Caches
+actor CacheBase : SwitchableDecoration {
+	-SOLID +SHOOTABLE
+	+NOBLOOD +ACTIVATEMCROSS
+	+DONTGIB +NOICEDEATH
+	+CANPASS +NOGRAVITY
+	radius 8
+	height 64
+	health 300
+	renderstyle Translucent
+	alpha 0.0
+	scale 0.65
+	mass 0x7FFFFFFF
+	damagefactor "Disarm", 0.0
+	tag "Cache"
+	states {
+	Spawn:
+		CACH AA 0 A_CheckSight("NoWayDude")
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A 69 A_Gravity
+	Active:
+		CACH A 0 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/health_pkup")
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	Inactive:
+		CACH A -1
+		stop
+	Death:
+		TNT1 A 0 
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32, 0, 0, 0, 0, 128, 0)
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 0 bright A_Explode(64,128)
+		TNT1 A 4 bright 
+		stop
+	NoWayDude:
+	Death.Deconstruction:
+		// bai bai cache
+		"----" A 2 A_PlaySound ("utility/deconstruct")
+		"----" AAAAAAAAAA 2 A_Fadeout(0.1)
+		stop
+	}
+}
+
+actor MedicalCache : CacheBase 21416 {
+	//$Category Objects
+	tag "Medical Cache"
+	Health 300
+	states {
+	Spawn:
+		CACH AA 0 A_CheckSight("NoWayDude")
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A 69 A_Gravity
+		CACH A 0 A_RadiusThrust (3000, 9, 1)
+	Active:
+		CACH A 0 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/health_pkup")
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",-64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",0,64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",0,-64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",-45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",-45,45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",45,45,0,0,0,0,0,32,0)
+		CACH AAAA 35 A_SpawnItemEx("MedicalCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	}
+}
+
+actor MedicalCacheHealth : Stimpack {
+	States {
+	Spawn:
+		STIM AAAAAAA 35
+		STIM A 1
+		Stop
+	}
+}
+
+actor AmmoCache : CacheBase 21417 {
+	//$Category Objects
+	tag "Ammo Cache"
+	Health 400
+	States {
+	Spawn:
+		CACH AA 0 A_CheckSight("NoWayDude")
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A 69 A_Gravity
+	Active:
+		CACH A 0 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 35 A_PlaySound("misc/i_pkup")
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",-64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",0,64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",0,-64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",-45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",-45,45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",45,45,0,0,0,0,0,32,0)
+		CACH AAAAAA 35 A_SpawnItemEx("AmmoCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	}
+}
+
+actor AmmoCachePack : AmmoPack {
+	inventory.pickupmessage "Picked up an ammo pack."
+	states {
+	Spawn:
+		BKPK AAAAAAA 35
+		BKPK A 1
+		Stop
+	Pickup:
+		TNT1 A 0 A_GiveInventory ("NewClipAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("RifleAmmo", 5)
+		TNT1 A 0 A_GiveInventory ("RifleGrenadeAmmo", 1)
+		//TNT1 A 0 A_GiveInventory ("MortarAmmo", 4)
+		TNT1 A 0 A_GiveInventory ("MachineGunAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("LaserRifleAmmo", 10)
+		TNT1 A 0 A_GiveInventory ("FlamerAmmo", 25)
+		TNT1 A 0 A_GiveInventory ("GrenadeAmmo", 4)
+		TNT1 A 0 A_GiveInventory ("MissileAmmo", 2)
+		TNT1 A 0 A_GiveInventory ("GaussRifleAmmo", 4)
+		TNT1 A 0 A_GiveInventory ("ChemicalAmmo", 25)
+		TNT1 A 0 A_GiveInventory ("LaserChaingunAmmo", 25)
+		TNT1 A 0 A_GiveInventory ("PlasmaCannonAmmo", 1)
+		TNT1 A 0 A_GiveInventory ("ShotgunAmmo", 5)
+		TNT1 A 0 A_GiveInventory ("ChronoBolt", 3) // [TT] Changed chryo to chrono
+		TNT1 A 0 A_GiveInventory ("SniperAmmo", 4)
+		TNT1 A 0 A_GiveInventory ("GeneporiumCharge",25)
+		TNT1 A 0 A_GiveInventory ("TE21CalAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("FA21CalAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("ArtilleryShellAmmo", 2)
+		TNT1 A 0 A_GiveInventory ("PlasmaRifleAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("KarasawaAmmo", 1)
+		//TNT1 A 0 A_GiveInventory ("TimeGunAmmo", 2)
+		TNT1 A 0 A_GiveInventory ("StealthCharge", 10)
+		//TNT1 A 0 A_GiveInventory ("JetpackFuel", 7)
+		TNT1 A 0 A_GiveInventory ("Nails", 40)
+		Stop
+	}
+}
+
+actor SuperCache : CacheBase {
+	health 800
+	states {
+	Spawn:
+		CACH AA 0 A_CheckSight("NoWayDude")
+		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
+		CACH A 0 A_SetTranslucent(1.0,0)
+		CACH A 69 A_Gravity
+	Active:
+		CACH A 0 A_SpawnItemEx("SuperCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 0 A_PlayWeaponSound("misc/health_pkup")
+		CACH A 35 A_PlaySound("misc/i_pkup")
+		goto Working
+	Working:
+		CACH A 35 A_SpawnItemEx("SuperCacheFlare",0,0,64,0,0,0,128,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",-64,0,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",0,64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("AmmoCachePack",0,-64,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",-45,-45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",-45,45,0,0,0,0,0,32,0)
+		CACH A 0 A_SpawnItemEx("MedicalCacheHealth",45,45,0,0,0,0,0,32,0)
+		CACH AAAAAA 35 A_SpawnItemEx("SuperCacheFlare",0,0,64,0,0,0,128,0)
+		loop
+	}
+}
+
+actor SuperCacheMapSpawned : SuperCache 21418 {
+	//$Category Objects
+	tag "Super Cache"
+	+SOLID
+	-NOCLIP
+	-NOGRAVITY
+	alpha 1.0
+	states {
+	Spawn:
+		CACH A 0
+		goto Working
+	}
+}
+
+actor MedicalCacheFlare {
+	+RANDOMIZE +NOCLIP
+	+NOGRAVITY +BRIGHT
+	+NOINTERACTION +CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	renderstyle Add
+	alpha 0.5
+	scale 0.20
+	states {
+	Spawn:
+		CACH B 1
+	Idle:
+		"----" AAAAAAAAAA 1 A_FadeIn (0.05)
+		"----" AAAAAAAAAA 1 A_FadeOut (0.05)
+		"----" A 15
+		stop
+	}
+}
+
+actor AmmoCacheFlare : MedicalCacheFlare {
+	states {
+	Spawn:
+		PPCX A 1
+		goto Idle
+	}
+}
+
+actor SuperCacheFlare : MedicalCacheFlare {
+	states {
+	Spawn:
+		CACH C 1
+		goto Idle
+	}
+}
+
+actor MiniRefCacheFlare : MedicalCacheFlare {
+	states {
+	Spawn:
+		CACH D 1
+		goto Idle
+	}
+}

@@ -1,0 +1,462 @@
+//SUPERWEAPONS - Thank IcyTux and Keksdose for their resource WAD.
+Actor NukeMissile : Rocket
+{
+ States
+ {
+  Death:
+   TNT1 A 0
+   TNT1 A 0 A_SpawnItem("Nuke", 0, 2, 0)
+   Stop
+ }
+}
+
+Actor Nuke
+{
+ Radius 8
+ Height 10
+ +NoBlockmap
+ +NoGravity
+ +ForceRadiusDmg
+ +ForceYBillBoard
+ DamageType "Superweapon"
+ scale 3.0
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 A 0 A_SetTranslucent(0.75,1)
+   TNT1 A 0 A_PlaySoundEx("Nuke/Boom", "Voice", 0, 2)
+// TNT1 A 0 A_PlaySound("Nuke/Boom",CHAN_AUTO)
+   TNT1 A 1 //A_Explode(40000, 512, 1)
+   TNT1 A 0 Radius_Quake(7, 105, 0, 50, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeFloor", 0, 0, 0,0,0,0,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeFlare", 0, 0, 0,0,0,0,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmokePillar", 0, 0, 0,0,0,4.8,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeMushroom2", 0, 0, 0,1.5,0,5,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeMushroom2", 0, 0, 0,1.5,0,5,90,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeMushroom2", 0, 0, 0,1.5,0,5,180,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeMushroom2", 0, 0, 0,1.5,0,5,270,128,0)
+   NKE1 ABCDEFGHIJKLMN 9 BRIGHT
+   TNT1 A 0 A_SpawnItemEx("NukeMushroom", 0, 0, 500,0,0,0.5,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmokeMushroom", 0, 0, 500,0,0,0.5,0,128,0)
+   NKE1 OPQRSTU 8 BRIGHT A_FadeOut(0.05)
+   Stop
+ }
+}
+
+Actor NukeFire : Nuke
+{
+ RenderStyle Add
+ +NoInteraction
+ +ClientSideOnly
+ -ForceYBillBoard
+ +FORCEXYBILLBOARD
+ Scale 0.75
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   FLA1 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn2:
+   FLA2 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn3:
+   FLA3 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn4:
+   FLA4 A 1 Bright A_FadeOut(0.015)
+   Wait
+ }
+}
+
+Actor NukeSmoke : Nuke
+{
+ Scale 3.5
+ +NoInteraction
+ +ClientSideOnly
+ -ForceYBillBoard
+ +FORCEXYBILLBOARD
+ Alpha 0.5
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   SMOK A 5 A_FadeOut(0.015)
+   Wait
+  Spawn2:
+   SMOK B 5 A_FadeOut(0.015)
+   Wait
+  Spawn3:
+   SMOK C 5 A_FadeOut(0.015)
+   Wait
+  Spawn4:
+   SMOK D 5 A_FadeOut(0.015)
+   Wait
+ }
+}
+
+Actor NukeFlare : NukeFire
+{
+ Scale 16
+ +NoInteraction
+ States
+ {
+  Spawn:
+   FLAR A 1 Bright A_FadeOut(0.01)
+   Wait
+ }
+}
+
+Actor NukeFloor : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeFire", 0, 0, 0, 0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0, Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeSmokeFloor : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0, Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukePillar : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeFire", 0, 0, 0, 0.00001 * Random(0, 100000), 0.00001 * Random(0, 100000), Random(0, -3), Random(0, 359), 128, 0)
+   TNT1 A 1 A_SpawnItem("NukeSmokering", 0, 0, 0)
+   TNT1 AAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeFire", 0, 0, 0, 0.00001 * Random(0, 100000), 0.00001 * Random(0, 100000), Random(0, -3), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeSmokePillar : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 0.00001 * Random(0, 100000), 0.00001 * Random(0, 100000), 0.00001 * Random(0, -400000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeMushroom : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeFire", 0, 0, 0, 0.00001 * Random(0, 250000), 0.00001 * Random(0, 250000), 0.00001 * Random(-100000, 100000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeSmokeMushroom : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 0.00001 * Random(0, 250000), 0.00001 * Random(0, 250000), 0.00001 * Random(-100000, 100000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeMushroom2 : Nuke
+{
+ +ClientSideOnly
+ +HexenBounce //or else it'll look weird
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeFire", Random(0, 16), 0, 0, 0.00001 * Random(100000, 400000), 0, 0.00001 * Random(0, 100000), Random(0, 359), 128, 128)
+   Stop
+ }
+}
+
+Actor NukeSmokering : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 0, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 20, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 40, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 60, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 80, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 100, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 120, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 140, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 160, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 180, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 200, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 220, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 240, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 260, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 280, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 300, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 320, 0, 0)
+//   TNT1 A 0 A_SpawnItemEx("NukeSmoke", 0, 0, 0, 4, 0, 0, 340, 0, 0)
+   Stop
+ }
+}
+
+//Hyper nuke=========================================================================================================
+
+Actor HyperNukeMissile : Rocket
+{
+ States
+ {
+  Death:
+   TNT1 A 0
+   TNT1 A 0 A_SpawnItem("HyperNuke", 0, 2, 0)
+   Stop
+ }
+}
+
+Actor HyperNuke : Nuke
+{
+ PROJECTILE
+ ReactionTime 1
+ States
+ {
+  Spawn:
+   TNT1 AAA 0 A_Countdown
+  Death:
+   TNT1 A 0
+   TNT1 A 0 A_PlaySoundEx("Nuke/Boom", "Voice", 0, 2)
+   TNT1 A 1 //A_Explode(40000, 512, 1)
+   TNT1 A 0 Radius_Quake(7, 105, 0, 140, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperFlare", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+   TNT1 A 25 A_SpawnItemEx("NukeHyperFloor", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+   TNT1 AA 0 A_SpawnItemEx("NukeHyperSmokeFloor", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperPillar", 0, 0, 0, 0, 0, 10, 0, 128, 0)
+   TNT1 A 105 A_SpawnItemEx("NukeHyperSmokePillar", 0, 0, 0, 0, 0, 10, 0, 128, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperMushroom", 0, 0, 1000, 0, 0, 0, 0, 128, 0)
+   TNT1 AA 0 A_SpawnItemEx("NukeHyperSmokeMushroom", 0, 0, 1000, 0, 0, 0, 0, 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperFire : Nuke
+{
+ RenderStyle Add
+ +NoInteraction
+ +ClientSideOnly
+ -ForceYBillBoard
+ +FORCEXYBILLBOARD
+ Scale 3
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   FLA1 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn2:
+   FLA2 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn3:
+   FLA3 A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn4:
+   FLA4 A 1 Bright A_FadeOut(0.015)
+   Wait
+ }
+}
+
+Actor NukeHyperSmoke : Nuke
+{
+ Scale 15
+ +NoInteraction
+ +ClientSideOnly
+ -ForceYBillBoard
+ +FORCEXYBILLBOARD
+ Alpha 0.5
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   SMOK A 5 A_FadeOut(0.015)
+   Wait
+  Spawn2:
+   SMOK B 5 A_FadeOut(0.015)
+   Wait
+  Spawn3:
+   SMOK C 5 A_FadeOut(0.015)
+   Wait
+  Spawn4:
+   SMOK D 5 A_FadeOut(0.015)
+   Wait
+ }
+}
+
+Actor NukeHyperFlare : NukeFire
+{
+ Scale 48
+ +NoInteraction
+ +ClientSideOnly
+ States
+ {
+  Spawn:
+   FLAR A 1 Bright A_FadeOut(0.05)
+   Wait
+ }
+}
+
+Actor NukeHyperFloor : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperFire", 0, 0, 0, 0.00001 * Random(0, 900000), 0.00001 * Random(0, 900000), 0, Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperSmokeFloor : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 0.00001 * Random(0, 900000), 0.00001 * Random(0, 900000), 0, Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperPillar : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAA 2  A_SpawnItemEx("NukeHyperFire", 0, 0, 0, 0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0.00001 * Random(0, -600000), Random(0, 359), 128, 0)
+   TNT1 A 0 A_SpawnItem("NukeHyperSmokering", 0, 0, 0)
+   TNT1 AAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperFire", 0, 0, 0, 0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0.00001 * Random(0, -600000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperSmokePillar : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0.00001 * Random(0, -600000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperMushroom : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperFire", 0, 0, 0, 0.00001 * Random(0, 600000), 0.00001 * Random(0, 900000), 0.00001 * Random(-400000, 400000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperSmokeMushroom : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 0.00001 * Random(0, 600000), 0.00001 * Random(0, 900000), 0.00001 * Random(-400000, 400000), Random(0, 359), 128, 0)
+   Stop
+ }
+}
+
+Actor NukeHyperSmokering : Nuke
+{
+ +ClientSideOnly
+ +NoNetID
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 0, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 20, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 40, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 60, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 80, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 100, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 120, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 140, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 160, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 180, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 200, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 220, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 240, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 260, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 280, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 300, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 320, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 340, 0, 0)
+/*   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 10, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 30, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 50, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 70, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 90, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 110, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 130, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 150, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 170, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 190, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 210, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 230, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 250, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 270, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 290, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 310, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 330, 0, 0)
+   TNT1 A 0 A_SpawnItemEx("NukeHyperSmoke", 0, 0, 0, 12, 0, 0, 350, 0, 0)*/
+   Stop
+ }
+}

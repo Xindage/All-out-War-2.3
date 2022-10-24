@@ -1,0 +1,218 @@
+// MONEY RELATED SCRIPTS
+function int GetCredits (void) {
+	if (netstate == NETSTATE_Client)
+		return CheckInventory ("Credit");
+	return Credits[PlayerNumber()];
+}
+
+function int GetPlayerCredits (int i) {
+	if (!PlayerInGame (i))
+		return 0;
+	
+	if (netstate == NETSTATE_Client)
+		return CheckActorInventory (3800+i, "Credit");
+	return Credits[i];
+}
+
+function void SpendCredits (int amount) {
+	int d = CalcDiscount (amount);
+	amount -= d;
+	TakeInventory ("Credit", amount);
+	Credits[PlayerNumber()] -= amount;
+	
+	SetFont ("BIGFONT");
+	if (d > 0)
+		HudMessage (s:"\cJYou have spent \cQ$\cD", d:amount, s:" \cF[\cQ-$\cD", d:d, s:"\cF]";
+			HUDMSG_FADEOUT, 480+PlayerNumber(), CR_Green, 0.5, 0.55, 2.0, 1.0);
+	else
+		HudMessage (s:"\cJYou have spent \cQ$\cD", d:amount;
+			HUDMSG_FADEOUT, 480+PlayerNumber(), CR_Green, 0.5, 0.55, 2.0, 1.0);
+}
+
+function void AwardCredits (int amount) {
+	if (IsAdmin[PlayerNumber()])
+		return;
+	
+	SetFont ("SMALLFONT");
+	GiveInventory ("Credit", amount);
+	IntelMessage (strparam (s:"You have been awarded with \cQ$\cD", d:amount), false);
+}
+
+function void SetCredits (int value) {
+	DoSetCredits (PlayerNumber(), value, true);
+}
+
+function void SetPlayerCredits (int player, int value) {
+	DoSetCredits (player, value, true);
+}
+
+function void DoSetCredits (int player, int value, int inform) {
+	if (player < 0)
+		player = PlayerNumber();
+	
+	if (IsAdmin[player] || !PlayerInGame (player))
+		return;
+	
+	// [Dusk] Don't go past credit cap
+	int cap = GetConfig (CONFIG_CREDITCAP);
+	if (cap && value > cap)
+		value = cap;
+	
+	Credits[player] = value;
+	SetActorInventory (3800 + player, "Credit", value);
+}
+
+function void GivePlayerCredits (int player, int amount) {
+	DoSetCredits (player, GetPlayerCredits (player) + amount, true);
+}
+
+function void GiveCredits (int amount) {
+	DoSetCredits (PlayerNumber(), GetCredits() + amount, true);
+}
+
+function void GiveCreditsBold (int amount) {
+	GiveTeamCredits (amount, amount);
+}
+
+function void GiveTeamCredits (int b, int r) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame (i) || IsAdmin[i])
+			continue;
+		
+		if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
+			DoSetCredits (i, GetPlayerCredits (i) + b, false);
+		else
+			DoSetCredits (i, GetPlayerCredits (i) + r, false);
+	}
+}
+
+// Give credits to a player, 
+function void RefundCredits (int p, int v) {
+	if (p == -1)
+		p = PlayerNumber();
+	GivePlayerCredits (p, v);
+	
+	if (PlayerNumber() != p)
+		SetActivator (3800+p);
+	
+	SetFont ("SMALLFONT");
+	IntelMessage (strparam (s:"You have been refunded with \cQ$\cD", d:v), false);
+}
+
+function void TakeCredits (int p, int v, int verbose) {
+	if (p == -1)
+		p = PlayerNumber();
+	GivePlayerCredits (p, -v);
+	
+	if (verbose) {
+		if (PlayerNumber() != p)
+			SetActivator (3800+p);
+		
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (s:"You have been deducted \cQ$\cD", d:v), false);
+	}
+}
+
+// testing script
+Script SC_GIVECREDITS (int amount, int i) {
+	GivePlayerCredits (i, amount);
+	
+	// Online, this needs a message
+	if (netstate == NETSTATE_Server) {
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (s:"\cRServer \cJhas given \cQ$\cD", d:amount, s:" \cJto ", n:i+1), true);
+	}
+}
+
+function int CalcCreditFlow (int team) {
+	int p = 25;
+	if (GotPlant[team])
+		p += 25;
+	if (GotRefinery[team])
+		p += 50;
+	if (MiniRefinery[team])
+		p += 75;
+	
+	int f = (GetCVAR("zeta_credflow") * p) / 100;
+	if (!f)
+		f = 1;
+	
+	return f;
+}
+
+// Credit flow
+script SC_CREDITFLOW OPEN {
+	while (1)
+	{
+		for (int i = 0; i < MAXPLAYERS; i++)
+		{
+			if (!PlayerInGame (i) || GetActorHealth (3800 + i) <= 0)
+				continue;
+				
+			// [JD] Simplified this
+			GivePlayerCredits(i, CalcCreditFlow(GetPlayerInfo(i, PLAYERINFO_TEAM)));
+		}
+		
+		delay (35);
+	}
+}
+
+// DECORATE front-end
+script 814 (int amount)
+	GiveCredits (amount);
+
+//Price check
+script 330 (int amount) {
+	int d = CalcDiscount (amount);
+	amount -= d;
+	
+	if (d != 0) {
+		SetFont ("BIGFONT");
+		HudMessage (s:"\cJDiscount \cQ-$\cD", d:d, s:"\cF = \cQ$\cD", d:amount;
+			HUDMSG_FADEOUT, 480+PlayerNumber(), CR_Green, 0.25, 0.1, 2.0, 1.0);
+	}
+	
+	SetResultValue (amount);
+}
+
+// CREDIT BONUS
+Script 326 OPEN {
+	while (intHolder[i_CreditAwardTime] <= 0)
+		delay (5 * 35);
+	
+	delay (intHolder[i_CreditAwardTime] * MINUTETICS);
+	
+	GiveCreditsBold (intHolder[i_CreditAwardAmount]);
+	
+	AmbientSound ("powerup/credsound", 127);
+	SetFont ("SMALLFONT");
+	IntelMessage (strparam (s:"Credit bonus! You all get \cQ$\cD", d:intHolder[i_CreditAwardAmount], s:"\cJ!"), true);
+	restart;
+}
+
+function int CalcDiscount (int amount) {
+	// Privates don't get discounts
+	if (GetRank () == RANK_PRIVATE || amount <= 0)
+		return 0;
+	
+	int d;
+	if (amount < 200 && amount > 0)
+		d = 10;
+	else if (amount >= 200 && amount < 400)
+		d = 15;
+	else if (amount >= 400 && amount < 800)
+		d = 30;
+	else if (amount >= 800 && amount < 1600)
+		d = 50;
+	else if (amount > 1600)
+		d = 75;
+	
+	if (GetRank () >= RANK_MAJOR)
+		d *= 4;
+	else if (GetRank () >= RANK_LIEUTENANT)
+		d *= 3;
+	else if (GetRank () >= RANK_MASTERSGT)
+		d *= 2;
+	
+	return d;
+}

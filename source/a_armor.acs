@@ -1,0 +1,253 @@
+// All Out War 2 armour manipulation scripts
+// Credit to VoltlocK for originally creating the engine
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// What type is weak against what?
+int ArmorWeaknesses[6] = {
+	ARMOD_NOCHANGE, // NOCHANGE
+	ARMOD_CHEM, // FIRE
+	ARMOD_FIRE, // CHEM
+	ARMOD_BULLETPROOF, // ENERGY
+	ARMOD_ENERGY, // EXPLO
+	ARMOD_EXPLO, // BULLETPROOF
+};
+
+function int GetArmorGrade (void) {
+	return GetPlayerArmorGrade (PlayerNumber ());
+}
+
+function int GetPlayerArmorGrade (int p) {
+	if (CheckActorInventory (3800 + p, "PowerGrade5Armor")) return 5;
+	if (CheckActorInventory (3800 + p, "PowerGrade4Armor")) return 4;
+	if (CheckActorInventory (3800 + p, "PowerGrade3Armor")) return 3;
+	if (CheckActorInventory (3800 + p, "PowerGrade2Armor")) return 2;
+	if (CheckActorInventory (3800 + p, "PowerGrade1Armor")) return 1;
+	if (CheckActorInventory (3800 + p, "PowerGradeNeg1Armor")) return -1;
+	return 0;
+}
+
+function int GetArmorModifier (void) {
+	return GetPlayerArmorModifier (PlayerNumber ());
+}
+
+function int GetPlayerArmorModifier (int p) {
+	if (CheckActorInventory (3800 + p, "PowerFireProof")) return ARMOD_FIRE;
+	if (CheckActorInventory (3800 + p, "PowerChemicalProof")) return ARMOD_CHEM;
+	if (CheckActorInventory (3800 + p, "PowerExplosiveResistance")) return ARMOD_EXPLO;
+	if (CheckActorInventory (3800 + p, "PowerEnergyResistance")) return ARMOD_ENERGY;
+	if (CheckActorInventory (3800 + p, "PowerBulletProof")) return ARMOD_BULLETPROOF;
+	return 0;
+}
+
+// [Dusk] Set the armor grade and type
+function void SetArmorGrade (int n, int mod) {
+	SetPlayerArmorGrade (PlayerNumber(), n, mod);
+}
+
+function void SetPlayerArmorGrade (int p, int n, int mod) {
+	int grade = GetPlayerArmorGrade (p);
+	
+	if (n != NOCHANGE) {
+		if (mod & AGF_ADDITIVE) {
+			n += grade;
+		} else {
+			// armour upgrade
+			if (CheckActorInventory (3800 + p, "HasArmorUpgrade"))
+				n++;
+			
+			// [JD] If the player got a team boost before choosing their class, carry over the armor grade.
+			if (CheckActorInventory(3800 + p, "hasTeamBoost"))
+				n++;
+		}
+		
+		if (n > 5) n = 5;
+		if (n < 0) {
+			// don't go to -1 with AGF_ADDITIVE
+			if (mod & AGF_ADDITIVE)
+				n = 0;
+			else
+				n = -1;
+		}
+		
+		if ((mod & AGF_DONTSUBTRACT && n <= grade) || (mod & AGF_DONTADD && n >= grade))
+			return;
+		
+		if (grade != n) {
+			SetActorInventory (3800 + p, "PowerGrade5Armor", 0);
+			SetActorInventory (3800 + p, "PowerGrade4Armor", 0);
+			SetActorInventory (3800 + p, "PowerGrade3Armor", 0);
+			SetActorInventory (3800 + p, "PowerGrade2Armor", 0);
+			SetActorInventory (3800 + p, "PowerGrade1Armor", 0);
+			SetActorInventory (3800 + p, "PowerGradeNeg1Armor", 0);
+			
+			if (n == -1)
+				GiveActorInventory (3800 + p, "GradeNeg1Armor", 1);
+			else if (n > 0)
+				GiveActorInventory (3800 + p, strparam (s:"Grade", d:n, s:"Armor"), 1);
+			
+			if (n == 5 && !CheckActorInventory(3800 + p, "armorGradeVAnnounced"))
+			{
+				IntelMessage (strparam (n:p + 1, s:"\c- has \cKGrade 5 Armor!"), true);
+				GiveActorInventory(3800 + p, "armorGradeVAnnounced", 1);
+			}
+		}
+	}
+	
+	// Rid the flags now
+	mod &= ~(AGF_ADDITIVE | AGF_DONTSUBTRACT | AGF_DONTADD);
+	
+	// Give the armor type
+	if (mod != ARMOD_NOCHANGE) {
+		CheckAndRemove ("PowerFireProof");
+		CheckAndRemove ("PowerChemicalProof");
+		CheckAndRemove ("PowerExplosiveResistance");
+		CheckAndRemove ("PowerEnergyResistance");
+		CheckAndRemove ("PowerBulletProof");
+		
+		switch (mod) {
+		case ARMOD_FIRE:
+			GiveActorInventory (3800 + p, "FireProof", 1);
+			break;
+		case ARMOD_CHEM:
+			GiveActorInventory (3800 + p, "ChemicalProof", 1);
+			break;
+		case ARMOD_EXPLO:
+			GiveActorInventory (3800 + p, "ExplosiveResistance", 1);
+			break;
+		case ARMOD_ENERGY:
+			GiveActorInventory (3800 + p, "EnergyResistance", 1);
+			break;
+		case ARMOD_BULLETPROOF:
+			GiveActorInventory (3800 + p, "BulletProof", 1);
+			break;
+		}
+	}
+}
+
+// for testing and decorate (ai marines, et al)
+script SC_SETARMORGRADE (int grade, int mod)
+	SetArmorGrade (grade, mod);
+
+// [Dusk] ARMOR DISPLAY COMMAND		// [SG] armors no longer have weaknesses as of now, updating with new values
+// Argh! Data tables!
+/*int ArmorNames[13] = {"PowerGrade1Armor", "PowerGrade2Armor", "PowerGrade3Armor", "PowerGrade4Armor", "PowerGrade5Armor", 
+	"PowerGradeNeg1Armor", "PowerFireProof", "PowerChemicalProof", "PowerExplosiveResistance", "PowerEnergyResistance", 
+	"PowerChemicalResistance", "PowerGrade2ArmorFactoryPower", "PowerBulletProof" };
+int ArmorValuesFist[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	1.0, 1.0, 1.0, 1.0, 1.0, 0.86, 1.0};
+int ArmorValuesBullet[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	1.0, 1.0, 1.0, 1.0, 1.0, 0.86, 0.4};
+int ArmorValuesExplo[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	1.0, 1.0, 0.6, 1.0, 1.0, 0.86, 1.0};
+int ArmorValuesAntiArmor[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	1.0, 1.0, 0.6, 1.0, 1.0, 0.86, 1.0};
+int ArmorValuesFire[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	0.0, 2.0, 1.0, 1.0, 1.0, 0.86, 1.0};
+int ArmorValuesChem[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	2.0, 0.0, 1.0, 1.0, 0.6, 0.86, 1.0};
+int ArmorValuesEnergy[13] = {0.93, 0.86, 0.79, 0.72, 0.65, 1.14,
+	1.0, 1.0, 1.0, 0.6, 1.0, 0.86, 1.0};
+
+script SC_CCMD_SHOWARMOR (void) NET CLIENTSIDE {
+	int fist, bullet, explo, antiarmor, fire, chem, energy;
+	
+	if (CheckInventory ("IsMech")) {
+		// Mech damage factors
+		fist = 0.35;
+		bullet = 0.8;
+		explo = 1.35;
+		antiarmor = 2.0;
+		fire = 1.25;
+		chem = 1.75;
+		energy = 1.0;
+	} else {
+		// Infantry damage factors
+		fist = 1.0;
+		bullet = 1.0;
+		explo = 1.0;
+		antiarmor = 1.0;
+		fire = 1.0;
+		if (CheckInventory ("PowerBerserk"))
+			chem = 2.25;
+		else
+			chem = 1.0;
+		energy = 1.0;
+	}
+	
+	for (int i = 0; i < 13; i++) {
+		if (CheckInventory (ArmorNames[i])) {
+			fist = FixedMul (fist, ArmorValuesFist[i]);
+			bullet = FixedMul (bullet, ArmorValuesBullet[i]);
+			explo = FixedMul (explo, ArmorValuesExplo[i]);
+			antiarmor = FixedMul (antiarmor, ArmorValuesAntiArmor[i]);
+			fire = FixedMul (fire, ArmorValuesFire[i]);
+			chem = FixedMul (chem, ArmorValuesChem[i]);
+			energy = FixedMul (energy, ArmorValuesEnergy[i]);
+		}
+	}
+	
+	Log (s:"CURRENT DAMAGE FACTORS: \cJ", f:fist,
+		s:" \cU", f:bullet,
+		s:" \cG", f:fire,
+		s:" \cD", f:chem,
+		s:" \cN", f:energy,
+		s:" \cF", f:explo,
+		s:" \cI", f:antiarmor);
+}*/
+
+function void AddArmor (int n) {
+	SetArmorGrade (n, AGF_ADDITIVE | ARMOD_NOCHANGE);
+}
+
+function void AddPlayerArmor (int p, int n) {
+	SetPlayerArmorGrade (p, n, AGF_ADDITIVE | ARMOD_NOCHANGE);
+}
+
+// [Dusk] Armor type change script
+script SC_ARMORITEMUSE (int modtype) {
+	GiveInventory ("IsChangingArmor", 1);
+	
+	ACS_ExecuteAlways (SC_CL_ARMORPREDICT, 0, modtype);
+	
+	int n = 5;
+	
+	while (n > 0) {
+		if (GetHealth() <= 0)
+			terminate;
+		delay (35);
+		n--;
+	}
+	
+	TakeInventory ("IsChangingArmor", 1);
+	
+	if( (!CheckInventory("IsMech")) || (!CheckInventory("CancelChangingArmor")) )
+	{
+		ActivatorSound ("misc/armor_pkup", 127);
+		SetArmorGrade (NOCHANGE, modtype);
+	}
+	
+	else
+		TakeInventory("CancelChangingArmor",1);
+}
+
+// [Dusk] Client-side progress prediction
+script SC_CL_ARMORPREDICT (int modtype) CLIENTSIDE {
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		terminate;
+	
+	TakeInventory ("ArmorChangeProgress", 175);
+	
+	int n = 175;
+	while (n > 0) {
+		if (GetHealth() <= 0)
+			terminate;
+		GiveInventory ("ArmorChangeProgress", 1);
+		delay (1);
+		n--;
+	}
+	
+	TakeInventory ("ArmorChangeProgress", 175);
+}

@@ -1,0 +1,348 @@
+// PLASMA CANNON
+actor PlasmaCannon : AOWWeapon {
+	+WEAPON.NOAUTOFIRE
+	DropItem "NewBackPack"
+	Weapon.SelectionOrder 1
+	Weapon.Kickback 100
+	Weapon.AmmoType "PlasmaCannonAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 4
+	//Weapon.AmmoType2 "PlasmaCannonAmmo"
+	//Weapon.AmmoUse2 1
+	Weapon.UpSound "weapons/up/plasmacannon"
+	Weapon.PreferredSkin "MarineBFG"
+	States {
+	Ready:
+		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "ReadyRed")
+		PLCG ABCD 3 A_WeaponReady
+		goto Ready+2
+	ReadyRed:
+		PC2G ABCD 3 A_WeaponReady
+		loop
+	Deselect:
+		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "DeselectRed")
+		PLCG A 1 offset (-5, 34)
+		PLCG A 1 offset (-16, 38)
+		PLCG A 1 offset (-23, 45)
+		PLCG A 1 offset (-32, 56)
+		PLCG A 1 offset (-42, 66)
+		PLCG A 1 offset (-51, 73)
+		PLCG A 1 offset (-63, 87)
+		PLCG A 1 offset (-78, 97)
+		PLCG A 1 offset (-88, 111)
+		PLCG A 1 offset (-99, 121)
+		PLCG A 1 offset (-112, 133)
+		PLCG A 1 offset (-125, 154)
+		PLCG A 0 offset (-1, 33)
+		PLCG A 0 A_Lower
+		wait
+	DeselectRed:
+		PC2G A 1 offset (-5, 34)
+		PC2G A 1 offset (-16, 38)
+		PC2G A 1 offset (-23, 45)
+		PC2G A 1 offset (-32, 56)
+		PC2G A 1 offset (-42, 66)
+		PC2G A 1 offset (-51, 73)
+		PC2G A 1 offset (-63, 87)
+		PC2G A 1 offset (-78, 97)
+		PC2G A 1 offset (-88, 111)
+		PC2G A 1 offset (-99, 121)
+		PC2G A 1 offset (-112, 133)
+		PC2G A 1 offset (-125, 154)
+		PC2G A 0 offset (-1, 33)
+		PC2G A 0 A_Lower
+		wait
+	Select:
+		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "SelectRed")
+		PLCG A 1 offset (-125, 154)
+		PLCG A 1 offset (-112, 133)
+		PLCG A 1 offset (-99, 121)
+		PLCG A 1 offset (-88, 111)
+		PLCG A 1 offset (-78, 97)
+		PLCG A 1 offset (-63, 87)
+		PLCG A 1 offset (-51, 73)
+		PLCG A 1 offset (-42, 66)
+		PLCG A 1 offset (-32, 56)
+		PLCG A 1 offset (-23, 45)
+		PLCG A 1 offset (-16, 38)
+		PLCG A 1 offset (-5, 34)
+		goto ready
+	SelectRed:
+		PC2G A 1 offset (-125, 154)
+		PC2G A 1 offset (-112, 133)
+		PC2G A 1 offset (-99, 121)
+		PC2G A 1 offset (-88, 111)
+		PC2G A 1 offset (-78, 97)
+		PC2G A 1 offset (-63, 87)
+		PC2G A 1 offset (-51, 73)
+		PC2G A 1 offset (-42, 66)
+		PC2G A 1 offset (-32, 56)
+		PC2G A 1 offset (-23, 45)
+		PC2G A 1 offset (-16, 38)
+		PC2G A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PC2G A 0 A_JumpIfInventory("IsBlue",1,"FireBlue")
+		PC2G A 8 A_PlayWeaponSound("plasmacannon/fire")
+		PC2G EFG 6 bright
+		PC2G H 0 bright A_GunFlash
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PC2G H 0 bright A_LightInverse
+		PC2G H 2 bright A_FireCustomMissile("PlasmaCannonBall")
+		PC2G H 3 bright A_Light2
+		PC2G I 2 bright A_Light1
+		PC2G I 3 bright A_Light0
+		PC2G JKL 5 bright
+		PC2G EF 3
+		PC2G G 5 A_Refire
+		goto Ready
+	/*AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PC2G A 0 A_JumpIfInventory("IsBlue",1,"AltFireBlue")
+		PC2G A 5 A_PlayWeaponSound("plasmacannon/altfire")
+		PC2G EFG 5 bright
+		PC2G H 0 bright A_GunFlash
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PC2G H 0 bright A_LightInverse
+		PC2G H 2 bright A_FireCustomMissile("PlasmaCannonBallSmall")
+		PC2G H 2 bright A_Light2
+		PC2G I 2 bright A_Light1
+		PC2G I 2 bright A_Light0
+		PC2G JKL 4 bright
+		PC2G EF 3
+		PC2G G 5 A_Refire
+		goto Ready*/
+	FireBlue:
+		PLCG A 8 A_PlayWeaponSound("plasmacannon/fire")
+		PLCG EFG 6 bright
+		PLCG H 0 bright A_GunFlash
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PLCG H 0 bright A_LightInverse
+		PLCG H 2 bright A_FireCustomMissile("PlasmaCannonBallBlue")
+		PLCG H 3 bright A_Light2
+		PLCG I 2 bright A_Light1
+		PLCG I 3 bright A_Light0
+		PLCG JKL 5 bright
+		PLCG EF 3
+		PLCG G 5 A_Refire
+		goto Ready
+	/*AltFireBlue:
+		PLCG A 5 A_PlayWeaponSound("plasmacannon/altfire")
+		PLCG EFG 5 bright
+		PLCG H 0 bright A_GunFlash
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		PLCG H 0 bright A_LightInverse
+		PLCG H 2 bright A_FireCustomMissile("PlasmaCannonBallSmallBlue")
+		PLCG H 2 bright A_Light2
+		PLCG I 2 bright A_Light1
+		PLCG I 2 bright A_Light0
+		PLCG JKL 4 bright
+		PLCG EF 3
+		PLCG G 5 A_Refire
+		goto Ready*/
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+// ============================================================================
+// Main projectile
+actor PlasmaCannonBall {
+	PROJECTILE
+	+FORCEXYBILLBOARD
+	+EXTREMEDEATH
+	Radius 13
+	Height 8
+	Speed 40
+	Damage (400)
+	Obituary "$OB_PLASMACANNON_RED" // "%o was annihilated by %k's \caPlasma Cannon."
+	RenderStyle Add
+	Alpha 0.75
+	DeathSound "plasmacannon/explode"
+	DamageType "Explosion"
+	Scale 1.5
+	Translation "192:207=228:246"
+	decal "PCLightningRed"
+	States {
+	Spawn:
+		PLS3 AABB 1 bright A_SpawnItemEx ("PlasmaFlameTail", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		loop
+	Death:
+		PLE1 A 4
+		PLE1 A 4 bright A_Explode (500, 192)
+		PLE1 BBBB 2 bright A_SpawnItemEx("PlasmaFlameDecay", random(-32,32), random(-32,32), random(-32,32),0,0,0,0, SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+		PLE1 C 0 A_SpawnItemEx ("PlasmaFlameCluster", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		PLE1 C 4 bright
+		PLE1 C 4 bright A_Explode (30, 550, 0)
+		PLE1 DEF 8 bright
+		stop
+	}
+}
+
+actor PlasmaCannonBallSmall : PlasmaCannonBall {
+	+SEEKERMISSILE
+	-EXTREMEDEATH
+	Radius 9
+	Height 7
+	Speed 45
+	Damage (150)
+	DeathSound "plasmacannon/altexplode"
+	Obituary "$OB_PLASMACANNON_ALT_RED" // "%o couldn't escape %k's \caPlasma Cannon."
+	Scale 0.9
+	decal "PC2LightningRed"
+	States {
+	Spawn:
+		PLS3 A 0 bright A_Tracer2
+		PLS3 ABA 1 bright A_SpawnItemEx("PlasmaFlameTailSmall", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		PLS3 B 0 bright A_Tracer2
+		PLS3 BAB 1 bright A_SpawnItemEx("PlasmaFlameTailSmall", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		loop
+	Death:
+		PLE1 A 3
+		PLE1 A 3 bright A_Explode(128,128)
+		PLE1 B 7 bright
+		PLE1 C 3 bright
+		PLE1 C 3 bright A_Explode(128,256)
+		PLE1 DEF 7 bright
+		stop
+	}
+}
+
+actor PlasmaCannonBallBlue : PlasmaCannonBall {
+	Damage (400)
+	Translation "0:0=0:0"
+	Obituary "$OB_PLASMACANNON_BLUE" // "%o was annihilated by %k's \cNPlasma Cannon."
+	decal "PCLightning"
+	States {
+	Death:
+		PLE1 A 4
+		PLE1 A 4 bright A_Explode (500, 192)
+		PLE1 BBBB 2 bright A_SpawnItemEx("PlasmaFlameDecayBlue", random(-32,32), random(-32,32), random(-32,32),0,0,0,0, SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+		PLE1 C 0 A_SpawnItemEx ("PlasmaFlameCluster", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		PLE1 C 4 bright
+		PLE1 C 4 bright A_Explode (30, 550, 0)
+		PLE1 DEF 8 bright
+		stop
+	}
+}
+
+actor PlasmaCannonBallSmallBlue : PlasmaCannonBallSmall {
+	Damage (150)
+	Translation "160:167=168:191","236:255=168:191"
+	Obituary "$OB_PLASMACANNON_ALT_BLUE" // "%o couldn't escape %k's \cnPlasma Cannon."
+	decal "PC2Lightning"
+}
+
+// ============================================================================
+// Decay actors
+actor PlasmaFlameDecay {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	Renderstyle None
+	DamageType "Fire"
+	Obituary "$OB_FIREDECAY" // "%o burns in %k's firestorm."
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("PlasmaFlameDecayFX", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 15 BRIGHT A_Explode(8,96,0)
+		stop
+	}
+}
+
+actor PlasmaFlameDecayBlue : PlasmaFlameDecay {}
+
+actor PlasmaFlameDecayFX {
+	+CLIENTSIDEONLY +NOBLOCKMAP
+	+NOGRAVITY +NOINTERACTION
+	ReactionTime 66
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 5 A_SpawnItemEx ("PlasmaFlame", random(-16,16), random(-16,16), random(8,16),
+			0, 0, random(1,3), 0, SXF_TRANSFERTRANSLATION, 32)
+		TNT1 A 0 A_Countdown
+		loop
+	Death:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor PlasmaFlameCluster {
+	+NOBLOCKMAP +NOGRAVITY
+	+CLIENTSIDEONLY +NOINTERACTION
+	ReactionTime 60
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("PlasmaFlame", 0, 0, 0, random(-9,9), random(-10,10), random(-10,10), 0, SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_Countdown
+		loop
+	Death:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor PlasmaFlameTail {
+	+CLIENTSIDEONLY +NOBLOCKMAP
+	+NOGRAVITY +NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("PlasmaFlame", -8, 0, 0, -6, random(-2, -3), random(-1, 1), 0, SXF_TRANSFERTRANSLATION)
+		TNT1 A 1 A_SpawnItemEx ("PlasmaFlame", -8, 0, 0, -6, random(2, 3), random(-1, 1), 0, SXF_TRANSFERTRANSLATION)
+		stop
+	}
+}
+
+actor PlasmaFlameTailSmall : PlasmaFlameTail {
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("PlasmaFlameSmall", -8, 0, 0, -5, random(-2, -3), random(-1, 1), 0, SXF_TRANSFERTRANSLATION)
+		TNT1 A 1 A_SpawnItemEx ("PlasmaFlameSmall", -8, 0, 0, -5, random(2, 3), random(-1, 1), 0, SXF_TRANSFERTRANSLATION)
+		stop
+	}
+}
+
+// ============================================================================
+actor PlasmaFlame {
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	Radius 13
+	Height 8
+	Speed 10
+	RenderStyle Add
+	Alpha 0.75
+	Scale 1.2
+	States {
+	Spawn:
+		TNT1 A 0
+		PLFX ABCDEFG 3 bright
+		PLFX FG 2 bright
+		stop
+	}
+}
+
+actor PlasmaFlameSmall : PlasmaFlame {
+	scale 0.8
+	states {
+	Spawn:
+		TNT1 A 0
+		PLFX ABCDEFG 2 bright
+		stop
+	}
+}

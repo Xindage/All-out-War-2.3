@@ -1,0 +1,102 @@
+// SURRENDER SCRIPT
+script 342 (void) NET {
+	VoteSurrender ();
+}
+
+function void VoteSurrender (void) {
+	if (!PlayerInGame(PlayerNumber())) {
+		GenericError ("You can't surrender as a spectator!");
+		return;
+	}
+	
+	if (GetCVAR ("zeta_surrendermode") == 2) {
+		GenericError ("Surrender is disabled!");
+		return;
+	} else if (GetCVAR("zeta_surrendermode") == 1 && CalcBaseLeft (PlayerTeam ()) >= 5) {
+		GenericError ("It's too early to surrender!");
+		return;
+	}
+	
+	if (Timer() - LastSurrenderTime[PlayerNumber()] < 35 * SURRENDER_WAIT_TIME) {
+		GenericError ("Please wait to revote for surrender!");
+		return;
+	}
+	
+	LastSurrenderTime[PlayerNumber()] = Timer();
+	
+	Surrender[PlayerNumber()] = !Surrender[PlayerNumber()];
+	SetFont ("SMALLFONT");
+	if (PlayerTeam () == TEAM_RED)
+		IntelMessage (strparam (s:"\cD", d:SurrenderCount(TEAM_RED), s:"\cQ/\cD", d:RedCount(), s:" ",
+			s:"\cJof \cARed Team\cJ\n ", s:cond (SurrenderCount(TEAM_RED) == 1, "has", "have"),
+			s:" voted to surrender"), true);
+	else
+		IntelMessage (strparam (s:"\cD", d:SurrenderCount(TEAM_BLUE), s:"\cQ/\cD", d:BlueCount(), s:" ",
+			s:"\cJof \cNBlue Team\cJ\n ", s:cond (SurrenderCount(TEAM_BLUE) == 1, "has", "have"),
+			s:" voted to surrender"), true);
+	
+	ACS_Execute (751, 0);
+}
+
+script 751 (void) {
+	// [Dusk] Set activator to world first or this could break, like, horribly,
+	// if the player activating this script goes to spectate.
+	SetActivator (-1);
+	
+	int count;
+	
+	delay (35*2);
+	count = SurrenderCount (TEAM_BLUE);
+	if ((count > BlueCount()/2 && (BlueCount() <= 6 && RedCount() != 0)) ||
+		(count >= BlueCount()-3 && (BlueCount() > 6 && RedCount() != 0))) {
+		SetFont("BIGFONT");
+		HudMessage (s:"\cNBlue Team surrenders";
+			HUDMSG_FADEOUT, 0, CR_YELLOW, 0.5, 0.3, 2.0, 1.0);
+		FreezeBold();
+		delay(35*2);
+		Thing_Destroy(101);
+		delay(5);
+		Thing_Destroy(103);
+		delay(5);
+		Thing_Destroy(105);
+		delay(5);
+		Thing_Destroy(107);
+		delay(5);
+		Thing_Destroy(109);
+		delay(5);
+		Thing_Destroy(114);
+		Log(s:"Blue team surrenders.");
+	}
+   
+	count = SurrenderCount (TEAM_RED);
+	if ((count > RedCount()/2 && RedCount() <= 6 && BlueCount() != 0) ||
+		(count >= RedCount()-3 && RedCount() > 6 && BlueCount() != 0)) {
+		SetFont("BIGFONT");
+		HudMessage (s:"\cARed Team surrenders";
+			HUDMSG_FADEOUT, 0, CR_YELLOW, 0.5, 0.3, 2.0, 1.0);
+		FreezeBold();
+		delay(35*2);
+		Thing_Destroy(201);
+		delay(5);
+		Thing_Destroy(203);
+		delay(5);
+		Thing_Destroy(205);
+		delay(5);
+		Thing_Destroy(207);
+		delay(5);
+		Thing_Destroy(209);
+		delay(5);
+		Thing_Destroy(214);
+		Log(s:"Red team surrenders.");
+	}
+}
+
+// ============================================================================
+function int SurrenderCount (int team) {
+	int count = 0;
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (PlayerInGame (i) && GetPlayerTeam (i) == team && Surrender[i])
+			count++;
+	}
+	return count;
+}

@@ -1,0 +1,266 @@
+// [Dusk] Maps cannot import the array variables because then if any array variable
+// is changed all of the the maps' scripts break. Therefore they're in a separate
+// file so that aow2scrp.acs can be imported safely.
+
+// This stuff could be organized a little better...
+
+//Bases
+bool GotRefinery[2];
+bool GotBarracks[2];
+bool GotFactory[2];
+bool GotPlant[2];
+bool GotRepair[2];
+bool GotObelisk[2];
+int MiniRefinery[2];
+
+
+//RESEARCHES!!!!!!!!
+bool EnhancedRefining[2]; //Increases profits from harvesting by $125 //Costs $2000
+bool AdvancedMechs[2]; //Enables purchase of Heavy mechs //Costs $2000
+int GlobalMedic[2]; //Builds a Team Health Regeneration Cache //Costs $2250
+int GlobalAmmo[2]; //Builds a Team Ammo Regeneration Cache //Costs $2250
+bool AdvancedTurrets[2]; //Allows construction of high level Turrets //Costs $2000
+bool MoreTurrets[2]; //Increases Turret cap by 5 //Costs $2000
+int MaxTurrets[2] = {MAX_TURRETS, MAX_TURRETS};
+
+// [Dusk] This is used to determine which portal is alive *and* active
+// A portal is considered active when it has a working destinaton
+int TeleporterNodes[4];
+// Used to determine when a player has teleported in the last 18 tics; prevents teleporting multiple times.
+int HasTeleported[MAXPLAYERS];
+
+int LastMenu[MAXPLAYERS]; // [SP] This is to fix double-pressing on mech switches, causing a huge cost to the buyer.
+
+// [SP] Keep track of when player joins game for purposes of team balance
+int StartTime[MAXPLAYERS];
+
+// [SP] Plasma cannon tracking
+int LastPurchasedBeacon[3];
+int NumPlasmaCannons[3];
+
+// [SP] Time Cop tracking
+int NumTimeCops[2];
+
+// [JD] Karasawa tracking.
+int NumKarasawas[2];
+
+// [JD] Utility Guy tracking.
+int NumUtilityGuy[2];
+
+int RepairPadMechHPStore[MAXPLAYERS];
+
+int RepairAmounts[5] = {
+	0,
+	10,
+	14,
+	17,
+	20
+						};
+
+//bool GuidedMissile[MAXPLAYERS];
+
+// Interpolation
+int HUDInterpolationCounter[2];
+
+str RankTitles[11] = {
+	"Private", "Corporal", "Sergeant", "Master Sgt.",
+	"Officer", "Lieutenant", "Captain", "Major",
+	"Lt. Colonel", "Colonel", "General"
+};
+
+bool Bots[MAX_MARINES];
+
+int BaseTIDs[MAX_BUILDINGS*2] = {
+	TID_BARRACKS_BLUE, TID_BARRACKS_RED,
+	TID_REFINERY_BLUE, TID_REFINERY_RED,
+	TID_RESCENTRE_BLUE, TID_RESCENTRE_RED,
+	TID_FACTORY_BLUE, TID_FACTORY_RED,
+	TID_REPAIR_BLUE, TID_REPAIR_RED,
+	TID_OBELISK_BLUE, TID_OBELISK_RED,
+	TID_MINIREF_BLUE, TID_MINIREF_RED,
+	TID_HEALTHREGEN_BLUE, TID_HEALTHREGEN_RED,
+	TID_AMMOREGEN_BLUE, TID_AMMOREGEN_RED,
+	TID_TELENODE_BLUE1, TID_TELENODE_RED1,
+	TID_TELENODE_BLUE2, TID_TELENODE_RED2
+};
+
+int RecordedBuildingHealths[MAX_BUILDINGS * 2];
+int UnawardedDamage[MAXPLAYERS];
+
+str TeamNames[2] = {"Blue", "Red"};
+str TeamColors[4] = {
+	"\cH", "\cG",
+	"\cN", "\cA",
+};
+
+int Credits[MAXPLAYERS];
+int Experience[MAXPLAYERS];
+
+int PlayersTeam[MAXPLAYERS];
+bool IsAdmin[MAXPLAYERS];
+bool Surrender[MAXPLAYERS];
+int LastSurrenderTime[MAXPLAYERS];
+
+bool GettingMech[2];
+int Tickets[2];
+
+int PlayerSpeeds[MAXPLAYERS];
+int MechGetter[2]; // which player is in the hanger?
+
+int PlasmaCooldown[MAXPLAYERS]; // same for plasma cannon (individual counters)
+
+int RepairBonus[64];
+int MedicBonus[64];
+int AIMarines[2]; // compensation-spawned only
+
+//int EnhancedC4[MAXPLAYERS];
+
+
+// [Dusk] Class meta-table
+str Classes_str[NUMCLASSES][MAX_CLASSKEYS_STR];
+int Classes_int[NUMCLASSES][MAX_CLASSKEYS_INT];
+
+// [JD] For Grenades, Flashbangs, and Selfheals
+str throwBindOldWep[64];
+
+int Repairing_int[MAX_BUILDINGS * 2][MAXPLAYERS + 1];
+
+
+// [Dusk] CVars that get synced from server to client
+// Index 0 is for the server and 1 is for the client.
+#define CONFIG_ALTEXP					0	// Alternate experience mode
+#define CONFIG_STARTTICKETS				1	// Initial ticket count
+#define CONFIG_MECHS					2	// Are mechs enabled?
+#define CONFIG_ADVTURRETS_BLUE			3	// Does blue team have advanced turrets?
+#define CONFIG_ADVTURRETS_RED			4	// -- red
+#define CONFIG_MAXTURRETS_BLUE			5	// How many turret slots does blue team have?
+#define CONFIG_MAXTURRETS_RED			6	// -- red
+#define CONFIG_TOURNAMENTMODE			7	// Is the game in tournament mode?
+#define CONFIG_ENHANCEDREFINING_BLUE	8	// Does blue team have enhanced refining?
+#define CONFIG_ENHANCEDREFINING_RED		9	// -- red
+#define CONFIG_ADVMECHS_BLUE			10	// Does blue team have advanced mechs?
+#define CONFIG_ADVMECHS_RED				11	// -- red
+#define CONFIG_MAXTIMECOPS				12	// Max timecops per team
+#define CONFIG_JUGGERNAUTLIMIT			13	// Juggernaut limit
+#define CONFIG_C4DELAY					14	// zeta_c4delay
+#define CONFIG_NORADAR					15  // Is the radar forbidden in game?
+#define CONFIG_CREDITCAP				16	// Credit cap
+#define CONFIG_SANDBAGS					17	// Are sandbags allowed?
+#define CONFIG_LIGHTMECHS				18	// Light mechs only?
+#define CONFIG_MAXKARASAWAS				19 	// Max Karasawas per team.
+#define CONFIG_MAXUTILITYGUY			20
+/*#define CONFIG_ENHANCEDC4_BLUE			18	// Does blue team have enhanced C4?
+#define CONFIG_ENHANCEDC4_RED			19	// -- red*/
+// ----
+#define MAX_CONFIG						21
+int Config[MAX_CONFIG][2];
+
+// Snapshot stuff
+int SnapshotTime[MAXPLAYERS];
+int AIMarineCount; // how many AI marines are there overall?
+
+// Top-level name of the menu
+// Names for categories
+int MenuCategories[MAX_MENU_CATEGORIES];
+// Items
+int MenuItems[MAX_MENU_CATEGORIES][MAX_MENU_ITEMS];
+
+// How many tics shall the menu be frozen for?
+
+int MenuClasses[4][MAX_MENU_ITEMS];
+int MenuResearches[3][MAX_MENU_ITEMS];
+
+// Can a player perform a request for its killer's health?
+int CanCheckKillerHealth[MAXPLAYERS];
+
+int MenuMechs[NUM_MECH_WEIGHTS][MAX_MENU_ITEMS];
+
+// ============================================================================
+
+// Identifiers of weapons the random weapon crate can give.
+#define MAX_RANDOMWEAPONCRATEITEMS 23
+int RandomWeaponCrateItems[MAX_RANDOMWEAPONCRATEITEMS] = {
+	ITEM_ARTILLERY,
+	ITEM_CHEMSPRAY,
+	ITEM_SSG,
+	ITEM_CHAINSAW,
+	ITEM_FLAMER,
+	ITEM_GATLING,
+	ITEM_GAUSS,
+	ITEM_GRENADE,
+	ITEM_KNIFE,
+	ITEM_LASERCHAIN,
+// -- 10
+	ITEM_LASERRIFLE,
+	ITEM_MACHINEGUN,
+	ITEM_MISSILE,
+	ITEM_PLASMA,
+	ITEM_RIFLE,
+	ITEM_SHOCKRIFLE,
+	ITEM_SHOTGUN,
+	ITEM_SNIPER,
+	ITEM_SMG,
+	ITEM_NailMG,
+// -- 20
+	ITEM_TIBRIFLE,
+	ITEM_COMBUSTRIFLE,
+	ITEM_TIMEGUN,
+// -- 23
+};
+
+// ============================================================================
+// [Dusk] Location TIDs and names.
+#define NUM_LOCATIONS 20
+int Locations[NUM_LOCATIONS] = {
+	TID_BARRACKS_BLUE,
+	TID_BARRACKS_RED,
+	TID_REFINERY_BLUE,
+	TID_REFINERY_RED,
+	TID_RESCENTRE_BLUE,
+	TID_RESCENTRE_RED,
+	TID_FACTORY_BLUE,
+	TID_FACTORY_RED,
+	TID_REPAIR_BLUE,
+	TID_REPAIR_RED, // ---- 10
+	TID_OBELISK_BLUE,
+	TID_OBELISK_RED,
+	TID_CRATE,
+	TID_MINIREF_BLUE,
+	TID_MINIREF_RED,
+	TID_HEALTHREGEN_BLUE,
+	TID_HEALTHREGEN_RED,
+	TID_AMMOREGEN_BLUE,
+	TID_AMMOREGEN_RED,
+	-1, // Spawn room has no TID, checked with inventory item ---- 20
+};
+
+// Names of the locations above
+str LocationNames[NUM_LOCATIONS] = {
+	"blue barracks",
+	"red barracks",
+	"blue refinery",
+	"red refinery",
+	"blue research centre",
+	"red research centre",
+	"blue war factory",
+	"red war factory",
+	"blue repair facility",
+	"red repair facility",
+	"blue obelisk",
+	"red obelisk",
+	"powerup crate",
+	"blue mini-refinery",
+	"red mini-refinery",
+	"blue health regenerator",
+	"red health regenerator",
+	"blue ammo regenerator",
+	"red ammo regenerator",
+	"spawn room",
+};
+
+str g_Error = 0;
+
+
+// ============================================================================
+// [Dusk] MapConfig[] - map-specific configuration
+int MapConfig[512];

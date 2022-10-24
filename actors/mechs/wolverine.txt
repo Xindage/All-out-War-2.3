@@ -1,0 +1,348 @@
+// Wolverine mech
+actor Wolverine : MechPlayer_Base {
+	Health 3500
+	Radius 58
+	Height 128
+	Mass 4000
+	PainChance 0
+	PainChance "Flash", 255
+	Player.DisplayName "Wolverine"
+	player.soundclass "wolv"
+	player.forwardmove 0.45
+	player.sidemove 0.15
+	player.maxhealth 3500
+	Player.ViewHeight 96
+	Player.AttackZOffset 13
+	Player.MorphWeapon "WolverineWeapons"
+	scale 1.75
+	states {
+	Spawn:
+		ROB1 A 0
+		ROB1 A 0 SetPlayerProperty (0, 0, 3)
+		ROB1 A 0 ACS_Execute (315, 0)
+		ROB1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		ROB1 A 0 A_GiveInventory ("MechEjectButton", 1)
+		ROB1 A 0 A_GiveInventory ("IsMech",1)
+		ROB1 A 35
+		ROB1 AAAA 35 A_PlaySound ("mech/idle", 5)
+		ROB1 A 35
+		loop
+	See:
+		ROB1 C 0 SetPlayerProperty (0, 0, 3)
+		ROB1 CD 5 A_JumpIfHealthLower (500, "SeeDamaged")
+		ROB1 D 0 A_PlaySound ("mech/idle", 5)
+		ROB1 D 0 Radius_Quake (2, 8, 0, 2, 0)
+		ROB1 E 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -24, 4)
+		ROB1 E 5 A_SpawnItemEx ("MechStepDamageWeak", 0, -24, 4)
+		ROB1 DC 5
+		ROB1 D 0 Radius_Quake (2, 8, 0, 2, 0)
+		ROB1 B 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 24, 4)
+		ROB1 B 5 A_SpawnItemEx ("MechStepDamageWeak", 0, 24, 4)
+		ROB1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		goto Spawn
+	SeeDamaged:
+		ROB1 CD 5 
+		ROB1 D 0 A_PlaySound ("mech/idle", 5)
+		ROB1 D 0 Radius_Quake(2,8,0,2,0)
+		ROB1 E 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -24, 4)
+		ROB1 E 0 A_SpawnItemEx ("MechStepDamageWeak", 0, -24, 4)
+		ROB1 E 5 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32,32),random(-32,32),random(96,128), 0,0,3)
+		ROB1 DC 5
+		ROB1 D 0 Radius_Quake(2,8,0,2,0)
+		ROB1 B 0 A_SpawnItemEx("MechStepSmokePuff", 0, 24, 4)
+		ROB1 B 0 A_SpawnItemEx("MechStepDamageWeak", 0, 24, 4)
+		ROB1 B 5 A_SpawnItemEx("EjectedMechSmokePuff", random(-32,32),random(-32,32),random(96,128), 0,0,3)
+		ROB1 B 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		goto Spawn
+	Drown:
+		TNT1 A 0 Thing_Damage (0, 300, 12)
+		goto Spawn
+	Melee:
+		ROB1 F 15 bright A_SpawnItemEx ("MechStepDamageWeak", 0, -24, 4)
+		ROB1 F 5 bright A_SpawnItemEx ("MechStepDamageWeak", 0, 24, 4)
+		ROB1 G 10
+		goto Spawn
+	Death:
+		ROB1 A 0
+		TNT1 A 0 A_JumpIfInventory("IsKamikaze",1,"Death.IonExplosion")
+		TNT1 A 0 A_JumpIfInventory("IsBombCrate", 1, "Death.BombExplosion")
+	DeathGo:
+		ROB1 A 10 A_NoBlocking
+		TNT1 A 0 A_StopSound (5)
+		TNT1 A 0 A_StopSound (CHAN_WEAPON)
+		ROB1 A 10 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+		DISR Z -1 A_SetTranslucent(0,0.0)
+		Stop
+	Death.IonExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Death.NukeExplosion")
+		TNT1 A 0 A_SpawnItemEx ("BlueStrikeKamikaze", 0, 0, 32)
+		goto DeathGo
+	Death.NukeExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("NukeKamikaze", 0, 0, 32)
+		goto DeathGo
+	Death.BombExplosion:
+		ROB3 A 0
+		ROB3 A 0 A_SpawnItemEx("BombExplosion")
+		goto DeathGo
+	}
+}
+
+actor WolverineUsed : Wolverine {health 1500}
+
+actor WolverineSwitch : PermanentPowerup {Powerup.Type "Wolverine"}
+actor WolverineSwitchUsed : PermanentPowerup {Powerup.Type "WolverineUsed"}
+
+actor PowerWolverine : PowerMorph {
+	PowerMorph.PlayerClass "Wolverine"
+	PowerMorph.MorphStyle (MRF_FULLHEALTH|MRF_ADDSTAMINA|MRF_NEWTIDBEHAVIOUR|MRF_WHENINVULNERABLE)
+}
+
+actor PowerWolverineUsed : PowerMorph {
+	PowerMorph.PlayerClass "WolverineUsed"
+	PowerMorph.MorphStyle (MRF_FULLHEALTH|MRF_ADDSTAMINA|MRF_NEWTIDBEHAVIOUR|MRF_WHENINVULNERABLE)
+}
+
+actor WolverineSwitchPickup : CustomInventory {
+	+AUTOACTIVATE
+	inventory.pickupsound "mech/start"
+	translation "112:127=[255,255,255]:[0,0,0]"
+	scale 1.75
+	states {
+	Spawn:
+		ROB1 A -1
+		stop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult (353)
+		stop
+	Use:
+		TNT1 A 0 A_GiveInventory ("WolverineSwitchUsed", 1)
+		RAVN I 0 A_GiveInventory ("IsMech", 1)
+		RAVN I 0 A_GiveInventory("MechEjectButton",1)
+		stop
+	}
+}
+
+actor WolverineWeapons : AOWWeapon {
+	Weapon.SelectionOrder 1
+	Obituary "%o was overwhelmed by %k's Wolverine."
+	+WEAPON.CHEATNOTWEAPON
+	+WEAPON.DONTBOB
+	weapon.preferredskin "WolverineMech"
+	States {
+	Ready:
+		MHUD A 1 A_WeaponReady
+		Loop
+	Deselect:
+		MHUD A 0 A_JumpIfHealthLower(1,1)
+		goto Ready
+		MHUD CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 0 A_Lower
+		TNT1 A 1 A_Lower
+		goto Deselect+29
+	Select:
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Raise
+		TNT1 A 1 A_Raise
+		wait
+	WaitReload:
+		MHUD A 2
+		MHUD A 2 A_ReFire
+		Goto Ready
+	Fire:
+		MHUD A 0
+		MHUD A 0 A_JumpIfInventory ("Wolverine-WhatWeapon",2,"FireMinigun")
+		MHUD A 0 A_JumpIfInventory ("Wolverine-WhatWeapon",1,"FirePulse")
+		MHUD A 0 A_JumpIfInventory ("Reload-LRM", 1, "FirePulse")
+		MHUD A 10 A_JumpIfInventory ("MechRocketAmmo",10,1)
+		Goto NoAmmo
+		MHUD A 2 A_PlayWeaponSound ("lrm/fire")
+		MHUD B 0 Radius_Quake (2, 35, 0, 1, 0)
+		MHUD A 0 A_TakeInventory ("MechRocketAmmo", 10)
+		MHUD A 0 ACS_ExecuteAlways (319, 0, 1, 4) // reload
+		MHUD B 0 Bright A_GunFlash
+		MHUD BBBBBBBBBB 2 A_FireCustomMissile ("LongRangeMissile", 0, 0, 25)
+		MHUD A 20
+		MHUD A 2 A_Refire
+		Goto Ready
+	FirePulse:
+		MHUD C 0
+		TNT1 A 0 A_JumpIfInventory("IsBlue", 1, "FirePulseBlue")
+		MHUD A 0 Radius_Quake (1, 4, 0, 1, 0)
+		MHUD D 0 A_Light2
+		MHUD D 1 bright A_FireCustomMissile ("PulseBall", 0, 1, 25)
+		MHUD D 1 bright A_Light1
+		MHUD C 1
+		MHUD C 1 A_ReFire
+		MHUD C 1 A_Light0
+		Goto Ready
+	FirePulseBlue:
+		MHUD C 0
+		MHUD A 0 Radius_Quake (1, 4, 0, 1, 0)
+		MHUD D 0 A_Light2
+		MHUD D 1 bright A_FireCustomMissile ("PulseBallBlue", 0, 1, 25)
+		MHUD D 1 bright A_Light1
+		MHUD C 1
+		MHUD C 1 A_ReFire
+		MHUD C 1 A_Light0
+		Goto Ready
+	FireMinigun:
+		MHUD A 10 A_JumpIfInventory("Wolverine-MinigunAmmo",2,2)
+		MHUD A 0 A_PlaySoundEx("minigun/spin","Weapon",0)
+		Goto NoAmmo
+		MHUD B 0 Radius_Quake(2,8,0,1,0)
+		MHUD A 0 A_PlaySoundEx("minigun/fire","Weapon",1)
+		MHUD A 0 A_TakeInventory("Wolverine-MinigunAmmo",1)
+		MHUD B 0 A_SpawnItemEx("RifleShellCasing",2,8,30,random(-3,-1),random(0,1),random(1,3),random(-60,-45),128)
+		MHUD B 0 A_Light2
+		MHUD B 1 BRIGHT A_FireBullets (3.4, 3.4, -1, 10, "RiflePuff", FBF_NOFLASH)
+		MHUD B 1 bright A_Light1
+		MHUD A 1
+		MHUD B 0 A_Light2
+		MHUD A 0 A_TakeInventory("Wolverine-MinigunAmmo",1)
+		MHUD B 0 A_SpawnItemEx("RifleShellCasing",2,8,30,random(-3,-1),random(0,1),random(1,3),random(-60,-45),128)
+		MHUD B 1 BRIGHT A_FireBullets (3.4, 3.4, -1, 10, "RiflePuff", FBF_NOFLASH)
+		MHUD B 1 bright A_Light1
+		MHUD A 1
+		MHUD A 0 A_ReFire
+		MHUD A 0 A_PlaySoundEx("minigun/spin","Weapon",0)
+		MHUD A 4 A_Light0
+		goto Ready
+	Flash:
+		TNT1 A 2 bright A_Light2
+		TNT1 A 2 bright A_Light1
+		TNT1 A 2 bright A_Light2
+		TNT1 A 2 bright A_Light1
+		TNT1 A 2 bright A_Light2
+		TNT1 A 2 bright A_Light1
+		TNT1 A 2 bright A_Light2
+		TNT1 A 2 bright A_Light1
+		TNT1 A 2 bright A_Light2
+		TNT1 A 2 bright A_Light1
+		Goto LightDone
+	AltFire:
+		MHUD A 0
+		MHUD C 15 ACS_ExecuteAlways (314, 0)
+		MHUD A 10
+		Goto Ready
+	NoAmmo:
+		MHUD A 10 A_WeaponReady (WRF_NOPRIMARY)
+		goto Ready
+	Spawn:
+		TNT1 A 0 
+		stop
+	}
+}
+
+actor PulseBall {
+	PROJECTILE
+	+FORCEXYBILLBOARD
+	
+	radius 8
+	height 8
+	speed 50
+	damage (20)
+	scale 0.2
+	renderstyle Add
+	alpha 0.9
+	seesound "plasma/fire"
+	deathsound "plasma/explo"
+	decal PulseScorch
+	damagetype "Energy"
+	
+	states {
+	Spawn:
+		PLGR A 0
+		PLGR A 0 A_SpawnItemEx("PulseBallSmokePuff", 0, 0, 0, 0, 0, 1)
+	Idle:
+		PLGR ABCDE 2 BRIGHT
+		loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("PulseBallSmokePuff", 0, 0, 0, 0, 0, 1)
+		PLGR ABCDE 3 bright A_FadeOut
+		goto Death+1
+	}
+}
+
+Actor PulseBallBlue : PulseBall
+{
+	States
+	{
+		Spawn:
+			PLGB A 0
+			PLGB A 0 A_SpawnItemEx("PulseBallSmokePuff", 0, 0, 0, 0, 0, 1)
+		Idle:
+			PLGB ABCDE 2 Bright
+			Loop
+		Death:
+			TNT1 A 0 A_SpawnItemEx("PulseBallSmokePuff", 0, 0, 0, 0, 0, 1)
+			PLGB ABCDE 3 bright A_FadeOut
+			Goto Death+1
+	}
+}
+
+actor MechRocketAmmo : Ammo {
+	inventory.amount 10
+	inventory.maxamount 250
+	ammo.backpackamount 10
+	ammo.backpackmaxamount 250
+}
+
+actor Wolverine-MinigunAmmo : Ammo {
+	inventory.amount 10
+	inventory.maxamount 600
+	ammo.backpackamount 10
+	ammo.backpackmaxamount 600
+}
+
+actor Reload-LRM : Inventory {}
+
+actor Wolverine-WhatWeapon : Inventory {inventory.maxamount 8}
+
+actor DamagedWolverine {
+	Health 300
+	Radius 58
+	Height 128
+	Mass 2000
+	+SHOOTABLE
+	PainChance 0
+	scale 1.75
+	bloodtype "HHMetalHit"
+	bloodcolor "White"
+	obituary "%o went boom."
+	Translation "112:127=[255,255,255]:[0,0,0]"
+	damagefactor "Disarm", 0.0
+	states {
+	Spawn:
+		ROB1 A 175
+		ROB1 A 5 A_SpawnItemEx("EjectedMechSmokePuff",random(-32,32),random(-32,32),random(96,128),0,0,3,0,128,0)
+		goto wait
+	Death:
+		ROB1 A 0
+		ROB1 A 10 A_NoBlocking
+		ROB1 A 10 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+		DISR K -1
+		Stop
+	}
+}
+
+actor EjectedWolverine {
+	scale 1.75
+	translation "112:127=[255,255,255]:[0,0,0]"
+	States {
+	Spawn:
+		ROB1 AAAA 35
+		ROB1 A 0 A_SpawnItemEx ("WolverineSwitchPickup")
+		stop
+	}
+}
+
+actor WolverineAmmoPackage : CustomInventory {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	states {
+	Pickup:
+		TNT1 A 0 A_GiveInventory ("Wolverine-MinigunAmmo", 600)
+		TNT1 A 0 A_GiveInventory ("MechRocketAmmo", 240)
+		stop
+	}
+}

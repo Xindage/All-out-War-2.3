@@ -1,0 +1,72 @@
+// very important stuff
+
+// ============================================================================
+// Base class for weapons
+actor AOWWeapon : Weapon {
+	//$Category Weapons
+	+NO_AUTO_SWITCH
+	+NOAUTOAIM
+	Weapon.Kickback 50
+	weapon.selectionorder 9999
+	states {
+	DeselectDie:
+		TNT1 A 0 A_Lower
+		TNT1 A 1 A_Lower
+		loop
+	Flash:
+		TNT1 A 2 A_Light1
+		TNT1 A 2 A_Light2
+		TNT1 A 0 A_Light0
+		stop
+	LightDone:
+		TNT1 A 0 A_Light0
+		Stop
+	}
+}
+
+// =============================================================================
+// Base class for morphs
+actor AOWMorph : PowerMorph {
+	PowerMorph.MorphStyle (MRF_FULLHEALTH|MRF_ADDSTAMINA|MRF_NEWTIDBEHAVIOUR|MRF_WHENINVULNERABLE)
+}
+
+// =============================================================================
+// Base class for powerups
+actor PermanentPowerup : PowerupGiver {
+	+AUTOACTIVATE
+	Inventory.MaxAmount 0
+	Powerup.Type "Null"
+	Powerup.Duration 0x7FFFFFFF
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+// =============================================================================
+// Base class for inventory items, providing a few extra states and +INVBAR
+actor InventoryItem : CustomInventory {
+	+INVBAR
+	Inventory.MaxAmount 1
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	Use.Mech:
+		TNT1 A 0 ACS_ExecuteAlways (697, 0)
+		fail
+	Failure:
+		TNT1 A 0
+		fail
+	Destealth:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		fail
+	}
+}
+
+// ============================================================================
+actor Cooldown : PowerProtection {
+	Powerup.Duration 1
+	DamageFactor "normal", 1
+}

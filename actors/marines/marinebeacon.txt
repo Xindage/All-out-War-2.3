@@ -1,0 +1,116 @@
+// MARINE BEACON
+actor BlueRandomMarine : RandomSpawner {
+	// [Dusk] {9/27/12} For some VERY odd reason, anything spawned by this
+	// actor loses designatedteam unless this actor has a team designation too.
+	// Zandronum bug?
+	DesignatedTeam 0
+	dropitem "BlueRocketSoldier"
+	dropitem "BlueSuperShotgunner"
+	dropitem "BlueTiberiumRifleman"
+	dropitem "BluePlasmaGunner"
+	dropitem "BlueFlamerDude"
+}
+
+actor RedRandomMarine : RandomSpawner {
+	DesignatedTeam 1
+	dropitem "RedRocketSoldier"
+	dropitem "RedSuperShotgunner"
+	dropitem "RedTiberiumRifleman"
+	dropitem "RedPlasmaGunner"
+	dropitem "RedFlamerDude"
+}
+
+// [Dusk] No count item for this one because it cannot be refilled
+actor MarineBeaconItem : InventoryItem 29016 {
+	//$Category Pickups
+	tag "Marine Beacon"
+	inventory.icon "mbcnicon"
+	inventory.pickupmessage "Picked up a marine beacon!"
+	inventory.maxamount 3
+	states {
+	Spawn:
+		MBCN B -1
+		stop
+	Use:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "Use.Mech")
+		TNT1 A 0 A_JumpIfInventory ("StealthMode", 1, "Destealth")
+		TNT1 A 0 A_JumpIfInventory ("PowerBerserk", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Use.Blue")
+		TNT1 A 0 A_FireCustomMissile ("MarineBeaconThrown", 0, 0)
+		stop
+	Use.Blue:
+		TNT1 A 0 A_FireCustomMissile ("MarineBeaconThrownBlue", 0, 0)
+		stop
+	}
+}
+
+actor MarineBeaconThrown : MedicationFieldThrown {
+	states {
+	Spawn:
+		MBCN B -1
+		stop
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("MarineBeacon", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		TNT1 A 5
+		stop
+	}
+}
+
+actor MarineBeaconThrownBlue : MedicationFieldThrown {
+	Translation "36:57=212:235", "58:79=212:235"
+	states {
+	Spawn:
+		MBCN B -1
+		stop
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("MarineBeaconBlue", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		TNT1 A 5
+		stop
+	}
+}
+
+actor MarineBeacon {
+	states {
+	Spawn:
+		MBCN B 35
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		goto Idle
+	Idle:
+		MBCN A 8 BRIGHT ACS_ExecuteAlways (951, 0, 3, 1)
+		MBCN B 8
+		loop
+	Done:
+		MBCN B 105
+		MBCN B 2 A_FadeOut
+		wait
+	}
+}
+
+// for some reason inheritance breaks this o_O
+actor MarineBeaconBlue {
+	states {
+	Spawn:
+		MBCN B 105
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		MBCN A 8 BRIGHT
+		MBCN B 8
+		goto Idle
+	Idle:
+		MBCN A 8 BRIGHT ACS_ExecuteAlways (951, 0, 3, 0)
+		MBCN B 8
+		loop
+	Done:
+		MBCN B 105
+		MBCN B 2 A_FadeOut
+		wait
+	}
+}

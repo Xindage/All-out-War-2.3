@@ -1,0 +1,213 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 donation script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+int g_Donatee = 0;
+int g_DonationMenuOpen = 0;
+
+function void DoDonateCredits (int donatee, int dosh, int selfmessage, int othermessage) {
+	int donor = PlayerNumber ();
+	
+	GivePlayerCredits (donatee, dosh);
+	
+	if (selfmessage) {
+		LocalAmbientSound ("powerup/stolsound", 127);
+		IntelMessageNoLog (strparam (s:"You have donated \cf$",
+			d:dosh, s:"\c- to ", n:donatee + 1), false);
+	}
+	
+	if (othermessage) {
+		SetActivator (3800 + donatee);
+		IntelMessageNoLog (strparam (s:"You have been donated \cQ$\cD",
+			d:dosh, s:"\cJ\nby ", n:donor+1), false);
+		SetActivator (3800 + donor);
+	}
+}
+
+function void DonateCredits (int donatee, int dosh) {
+	if (!PlayerInGame (PlayerNumber ()))
+		return;
+	
+	// [Dusk] Need to be in game for a minute before being able to donate
+	int wait = (StartTime[PlayerNumber()] + (GetCVAR ("zeta_donatewait") * 35) - Timer());
+	if (wait > 0) {
+		DisplayCross ();
+		IntelMessageNoLog (strparam (s:"Donation system is not able to find your wallet.\n",
+			s:"Please wait ", d:wait / 35, s:" seconds."), false);
+		return;
+	}
+	
+	// [JD] This is to cut down on the donation abuse (Players joining and spectating to donate to teammates).
+	if (GetRank() == RANK_PRIVATE)
+	{
+		IntelMessageNoLog ("\cgYou need to be a higher rank!", false);
+		return;
+	}
+	
+	// [Dusk] {11/1/12} Donatee of 255 means all money at once.
+	// dosh is irrelevant here.
+	if (donatee == 255) {
+		int teammates = GetTeamProperty (PlayerTeam(), TPROP_NumPlayers) - 1;
+		if (!teammates)
+			return;
+		
+		int cred = Credits[PlayerNumber()];
+		
+		// Don't bother if there's less than $10 for each.
+		if (cred < 10 * teammates)
+			return;
+		
+		int share = cred / teammates;
+		int donater = PlayerNumber();
+		int team = PlayerTeam();
+		
+		for (int i = 0; i < MAXPLAYERS; i++) {
+			if (!PlayerInGame (i) || GetPlayerTeam (i) != team || i == PlayerNumber())
+				continue;
+			
+			// print3f ("%n -> $%d -> %n", 0, share, i + 1);
+			DoDonateCredits (i, share, false, true);
+		}
+		
+		GiveCredits (-(share * teammates));
+		LocalAmbientSound ("powerup/stolsound", 127);
+		IntelMessage ("\cFYou have donated all your money to your teammates.", false);
+		return;
+	}
+	
+	// [Dusk] {10/27/12} Let the user specify the amount.
+	if (dosh <= 0)
+		dosh = 100;
+	
+	// Validity check
+	if (GetPlayerTeam (donatee) != PlayerTeam() || donatee == PlayerNumber()) 
+		return;
+	
+	if (GetCredits () < dosh) {
+		DisplayCross ();
+		IntelMessageNoLog ("\cgYou can't afford this!", false);
+		return;
+	}
+	
+	// [Cata] Don't donate to overcapped players.
+	if(Credits[donatee] >= Config[CONFIG_CREDITCAP][PEER_SERVER])
+	{
+		DisplayCross ();
+		IntelMessageNoLog ("\cgThat player cannot carry any more credits!", false);
+		return;		
+	}
+	
+	GiveCredits (-dosh);
+	DoDonateCredits (donatee, dosh, true, true);
+}
+
+// [Dusk] {10/27/12} I think that the client knows enough to display this by itself.
+function void DrawDonateMenu (void) {
+	int dosh = CheckActorInventory (3800 + g_Donatee, "Credit");
+	
+	// [Dusk] If we're offline, use a different source of info
+	if (netstate == NETSTATE_Offline)
+		dosh = Credits[g_Donatee];
+	
+	int amount = GetCVAR ("zeta_cl_donateamount");
+	
+	SetFont ("SMALLFONT");
+	HudMessage (s:"\cJ== Make a donation!",
+		s:"\n\cFChange Name \cK-> \cI", k:"DonationName",
+		s:"\n\cFDonate \cQ$\cD",
+		d:cond (amount > 0, amount, 100),
+		s:" \cK-> \cI", k:"DonationGive",
+		s:"\n\n\cc", n:g_Donatee+1,
+		s:"\n\cKCredits: \cQ$\cD", d:dosh,
+		s:"\n\cKHealth: ", d:GetActorHealth (3800 + g_Donatee),
+			s:" / ", d:GetActorSpawnHealth (3800 + g_Donatee),
+		s:"\n\cK", s:DisplayName (g_Donatee);
+			HUDMSG_PLAIN, 6000, 0, -0.65, 0.55, 1.15);
+}
+
+// [Dusk] {10/27/12}
+function void ClearDonateMenu (void) {
+	ClearHUDMessage (6000);
+}
+
+// [Dusk] Find the next person we could donate to.
+function void NextDonatee (void) {
+	do {
+		g_Donatee++;
+		if (g_Donatee >= MAXPLAYERS)
+			g_Donatee = 0;
+	} while (GetPlayerTeam (g_Donatee) != PlayerTeam () ||
+		g_Donatee == intHolder[i_consoleplayer]);
+	
+	// [Dusk] {10/27/12} Store the donatee into a CVAR.
+	ConsoleCommand (strparam (s:"set __zeta_donatee ", d:g_Donatee));
+}
+
+// Donations
+// [Dusk] {10/27/12} Restructured this code
+script SC_CL_DONATE (int action) NET CLIENTSIDE {
+	if (!PlayerInGame (intHolder[i_consoleplayer]))
+		terminate;
+	
+	// [Dusk] {10/27/12} If there is nobody to donate to, do nothing.
+	if (GetTeamProperty (ConsoleTeam(), TPROP_NumPlayers) == 1) {
+		if (action == 0)
+			Log (s:"No teammates to donate to!");
+		
+		g_DonationMenuOpen = false;
+		ClearDonateMenu ();
+		terminate;
+	}
+	
+	switch (action) {
+	case 0:
+		// donationmenu
+		g_DonationMenuOpen = !g_DonationMenuOpen;
+		
+		// [Dusk] If the player we have open right now is not valid, find another one.
+		if (GetPlayerTeam (g_Donatee) != ConsoleTeam() || g_Donatee == intHolder[i_consoleplayer])
+			NextDonatee ();
+		
+		// [Dusk] Start menu loop
+		if (g_DonationMenuOpen)
+			ACS_Execute (989, 0);
+		else {
+			// [Dusk] Clear the menu.
+			ACS_Terminate (989, 0);
+			ClearDonateMenu ();
+		}
+		break;
+	case 1:
+		// donationname
+		if (!g_DonationMenuOpen)
+			break;
+		
+		NextDonatee ();
+		DrawDonateMenu ();
+		break;
+	}
+}
+
+// [Dusk] {10/27/12} Donation menu loop
+script SC_DONATEHUD (void) NET CLIENTSIDE {
+	while (g_DonationMenuOpen) {
+		DrawDonateMenu ();
+		delay (35);
+	}
+}
+
+// [Dusk] {10/27/12} Server tells the client to update the donation menu.
+script SC_CL_UPDATEDONATEHUD (void) CLIENTSIDE {
+	DrawDonateMenu ();
+}
+
+// [Dusk] Server gets information of player wishing to donate.
+script SC_DONATIONREQUEST (int donatee, int dosh) NET {
+	DonateCredits (donatee, dosh);
+}

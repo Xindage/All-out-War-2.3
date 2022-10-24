@@ -1,0 +1,56 @@
+ // Effect particle
+actor SpawnInvulnerabilityFX {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx ("SpawnInvulnerabilityFX2",
+			random (-16, 16), random (-16, 16), random (20, 30), 0, 0, random (2, 6))
+		stop
+	}
+}
+
+actor SpawnInvulnerabilityFX2 : SpawnInvulnerabilityFX {
+	RenderStyle Add
+	Alpha 0.1
+	Scale 0.2
+	States {
+	Spawn:
+		PTCL ABCABC 1 A_FadeIn (0.1)
+		goto Idle
+	Idle:
+		PTCL ABC 1 bright A_FadeOut (0.1)
+		loop
+	}
+}
+
+// =============================================================================
+actor TimeGunBoostFX : SpawnInvulnerabilityFX {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx ("TimeGunBoostFX2",
+			random (-16, 16), random (-16, 16), random (20, 30), 0, 0, random (2, 6))
+		stop
+	}
+}
+
+actor TimeGunBoostFX2 : SpawnInvulnerabilityFX2 {
+	Translation "1:31=146:159"
+}
+
+// =============================================================================
+actor TimeGunSlowFX : SpawnInvulnerabilityFX {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx ("TimeGunSlowFX2",
+			random (-16, 16), random (-16, 16), random (20, 30), 0, 0, random (2, 6))
+		stop
+	}
+}
+
+actor TimeGunSlowFX2 : SpawnInvulnerabilityFX2 {
+	Translation "1:31=203:213"
+}

@@ -1,0 +1,100 @@
+// The game configurator is a special actor that holds special information
+// about the game. Its inventory is special and is used to determine various
+// things about the game state.
+
+// =============================================================================
+actor GameConfigurator {
+	+NOBLOCKMAP
+	+NOINTERACTION
+	+NOSECTOR
+	Tag "Game configurator"
+	
+	States {
+	Spawn:
+		TNT1 A -1
+		stop
+	}
+}
+
+// =============================================================================
+// The inventory of the configurator. They are indexed so that I can use these
+// with identifiers in ACS.
+actor GameConfigInv0 : Inventory {
+	Inventory.MaxAmount 0x7FFFFFFF
+}
+
+actor GameConfigInv1  : GameConfigInv0 {}
+actor GameConfigInv2  : GameConfigInv0 {}
+actor GameConfigInv3  : GameConfigInv0 {}
+actor GameConfigInv4  : GameConfigInv0 {}
+actor GameConfigInv5  : GameConfigInv0 {}
+actor GameConfigInv6  : GameConfigInv0 {}
+actor GameConfigInv7  : GameConfigInv0 {}
+actor GameConfigInv8  : GameConfigInv0 {}
+actor GameConfigInv9  : GameConfigInv0 {}
+actor GameConfigInv10 : GameConfigInv0 {}
+actor GameConfigInv11 : GameConfigInv0 {}
+actor GameConfigInv12 : GameConfigInv0 {}
+actor GameConfigInv13 : GameConfigInv0 {}
+actor GameConfigInv14 : GameConfigInv0 {}
+actor GameConfigInv15 : GameConfigInv0 {}
+actor GameConfigInv16 : GameConfigInv0 {}
+actor GameConfigInv17 : GameConfigInv0 {}
+actor GameConfigInv18 : GameConfigInv0 {}
+actor GameConfigInv19 : GameConfigInv0 {}
+actor GameConfigInv20 : GameConfigInv0 {}
+actor GameConfigInv21 : GameConfigInv0 {}
+actor GameConfigInv22 : GameConfigInv0 {}
+actor GameConfigInv23 : GameConfigInv0 {}
+actor GameConfigInv24 : GameConfigInv0 {}
+actor GameConfigInv25 : GameConfigInv0 {}
+actor GameConfigInv26 : GameConfigInv0 {}
+actor GameConfigInv27 : GameConfigInv0 {}
+actor GameConfigInv28 : GameConfigInv0 {}
+actor GameConfigInv29 : GameConfigInv0 {}
+actor GameConfigInv30 : GameConfigInv0 {}
+actor GameConfigInv31 : GameConfigInv0 {}
+actor GameConfigInv32 : GameConfigInv0 {}
+actor GameConfigInv33 : GameConfigInv0 {}
+actor GameConfigInv34 : GameConfigInv0 {}
+actor GameConfigInv35 : GameConfigInv0 {}
+actor GameConfigInv36 : GameConfigInv0 {}
+actor GameConfigInv37 : GameConfigInv0 {}
+actor GameConfigInv38 : GameConfigInv0 {}
+actor GameConfigInv39 : GameConfigInv0 {}
+actor GameConfigInv40 : GameConfigInv0 {}
+actor GameConfigInv41 : GameConfigInv0 {}
+actor GameConfigInv42 : GameConfigInv0 {}
+actor GameConfigInv43 : GameConfigInv0 {}
+actor GameConfigInv44 : GameConfigInv0 {}
+actor GameConfigInv45 : GameConfigInv0 {}
+actor GameConfigInv46 : GameConfigInv0 {}
+actor GameConfigInv47 : GameConfigInv0 {}
+actor GameConfigInv48 : GameConfigInv0 {}
+actor GameConfigInv49 : GameConfigInv0 {}
+actor GameConfigInv50 : GameConfigInv0 {}
+actor GameConfigInv51 : GameConfigInv0 {}
+actor GameConfigInv52 : GameConfigInv0 {}
+actor GameConfigInv53 : GameConfigInv0 {}
+actor GameConfigInv54 : GameConfigInv0 {}
+actor GameConfigInv55 : GameConfigInv0 {}
+actor GameConfigInv56 : GameConfigInv0 {}
+actor GameConfigInv57 : GameConfigInv0 {}
+actor GameConfigInv58 : GameConfigInv0 {}
+actor GameConfigInv59 : GameConfigInv0 {}
+actor GameConfigInv60 : GameConfigInv0 {}
+actor GameConfigInv61 : GameConfigInv0 {}
+actor GameConfigInv62 : GameConfigInv0 {}
+actor GameConfigInv63 : GameConfigInv0 {}
+actor GameConfigInv64 : GameConfigInv0 {}
+actor GameConfigInv65 : GameConfigInv0 {}
+actor GameConfigInv66 : GameConfigInv0 {}
+actor GameConfigInv67 : GameConfigInv0 {}
+actor GameConfigInv68 : GameConfigInv0 {}
+actor GameConfigInv69 : GameConfigInv0 {}
+actor GameConfigInv70 : GameConfigInv0 {}
+actor GameConfigInv71 : GameConfigInv0 {}
+actor GameConfigInv72 : GameConfigInv0 {}
+actor GameConfigInv73 : GameConfigInv0 {}
+actor GameConfigInv74 : GameConfigInv0 {}
+actor GameConfigInv75 : GameConfigInv0 {}

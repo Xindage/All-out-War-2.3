@@ -1,0 +1,126 @@
+// Isn't working. At all. Find a way to fix this and take it to use afterwards.
+
+/*
+// =============================================================================
+// [Dusk] Game settings that get synced from server to client
+// Index 0 is for the server and 1 is for the client.
+#define CONFIG_StartTickets				0	// Initial ticket count
+#define CONFIG_MaxTurrets_Blue			1	// How many turret slots does blue team have?
+#define CONFIG_MaxTurrets_Red			2	// Same for red
+#define CONFIG_AdvTurrets				3	// Does blue team have advanced turrets?
+#define CONFIG_EnhancedRefining			4	//
+#define CONFIG_AdvMechs					5	//
+#define CONFIG_MaxTimeCops				6	// Max timecops per team
+#define CONFIG_JuggernautLimit			7	// Juggernaut limit
+#define CONFIG_C4Delay					8	// zeta_c4delay
+#define CONFIG_CreditCap				9	// Credit cap
+#define CONFIG_Flags					10	// Flags, see below
+#define CONFIG_ResearchFlags			11	// Research flags
+#define CONFIG_BlueTickets				12	// Amount of lives on the blue team
+#define CONFIG_RedTickets				13	// Amount of lives on the red team
+// ----
+#define MAX_CONFIG						14
+
+// ---------------------------------------------
+#define GF_MECHS						(1 << 0)
+#define GF_TOURNAMENTMODE				(1 << 1)
+#define GF_SANDBAGS						(1 << 2)
+#define GF_NORADAR						(1 << 3)
+#define GF_ALTEXP						(1 << 4)
+
+#define TEAMF_Blue	(1 << 0)
+#define TEAMF_Red	(1 << 1)
+
+// =============================================================================
+function void SpawnGameConfigurator (void) {
+	int i, j;
+	
+	// Try to spawn it in various places. First, try the buildings.
+	for (i = 0; i < MAX_BUILDINGS * 2; i++)
+		if (SpawnSpotForced ("GameConfigurator", BaseTIDs[i], TID_GameConfig, 0))
+			break;
+	
+	if (i >= MAX_BUILDINGS * 2) {
+		// Failed. Try crate spots next.
+		for (j = 0; j < CountCrateSpots(); j++)
+			if (SpawnSpotForced ("GameConfigurator", TID_CrateSpot_Start + j, TID_GameConfig, 0))
+				break;
+		
+		// Last shot. Try the origin.
+		if (j >= CountCrateSpots()) {
+			if (!Spawn ("GameConfigurator", 0, 0, 0, TID_GameConfig))
+				FatalError ("Couldn't spawn the game configurator!");
+		}
+	}
+	
+	if (ThingCount (T_NONE, TID_GameConfig) != 1)
+		Log (s:"WARNING: ", d:ThingCount (T_NONE, TID_GameConfig), s:" game configurators spawned!");
+	
+	// Initialize it now - set all values to zero
+	for (i = 0; i < MAX_CONFIG; i++)
+		SetConfig (i, 0);
+	
+	// Initialize non-zero values:
+	SetConfig (CONFIG_MAXTURRETS_BLUE, MaxTurrets[TEAM_BLUE]);
+	SetConfig (CONFIG_MAXTURRETS_RED, MaxTurrets[TEAM_RED]);
+}
+
+// =============================================================================
+function void SetConfig (int key, str val) {
+	if (key < 0 || key >= MAX_CONFIG) {
+		Log (s:"SetConfig: bad key value ", d:key, s:"!");
+		return;
+	}
+	
+	// Since configuration can also be negative and inventory is unsigned,
+	// we offset the inventory value so that we can add negatives too.
+	// However, don't offset flags.
+	if (key != CONFIG_Flags)
+		val += 0x3FFFFFFF;
+	
+	str inv = strparam (s:"GameConfigInv", d:key);
+	if (CheckActorInventory (TID_GameConfig, inv) == val)
+		return; // Already set
+	
+	SetActorInventory (TID_GameConfig, inv, val);
+	
+	if (CheckActorInventory (TID_GameConfig, inv) != val)
+		Log (s:"Failed to set config ", d:key, s:" to ", d:val);
+}
+
+// ============================================================================
+function int GetConfig (int key) {
+	if (key < 0 || key >= MAX_CONFIG) {
+		Log (s:"GetConfig: bad key value ", d:key, s:"!");
+		return 0;
+	}
+	
+	str inv = strparam (s:"GameConfigInv", d:key);
+	int val = CheckActorInventory (TID_GameConfig, inv);
+	
+	// Subtract the offset value 
+	if (key != CONFIG_Flags)
+		val -= 0x3FFFFFFF;
+	
+	return val;
+}
+
+// ============================================================================
+function void SetGameFlag (int flag, int set) {
+	if (set)
+		SetConfig (CONFIG_Flags, GetConfig (CONFIG_Flags) | flag);
+	else
+		SetConfig (CONFIG_Flags, GetConfig (CONFIG_Flags) & ~flag);
+}
+
+function void SetTeamConfigFlag (int type, int team, int set) {
+	if (set)
+		SetConfig (type, GetConfig (type) | (1 << team));
+	else
+		SetConfig (type, GetConfig (type) & ~(1 << team));
+}
+
+function int CheckTeamConfig (int type, int team) {
+	return (GetConfig (type) & (1 << team));
+}
+*/

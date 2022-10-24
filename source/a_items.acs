@@ -1,0 +1,173 @@
+// All Out War 2 Inventory item scripts
+// Credit to VoltlocK for originally creating the AOW2 engine,
+// with modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// ============================================================================
+// Gives an item to the player by identifier
+function bool GiveItem (int id, bool set) {
+	// Must be valid
+	if (id <= 0 || id >= MAX_ITEMS)
+		return false;
+	
+	for (int i = 0; i < 3; i++) {
+		str name = Items_str[id][IK_ITEM0 + i];
+		int count = Items_int[id][IK_COUNT0 + i];
+		
+		if (name == 0 || count <= 0)
+			continue;
+		
+		GiveInventory (name, count);
+		
+		if (set && !i)
+			SetWeapon (name);
+	}
+	
+	// If we're giving mines to the player, activate the side HUD
+	if (id == ITEM_MINE_X4 || id == ITEM_MINE_X6)
+		ACS_ExecuteAlways (SC_UTILITYHUD, 0);
+	
+	return true;
+}
+
+// ============================================================================
+// Med-field function
+#define MEDFIELD_RANGE 128
+#define MEDFIELD_AMOUNT 10
+#define MEDFIELD_DELAY 5
+int IsBeingHealed[MAXPLAYERS];
+script SC_MEDICATIONFIELD (int action, int i) {
+	int shp;
+	int n;
+	switch (action) {
+	case 0:
+		// Search for players
+		for (i = 0; i < MAXPLAYERS; i++) {
+			if (GetActorHealth (3800+i) < GetActorSpawnHealth (3800+i) && !CheckActorInventory (3800+i, "IsMech"))
+				if (CheckActorDistance (0, 3800+i, MEDFIELD_RANGE))
+					ACS_ExecuteAlways (952, 0, 1, i);
+		}
+		break;
+	case 1:
+		// Perform healing on a certain player
+		if (IsBeingHealed[i]) terminate;
+		IsBeingHealed[i] = true;
+		shp = GetActorSpawnHealth (3800+i);
+		n = GetActorHealth (3800+i);
+		while (n < shp && n > 0 && CheckActorDistance (0, 3800+i, MEDFIELD_RANGE)) {
+			n += MEDFIELD_AMOUNT;
+			
+			if (n > shp)
+				n = shp;
+			
+			SetActorHealth (3800+i, n);
+			
+			delay (MEDFIELD_DELAY);
+			n = GetActorHealth (3800+i);
+		}
+		IsBeingHealed[i] = false;
+		break;
+	}
+}
+
+// ============================================================================
+// [Dusk] Miscallenous item scripts
+script SC_CUSTOMINVENTORY (int action, int team) {
+	if (action != 3 && PlayerNumber() == -1)
+		terminate;
+	
+	switch (action) {
+	case 1:
+		// Remote C4
+		GiveInventory ("RemoteC4Thrower", 1);
+		delay (1);
+		SetWeapon ("RemoteC4Thrower");
+		break;
+	case 2:
+		// Refill C4
+		RefillC4 ();
+		break;
+	case 3:
+		// Marine beacon summons a marine
+		int x, y, x0, y0, z, yays;
+		str marine = "BlueBackup";
+		if (team == TEAM_RED)
+			marine = "RedBackup";
+		
+		x0 = GetActorX (0);
+		y0 = GetActorY (0);
+		z = GetActorZ (0) + 32.0;
+		
+		// first try straight above
+		x = x0; y = y0;
+		yays = Spawn (marine, x, y, z);
+		if (yays) {Spawn ("TeleportFog", x, y, z); SetActorState (0, "Done"); terminate;}
+		
+		// a bit to north
+		x = x0; y = y0 + 64.0;
+		yays = Spawn (marine, x, y, z);
+		if (yays) {Spawn ("TeleportFog", x, y, z); SetActorState (0, "Done"); terminate;}
+		
+		// east
+		x = x0 + 64.0; y = y0;
+		yays = Spawn (marine, x, y, z);
+		if (yays) {Spawn ("TeleportFog", x, y, z); SetActorState (0, "Done"); terminate;}
+		
+		// south
+		x = x0; y = y0 - 64.0;
+		yays = Spawn (marine, x, y, z);
+		if (yays) {Spawn ("TeleportFog", x, y, z); SetActorState (0, "Done"); terminate;}
+		
+		// west
+		x = x0 - 64.0; y = y0;
+		yays = Spawn (marine, x, y, z);
+		if (yays) {Spawn ("TeleportFog", x, y, z); SetActorState (0, "Done"); terminate;}
+		
+		// If success, beacon is put to Done state, if failure, it will call this again after 35 ticks
+		break;
+	case 4:
+		// Activate self-heal
+		if (CheckInventory ("SelfHeal") ||
+			CheckInventory("IsUsingBindFragGrenade") ||
+			CheckInventory("IsUsingBindFlashbang") ||
+			CheckInventory("IsUsingBindRemoteC4"))
+			terminate;
+		GiveInventory ("SelfHeal", 1);
+		throwBindOldWep[playernumber()] = GetWeapon();
+		delay (1);
+		SetWeapon ("SelfHeal");
+		break;
+	case 5:
+		// Pull out the open deck
+		if (CheckInventory ("CrateChooser")) {
+			TakeInventory("CrateChooser", 1);
+			Break;
+		}
+		
+		GiveInventory ("CrateChooser", 1);
+		delay (1);
+		SetWeapon ("CrateChooser");
+		break;
+	}
+}
+
+// =============================================================================
+// [Dusk] Test script
+script SC_LOCATIONTEST (void) NET CLIENTSIDE {
+	while (1) {
+		int l = EstimateLocation (ActivatorTID ());
+		if (l != -1)
+			Log (s:"I'm near ", s:LocationNames[l]);
+		else
+			Log (s:"I'm near nothing");
+		
+		Delay (1);
+	}
+}
+
+// =============================================================================
+script SC_FullRefillPack (void) {
+	GiveFullRefill (true);
+}

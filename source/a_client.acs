@@ -1,0 +1,844 @@
+// ************************************************
+// [Dusk] Clientside code hub
+script SC_CLIENT OPEN CLIENTSIDE {
+	// Store the local player number
+	intHolder[i_consoleplayer] = ConsolePlayerNumber ();
+	
+	NetState |= NETSTATE_Client;
+	
+	delay (5);
+	
+	// Get outside the spawn room.
+	RequestScriptPuke(SC_CL_SPECTATORTELEPORT, 0, 0, 0);
+	
+	delay (5);
+	
+	ACS_ExecuteAlways (SC_CL_EFFECTS, 0);
+	ACS_ExecuteAlways (SC_CL_HUDINIT, 0);
+	
+	// nothing to see here, folks
+	//FixFuckedUpArrays ();
+	
+	// Initialize stuff unless we did so already.
+	if (!(NetState & NETSTATE_Server)) {
+		InitClasses();
+		
+		BuildMenuClasses ();
+		BuildMenuResearches ();
+		BuildMenuMechs ();
+		InitParticleFuserData ();
+		CR_InitCrateList ();
+	}
+	
+	PR_InitPreferences ();
+	// [SG] With these moved to CVarInfo, this is no longer needed
+	/*
+	
+	// [Dusk] Use consolecommand to make client-side CVARs show up properly
+	// Use CONFONT for HUD elements
+	if (GetCVar ("zeta_cl_confonthud") <= 0)
+		ConsoleCommand ("set zeta_cl_confonthud 0");
+	
+	// Request information about the killer's health when we get fragged
+	if (GetCVar ("zeta_cl_killerhealth") <= 0)
+		ConsoleCommand ("set zeta_cl_killerhealth 0");
+	
+	// Desired effect level (negative means less, positive means more, 0 means normal)
+	if (GetCVar ("zeta_cl_fx") == 0)
+		ConsoleCommand ("set zeta_cl_fx 0");
+	
+	// Don't draw any HUD elements
+	if (GetCVar ("zeta_cl_nohud") <= 0)
+		ConsoleCommand ("set zeta_cl_nohud 0");
+	
+	// Always use the radar (but it will only show teammates)
+	if (GetCVar ("zeta_cl_alwaysradar") <= 0)
+		ConsoleCommand ("set zeta_cl_alwaysradar 0");
+	
+	// [Dusk] {9/15/12} Disables team log completely.
+	if (GetCVar ("zeta_cl_noteamlog") <= 0)
+		ConsoleCommand ("set zeta_cl_noteamlog 0");
+	
+	// [Dusk] {10/4/12} CVAR to show team log on the screen.
+	// It takes a lot of screen space so I'm disabling it by default
+	if (GetCVAR ("zeta_cl_fullteamlog") <= 0)
+		ConsoleCommand ("set zeta_cl_fullteamlog 0");
+	
+	// [Dusk] {10/27/12} How much to donate?
+	if (GetCVAR ("zeta_cl_donateamount") <= 0)
+		ConsoleCommand ("set zeta_cl_donateamount 100");
+	
+	// [Dusk] Also archive them.
+	ArchiveCVAR ("zeta_cl_confonthud");
+	ArchiveCVAR ("zeta_cl_killerhealth");
+	ArchiveCVAR ("zeta_cl_fx");
+	ArchiveCVAR ("zeta_cl_nohud");
+	ArchiveCVAR ("zeta_cl_alwaysradar");
+	ArchiveCVAR ("zeta_noteamintel");
+	ArchiveCVAR ("zeta_cl_fullteamlog");
+	ArchiveCVAR ("zeta_cl_donateamount");
+	
+	*/
+	// [Dusk] {9/10/12} Activate the radar
+	ACS_Execute (SC_CL_RADAR, 0);
+}
+
+// =============================================================================
+// [JD] This version of identify target works just the same as the server variable but was inhanced to allow stealths to be truly unidentifiable
+
+/*script SC_IdentifyTarget ENTER CLIENTSIDE // Clientsided because we don't want excessive bandwidth usage
+{	
+	// Static stuff
+	int NameXpos = 0.5;
+	int NameYpos = 0.95;
+	int HoldTime = 1.25;
+	int FadeTime = 0.25;
+	int Increment = 0.020;
+	
+	// Stuff we can get now
+	int ActivatorPlayerTID = 3800 + intHolder[i_consoleplayer]; // Get the activator's TID so we can switch back to him later
+	int ActivatorTeam = PlayerTeam(); // Gets the activator's team
+	
+	// Variables initialized for later
+	int TargetPlayer;
+	int TargetTeam;
+
+	while (TRUE)
+	{
+		SetActivatorToTarget(0); // Checks if the player is looking at someone else
+		TargetPlayer = ActivatorTID(); // Store the TID of the player under the crosshair
+		
+		if (GetActorHealth(TargetPlayer) > 0 && TargetPlayer != ActivatorPlayerTID && TargetPlayer >= 3800 && TargetPlayer <= (3800+MAXPLAYERS) && CheckInventory("StealthMode") != 2)
+		{
+			TargetTeam = PlayerTeam(); // Returns the team of the target player
+		
+			SetActivator(ActivatorPlayerTID); // Revert back to the original activator so we can display stuff on their screen
+		
+			HudMessage(n:(TargetPlayer-3800)+1;
+					HUDMSG_FADEOUT, 1, GetTeamColor(TargetPlayer-3800), NameXpos, NameYpos, HoldTime, FadeTime);
+					
+			if (ActivatorTeam == TargetTeam)
+			{
+				HudMessage(s:"Ally";
+					HUDMSG_FADEOUT, 2, CR_GREEN, NameXpos, NameYpos+Increment, HoldTime, FadeTime);
+			}
+			
+			else
+			{
+				HudMessage(s:"Enemy";
+					HUDMSG_FADEOUT, 2, CR_BRICK, NameXpos, NameYpos+Increment, HoldTime, FadeTime);
+			}
+		}
+		
+		else
+			SetActivator(ActivatorPlayerTID); // Without this things start breaking if you look at something that isn't a player
+	
+		Delay(1); // Required or script dies
+	}
+}
+
+function int GetTeamColor (int who)
+{
+	switch(GetPlayerInfo(who, PLAYERINFO_TEAM))
+	{
+		// Blue
+		case 0: return CR_BLUE; break;
+			
+		// Red
+		case 1: return CR_RED; break;
+	}
+	
+	return CR_WHITE;
+}*/
+
+// =============================================================================
+script SC_WHOAMI (void) NET CLIENTSIDE {
+	Log (s:"I am player ", d:intHolder[i_consoleplayer], s:" named ", n:intHolder[i_consoleplayer]+1);
+}
+
+// =============================================================================
+script SC_CL_EFFECTS (void) NET CLIENTSIDE {
+	int last_nohud = GetCVAR ("zeta_cl_nohud");
+	int last_confonthud = GetCVAR ("zeta_cl_confonthud");
+	int tid, targ;
+	int tick = 0;
+	
+	while (1) {
+		// [Dusk] If HUD preferences have changed, refresh the HUD.
+		if (GetCVar ("zeta_cl_nohud") != last_nohud ||
+			GetCVar ("zeta_cl_confonthud") != last_confonthud)
+		{
+			last_nohud = GetCVar ("zeta_cl_nohud");
+			last_nohud = GetCVar ("zeta_cl_confonthud");
+			UpdateHUD ();
+		}
+		
+		for (int i = 0; i < MAXPLAYERS; i++) {
+			tid = 3800+i;
+			
+			// Display smoke on tib-carrying players
+			if (CheckActorInventory (tid, "TiberiumCrystal"))
+				SpawnSpotForced ("TiberiumChemSmokePlayer", tid, 0, GetActorAngle(tid)>>8);
+			
+			// Flicker friendly stealths
+			int teammate = (GetPlayerInfo (i, PLAYERINFO_TEAM) == ConsoleTeam ()) || !PlayerInGame (intHolder[i_consoleplayer]);
+			if (teammate && i != intHolder[i_consoleplayer] && (CheckActorInventory (tid, "StealthMode") == 2)) {
+				SetActorProperty (tid, APROP_RenderStyle, STYLE_Translucent);
+				SetActorProperty (tid, APROP_Alpha, 0.6);
+			}
+			
+			// Jetpack fire
+			if (CheckActorInventory (tid, "JetpackActive"))
+				SpawnSpotForced ("JumpjetFire", tid, 0, GetActorAngle (tid)>>8);
+			
+			// Spawn invulnerability particles
+			if (CheckActorInventory (tid, "PowerSpawnInvulnerability") && i != intHolder[i_consoleplayer])
+				ACS_ExecuteAlways (977, 0, 0, tid);
+			
+			// Time gun boost particles
+			if ((CheckActorInventory (tid, "PowerTimeGunBoost") ||
+				CheckActorInventory (tid, "PowerTimeGunFloat") ||
+				CheckActorInventory (tid, "PowerTimeGunSpeed")) &&
+				i != intHolder[i_consoleplayer])
+				ACS_ExecuteAlways (977, 0, 1, tid);
+			
+			// negative effects
+			if ((CheckActorInventory (tid, "PowerTimeGunSlow") ||
+				CheckActorInventory (tid, "PowerTimeGunWeaken")) &&
+				i != intHolder[i_consoleplayer])
+				ACS_ExecuteAlways (977, 0, 2, tid);
+		}
+		
+		/*
+		// If we're targeting a teammate tortoise, draw its passenger list
+		if (tick % 3 == 0) {
+			if (SetActivator (3800 + intHolder[i_consoleplayer]) && !CheckInventory ("IsMech")) {
+				targ = GetTargetInfo (TARGETINFO_TID);
+				teammate = (GetPlayerInfo (targ - 3800, PLAYERINFO_TEAM) == ConsoleTeam ()) || !PlayerInGame (intHolder[i_consoleplayer]);
+				if (targ != ActivatorTID() && CheckActorInventory (targ, "TortoiseWeapons") && teammate)
+					DrawTortoiseHUD (targ, 1.0);
+			}
+		}
+		*/
+		
+		tick++;
+		delay (5);
+	}
+}
+
+// =============================================================================
+// Secondary script for client-side effects. All case-statements should last
+// for *five tics* and five tics exact.
+script SC_CL_EFFECTS2 (int a, int b) {
+	int i;
+	
+	switch (a) {
+	case 0:
+	case 1:
+	case 2:
+		// Spawn invul particles
+		for (i = 0; i < 5; i++) {
+			switch (a) {
+			case 0:
+				SpawnSpotForced ("SpawnInvulnerabilityFX", b, 0, 0);
+				break;
+			case 1:
+				SpawnSpotForced ("TimeGunBoostFX", b, 0, 0);
+				break;
+			case 2:
+				SpawnSpotForced ("TimeGunSlowFX", b, 0, 0);
+				break;
+			}
+			
+			delay (1);
+		}
+	}
+}
+
+// =============================================================================
+// trail -> player
+script SC_CL_EFFECTTRAIL (int type, int target) CLIENTSIDE {
+	switch (type){
+	case 0:
+		// Shock rifle trail
+		SpawnTrail (0, target, "VoltageTrailFX", 32, 12, 0, 0, 0, -6.0, 6.0, 36.0);
+		break;
+	case 1:
+		// Bomb-squad gun (yellow)
+		SpawnTrail (0, target, "DisarmTrail", 8, 0, 0, 0, 0, 0, 5.0, 36.0);
+		break;
+	case 2:
+		// Heal gun (red)
+		SpawnTrail (0, target, "HealTrail", 8, 0, 0, 0, 0, 0, 5.0, 36.0);
+		break;
+	case 3:
+		// Repair gun (blue)
+		SpawnTrail (0, target, "RepairTrail", 8, 0, 0, 0, 0, 0, 5.0, 36.0);
+		break;
+	case 4:
+		// Upgraded repair gun (purple)
+		SpawnTrail (0, target, "UpgradedRepairTrail", 14, 0, 0, 0, 0, 0, 5.0, 36.0);
+		break;
+	}
+}
+
+// =============================================================================
+// [Dusk] Spawns a trail of type actors from src to dest, with interval units
+// in between (with a cap of 128 trail actors at most).
+function bool SpawnTrail (int src, int dest, str type, int interval, int rand,
+				  int xoff0, int yoff0, int zoff0, int xoff1, int yoff1, int zoff1)
+{
+	// The server may not do this
+	if (intHolder[i_consoleplayer] == -1)
+		return false;
+	
+	int x, y, z;
+	
+	// 0 means self
+	if (!src) src = ActivatorTID ();
+	if (!dest) dest = ActivatorTID ();
+	
+	if (src == dest) {
+		Log (s:"SpawnTrail: Can't trail to ourselves!");
+		return false;
+	}
+	
+	// From where to where?
+	int x0 = GetActorX (src);
+	int y0 = GetActorY (src);
+	int z0 = GetActorZ (src);
+	int a0 = GetActorAngle (src);
+	int x1 = GetActorX (dest);
+	int y1 = GetActorY (dest);
+	int z1 = GetActorZ (dest);
+	int a1 = GetActorAngle (dest);
+	
+	// Apply offsets
+	x0 += FixedMul (cos (a0+0.25), xoff0) + FixedMul (cos (a0), yoff0);
+	y0 += FixedMul (sin (a0+0.25), xoff0) + FixedMul (sin (a0), yoff0);
+	z0 += zoff0;
+	x1 += FixedMul (cos (a1+0.25), xoff1) + FixedMul (cos (a1), yoff1);
+	y1 += FixedMul (sin (a1+0.25), xoff1) + FixedMul (sin (a1), yoff1);
+	z1 += zoff1;
+	
+	int d = AproxDistance (src, dest);
+	
+	// How many trail actors to spawn?
+	if (interval <= 32)
+		interval = 32;
+	
+	int n = (d>>16) / interval;
+	int cap = 128;
+	
+	if (GetCVar ("zeta_cl_fx") > 0) {
+		n *= 2;
+		cap *= 2;
+	} else if (GetCVar ("zeta_cl_fx") < 0) {
+		n /= 2;
+		cap /= 2;
+	}
+	
+	if (n > cap)
+		n = cap;
+	
+	// Nothing to spawn!
+	if (n <= 0)
+		return false;
+	
+	// Distance between current point and first flare
+	int dx0 = (x1 - x0) / n;
+	int dy0 = (y1 - y0) / n;
+	int dz0 = (z1 - z0) / n;
+	
+	// Randomize initial distance so particles won't take the same spots
+	// on continuous beams. That just looks awkward.
+	int r = random (-5, 5) * 0.1;
+	x0 += FixedMul (r, dx0);
+	y0 += FixedMul (r, dy0);
+	z0 += FixedMul (r, dz0);
+	
+	// Randomize the distance a bit
+	if (rand > 7)
+		n += random (-1, 1);
+	
+	// Information gathered, actually spawn the flares now
+	for (int i = 0; i < n; i++) {
+		x = x0 + i*dx0;
+		y = y0 + i*dy0;
+		z = z0 + i*dz0;
+		
+		if (rand > 0) {
+			x += random (-rand, rand) * 0.5;
+			y += random (-rand, rand) * 0.5;
+			z += random (-rand, rand) * 0.5;
+		}
+		
+		Spawn (type, x, y, z);
+		// Log (d:i, s:": ", f:x,s:", ", f:y,s:", ",f:z);
+	}
+	
+	return true;
+}
+
+// =============================================================================
+// [Dusk] Get zeta_cl_fx value
+script SC_CL_FXCVAR (void) CLIENTSIDE {
+	SetResultValue (GetCVar ("zeta_cl_fx"));
+}
+
+// =============================================================================
+// [Dusk] Missile launcher targeter
+script SC_CL_MISSILETARGETER (void) CLIENTSIDE {
+	if (ActivatorTID () != 3800 + intHolder[i_consoleplayer]) terminate;
+	int mytid = 3800 + intHolder[i_consoleplayer];
+	int t;
+	int team = PlayerTeam ();
+	
+	while (CheckWeapon ("MissileLauncher") && GetActorProperty (0, APROP_Health) > 0) {
+		SetActivatorToTarget (0);
+		t = ActivatorTID ();
+		
+		// Only display the targeter if aiming at a non-stealthing enemy player.
+		if (t != mytid && t >= 3800 && t <= (3800+MAXPLAYERS) &&
+			CheckActorInventory (t, "StealthMode") != 2 &&
+			GetPlayerInfo (t-3800, PLAYERINFO_TEAM) != team) {
+			
+			// Display the targeter circle
+			SetFont ("TARGHAIR");
+			HudMessageBold (s:"a";
+				HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, -0.5, -0.5, HM_2TICS, HM_3TICS);
+			
+			// Play beep sound
+			AmbientSound ("missilelauncher/see", 127);
+			delay (4);
+		}
+		
+		SetActivator (mytid);
+		delay (1);
+	}
+}
+
+// =============================================================================
+// [Dusk] Sniper rifle zoom effect
+script SC_CL_SNIPERZOOM (void) CLIENTSIDE {
+	// Fade in
+	FadeTo (0, 0, 0, 1.0, 0.1);
+	delay ((0.1 * 35) >> 16);
+	
+	delay (5);
+	
+	// Fade out
+	if (CheckInventory ("IsZoomed"))
+		FadeTo (255, 0, 0, 0.2, 0.3);
+	else
+		FadeTo (0, 0, 0, 0, 0.3);
+}
+
+// =============================================================================
+// [Dusk] {9/10/12} Radar that displays teammates and things of interest
+#define RADAR_SIZE 0.15
+#define RADAR_FOV 7000
+
+// =============================================================================
+function void DrawRadarBlip (int tid, str blipname) {
+	int d = AproxDistance (3800 + intHolder[i_consoleplayer], tid) / RADAR_FOV;
+	
+	if (d >= RADAR_SIZE)
+		return; // Too far away
+	
+	int va = VectorAngle (GetActorX (tid) - GetActorX (3800+intHolder[i_consoleplayer]),
+		GetActorY (tid) - GetActorY (3800+intHolder[i_consoleplayer]));
+	int a = (va - GetActorAngle (3800+intHolder[i_consoleplayer]) + 1.5) % 1.0;
+	int x = FixedMul (sin(a), d);
+	int y = FixedMul (cos(a), d);
+	
+	SetFont (blipname);
+	HudMessage (s:"a";
+		HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, RADAR_SIZE + x, RADAR_SIZE + y, 3*HM_1TIC, 6*HM_1TIC);
+}
+
+// =============================================================================
+script SC_CL_RADAR (void) NET CLIENTSIDE {
+	int cratespots = CountCrateSpots ();
+	int i;
+	
+	while (1) {
+		delay (6);
+		
+		if (GetConfig (CONFIG_NORADAR) || // server disabled the radar
+			!PlayerInGame (intHolder[i_consoleplayer]) || // consoleplayer is spectating
+			(
+				!GetCVar ("zeta_cl_alwaysradar") && // player has no radar and cvar is disabled
+				!CheckActorInventory (3800+intHolder[i_consoleplayer], "PowerRadar")
+			))
+		{
+			continue;
+		}
+		
+		// Draw players
+		for (i = 0; i < MAXPLAYERS; i++) {
+			if (!PlayerInGame (i))
+				continue; // not in game
+			
+			// Thermal cloak cloaks you from the radar, too
+			if (GetPlayerInfo (i, PLAYERINFO_TEAM) != ConsoleTeam() &&
+				(!CheckActorInventory (3800+intHolder[i_consoleplayer], "PowerRadar") ||
+				CheckActorInventory (3800+i, "ThermalCloakingTime")))
+			{
+				continue; // not on our team
+			}
+			
+			if (CheckActorInventory (3800+i, "IsMech")) {
+				// Draw mechs with big blips
+				// [JD] No.
+				if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
+					DrawRadarBlip (3800+i, "radrblue");
+				else
+					DrawRadarBlip (3800+i, "radrred");
+			} else {
+				if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
+					DrawRadarBlip (3800+i, "radrblue");
+				else
+					DrawRadarBlip (3800+i, "radrred");
+			}
+		}
+		
+		// Draw AI marines
+		for (i = 0; i < MAX_MARINES; i++) {
+			if (!Bots[i])
+				continue; // doesn't exist
+			
+			if (CheckActorInventory (TID_MARINE+i, "IsBlue"))
+				DrawRadarBlip (TID_MARINE+i, "radrblue");
+			else
+				DrawRadarBlip (TID_MARINE+i, "radrred");
+		}
+		
+		// Powerup crate spots
+		for (i = 0; i < cratespots; i++)
+			DrawRadarBlip (TID_CRATESPOT_START + i, "radryelo");
+	}
+}
+
+// [Dusk] Preferences dialog
+
+// Is the preferences menu open?
+int g_PreferencesOpen = false;
+
+// Where is the cursor at?
+int g_PreferenceCursor = 0;
+
+#define PREFTYPE_POLARENUM 	0 // -1, 0, 1 for low, medium, high
+#define PREFTYPE_INT		1 // integer value
+#define PREFTYPE_CREDITS	2 // credit value
+#define PREFTYPE_BOOL		3 // true/false toggle
+#define PREFTYPE_INVBOOL	4 // false/true toggle
+
+#define HID_PREFERENCES 7000
+
+// Increment, minimum and maximum are only used in integer and credit types.
+#define PRK_CVAR 0 // CVAR name, will be prefixed with zeta_cl_
+#define PRK_LABEL 1 // Description of this as appears on the menu
+#define MAX_PREFKEYS_str 2
+
+
+#define PRK_TYPE 0 // Type of this, determines how it is handled in the menu
+#define PRK_INCR 1 // How much this variable is incremented at one key press
+#define PRK_MIN 2 // Minimum amount of this
+#define PRK_MAX 3 // Maximum amount of this
+#define MAX_PREFKEYS_int 4
+
+// =============================================================================
+// [Dusk] Preference definitions.
+#define MAX_PREFERENCES 7
+int g_Preferences_int[MAX_PREFERENCES][MAX_PREFKEYS_int];
+str g_Preferences_str[MAX_PREFERENCES][MAX_PREFKEYS_str];
+
+// =============================================================================
+// [Dusk] Definitions have to be in a separate function because otherwise
+// there's conflicts.
+function void PR_AddPreferenceType (str var, str label, int type, int incr, int min, int max) {
+	int i = 0;
+	while (g_Preferences_str[i][PRK_CVAR] != 0)
+		i++; // Find a free spot
+	if (i >= MAX_PREFERENCES)
+		FatalError1f ("Tried to declare too many preferences types! Limit is %d", MAX_PREFERENCES);
+	
+	g_Preferences_str[i][PRK_CVAR] = var;
+	g_Preferences_str[i][PRK_LABEL] = label;
+	g_Preferences_int[i][PRK_TYPE] = type;
+	g_Preferences_int[i][PRK_INCR] = incr;
+	g_Preferences_int[i][PRK_MIN] = min;
+	g_Preferences_int[i][PRK_MAX] = max;
+}
+
+// =============================================================================
+function void PR_InitPreferences (void) {
+	if (g_Preferences_Str[0][PRK_CVAR] != 0)
+		return;
+	
+	PR_AddPreferenceType ("fx", "Graphics level", PREFTYPE_POLARENUM, -1, -1, -1);
+	PR_AddPreferenceType ("donateamount", "Donation amount", PREFTYPE_CREDITS, 50, 0, 1000);
+	PR_AddPreferenceType ("killerhealth", "Show killer's health", PREFTYPE_BOOL, -1, -1, -1);
+	PR_AddPreferenceType ("nohud", "Show AOW HUD", PREFTYPE_INVBOOL, -1, -1, -1);
+	PR_AddPreferenceType ("alwaysradar", "Team radar", PREFTYPE_BOOL, -1, -1, -1);
+	PR_AddPreferenceType ("noteamlog", "Team log", PREFTYPE_INVBOOL, -1, -1, -1);
+	PR_AddPreferenceType ("confonthud", "Console font HUD", PREFTYPE_BOOL, -1, -1, -1);
+	
+	// Check that we have the right amount of preferences
+	int i = 0;
+	while (g_Preferences_str[i][PRK_CVAR] != 0)
+		i++;
+	if (i != MAX_PREFERENCES)
+		FatalError2f ("MAX_PREFERENCES set incorrectly, is %d, should be %d\n", i, MAX_PREFERENCES);
+}
+
+// =============================================================================
+// CCMD: zeta_preferencemenu
+script SC_PREF_MENUTOGGLE (void) net clientside {
+
+	if (g_PreferencesOpen) {
+		PR_Dismiss ();
+		terminate;
+	}
+	
+	// Check whether we're eligible to use the pref menu
+	if (!PR_CheckValid (intHolder[i_consoleplayer]))
+		terminate;
+	
+	g_PreferencesOpen = true;
+	g_PreferenceCursor = 0;
+	LocalAmbientSound ("menu/prompt", 127);
+	
+	// Request a menu freeze and wait until we get the confirmation.
+	ACS_ExecuteAlways (SC_PREF_REQUESTFREEZE, 0, true);
+	if (netstate == NETSTATE_Client) // no need to offline, though..
+		while (CheckInventory ("InMenu") != MENU_PREFERENCES && g_PreferencesOpen)
+			delay (1);
+	
+	// If the menu was closed while in the above block, get out now.
+	if (!g_PreferencesOpen)
+		terminate;
+	
+	PR_Draw ();
+	
+	do {
+		// Menu loop
+		int buttons = GetPlayerInput (-1, INPUT_BUTTONS);
+		int delaytime = 5;
+		
+		if (buttons & BT_FORWARD)
+			PR_MoveCursor (-1);
+		else if (buttons & BT_BACK)
+			PR_MoveCursor (1);
+		else if (buttons & BT_LEFT || buttons & BT_MOVELEFT)
+			PR_MoveCurrent (true);
+		else if (buttons & BT_RIGHT || buttons & BT_MOVERIGHT)
+			PR_MoveCurrent (false);
+		else if (buttons & BT_ATTACK || buttons & BT_ALTATTACK)
+			PR_Dismiss ();
+		else
+			delaytime = 1;
+		
+		delay (delaytime);
+	} while (g_PreferencesOpen);
+}
+
+// =============================================================================
+// Check are we supposed to be able to be in the preferences menu.
+function bool PR_CheckValid (int cp) {
+	// Quite unfortunately, we cannot do any menus while spectating, since
+	// any button input will not be recorded then.
+	if (!PlayerInGame (cp))
+		return false;
+	
+	int menutype = CheckActorInventory (3800 + cp, "InMenu");
+	if (menutype != MENU_PREFERENCES && menutype != 0)
+		return false; // in another menu
+	
+	return true;
+}
+
+// =============================================================================
+function void PR_HUDMessage (str text, int id, int x, int y) {
+	HUDMessage (s:text; HUDMSG_PLAIN, HID_PREFERENCES + id, CR_UNTRANSLATED, x, y, 0);
+}
+
+// =============================================================================
+function void PR_Draw (void) {
+	int y = 0.3;
+	
+	SetFont ("BIGFONT");
+	PR_HUDMessage ("\cNPREFERENCES", 0, -0.4, y);
+	y += 0.032;
+	
+	SetHUDFont ();
+	
+	// Loop through each preference and display it
+	for (int i = 0; i < MAX_PREFERENCES; i++) {
+		str head_color = "\cH";
+		str val_color = "\cU";
+		
+		int hilight = i == g_PreferenceCursor;
+		
+		// Use different colors when highlighting the specific preference
+		if (hilight) {
+			head_color = "\cN";
+			val_color = "\cJ";
+		}
+		
+		// Label of the preference
+		PR_HudMessage (strparam (s:head_color, s:g_Preferences_str[i][PRK_LABEL], s:":"), (i * 2) + 1, -0.4, y);
+		
+		// Now build the value string
+		int val = GetCVar (strparam (s:"zeta_cl_", s:g_Preferences_str[i][PRK_CVAR]));
+		str type = g_Preferences_int[i][PRK_TYPE];
+		str text;
+		
+		// Determine how to show the value to the user
+		switch (type) {
+		case PREFTYPE_BOOL:
+		case PREFTYPE_INVBOOL:
+			if (type == PREFTYPE_INVBOOL)
+				val = !val;
+			
+			if (hilight)
+				val_color = cond (val, "\cD", "\cQ");
+			else
+				val_color = cond (val, "\cC", "\cU");
+			text = strparam (s:val_color, s:cond (val, "ON", "OFF"));
+			break;
+		case PREFTYPE_INT:
+			text = strparam (s:val_color, d:val);
+			break;
+		case PREFTYPE_CREDITS:
+			str fmt = "\cQ$\cD";
+			if (!hilight)
+				fmt = "\cM$\cU";
+			
+			text = strparam (s:fmt, d:val);
+			break;
+		case PREFTYPE_POLARENUM:
+			if (val < 0) {
+				text = "LOW";
+				val_color = cond (hilight, "\cG", "\cR");
+			} else if (val == 0) {
+				text = "NORMAL";
+				val_color = cond (hilight, "\cF", "\cK");
+			} else {
+				text = "HIGH";
+				val_color = cond (hilight, "\cD", "\cQ");
+			}
+			break;
+		}
+		
+		PR_HudMessage (strparam (s:val_color, s:text), (i * 2) + 2, -0.6, y);
+		y += SMALLSPACE;
+	}
+}
+
+// =============================================================================
+// Un-draw the preferences
+function void PR_Undraw (void) {
+	ClearHUDMessage (HID_PREFERENCES); // header
+	for (int i = 0; i < MAX_PREFERENCES; i++) {
+		ClearHUDMessage (HID_PREFERENCES + (i * 2) + 1);
+		ClearHUDMessage (HID_PREFERENCES + (i * 2) + 2);
+	}
+}
+
+// =============================================================================
+// Move current preference to positive or to negative.
+// [JD] Not sure why they used ConsoleCommand to change the CVars when there's a dedicated function...
+//		Anyway, this was formatted to use SetCVar instead of ConsoleCommand
+function void PR_MoveCurrent (int neg) {
+	int cur = g_PreferenceCursor;
+	str type = g_Preferences_int[cur][PRK_TYPE];
+	str cvar = strparam (s:"zeta_cl_", s:g_Preferences_str[cur][PRK_CVAR]);
+	int val = GetCVar (cvar);
+	int cmd;
+	
+	switch (type) {
+	case PREFTYPE_BOOL:
+	case PREFTYPE_INVBOOL:
+		if (val)
+			cmd = 0;
+		else
+			cmd = 1;
+		break;
+	case PREFTYPE_INT:
+	case PREFTYPE_CREDITS:
+		int newval = val + (cond (neg, -1, 1) * g_Preferences_int[cur][PRK_INCR]);
+		int min = g_Preferences_int[cur][PRK_MIN];
+		int max = g_Preferences_int[cur][PRK_MAX];
+		if (newval < min)
+			newval = min;
+		else if (newval > max)
+			newval = max;
+		
+		cmd = newval;
+		break;
+	case PREFTYPE_POLARENUM:
+		newval = val + cond (neg, -1, 1);
+		if (newval > 1)
+			newval -= 3;
+		if (newval < -1)
+			newval += 3;
+		cmd = newval;
+	}
+
+	SetCVar(cvar, cmd);
+	LocalAmbientSound ("menu/change", 127);
+	PR_Draw ();
+}
+
+// =============================================================================
+// Move the preference cursor delta entries down.
+function void PR_MoveCursor (int delta) {
+	g_PreferenceCursor += delta;
+	
+	if (g_PreferenceCursor >= MAX_PREFERENCES)
+		g_PreferenceCursor %= MAX_PREFERENCES;
+	
+	while (g_PreferenceCursor < 0)
+		g_PreferenceCursor += MAX_PREFERENCES;
+	
+	LocalAmbientSound ("menu/cursor", 127);
+	PR_Draw ();
+}
+
+// =============================================================================
+function void PR_Dismiss (void) {
+	if (!g_PreferencesOpen)
+		return;
+	
+	g_PreferencesOpen = false;
+	PR_Undraw ();
+	ACS_ExecuteAlways (804, 0, false);
+	LocalAmbientSound ("menu/dismiss", 127);
+}
+
+// =============================================================================
+script SC_PREF_REQUESTFREEZE (int set) clientside {
+	if (!PR_CheckValid (intHolder[i_consoleplayer]))
+		terminate;
+	
+	// Because there is no client->server packet loss countering, we keep
+	// performing the request until it passes through.
+	do {
+		RequestScriptPuke(SC_PREF_FREEZECMD, set, 0, 0);
+		delay (15);
+	} while (g_PreferencesOpen == set && CheckInventory ("InMenu") != cond (set, MENU_PREFERENCES, 0));
+}
+
+// =============================================================================
+// Serverside: client requests to be frozen while they pick their preferences.
+script SC_PREF_FREEZECMD (int set) net {
+	if (!PR_CheckValid (PlayerNumber ()))
+		terminate;
+	
+	// Set the properties
+	SetPlayerProperty (0, set, PROP_FROZEN);
+	SetPlayerProperty (0, set, PROP_TOTALLYFROZEN);
+	SetInventory ("InMenu", cond (set, MENU_PREFERENCES, 0));
+}

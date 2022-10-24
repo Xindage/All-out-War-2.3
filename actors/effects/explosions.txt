@@ -1,0 +1,277 @@
+// Explosion actors
+actor ChemicalExplosion {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(ACS_ExecuteWithResult(909) == 1, "highFX")
+		TNT1 A 0 A_JumpIf(ACS_ExecuteWithResult(909) == -1, "lowFX")
+		Goto normalFX
+	normalFX:
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-6, 6), random (-6, 6), random (-6, 6))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-6, 6), random (-6, 6), random (-6, 6))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-6, 6), random (-6, 6), random (-6, 6))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-6, 6), random (-6, 6), random (-6, 6))
+		stop
+	lowFX:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ChemicalExplosionSmall")
+		Stop
+	highFX:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ChemicalExplosionLarge")
+		Stop
+	}
+}
+
+actor ChemicalExplosionSmall {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-3, 3), random (-3, 3), random (-3, 3))
+		stop
+	}
+}
+
+actor ChemicalExplosionLarge {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx ("ChemicalFlameExplosion", 0,0,0, random (-16, 16), random (-16, 16), random (-16, 16))
+		stop
+	}
+}
+
+actor ChemicalFlameExplosion {
+	+CLIENTSIDEONLY +SOLID
+	+NOINTERACTION +FORCEXYBILLBOARD
+	radius 13
+	height 8
+	renderstyle Add
+	alpha 0.9
+	scale 0.6
+	states {
+	Spawn:
+		TIBX ABCDEFGH 1
+		TIBX IJKLMNOPQ 1 A_FadeOut (0.1)
+		stop
+	}
+}
+
+// new explosion code by dark-slayer
+actor ExplosionSprite
+{
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	Renderstyle Add
+	Alpha 0.5
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (910, 0) == 0, "Software")
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (801), "CloseFilter")
+	FilterChecked:
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Water")
+		TNT1 A 0 A_Jump(255,"Spawn1","Spawn2","Spawn3","Spawn4","Spawn5")
+		Goto Spawn1
+	Spawn1:
+		E1_A ABCDEFGH 3 bright
+		stop
+	Spawn2:
+		E2_A ABCDEFGH 3 bright
+		stop
+	Spawn3:
+		E3_A ABCDEFGH 3 bright
+		stop
+	Spawn4:
+		E4_A ABCDEFGH 3 bright
+		stop
+	Spawn5:
+		E5_A ABCDEFGH 3 bright
+		stop
+	Water:
+		TNT1 A 1
+		TNT1 A 0 A_Jump(255,"Water1","Water2","Water3","Water4","Water5")
+		Goto Water1
+	Water1:
+		E1_A AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_Fadeout(0.1)
+		stop
+	Water2:
+		E2_A AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_Fadeout(0.1)
+		stop
+	Water3:
+		E3_A AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_Fadeout(0.1)
+		stop
+	Water4:
+		E4_A AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_Fadeout(0.1)
+		stop
+	Water5:
+		E5_A AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_Fadeout(0.1)
+		stop
+	Software:
+		TNT1 A 0 A_SetTranslucent (0.75, 1)
+		goto Spawn+2
+	CloseFilter:
+		TNT1 A 0 A_Jump (80, "FilterChecked")
+		stop
+	}
+}
+
+actor ExplosionMain {
+	//+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		goto Normal
+	Normal:
+		TNT1 A 0 A_SpawnItemEx ("DebrisCluster")
+	DoExplode:
+		TNT1 AA 1 A_SpawnItemEx("Explo1",1.0*0.5*random(-32,32),1.0*0.5*random(-32,32),1.0*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 AA 1 A_SpawnItemEx("Explo2",0,0,0,1.0*0.05*random(-30,30),1.0*0.05*random(-30,30),1.0*0.05*random(-30,30),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("Explo3",0,0,0,1.0*0.05*random(-15,15),1.0*0.05*random(-15,15),1.0*0.05*random(-15,15),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("Explo4",0,0,0,1.0*0.05*random(-7,7),1.0*0.05*random(-7,7),1.0*0.05*random(-7,7),random(0,359),32)
+		Stop
+	LowFX:
+		TNT1 A 0 A_SpawnItemEx ("DebrisClusterSmall")
+	DoExplodeLowFX:
+		TNT1 A 2 A_SpawnItemEx("Explo1",1.0*0.5*random(-32,32),1.0*0.5*random(-32,32),1.0*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 A 2 A_SpawnItemEx("Explo2",0,0,0,1.0*0.05*random(-30,30),1.0*0.05*random(-30,30),1.0*0.05*random(-30,30),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("Explo3",0,0,0,1.0*0.05*random(-15,15),1.0*0.05*random(-15,15),1.0*0.05*random(-15,15),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("Explo4",0,0,0,1.0*0.05*random(-7,7),1.0*0.05*random(-7,7),1.0*0.05*random(-7,7),random(0,359),32)
+		TNT1 A 10
+		Stop
+	}
+}
+
+// [Dusk] Debris-less explosion
+actor ExplosionNoDebris : ExplosionMain {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "DoExplodeLowFX")
+		goto DoExplode
+	}
+}
+
+Actor Explo1 : ExplosionSprite {Scale 4.0}
+Actor Explo2 : ExplosionSprite {Scale 3.0}
+Actor Explo3 : ExplosionSprite {Scale 2.0}
+Actor Explo4 : ExplosionSprite {Scale 1.0}
+
+actor ExplosionMainLarge {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "LowFX")
+		goto Normal
+	Normal:
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DebrisSpawner",random(-8,8),random(-8,8),0,random(-10,10),random(-10,10),random(9,22),random(0,359),32,32)
+	DoExplode:
+		TNT1 AA 1 A_SpawnItemEx("ExploLarge1",2.0*0.5*random(-32,32),2.0*0.5*random(-32,32),2.0*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 AA 1 A_SpawnItemEx("ExploLarge2",0,0,0,2.0*0.05*random(-30,30),2.0*0.05*random(-30,30),2.0*0.05*random(-30,30),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploLarge3",0,0,0,2.0*0.05*random(-15,15),2.0*0.05*random(-15,15),2.0*0.05*random(-15,15),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploLarge4",0,0,0,2.0*0.05*random(-7,7),2.0*0.05*random(-7,7),2.0*0.05*random(-7,7),random(0,359),32)
+		Stop
+	LowFX:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DebrisSpawner",random(-8,8),random(-8,8),0,random(-10,10),random(-10,10),random(9,22),random(0,359),32,32)
+	DoExplodeLow:
+		TNT1 A 2 A_SpawnItemEx("ExploLarge1",2.0*0.5*random(-32,32),2.0*0.5*random(-32,32),2.0*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 A 2 A_SpawnItemEx("ExploLarge2",0,0,0,2.0*0.05*random(-30,30),2.0*0.05*random(-30,30),2.0*0.05*random(-30,30),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploLarge3",0,0,0,2.0*0.05*random(-15,15),2.0*0.05*random(-15,15),2.0*0.05*random(-15,15),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploLarge4",0,0,0,2.0*0.05*random(-7,7),2.0*0.05*random(-7,7),2.0*0.05*random(-7,7),random(0,359),32)
+		stop
+	}
+}
+
+actor ExplosionLargeNoDebris : ExplosionMainLarge {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "DoExplodeLow")
+		goto DoExplode
+	}
+}
+
+Actor ExploLarge1 : ExplosionSprite {Scale 8.0}
+Actor ExploLarge2 : ExplosionSprite {Scale 6.0}
+Actor ExploLarge3 : ExplosionSprite {Scale 4.0}
+Actor ExploLarge4 : ExplosionSprite {Scale 2.0}
+
+actor ExplosionSmall {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "LowFX")
+		goto Normal
+	Normal:
+		TNT1 AA 1 A_SpawnItemEx("ExploSmall1",0.5*0.5*random(-32,32),0.5*0.5*random(-32,32),0.5*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmall2",0,0,0,0.5*0.05*random(-30,30),0.5*0.05*random(-30,30),0.5*0.05*random(-30,30),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmall3",0,0,0,0.5*0.05*random(-15,15),0.5*0.05*random(-15,15),0.5*0.05*random(-15,15),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmall4",0,0,0,0.5*0.05*random(-7,7),0.5*0.05*random(-7,7),0.5*0.05*random(-7,7),random(0,359),32)
+		Stop
+	LowFX:
+		TNT1 A 2 A_SpawnItemEx("ExploSmall1",0.5*0.5*random(-32,32),0.5*0.5*random(-32,32),0.5*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmall2",0,0,0,0.5*0.05*random(-30,30),0.5*0.05*random(-30,30),0.5*0.05*random(-30,30),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmall3",0,0,0,0.5*0.05*random(-15,15),0.5*0.05*random(-15,15),0.5*0.05*random(-15,15),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmall4",0,0,0,0.5*0.05*random(-7,7),0.5*0.05*random(-7,7),0.5*0.05*random(-7,7),random(0,359),32)
+		Stop
+	}
+}
+Actor ExploSmall1 : ExplosionSprite {Scale 2.0}
+Actor ExploSmall2 : ExplosionSprite {Scale 1.5}
+Actor ExploSmall3 : ExplosionSprite {Scale 1.0}
+Actor ExploSmall4 : ExplosionSprite {Scale 0.5}
+
+actor ExplosionSmaller {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "LowFX")
+		goto Normal
+	Normal:
+		TNT1 AA 1 A_SpawnItemEx("ExploSmaller1",0.25*0.5*random(-32,32),0.25*0.5*random(-32,32),0.25*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmaller2",0,0,0,0.25*0.05*random(-30,30),0.25*0.05*random(-30,30),0.25*0.05*random(-30,30),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmaller3",0,0,0,0.25*0.05*random(-15,15),0.25*0.05*random(-15,15),0.25*0.05*random(-15,15),random(0,359),32)
+		TNT1 AA 1 A_SpawnItemEx("ExploSmaller4",0,0,0,0.25*0.05*random(-7,7),0.25*0.05*random(-7,7),0.25*0.05*random(-7,7),random(0,359),32)
+		TNT1 A 10
+		Stop
+	LowFX:
+		TNT1 A 2 A_SpawnItemEx("ExploSmaller1",0.25*0.5*random(-32,32),0.25*0.5*random(-32,32),0.25*0.5*random(-32,32),0,0,0,0,32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmaller2",0,0,0,0.25*0.05*random(-30,30),0.25*0.05*random(-30,30),0.25*0.05*random(-30,30),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmaller3",0,0,0,0.25*0.05*random(-15,15),0.25*0.05*random(-15,15),0.25*0.05*random(-15,15),random(0,359),32)
+		TNT1 A 2 A_SpawnItemEx("ExploSmaller4",0,0,0,0.25*0.05*random(-7,7),0.25*0.05*random(-7,7),0.25*0.05*random(-7,7),random(0,359),32)
+		TNT1 A 10
+		stop
+	}
+}
+Actor ExploSmaller1 : ExplosionSprite {Scale 1.0}
+Actor ExploSmaller2 : ExplosionSprite {Scale 0.75}
+Actor ExploSmaller3 : ExplosionSprite {Scale 0.5}
+Actor ExploSmaller4 : ExplosionSprite {Scale 0.25}

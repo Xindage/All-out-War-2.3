@@ -1,0 +1,281 @@
+// Missile Launcher
+actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048 
+{
+	-NOAUTOAIM // [tt] Autoaim is needed for this to even home.
+	+WEAPON.NOAUTOFIRE
+	Inventory.PickupMessage "You got the missile launcher!"
+	Weapon.SelectionOrder 13
+	Weapon.AmmoType "MissileAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 2
+	Weapon.PreferredSkin "MarineRockets"
+	Weapon.UpSound "weapons/up/rocket"
+	Tag "Missile Launcher"
+	states {
+	Spawn:
+		LAUN A -1
+		stop
+	Select:
+		MSLR A 0 ACS_ExecuteAlways (963, 0) // init targeter
+		MSLR A 0 A_JumpIfInventory ("IsBlue", 1, "SelectBlue")
+		MSLR A 1 offset (-125, 154)
+		MSLR A 1 offset (-112, 133)
+		MSLR A 1 offset (-99, 121)
+		MSLR A 1 offset (-88, 111)
+		MSLR A 1 offset (-78, 97)
+		MSLR A 1 offset (-63, 87)
+		MSLR A 1 offset (-51, 73)
+		MSLR A 1 offset (-42, 66)
+		MSLR A 1 offset (-32, 56)
+		MSLR A 1 offset (-23, 45)
+		MSLR A 1 offset (-16, 38)
+		MSLR A 1 offset (-5, 34)
+		goto ready
+	SelectBlue:
+		MSLB A 1 offset (-125, 154)
+		MSLB A 1 offset (-112, 133)
+		MSLB A 1 offset (-99, 121)
+		MSLB A 1 offset (-88, 111)
+		MSLB A 1 offset (-78, 97)
+		MSLB A 1 offset (-63, 87)
+		MSLB A 1 offset (-51, 73)
+		MSLB A 1 offset (-42, 66)
+		MSLB A 1 offset (-32, 56)
+		MSLB A 1 offset (-23, 45)
+		MSLB A 1 offset (-16, 38)
+		MSLB A 1 offset (-5, 34)
+		goto ready
+	Deselect:
+		MSLR A 0 A_JumpIfInventory ("IsBlue", 1, "DeselectBlue")
+		MSLR A 1 offset (-5, 34)
+		MSLR A 1 offset (-16, 38)
+		MSLR A 1 offset (-23, 45)
+		MSLR A 1 offset (-32, 56)
+		MSLR A 1 offset (-42, 66)
+		MSLR A 1 offset (-51, 73)
+		MSLR A 1 offset (-63, 87)
+		MSLR A 1 offset (-78, 97)
+		MSLR A 1 offset (-88, 111)
+		MSLR A 1 offset (-99, 121)
+		MSLR A 1 offset (-112, 133)
+		MSLR A 1 offset (-125, 154)
+		MSLR A 0 offset (-1, 33)
+		MSLR A 0 A_Lower
+		wait
+	DeselectBlue:
+		MSLB A 1 offset (-5, 34)
+		MSLB A 1 offset (-16, 38)
+		MSLB A 1 offset (-23, 45)
+		MSLB A 1 offset (-32, 56)
+		MSLB A 1 offset (-42, 66)
+		MSLB A 1 offset (-51, 73)
+		MSLB A 1 offset (-63, 87)
+		MSLB A 1 offset (-78, 97)
+		MSLB A 1 offset (-88, 111)
+		MSLB A 1 offset (-99, 121)
+		MSLB A 1 offset (-112, 133)
+		MSLB A 1 offset (-125, 154)
+		MSLB A 0 offset (-1, 33)
+		MSLB A 0 A_Lower
+		wait
+	Ready:
+		MSLR A 0 A_JumpIfInventory ("IsBlue", 1, "ReadyBlue")
+		MSLR A 1 A_WeaponReady (WRF_NOSECONDARY)
+		wait
+	ReadyBlue:
+		MSLB A 1 A_WeaponReady (WRF_NOSECONDARY)
+		wait
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		MSLB A 0 A_GunFlash
+		MSLB A 0 A_PlaySound ("missilelauncher/fire", CHAN_WEAPON)
+		MSLB A 0 A_JumpIfTargetInLOS ("Fire.Homing")
+		MSLB A 0 A_JumpIfInventory("IsBlue", 1, "FireBlue")
+		MSLB A 0 A_FireCustomMissile ("HeavyMissile")
+		goto AnimationRed
+	FireBlue:
+		MSLB A 0
+		MSLB A 0 A_FireCustomMissile("HeavyMissileBlue")
+		Goto AnimationBlue
+	Fire.Homing:
+		MSLB A 0
+		MSLB A 0 A_JumpIfInventory("IsBlue", 1, "Fire.HomingBlue")
+		MSLB A 0 A_FireCustomMissile ("HeavyHomingMissile")
+		goto AnimationRed
+	Fire.HomingBlue:
+		MSLB A 0
+		MSLB A 0 A_FireCustomMissile("HeavyHomingBlueMissile")
+		Goto AnimationBlue
+	AnimationRed:
+		//MSLR A 0 A_JumpIfInventory ("IsBlue", 1, "AnimationBlue")
+		MSLR A 1 offset (1, 35) Radius_Quake(6,12,0,1,0)
+		MSLR A 0 Offset (1, 35) A_Recoil (18)
+		MSLR A 1 offset (2, 38) A_ZoomFactor(0.952)
+		MSLR A 1 offset (3, 41) A_ZoomFactor(0.934)
+		MSLR A 1 offset (4, 44) A_ZoomFactor(0.866)
+		MSLR A 1 offset (5, 47) A_ZoomFactor(0.851)
+		MSLR A 1 offset (6, 50) A_ZoomFactor(0.862)
+		MSLR A 1 offset (5, 47) A_ZoomFactor(0.875)
+		MSLR A 1 offset (4, 44) A_ZoomFactor(0.912)
+		MSLR A 1 offset (3, 41) A_ZoomFactor(0.931)
+		MSLR A 1 offset (2, 38) A_ZoomFactor(0.947)
+		MSLR A 1 offset (1, 35) A_ZoomFactor(0.976)
+		MSLR A 1 offset (0, 32) A_ZoomFactor(1)
+		MSLR A 39 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		MSLR A 0 A_CheckReload
+		MSLR A 0 A_PlayWeaponSound ("missilelauncher/reload")
+		MSLR BC 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		MSLR D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		MSLR E 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		MSLR E 0 A_ReFire
+		goto Ready
+	AnimationBlue:
+		MSLB A 1 offset (1, 35) Radius_Quake(6,12,0,1,0)
+		MSLB A 0 Offset (1, 35) A_Recoil (18)
+		MSLB A 1 offset (2, 38) A_ZoomFactor(0.952)
+		MSLB A 1 offset (3, 41) A_ZoomFactor(0.934)
+		MSLB A 1 offset (4, 44) A_ZoomFactor(0.866)
+		MSLB A 1 offset (5, 47) A_ZoomFactor(0.851)
+		MSLB A 1 offset (6, 50) A_ZoomFactor(0.862)
+		MSLB A 1 offset (5, 47) A_ZoomFactor(0.875)
+		MSLB A 1 offset (4, 44) A_ZoomFactor(0.912)
+		MSLB A 1 offset (3, 41) A_ZoomFactor(0.931)
+		MSLB A 1 offset (2, 38) A_ZoomFactor(0.947)
+		MSLB A 1 offset (1, 35) A_ZoomFactor(0.976)
+		MSLB A 1 offset (0, 32) A_ZoomFactor(1)
+		MSLB A 39 A_WeaponReady (WRF_NOSWITCH|WRF_NOFIRE)
+		MSLB A 0 A_CheckReload
+		MSLB A 0 A_PlayWeaponSound ("missilelauncher/reload")
+		MSLB BC 2 A_WeaponReady (WRF_NOSWITCH|WRF_NOFIRE)
+		MSLB D 4 A_WeaponReady (WRF_NOSWITCH|WRF_NOFIRE)
+		MSLB E 4 A_WeaponReady (WRF_NOSWITCH|WRF_NOFIRE)
+		MSLB E 0 A_ReFire
+		goto Ready
+	Flash:
+		MSFR A 2 bright A_Light1
+		MSFR B 2 bright 
+		MSFR C 2 bright A_Light2
+		MSFR D 2 bright
+		MSFR D 0 A_Light0
+		stop
+	}
+}
+
+actor HeavyMissile {
+	PROJECTILE
+	-RANDOMIZE
+	Radius 11
+	Height 8
+	Speed 37
+	Damage (100)
+	Obituary "$OB_MISSILELAUNCHER"
+	DeathSound "weapons/rocklx"
+	DamageType "Explosion"
+	Decal "Scorch"
+	States {
+	Spawn:
+		MISR A 2 bright
+		MISR A 0 bright A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, true)
+		MISR A 1 bright A_SpawnItemEx ("HeavyMissileSmoke", -16)
+		wait
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, 0, 160)
+		TNT1 A 0 A_StopSound (CHAN_BODY)
+		TNT1 A 0 A_Explode (190, 256)
+		//TNT1 A 0 A_RadiusThrust(96,128,0)
+		TNT1 A 0 A_SpawnItemEx ("HeavyMissileQuake")
+		TNT1 A 5 A_SpawnItemEx ("ExplosionMain")
+		stop
+	}
+}
+
+Actor HeavyMissileBlue : HeavyMissile
+{
+	States
+	{
+		Spawn:
+			MISB A 2 bright
+			MISB A 0 bright A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, true)
+			MISB A 1 bright A_SpawnItemEx ("HeavyMissileSmoke", -16)
+		wait
+	}
+}
+
+actor HeavyHomingMissile : HeavyMissile 
+{
+	+SEEKERMISSILE
+	Obituary "$OB_SEEKERMISSILE"
+	Speed 21//26
+
+	States {
+	Spawn:
+		MISR A 2 bright
+		MISR A 0 bright A_PlaySound ("seeker/beep", CHAN_ITEM, 1.0, true)
+		MISR A 0 bright A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, true)
+	Idle:
+		MISR A 0 A_SpawnItemEx ("HeavyMissileSmoke", -16)
+		MISR A 2 bright A_SeekerMissile (22, 45)
+		loop
+	Death:
+		TNT1 A 0 A_StopSound (CHAN_ITEM)
+		goto Super::Death
+	}
+}
+
+Actor HeavyHomingBlueMissile : HeavyMissileBlue
+{
+	+SEEKERMISSILE
+	Speed 21
+	States
+	{
+		Spawn:
+		MISB A 2 bright
+		MISB A 0 bright A_PlaySound ("seeker/beep", CHAN_ITEM, 1.0, true)
+		MISB A 0 bright A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, true)
+	Idle:
+		MISB A 0 A_SpawnItemEx ("HeavyMissileSmoke", -16)
+		MISB A 2 bright A_SeekerMissile (22, 45)
+		loop
+	}
+}
+
+actor HeavyMissileQuake {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 5 Radius_Quake (5, 5, 0, 7, 0)
+		TNT1 A 4 Radius_Quake (4, 4, 0, 7, 0)
+		TNT1 A 3 Radius_Quake (3, 3, 0, 7, 0)
+		TNT1 A 2 Radius_Quake (2, 2, 0, 7, 0)
+		TNT1 A 1 Radius_Quake (1, 1, 0, 7, 0)
+		stop
+	}
+}
+
+actor HeavyMissileSmoke {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	Alpha 0.6
+	Scale 0.2
+	States {
+	Spawn:
+		SMOK A 0
+		SMOK A 0 A_Jump (256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		goto Spawn1
+	Spawn1:
+		SMOK A 1 A_FadeOut
+		wait
+	Spawn2:
+		SMOK B 1 A_FadeOut
+		wait
+	Spawn3:
+		SMOK C 1 A_FadeOut
+		wait
+	Spawn4:
+		SMOK D 1 A_FadeOut
+		wait
+	}
+}

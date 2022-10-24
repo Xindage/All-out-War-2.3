@@ -1,0 +1,66 @@
+// Old sign actors. They exist here so as not to spawn map errors
+// on maps that still have them around. They just remove themselves.
+actor Sign {
+	+CLIENTSIDEONLY
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor Sign_Class01 : Sign 21421 {}
+actor Sign_Class02 : Sign 21422 {}
+actor Sign_Class03 : Sign 21423 {}
+actor Sign_Class04x : Sign 21424 {}
+actor Sign_Class05 : Sign 21425 {}
+actor Sign_Class06 : Sign 21426 {}
+actor Sign_Class07 : Sign 21427 {}
+actor Sign_Class08 : Sign 21428 {}
+actor Sign_Class09 : Sign 21429 {}
+actor Sign_Class10 : Sign 21430 {}
+actor Sign_Class11 : Sign 21431 {}
+actor Sign_Class12 : Sign 21432 {}
+actor Sign_Class13 : Sign 21433 {}
+actor Sign_Class14 : Sign 21434 {}
+actor Sign_Class15 : Sign 21435 {}
+actor Sign_Class16 : Sign 21456 {}
+actor Sign_Class17 : Sign 21437 {}
+actor Sign_Class18 : Sign 21438 {}
+actor Sign_Class19 : Sign 21439 {}
+actor Sign_Class20 : Sign 21440 {}
+actor Sign_Class21 : Sign 21441 {}
+actor Sign_Class22 : Sign 21442 {}
+actor Sign_Class23 : Sign 21443 {}
+actor Sign_Class24 : Sign 21444 {}
+actor Sign_Class25 : Sign 21445 {}
+actor Sign_Upgrade : Sign 21446 {}
+actor Sign_Class26 : Sign 21447 {}
+actor Sign_Class27 : Sign 21448 {}
+actor Sign_Mech01 : Sign 21449 {}
+actor Sign_Mech02 : Sign 21450 {}
+actor Sign_Mech03 : Sign 21451 {}
+actor Sign_Mech04 : Sign 21452 {}
+actor Sign_Mech05 : Sign 21453 {}
+actor Sign_Mech06 : Sign 21454 {}
+actor Sign_Class28 : Sign 21455 {}
+actor Sign_Class29 : Sign 21436 {}
+actor Sign_Class30 : Sign 21457 {}
+actor Sign_Upgrade01 : Sign 21458 {}
+actor Sign_Upgrade02 : Sign 21459 {}
+actor Sign_Upgrade03 : Sign 21460 {}
+actor Sign_Upgrade04 : Sign 21461 {}
+actor Sign_Upgrade05 : Sign 21462 {}
+actor Sign_Upgrade06 : Sign 21463 {}
+actor Sign_Upgrade07 : Sign 21464 {}
+actor Sign_Upgrade08 : Sign 21465 {}
+actor Sign_Upgrade09 : Sign 21466 {}
+actor Sign_Upgrade10 : Sign 21467 {}
+actor Sign_Upgrade11 : Sign 21468 {}
+actor Sign_Upgrade12 : Sign 21469 {}
+actor Sign_Upgrade13 : Sign 21470 {}
+actor Sign_Class31 : Sign 21471 {}
+actor Sign_Class32 : Sign 21472 {}
+actor Sign_Upgrade14 : Sign 21473 {}
+actor Sign_Upgrade15 : Sign 21474 {}
+actor Sign_Upgrade16 : Sign 21475 {}

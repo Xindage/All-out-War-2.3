@@ -1,0 +1,174 @@
+// Grenade launcher
+actor GrenadeLauncher : AOWWeapon 21046 {
+	+WEAPON.NOAUTOAIM
+	Obituary "$OB_GRENADE"
+	Inventory.PickupMessage "You got the grenade launcher!"
+	Weapon.SelectionOrder 12
+	Weapon.KickBack 100
+	Weapon.AmmoType "GrenadeAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoType2 "GrenadeAmmo"
+	Weapon.AmmoUse2 1
+	Weapon.AmmoGive 2
+	Weapon.PreferredSkin "MarineAssaultGrenade"
+	Weapon.UpSound "weapons/up/nadelauncher"
+	Tag "Grenade Launcher"
+	States {
+	Spawn:
+		GREN X -1
+		stop
+	Select:
+		GREN A 1 offset (-125, 154)
+		GREN A 1 offset (-112, 133)
+		GREN A 1 offset (-99, 121)
+		GREN A 1 offset (-88, 111)
+		GREN A 1 offset (-78, 97)
+		GREN A 1 offset (-63, 87)
+		GREN A 1 offset (-51, 73)
+		GREN A 1 offset (-42, 66)
+		GREN A 1 offset (-32, 56)
+		GREN A 1 offset (-23, 45)
+		GREN A 1 offset (-16, 38)
+		GREN A 1 offset (-5, 34)
+		goto ready
+	Deselect:
+		GREN A 1 offset (-5, 34)
+		GREN A 1 offset (-16, 38)
+		GREN A 1 offset (-23, 45)
+		GREN A 1 offset (-32, 56)
+		GREN A 1 offset (-42, 66)
+		GREN A 1 offset (-51, 73)
+		GREN A 1 offset (-63, 87)
+		GREN A 1 offset (-78, 97)
+		GREN A 1 offset (-88, 111)
+		GREN A 1 offset (-99, 121)
+		GREN A 1 offset (-112, 133)
+		GREN A 1 offset (-125, 154)
+		GREN A 0 offset (-1, 33)
+		GREN A 0 A_Lower
+		wait
+	Ready:
+		GREN A 1 A_WeaponReady
+		wait
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		GREN A 5 A_PlayWeaponSound ("grenade/fire")
+		GREN GH 1
+		GREN I 0 A_GunFlash
+		GREN I 1 A_FireCustomMissile ("GrenadeGrenade", 0, 1, 12)
+		GREN D 0 Radius_Quake(6,5,0,1,0)
+		GREN D 2
+		GREN E 2
+		GREN FF 2
+		GREN F 2
+		GREN F 2
+		GREN E 2
+		GREN D 2
+		GREN ABC 2
+		GREN A 0 A_ReFire
+		goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		GREN A 4 A_PlayWeaponSound ("grenade/fire")
+		GREN GH 1
+		GREN I 0 A_GunFlash
+		GREN I 1 A_FireCustomMissile ("GrenadeBounce", 0, 1, 12)
+		GREN D 0 Radius_Quake(6,5,0,1,0)
+		GREN DEFFFFF 2
+		GREN EDABC 1
+		GREN A 0 A_ReFire
+		goto Ready
+	}
+}
+
+// orca still uses this
+actor GrenadeSwitch : Inventory {}
+
+actor GrenadeGrenade {
+	PROJECTILE
+	-NOGRAVITY
+ 	+EXTREMEDEATH
+	Radius 11
+	Height 11
+	Speed 38
+	Damage (50)
+	RenderStyle Normal
+	Alpha 0.75
+	Gravity 0.8
+	DamageType "Explosion"
+	DeathSound "weapons/rocklx"
+	Obituary "$OB_GRENADE"
+	Decal "Scorch"
+	states {
+	Spawn:
+		SGRN A 0 bright A_FadeIn(0.01) //[Bloax] How fast the arc gets steeper.
+		SGRN A 0 bright A_SetGravity(0.85*(Alpha*Alpha)) //[Bloax] What's the maximum gravity.
+		// High gravity but low alpha would make the floor be magnets at some point.
+		// - While a low gravity but high alpha would result in a somewhat more constant arc. [/Theory]
+		SGRN A 2 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		loop
+	Death:
+		TNT1 B 0 bright A_NoGravity
+		TNT1 B 0 bright A_Explode(148,256,1) //20% less damage than Missile Launcher due to higher RoF
+		TNT1 B 0 bright A_RadiusThrust(384,128,1) //Weeee
+		TNT1 A 5 A_SpawnItemEx ("ExplosionMain")
+		stop
+	}
+}
+
+actor GrenadeBounce : GrenadeGrenade {
+	+DOOMBOUNCE
+	+BOUNCEONACTORS
+	Damage (0)
+	Speed 30
+	Gravity 0.8
+	BounceFactor 0.40
+	// A timed fuse of three seconds.
+	// [Bloax] Now shorter because three seconds in a firefight is an eternity.
+	ReactionTime 33
+	Obituary "$OB_GRENADE_ALT"
+	states {
+	Spawn:
+		SGRN A 0 bright A_CheckFloor(2)
+		SGRN A 0 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		SGRN A 2 bright A_Countdown
+		loop
+	}
+}
+
+// Select/Deselect offset-animations
+/*
+	Select:
+		GREN A 1 offset (130,154)
+		GREN A 1 offset (120,139)
+		GREN A 0 A_PlaySoundEx("Bazooka/Select","Body")
+		GREN A 1 offset (110,125)
+		GREN A 1 offset (100,112)
+		GREN A 1 offset (90,100)
+		GREN A 1 offset (80,89)
+		GREN A 1 offset (70,79)
+		GREN A 1 offset (60,70)
+		GREN A 1 offset (50,62)
+		GREN A 1 offset (40,55)
+		GREN A 1 offset (30,49)
+		GREN A 1 offset (20,44)
+		GREN A 1 offset (15,40)
+		GREN A 1 offset (10,37)
+		GREN A 1 offset (5,34)
+		GREN A 1 offset (0,0)
+		Goto Ready
+	Deselect:
+		GREN A 1 offset (4,34)
+		GREN A 1 offset (8,40)
+		GREN A 1 offset (16,49)
+		GREN A 1 offset (24,62)
+		GREN A 1 offset (32,79)
+		GREN A 1 offset (40,100)
+		GREN A 1 offset (48,125)
+		GREN A 1 offset (56,154)
+		TNT1 A 0 offset (1,32)
+		TNT1 A 1 A_Lower
+		Wait
+*/

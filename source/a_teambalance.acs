@@ -1,0 +1,163 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 team balancer
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// [Dusk] {11/7/12} Rewritten this for the most part..
+function void CheckTeamBalance (void) {
+	int i;
+	int Counter;
+	int CurTimeMax;
+	int PlayerStayTics = GetCVAR ("zeta_teamstaytime") * MINUTETICS;
+	
+	// [Dusk] {10/26/12} zeta_noteamswitcher disables this thing, too.
+	if (!GetCVar ("sv_noteamswitch") && !GetCVar ("zeta_noteamswitcher")) {
+		do {
+			int delta = RedCount() - BlueCount();
+			int do_restart = false;
+			
+			if (abs (delta) <= 1) 
+				break;
+			
+			int lesserteam = cond (delta > 0, TEAM_BLUE, TEAM_RED);
+			
+			// Find someone to switch
+			int switchee = -1;
+			int switcheetime = 0;
+			
+			for (i = 0; i < MAXPLAYERS; i++)
+			{
+				// [JD] Had to revise the checks a bit to compensate for players in mechs and dead players.
+				// [JD] EDIT: I actually goofed up here. Didn't realize the server was calling this function, shouldn't be broke anymore.
+				if (!PlayerInGame(i) ||
+					IsAdmin[i] ||
+					GetPlayerTeam (i) == lesserteam ||
+					CheckActorInventory(3800 + i, "IsMech") ||
+					GetActorHealth(3800 + i) <= 0)
+					continue;
+					
+				if (StartTime[i] > switcheetime && Timer () - StartTime[i] < PlayerStayTics) {
+					switchee = i;
+					switcheetime = StartTime[i];
+				}
+			}
+			
+			// Found someone, switch him.
+			if (switchee != -1) {
+				log (s:"Team auto-switcher: switching out ", n:switchee + 1,
+					 s:"\c- to ", s:TeamNames[lesserteam]);
+				
+				SetActivator (3800 + switchee);
+				
+				Player_SetTeam (lesserteam);
+				
+				SetInventory ("IsRed", lesserteam == TEAM_RED);
+				SetInventory ("IsBlue", lesserteam == TEAM_BLUE);
+				
+				// If they are in field right now, send them to their new
+				// team's base rather than into the spawn room.
+				if (CheckInventory ("IsInSpawnRoom"))
+					Teleport (70 + (lesserteam == TEAM_RED));
+				else
+					Teleport (1 + (lesserteam == TEAM_RED));
+				
+				if ((Timer () - StartTime[i]) > TICRATE) {
+					// If the player was already in-game for a bit, tell him why
+					// he's suddenly being switched out.
+					SetFont ("BIGFONT");
+					HudMessage (s:"You have been switched to even out the teams.";
+						HUDMSG_FadeOut, 2150, CR_WHITE, 0.5, 0.4, 4.0, 1.0);
+				}
+				
+				SetActivator (-1);
+				
+				do_restart = true;
+			}
+		} while (do_restart);
+	}
+}
+
+// =============================================================================
+// TEAM SHUFFLE
+// This is basically a big red panic button in case some epicly stupid
+// gross team stacking is present. It takes all players in-game and
+// assigns them random teams.
+script SC_TEAMSHUFFLE (void) {
+	log (s:"[SHUFFLE] Countdown begins.");
+	for (int i = 10; i > 0; i--) {
+		SetFont ("BIGFONT");
+		AmbientSound ("beacon/nukebeep", 127);
+		HudMessageBold (s:"WARNING: Server admin has called \cRteam shuffle!!\n\n",
+			s:"\cRALL PLAYERS\cG will switch to random teams in \cK", d:i;
+			HUDMSG_FADEOUT, 2150, CR_RED, 0.5, 0.3, 0.75, 1.0);
+		delay (35);
+	}
+	
+	AmbientSound ("nuke/boom", 127);
+	int max = PlayerCount() / 2;
+	int b, r, t;
+	str name;
+	int c;
+	log (s:"[SHUFFLE] Begin of team shuffle.");
+	
+	// First, knock out start times of everybody - we don't want the
+	// team switcher to interfere here.
+	for (i = 0; i < MAXPLAYERS; i++)
+		if (PlayerInGame (i))
+			StartTime[i] = -0x7FFFFFFF;
+	
+	for (i = 0; i < MAXPLAYERS; i++) {
+		// Not in game, therefore not part of shuffle
+		if (!PlayerInGame (i))
+			continue;
+		
+		// Don't interfere gamemasters, they're here to do something important
+		if (IsAdmin[i])
+			continue;
+		
+		t = random (TEAM_BLUE, TEAM_RED);
+		
+		// Keep teams even
+		if (t == TEAM_BLUE && b >= max)
+			t = TEAM_RED;
+		else if (t == TEAM_RED && r >= max)
+			t = TEAM_BLUE;
+		
+		if (t == TEAM_RED) {
+			name = "Red";
+			r++;
+		} else {
+			name = "Blue";
+			b++;
+		}
+		
+		SetActivator (3800+i);
+		if (PlayerTeam () == t) {
+			log (s:"[SHUFFLE] Player ", d:0, s:" \"", n:0, s:"\c-\" remains on ", s:name, s:".");
+			c = 0;
+		} else {
+			log (s:"[SHUFFLE] Player ", d:0, s:" \"", n:0, s:"\c-\" changes to ", s:name, s:".");
+			Player_SetTeam (t);
+			c = 1;
+		}
+		
+		// Teleport to spawn room if not already there
+		if (!CheckInventory ("IsInSpawnRoom") || c)
+			Teleport (70 + PlayerTeam());
+		
+		// Resign them
+		if (CheckInventory ("HasClass"))
+			ACS_ExecuteAlways (95, 0, 0, TRUE);
+		
+		delay (5);
+	}
+	
+	SetActivator (-1);
+	HudMessageBold (s:"Shuffle complete. Game on!"; HUDMSG_FADEOUT, 0, CR_GREEN, 0.5, 0.3, 3.5, 1.0);
+	log (s:"[SHUFFLE] Shuffle complete.");
+}

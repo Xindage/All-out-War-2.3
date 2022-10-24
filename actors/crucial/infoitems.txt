@@ -1,0 +1,170 @@
+// Various dummy items
+
+// [JD] Update this if you add any new classes
+actor ClassID : Inventory {Inventory.MaxAmount 33}
+
+actor IsRed : Inventory {}
+actor IsBlue : Inventory {}
+actor IsFemale : Inventory {}
+actor PurchaseToken : Inventory {Inventory.MaxAmount 99}
+actor InRepairs : Inventory {}
+actor HasClass : Inventory {}
+actor IsMech : Inventory {}
+actor TournamentMode : Inventory {}
+actor Refunds : Inventory {Inventory.MaxAmount 10000}
+actor PlayerRank : Inventory {Inventory.MaxAmount 8}
+actor IsCommando : Inventory {}
+actor IsSniper : Inventory {}
+actor IsMedic : Inventory {}
+actor IsKamikaze : Inventory {}
+actor IsHarvester : Inventory {}
+Actor IsNailMachineGunner : Inventory {}
+actor CantMech : Inventory {}
+actor HasArmorUpgrade : Inventory {}
+actor CrispyPlayer : Inventory {}
+actor CrispyPlayer2 : Inventory {Inventory.MaxAmount 4}
+actor IsInSpawnRoom : Inventory {}
+actor IsMCT : Inventory {}
+actor IsArtillerySoldier : Inventory {}
+
+// [SP] This item is used to determine whether a util can build turrets in his base.
+// He must be close enough to one of his own (standing) structures to do this.
+actor UtilityOutOfRange : Inventory {}
+
+actor DonateMenu : Inventory {}
+actor DonationName : Inventory {Inventory.MaxAmount 100}
+
+actor RepairBonus_XP : Inventory {Inventory.MaxAmount 1000}
+actor RepairBonus_Money : Inventory {Inventory.MaxAmount 20}
+
+actor RepairEffectPlayer : CustomInventory
+{
+  Inventory.MaxAmount 9999
+  +ALWAYSPICKUP
+  states
+  {
+  Spawn:
+    TNT1 A 5
+    stop
+  Pickup:
+    TNT1 AAAAA 0 A_SpawnItemEx("VoltagePuff2",random(-8,8),random(-8,8),random(4,56),0,0,0,0,128,0)
+    stop
+  }
+}
+actor RepairEffectMech : CustomInventory
+{
+  Inventory.MaxAmount 9999
+  +ALWAYSPICKUP
+  states
+  {
+  Spawn:
+    TNT1 A 5
+    stop
+  Pickup:
+    TNT1 AAAAA 0 A_SpawnItemEx("VoltagePuff2",random(-29,29),random(-29,29),random(4,128),0,0,0,0,128,0)
+    TNT1 AAAAA 0 A_SpawnItemEx("VoltagePuff2",random(-29,29),random(-29,29),random(4,128),0,0,0,0,128,0)
+    stop
+  }
+}
+
+// [SP] This item is used to check maps for HOM's. It blurs the screen red - however it also gives invulnerability.
+actor HOMCheckerGL : InvulnerabilitySphere {
+	Powerup.Color "FF 00 00", 0.2
+	Powerup.Duration 0x7FFFFFFF
+	Inventory.PickupMessage "HOM Checker!"
+}
+
+// Stealth mode.
+// 0 = unstealthed
+// 1 = fading out (stealthing)
+// 2 = stealthed
+// 3 = fading in (destealthing)
+actor StealthMode : Inventory {
+    Inventory.Amount 0
+    Inventory.MaxAmount 3
+}
+
+// [JD] Identify target handling for stealths
+Actor stealthIdentifyTargetOff : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	
+	States
+	{
+		Use:
+		Pickup:
+			TNT1 A 0
+			TNT1 A 0 A_ChangeFlag("DONTIDENTIFYTARGET", TRUE)
+			Stop
+	}
+}
+
+Actor stealthIdentifyTargetOn : stealthIdentifyTargetOff
+{
+	States
+	{
+		Use:
+		Pickup:
+			TNT1 A 0
+			TNT1 A 0 A_ChangeFlag("DONTIDENTIFYTARGET", FALSE)
+			Stop
+	}
+}
+
+// Players get this when they start pain flashing.
+actor StealthPain : Inventory {}
+
+// Players get this when they're getting forcibly destealthed
+// Stealth scripts recognize this item and terminate themselves to make way for the destealthing.
+actor DestealthOverride : Inventory {}
+
+// Players get this when they start firing while stealthed. This way
+// the script knows to restealth them afterwards
+actor StealthFire : Inventory {}
+
+// token spawned so that clients know to display ticket hud
+actor TicketToken {}
+
+actor PowerNoHealXP : PowerDamage {
+	DamageFactor Normal, 1.0
+}
+
+actor NoHealXP : PowerupGiver {
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
+	Powerup.Duration -2
+	Powerup.Type "NoHealXP"
+}
+
+actor StoredArmorModifier : Inventory {
+	Inventory.MaxAmount 1000
+}
+
+actor StoredArmorGrade : Inventory {
+	Inventory.MaxAmount 1000
+}
+
+// [JD] This is so ejecting from a mech wont print the Armor Grade V message over and over again
+Actor armorGradeVAnnounced : Inventory
+{
+	Inventory.MaxAmount 1
+}
+
+// Is the client in the menu?
+actor InMenu : Inventory {
+	Inventory.MaxAmount 10
+}
+
+// [JD] This is used to occasionally charge the player for using the Repair Pad.
+Actor Mech_RepairPadCharge : PowerDamage
+{
+	DamageFactor "Nothing", 1.0
+	Powerup.Duration -6
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}

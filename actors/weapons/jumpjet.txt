@@ -1,0 +1,95 @@
+// Jumpjet
+actor Jetpack : InventoryItem {
+	Tag "Jetpack"
+	Inventory.Icon "jeticon"
+	Inventory.MaxAmount 1
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	Use:
+		TNT1 A 0 ACS_ExecuteAlways (907, 0)
+		fail
+	}
+}
+
+// Is the player starting up/stopping down a jetpack?
+actor JetpackStartup : Inventory {}
+
+// Is the player using a jetpack?
+actor JetpackActive : Inventory {}
+
+actor JumpJetCount : Inventory {
+    inventory.amount 0
+    inventory.maxamount 25
+}
+
+actor JetpackFuel : Inventory {
+	Inventory.MaxAmount 40
+}
+
+actor JumpjetFire {
+	+NOSECTOR
+	+NOCLIP
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("OrcaFlame", 0, -5, 0, 0, 0, random(-9,-12))
+		TNT1 A 0 A_SpawnItemEx ("OrcaFlame", 0,  5, 0, 0, 0, random(-9,-12))
+		stop
+	}
+}
+
+// [Dusk] Deactivates jumpjet forcibly
+actor JumpjetDeactivate : CustomInventory {
+	+ALWAYSPICKUP
+	+AUTOACTIVATE
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	Pickup:
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_StopSound (6)
+		TNT1 A 0 SetPlayerProperty (0, 0, 3)
+		//TNT1 A 0 A_ChangeFlag ("PICKUP", 1)
+		TNT1 A 0 A_TakeInventory ("JetpackActive", 1)
+		stop
+	}
+}
+
+actor JetpackStart : CustomInventory {
+	+ALWAYSPICKUP
+	+AUTOACTIVATE
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	Pickup:
+		TNT1 A 0
+		//TNT1 A 0 A_ChangeFlag ("PICKUP", 0)
+		TNT1 A 0 A_PlaySound ("jumpjet/loop", 6, 1.0, 1)
+		stop
+	}
+}
+
+actor JetpackEnd1 : JetpackStart {
+	States {
+	Pickup:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound (6)
+		stop
+	}
+}
+
+actor JetpackEnd2 : JetpackStart {
+	States {
+	Pickup:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag ("PICKUP", 1)
+		TNT1 A 0 A_Gravity
+		stop
+	}
+}

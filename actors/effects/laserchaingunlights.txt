@@ -1,0 +1,71 @@
+actor LaserChaingunLight {
+  Radius 1
+  Height 1
+  Alpha 1
+  Scale 0.45
+  Renderstyle Add
+  +CLIENTSIDEONLY
+  -SOLID
+  +NOGRAVITY
+  +NOBLOCKMAP
+  +FORCEXYBILLBOARD
+  States
+{
+  Spawn:
+	LR_E A 0
+	LR_E A 0 A_Jump(64,"SlowFade")
+	LR_E A 0 A_Jump(164,2)
+	LR_E A 0 A_SpawnItemEx("LCGLightBig",0,0,0,0,0,0)
+	Stop
+	LR_E AAA 1 A_FadeOut(random(10,100)/1000)
+	LR_E BB 1 A_FadeOut(random(10,100)/1000)
+	LR_E CC 1 A_FadeOut(random(10,100)/1000)
+	LR_E DDD 1 A_FadeOut(random(10,100)/1000)
+	LR_E EEEEEEE 1 A_FadeOut(random(10,100)/1000)
+	Stop
+  SlowFade:
+	LR_E AAAAA 1 A_FadeOut(random(5,50)/1000)
+	LR_E BBBB 1 A_FadeOut(random(5,50)/1000)
+	LR_E CCCC 1 A_FadeOut(random(5,50)/1000)
+	LR_E DDDDDD 1 A_FadeOut(random(5,50)/1000)
+	LR_E EEEEEEEEEE 1 A_FadeOut(random(5,50)/1000)
+  Fade:
+	LR_E E 1 A_FadeOut(random(1,33)/1000)
+	Loop
+}
+}
+
+actor LCGLightBig : LaserChainGunLight { Scale 0.58 }
+
+actor LaserChaingunLightBlue : LaserChainGunLight //Oof
+{
+  States
+{
+  Spawn:
+	LC_E A 0
+	LC_E A 0 A_Jump(64,"SlowFade")
+	LC_E A 0 A_Jump(164,2)
+	LC_E A 0 A_SpawnItemEx("LCGLightBigBlue",0,0,0,0,0,0)
+	Stop
+	LC_E AAA 1 A_FadeOut(random(10,100)/1000)
+	LC_E BB 1 A_FadeOut(random(10,100)/1000)
+	LC_E CC 1 A_FadeOut(random(10,100)/1000)
+	LC_E DDD 1 A_FadeOut(random(10,100)/1000)
+	LC_E EEEEEEE 1 A_FadeOut(random(10,100)/1000)
+	Stop
+  SlowFade:
+	LC_E AAAAA 1 A_FadeOut(random(5,50)/1000)
+	LC_E BBBB 1 A_FadeOut(random(5,50)/1000)
+	LC_E CCCC 1 A_FadeOut(random(5,50)/1000)
+	LC_E DDDDDD 1 A_FadeOut(random(5,50)/1000)
+	LC_E EEEEEEEEEE 1 A_FadeOut(random(5,50)/1000)
+  Fade:
+	LC_E E 1 A_FadeOut(random(1,33)/1000)
+	Loop
+}
+}
+
+actor LCGLightBigBlue : LaserChainGunLightBlue { Scale 0.58 }
+
+actor LaserChaingunLight2 : LaserChaingunLight { Alpha 0.5 } //aow_fx 1 Stuff
+actor LaserChaingunLightBlue2 : LaserChaingunLightBlue { Alpha 0.5 }

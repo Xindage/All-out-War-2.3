@@ -1,0 +1,231 @@
+/* ============================================================================
+ * printf in ACS by Dusk
+ *
+ * To use, do: printNf (format, ...), where N is the amount of arguments given.
+ * Up to 8 arguments can be given. The code needs to be expanded if one wants
+ * more than 8.
+ *
+ * Use sprintNf if you want to capture the string.
+ *
+ * You can use this code in whatever projects, but do give me credit if you
+ * do so! Also do keep in mind that this is more expensive than your usual
+ * Log. Don't flame me if you hit runaway limits with this! You've been warned.
+ */
+
+#define MAX_PRINTF 8
+int PrintFMemory[MAX_PRINTF];
+
+// Core function: takes format string and number of arguments and returns
+// a formatted string.
+function str _sprintf (str format, int fcount) {
+	str work = "";
+	int curs = 0;
+	int perc = false;
+	int countwarn = false;
+	
+	for (int i = 0; i < strlen (format); i++) {
+		int c = GetChar (format, i);
+		
+		if (perc) {
+			if (c != '%' && curs >= fcount) {
+				if (!countwarn++)
+					Log (s:"sprint", d:fcount, s:"f: too few arguments for format \"", s:format, s:"\"");
+				
+				work = strparam (s:work, s:"(null)");
+				break;
+			} else {
+				// Perform the cast
+				switch (c) {
+				case '%':
+					work = strparam (s:work, s:"%");
+					break;
+				case 'c':
+					work = strparam (s:work, c:PrintFMemory[curs]);
+					break;
+				case 'd':
+					work = strparam (s:work, d:PrintFMemory[curs]);
+					break;
+				case 'f':
+					work = strparam (s:work, f:PrintFMemory[curs]);
+					break;
+				case 'i':
+					work = strparam (s:work, i:PrintFMemory[curs]);
+					break;
+				case 'k':
+					work = strparam (s:work, k:PrintFMemory[curs]);
+					break;
+				case 'l':
+					work = strparam (s:work, l:PrintFMemory[curs]);
+					break;
+				case 'n':
+					work = strparam (s:work, n:PrintFMemory[curs]);
+					break;
+				case 's':
+					work = strparam (s:work, s:PrintFMemory[curs]);
+					break;
+				case 'x':
+					work = strparam (s:work, x:PrintFMemory[curs]);
+					break;
+				default:
+					Log (s:"sprint", d:fcount, s:"f: unknown format cast ", c:c, s:"!");
+					return "";
+				}
+			}
+			
+			if (c != '%')
+				curs++;
+			
+			perc = false;
+		} else {
+			if (c == '%') {
+				perc = true;
+			} else {
+				// I guess newlines need to be catered formanually
+				if (c == '\\' && GetChar (format, i+1) == 'n') {
+					work = strparam (s:work, c:'\n');
+					i++;
+				} else
+					work = strparam (s:work, c:c);
+			}
+		}
+	}
+	
+	// Warn if there's too many arguments
+	if (curs < fcount)
+		Log (s:"sprint", d:fcount, s:"f: too many arguments for format \"", s:format, s:"\"");
+	
+	return work;
+}
+
+function str sprint1f (str format, int v1) {
+	PrintFMemory[0] = v1;
+	return _sprintf (format, 1);
+}
+
+function str sprint2f (str format, int v1, int v2) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	return _sprintf (format, 2);
+}
+
+function str sprint3f (str format, int v1, int v2, int v3) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	return _sprintf (format, 3);
+}
+
+function str sprint4f (str format, int v1, int v2, int v3, int v4) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	PrintFMemory[3] = v4;
+	return _sprintf (format, 4);
+}
+
+function str sprint5f (str format, int v1, int v2, int v3, int v4, int v5) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	PrintFMemory[3] = v4;
+	PrintFMemory[4] = v5;
+	return _sprintf (format, 5);
+}
+
+function str sprint6f (str format, int v1, int v2, int v3, int v4, int v5, int v6) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	PrintFMemory[3] = v4;
+	PrintFMemory[4] = v5;
+	PrintFMemory[5] = v6;
+	return _sprintf (format, 6);
+}
+
+function str sprint7f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	PrintFMemory[3] = v4;
+	PrintFMemory[4] = v5;
+	PrintFMemory[5] = v6;
+	PrintFMemory[6] = v7;
+	return _sprintf (format, 7);
+}
+
+function str sprint8f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+	PrintFMemory[0] = v1;
+	PrintFMemory[1] = v2;
+	PrintFMemory[2] = v3;
+	PrintFMemory[3] = v4;
+	PrintFMemory[4] = v5;
+	PrintFMemory[5] = v6;
+	PrintFMemory[6] = v7;
+	PrintFMemory[7] = v8;
+	return _sprintf (format, 8);
+}
+
+function void print1f (str format, int v1) {
+	Log (s:sprint1f (format, v1));
+}
+
+function void print2f (str format, int v1, int v2) {
+	Log (s:sprint2f (format, v1, v2));
+}
+
+function void print3f (str format, int v1, int v2, int v3) {
+	Log (s:sprint3f (format, v1, v2, v3));
+}
+
+function void print4f (str format, int v1, int v2, int v3, int v4) {
+	Log (s:sprint4f (format, v1, v2, v3, v4));
+}
+
+function void print5f (str format, int v1, int v2, int v3, int v4, int v5) {
+	Log (s:sprint5f (format, v1, v2, v3, v4, v5));
+}
+
+function void print6f (str format, int v1, int v2, int v3, int v4, int v5, int v6) {
+	Log (s:sprint6f (format, v1, v2, v3, v4, v5, v6));
+}
+
+function void print7f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+	Log (s:sprint7f (format, v1, v2, v3, v4, v5, v6, v7));
+}
+
+function void print8f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+	Log (s:sprint8f (format, v1, v2, v3, v4, v5, v6, v7, v8));
+}
+
+
+function void FatalError1f (str format, int v1) {
+	FatalError (strparam (s:sprint1f (format, v1)));
+}
+
+function void FatalError2f (str format, int v1, int v2) {
+	FatalError (strparam (s:sprint2f (format, v1, v2)));
+}
+
+function void FatalError3f (str format, int v1, int v2, int v3) {
+	FatalError (strparam (s:sprint3f (format, v1, v2, v3)));
+}
+
+function void FatalError4f (str format, int v1, int v2, int v3, int v4) {
+	FatalError (strparam (s:sprint4f (format, v1, v2, v3, v4)));
+}
+
+function void FatalError5f (str format, int v1, int v2, int v3, int v4, int v5) {
+	FatalError (strparam (s:sprint5f (format, v1, v2, v3, v4, v5)));
+}
+
+function void FatalError6f (str format, int v1, int v2, int v3, int v4, int v5, int v6) {
+	FatalError (strparam (s:sprint6f (format, v1, v2, v3, v4, v5, v6)));
+}
+
+function void FatalError7f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+	FatalError (strparam (s:sprint7f (format, v1, v2, v3, v4, v5, v6, v7)));
+}
+
+function void FatalError8f (str format, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+	FatalError (strparam (s:sprint8f (format, v1, v2, v3, v4, v5, v6, v7, v8)));
+}

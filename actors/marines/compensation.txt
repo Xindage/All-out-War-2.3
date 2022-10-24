@@ -1,0 +1,16 @@
+// AI Marines related to compensation
+actor BlueBackup : RandomSpawner {
+	dropitem "BlueRocketSoldier"
+	dropitem "BlueSuperShotgunner"
+	dropitem "BlueTiberiumRifleman"
+	dropitem "BluePlasmaGunner"
+	dropitem "BlueFlamerDude"
+}
+
+actor RedBackup : RandomSpawner {
+	dropitem "RedRocketSoldier"
+	dropitem "RedSuperShotgunner"
+	dropitem "RedTiberiumRifleman"
+	dropitem "RedPlasmaGunner"
+	dropitem "RedFlamerDude"
+}

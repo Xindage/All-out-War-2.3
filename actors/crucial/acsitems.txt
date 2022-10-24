@@ -1,0 +1,42 @@
+// [SP] This file is just for misc actors to help ACS
+
+// [Dusk] Thermal cloaking timer - tells how many seconds left.
+actor ThermalCloakingTime : Inventory {inventory.maxamount 90}
+
+// [Dusk] used to fix iron curtain + resign bug
+actor PowerNull : PowerProtection {damagefactor "normal", 1.0}
+actor RedHueRemover : PowerupGiver {
+	+INVENTORY.AUTOACTIVATE
+	inventory.pickupmessage "wat are you doing"
+	inventory.maxamount 0
+	powerup.color RedMap
+	powerup.duration -2
+	powerup.type "Null"
+}
+
+actor DimGoldHueRemover : RedHueRemover {powerup.color GoldMap, 0.25}
+actor DimRedHueRemover : RedHueRemover {powerup.color "AA 00 00", 0.25}
+actor GreenHueRemover : RedHueRemover {powerup.color GreenMap}
+
+actor ArmorUpgrade : CustomInventory {
+	states {
+	Pickup:
+		TNT1 A 0 ACS_ExecuteAlways (985, 0, 1, AGF_ADDITIVE)
+		TNT1 A 0 A_GiveInventory ("HasArmorUpgrade", 1)
+		stop
+	}
+}
+
+actor HUD_HealthType : Inventory {
+	Inventory.MaxAmount 4
+}
+
+actor HUD_HealthBlink : Inventory {}
+actor IsConsolePlayer : Inventory {}
+
+actor Experience : Inventory {
+	Inventory.MaxAmount 0x7FFFFFFF
+}
+
+actor HasRankUpgrades : Inventory {}
+actor instantNadeCast : Inventory {inventory.maxamount 1}

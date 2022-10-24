@@ -1,0 +1,83 @@
+// misc stuff
+
+// [Dusk] The damage type indicator is a solid floating sphere
+// which prints what damage type it was hit with.
+actor DamageTypeIndicator {
+	+SHOOTABLE
+	+NOCLIP
+	+NODAMAGE
+	+NOBLOOD
+	+NOGRAVITY
+	+FLOATBOB
+	mass 0x7FFFFFFF
+	radius 64
+	height 64
+	painchance 255
+	renderstyle add
+	alpha 0.75
+	states {
+	Spawn:
+		PPCX A -1 BRIGHT
+		stop
+	Pain.Fist:
+		PPCX A 0 A_Print ("Damage type indicator hit with Fist")
+		goto Spawn
+	Pain.Bullet:
+		PPCX A 0 A_Print ("Damage type indicator hit with Bullet")
+		goto Spawn
+	Pain.Rifle:
+		PPCX A 0 A_Print ("Damage type indicator hit with Rifle")
+		goto Spawn
+	Pain.Explosion:
+		PPCX A 0 A_Print ("Damage type indicator hit with Explosion")
+		goto Spawn
+	Pain.Fire:
+		PPCX A 0 A_Print ("Damage type indicator hit with Fire")
+		goto Spawn
+	Pain.FireSpecial:
+		PPCX A 0 A_Print ("Damage type indicator hit with FireSpecial")
+		goto Spawn
+	Pain.Chemical:
+		PPCX A 0 A_Print ("Damage type indicator hit with Chemical")
+		goto Spawn
+	Pain.ChemicalSpecial:
+		PPCX A 0 A_Print ("Damage type indicator hit with ChemicalSpecial")
+		goto Spawn
+	Pain.Energy:
+		PPCX A 0 A_Print ("Damage type indicator hit with Energy")
+		goto Spawn
+	Pain.AntiArmor:
+		PPCX A 0 A_Print ("Damage type indicator hit with AntiArmor")
+		goto Spawn
+	Pain.Time:
+		PPCX A 0 A_Print ("Damage type indicator hit with Time")
+		goto Spawn
+	Pain.Disarm:
+		PPCX A 0 A_Print ("Damage type indicator hit with Disarm")
+		goto Spawn
+	Pain.Superweapon:
+		PPCX A 0 A_Print ("Damage type indicator hit with Superweapon")
+		goto Spawn
+	Pain.MassDriver:
+		PPCX A 0 A_Print ("Damage type indicator hit with MassDriver")
+		goto Spawn
+	Pain.Mechstomp:
+		PPCX A 0 A_Print ("Damage type indicator hit with Mechstomp")
+		goto Spawn
+	Pain.Monster:
+		PPCX A 0 A_Print ("Damage type indicator hit with Monster")
+		goto Spawn
+	Pain.Deconstruction:
+		PPCX A 0 A_Print ("Damage type indicator hit with Deconstruction")
+		goto Spawn
+	Pain.Normal:
+		PPCX A 0 A_Print ("Damage type indicator hit with Normal damagetype")
+		goto Spawn
+	Pain:
+		PPCX A 0 A_Print ("Damage type indicator hit with unknown damagetype")
+		goto Spawn
+	Death:
+		PPCX A 0
+		goto Spawn
+	}
+}

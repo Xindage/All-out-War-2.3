@@ -1,0 +1,15 @@
+ClearTeams
+
+Team "Blue" {
+	PlayerColor "00 44 B5"
+	TextColor "Blue"
+	RailColor "18 6C F7"
+	PlayerStartThingNumber 5080
+}
+
+Team "Red" {
+	PlayerColor "A0 00 00"
+	TextColor "Red"
+	RailColor "A0 00 00"
+	PlayerStartThingNumber 5081
+}

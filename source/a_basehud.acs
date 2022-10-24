@@ -1,0 +1,145 @@
+// BUILDING HUD FUNCTIONALITY
+function void CL_DisplayBuildingHud (void) {
+	SetHUDFont ();
+	
+	// If we want no hud, clear it
+	if (GetCVar ("zeta_cl_nohud")) {
+		ClearHudMessage (8850);
+		ClearHudMessage (8851);
+		ClearHudMessage (8852);
+		return;
+	}
+	
+	int bluey = 0.44;
+	// [Dusk] {9/23/12} In smaller resolutions, we need to shove the blue
+	// team base HUD a bit up or it will overlap with the red one
+	if (GetCVar ("vid_defheight") <= 400)
+		bluey = 0.36;
+	
+	HudMessageBold (s:getBuildingColor (101), s:"Barracks\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (101)), d:GetActorSpeed (101), s:"\cc%\n",
+		s:getBuildingColor (103), s:"Refinery\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (103)), d:GetActorSpeed (103), s:"\cc%\n",
+		s:getBuildingColor (105), s:"Research Centre\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (105)), d:GetActorSpeed (105), s:"\cc%\n",
+		s:getBuildingColor (107), s:"War Factory\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (107)), d:GetActorSpeed (107), s:"\cc%\n",
+		s:getBuildingColor (114), s:"Obelisk of Light\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (114)), d:GetActorSpeed (114), s:"\cc%\n",
+		s:getBuildingColorGreen (109), s:"++", s:getBuildingColor (109), s:"Repair Facility\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (109)), d:GetActorSpeed (109), s:"\cc%\n",
+		s:getBuildingColorGreen (903), s:"++", s:getBuildingColor (903), s:"HP Regen\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (903)), d:GetActorSpeed (903), s:"\cc%\n",
+		s:getBuildingColorGreen (905), s:"++", s:getBuildingColor (905), s:"Ammo Regen\cc: ",
+		s:ColorCodeHealth (GetActorSpeed (905)), d:GetActorSpeed (905), s:"\cc%\n",
+		s:getBuildingColorGreen(901), s:"++", s:getBuildingColor (901), s:"Mini Refinery\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (901)), d:GetActorSpeed (901), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_BLUE, 0), s:"++", s:PortalLinkColor (TEAM_BLUE, 1), s:"Teleporter\cc: ",
+		s:ColorCodeHealth(PortalHealth (TID_TELENODE_BLUE1)), d:PortalHealth (TID_TELENODE_BLUE1), s:"\cc% / ",
+		s:ColorCodeHealth(PortalHealth (TID_TELENODE_BLUE2)), d:PortalHealth (TID_TELENODE_BLUE2), s:"\cc%";
+		HUDMSG_PLAIN, 8850, CR_BLUE, 0.012, bluey, 0.0);
+	
+	HudMessageBold (
+		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:getBuildingColor (201), s:"Barracks\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (201)), d:GetActorSpeed (201), s:"\cc%\n",
+		s:getBuildingColor (203), s:"Refinery\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (203)), d:GetActorSpeed (203), s:"\cc%\n",
+		s:getBuildingColor (205), s:"Research Centre\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (205)), d:GetActorSpeed (205), s:"\cc%\n",
+		s:getBuildingColor (207), s:"War Factory\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (207)), d:GetActorSpeed (207), s:"\cc%\n",
+		s:getBuildingColor (214), s:"Obelisk of Light\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (214)), d:GetActorSpeed (214), s:"\cc%\n",
+		s:getBuildingColorGreen (209), s:"++", s:getBuildingColor (209), s:"Repair Facility\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (209)), d:GetActorSpeed (209), s:"\cc%\n",
+		s:getBuildingColorGreen (902), s:"++", s:getBuildingColor (902), s:"HP Regen\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (902)), d:GetActorSpeed (902), s:"\cc%\n",
+		s:getBuildingColorGreen (904), s:"++", s:getBuildingColor (904), s:"Ammo Regen\cc: ",
+		s:ColorCodeHealth (GetActorSpeed (904)), d:GetActorSpeed (904), s:"\cc%\n",
+		s:getBuildingColorGreen(900), s:"++", s:getBuildingColor (900), s:"Mini Refinery\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (900)), d:GetActorSpeed (900), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_RED, 0), s:"++", s:PortalLinkColor (TEAM_RED, 1), s:"Teleporter\cc: ",
+		s:ColorCodeHealth(PortalHealth (TID_TELENODE_RED1)), d:PortalHealth (TID_TELENODE_RED1), s:"\cc% / ",
+		s:ColorCodeHealth(PortalHealth (TID_TELENODE_RED2)), d:PortalHealth (TID_TELENODE_RED2), s:"\cc%";
+		HUDMSG_PLAIN, 8851, CR_RED, 0.012, bluey, 0.0);
+	
+	/*int bluelives = GetActorSpeed (TID_TICKETCOUNTER_BLUE);
+	int redlives = GetActorSpeed (TID_TICKETCOUNTER_RED);*/
+	int bluelives = Tickets[TEAM_BLUE];
+	int redlives = Tickets[TEAM_RED];
+	if (GetCVar ("zeta_forcelivehud") || bluelives || redlives) {
+		int startlives = Config[CONFIG_STARTTICKETS][PEER_CLIENT];
+		//SetFont ("SMALLFONT");
+		HudMessageBold (
+			s:"\n \n \n \n \n \n \n \n \n \n \n \n \n\cd--------\n",
+			s:"\cHLives\cC: ", s:FractionColor (bluelives, startlives), d:bluelives,
+			s:"\n\cGLives\cC: ", s:FractionColor (redlives, startlives), d:redlives,
+			s:"\n\cd--------";
+			HUDMSG_PLAIN, 8852, CR_BLUE, 0.012, 0.44, 0.0);
+	}
+}
+
+function int PortalHealth (int t) {
+	if (!ThingCount (T_NONE, t)) return 0;
+	int s = GetActorSpeed (t);
+	if (s < 0) return 0;
+	return s;
+}
+
+function str PortalLinkColor (int team, int teamcolor) {
+	int t1 = TID_TELENODE_BLUE1 + 2*team;
+	int t2 = TID_TELENODE_BLUE2 + 2*team;
+	int exists = ThingCount (T_NONE, t1) && ThingCount (T_NONE, t2);
+	if (exists) {
+		if (!teamcolor)
+			return "\cD";
+		if (team == TEAM_BLUE)
+			return "\cH";
+		return "\cG";
+	}
+	
+	if (!teamcolor)
+		return "\cQ";
+	if (GetCVar ("zeta_cl_confonthud"))
+		return "\cU";
+	return "\cM";
+}
+
+function str ColorCodeHealth(int Percentage)
+{
+	if (Percentage == 100) // 100%
+		return "\cq";
+	else if (Percentage > 75) // healthy
+		return "\cd";
+	else if (Percentage > 50) // moderate
+		return "\cf";
+	else if (Percentage > 25) // low
+		return "\ci";
+	else if (Percentage > 0) // critical
+		return "\cr";
+	
+	if (GetCVar ("zeta_cl_confonthud"))
+		return "\cU";
+	return "\cM";
+}
+
+function str getBuildingColor (int tid) {
+	if (GetActorSpeed (tid) > 0) {
+		if (tid <= 199 || (tid >= 900 && tid % 2 == 1))
+			return "\cH";
+		else
+			return "\cG";
+	}
+	
+	if (GetCVar ("zeta_cl_confonthud"))
+		return "\cU";
+	return "\cM";
+}
+
+function str getBuildingColorGreen (int tid) {
+	if (GetActorSpeed (tid) > 0)
+		return "\cD";
+	
+	return "\cQ";
+}

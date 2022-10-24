@@ -1,0 +1,375 @@
+//////////////////////////////////////////
+// MORE COLOURS! :D                ///////
+//////////////////////////////////////////
+
+// NEON PINK //
+N1 {
+                #9b009d  #ff00fc 0 100
+                #ff00fc  #ff6eec 101 256
+       Console:
+                #9b009d  #ff00fc 0 100
+                #ff00fc  #ff6eec 101 256
+}
+
+// NEON YELLOW //
+N2 {
+                #cda900 #e4ff00 0 100
+                #e4ff00  #fff88a 101 256
+       Console:
+                #cda900  #e4ff00 0 100
+                #e4ff00  #fff88a 101 256
+}
+
+// NEON ORANGE //
+N3 {
+                #ba5300  #ff8a00 0 100
+                #ff8a00  #ffa95c 101 256
+       Console:
+                #ba5300  #ff8a00 0 100
+                #ff8a00  #ffa95c 101 256
+}
+
+// NEON GREEN //
+N4 {
+                #009916  #24ff00 0 100
+                #24ff00  #63ff5f 101 256
+       Console:
+                #009916  #24ff00 0 100
+                #24ff00  #63ff5f 101 256
+}
+
+// NEON BLUE //
+N5 {
+                #005ccd  #0096ff 0 100
+                #0096ff  #5fd0ff 101 256
+       Console:
+                #005ccd  #0096ff 0 100
+                #0096ff  #5fd0ff 101 256
+}
+
+// NEON PURPLE //
+N6 {
+                #6700bf  #c600ff 0 100
+                #c600ff  #d05fff 101 256
+       Console:
+                #6700bf  #c600ff 0 100
+                #c600ff  #d05fff 101 256
+}
+
+
+// NEON RED //
+N7 {
+                #b60000  #ff3434 0 100
+                #ff3434  #ff6a5f 101 256
+       Console:
+                #b60000  #ff3434 0 100
+                #ff3434  #ff6a5f 101 256
+}
+
+
+// NEON CYAN //
+N8 {
+                #009683  #34ffcd 0 100
+                #34ffcd  #98fffe 101 256
+       Console:
+                #009683  #34ffcd 0 100
+                #34ffcd  #98fffe 101 256
+}
+
+// PHOSPHORESCENCE //
+N9 {
+                #caf589  #40772c 0 256
+       Console:
+                #53ed8e  #0f652a 0 256
+}
+
+// ULTRAVIOLENT //
+N0 {
+                #94f9ff  #42278f 0 256
+       Console:
+                #42278f #94f9ff 0 256
+}
+
+
+
+/////////////////////////////////////////////
+
+// IVY ROPES //
+V1 {
+		#263420 #2b5d17 0 110
+                #2b5d17 #56792d 111 150
+                #0f901e #43883e 151 189
+                #56792d #62b500 190 256
+	 Console:
+		#0d2d01 #62b500 0 256
+}  
+
+// SLEAK HARDWARE //
+V2 {
+		#141415  #1d1c1e  0 9
+		#817c8f  #c9c9c9  10 180
+                #c9c9c9  #FFFFFF  181 256
+	Console:
+		#686573  #e7e7e7  0 256
+}
+
+// TROPICAL LAGOON //
+V3 {
+		#163e99  #0c886d  0 130
+		#0c886d  #25c260  131 199
+                #25c260  #05efe7  200 256
+	Console:
+		#082167  #05efe7  0 256
+}
+
+// TECHNO PUNK //
+V4 {
+                #381346 #8d1e4d  0 108
+                #8d1e4d #239aed  109 256
+	Console:
+		#381346 #239aed  0 256      
+}
+
+// DULL BULB //
+V5 {
+                #b5ac72  #2a2a22 0 60
+                #2a2a22  #6d683a 61 149
+                #6d683a  #9e9e9e 150 256
+       Console:
+                #54502c  #9e9e9e 0 256
+}
+
+// 20000 LEAGUES //
+V6 {
+                #05022c #1b1547 0 145
+                #1c1871 #312ba8 146 256
+       Console:
+                #060332 #2a267e 0 256
+}
+
+// HOT STUFF //
+V7 {
+                #591d0d  #7f3b2b 0 89
+                #8f4333  #bf772f 90 179
+                #cf8f2b  #fff31b 180 256
+       Console:
+                #591d0d  #bf772f 0 256
+}
+
+// A FINE WINE //
+V8 {
+                #1d0619 #450d32 0 145
+                #450d32 #92062e 146 256
+       Console:
+                #1d0619 #450d32 0 145
+                #450d32 #92062e 146 256
+}
+
+// GATE OF EVIL //
+V9 {
+		#000000 #0b0b0b 0 60
+                #0b0b0b #1f170b 61 121
+                #1f170b #2b230f 122 159
+                #2b230f #735c49 160 256
+	 Console:
+		#0b0b0b #2b230f 0 256
+}
+
+// MY COLOUR //
+V0 {
+                #0e0911 #261c34 0 159
+                #261c34 #453152 160 256
+       Console:
+                #0e0911 #261c34 0 159
+                #261c34 #453152 160 256
+}
+
+//////////////////////////////////////////
+
+// COTTON CANDY //
+Y1 {
+                #cb4c6d  #ffffff 0 256
+       Console:
+                #cb4c6d  #ffffff 0 256
+}
+
+// DEEP FOREST //
+Y2 {
+                #001101  #06480c 0 256
+       Console:
+                #001101  #06480c 0 256
+}
+
+
+// SHARP BREATH //
+Y3 {
+                #006160 #003255 0 145
+                #003255 #19191c 146 256
+       Console:
+                #006160 #003255 0 145
+                #003255 #19191c 146 256
+}
+
+// CREAMY BUTTER //
+Y4 {
+                #b88420  #ffff82 0 119
+                #ffff82  #ffffff 120 256
+       Console:
+                #dca02d #ffffdd 0 256
+}
+
+// BLOWTORCH //
+Y5 {
+		#141414 #393939 0 60
+                #393939 #767676 61 129
+                #807059 #ce7c00 130 199
+                #ff9900 #ffd016 200 256
+	 Console:
+		#393939 #ffd016 0 256
+}
+
+// CHOCOLATE CARAMEL //
+Y6 {
+		#120300 #3b0800 0 79
+                #3b0800 #974b31 80 199
+                #974b31 #eaaf49 200 256
+	 Console:
+		#3b0800 #eaaf49 0 256
+}
+
+// SPACESHIP PANELS //
+Y7 {
+                #211d23  #433f5d 0 149
+                #433f5d  #8e7999 150 256
+       Console:
+                #211d23 #8e7999 0 256
+}
+
+// TOXIC CHEMICALS //
+Y8 {
+                #131d05  #360000 0 60
+                #410000  #5b3600 61 111
+                #693e00  #8e8600 112 180
+                #909d00  #aee000 181 210
+                #aee000  #c6ff00 211 256
+       Console:
+                #5b3600  #c6ff00 0 256
+}
+
+// TOOTHPASTE //
+Y9 {
+                #002318  #1252ba 0 80
+                #00a3c1  #0064d5 81 198
+                #0064d5  #65ebff 199 256
+       Console:
+                #002318  #0049c1 0 80
+                #00a3c1  #0064d5 81 199
+                #0064d5  #65ebff 200 256
+}
+
+
+// PSYCHOTIC MIND //
+Y0 {
+                #c50c3c  #b12731 0 20
+                #b41e1e  #7f0830 21 149
+                #7f0830  #4a0000 150 256
+       Console:
+                #4a0000 #b12731  0 256
+}
+
+//////////////////////////////////////////////////
+
+// BLUEBERRY PIE //
+J1 {
+                #171a62  #024bc4 0 100
+                #1163d3  #3a8dfd 101 256
+       Console:
+                #171a62  #024bc4 0 100
+                #1163d3  #3a8dfd 101 256
+}
+
+// LOTUS PETALS //
+J2 {
+                #8e003f  #fe89dc 0 111
+                #fe89dc  #fffdfe 112 256
+       Console:
+                #8e003f  #fe89dc 0 111
+                #fe89dc  #fffdfe 112 256
+}
+
+// APPLETIZER //
+J3 {
+                #3a0007  #dd0000 0 159
+                #dd1000  #acdd00 160 256
+       Console:
+                #3a0007  #dd0000 0 159
+                #dd1000  #acdd00 160 256
+}
+
+// CARDBOARD //
+J4 {
+                #3d2618  #a3825f 0 170
+                #a0805d  #bda891 171 256
+       Console:
+                #3d2618  #a3825f 0 170
+                #a0805d  #bda891 171 256
+}
+
+// SOUR TASTE //
+J5 {
+                #234000  #48ff00 0 169
+                #48ff00  #c2ff6c 170 256
+       Console:
+                #234000  #48ff00 0 169
+                #48ff00  #c2ff6c 170 256
+}
+
+// STEAMPUNK //
+J6 {
+                #1e1a17  #533523 0 119
+                #533523  #9b6535 120 178
+                #9b6535  #6bbd9f 179 256
+       Console:
+                #1e1a17  #533523 0 119
+                #533523  #9b6535 120 178
+                #9b6535  #6bbd9f 179 256
+}
+
+
+// SANDSTONE //
+J7 {
+                #493523  #988855 0 127
+                #9e8e5c  #dfc061 128 200
+                #dfc061  #efd891 201 256
+       Console:
+                #493523  #988855 0 127
+                #9e8e5c  #dfc061 128 200
+                #dfc061  #efd891 201 256
+}
+
+// FUZZY HANDCUFFS //
+J8 {
+                #21152a  #7300c4 0 138
+                #8a00c4  #ef67b1 139 256
+       Console:
+                #21152a  #7300c4 0 127
+                #8a00c4  #ef67b1 128 256
+}
+
+
+// DUST BUNNIES //
+J9 {
+                #321f27  #6c5b74 0 110
+                #78637b  #ddcdac 111 256
+       Console:
+                #321f27  #6c5b74 0 110
+                #78637b  #ddcdac 111 256
+}
+
+// FREEZER BURN //
+J0 {
+                #ffffff  #06537f 0 150
+                #1975aa  #b2e3ff 151 256
+       Console:
+                #ffffff  #1975aa 0 256
+}

@@ -1,0 +1,249 @@
+// LASER RIFLE
+actor StealthLaserRifle : AOWWeapon {
+	+NOEXTREMEDEATH
+	+ALT_AMMO_OPTIONAL
+	DropItem "LaserRifle"
+	Obituary "$OB_LASERRIFLE"
+	Inventory.PickupMessage "You got the laser rifle!"
+	Weapon.SelectionOrder 8
+	Weapon.KickBack 100
+	Weapon.AmmoType "LaserRifleAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 0
+	Weapon.AmmoType2 "StealthCharge"
+	Weapon.AmmoUse2 3
+	Weapon.AmmoGive2 100
+	weapon.SlotNumber 8
+	Weapon.PreferredSkin "MarineGrenade"
+	Weapon.UpSound "weapons/up/laserrifle"
+	Tag "Laser rifle (stealth)"
+	decal "LaserScorch"
+	states {
+	Ready:
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "Ready.Blue")
+		LSRF A 0 A_JumpIfInventory ("StealthMode",1,"Ready.Stealth")
+		LSRF A 35 A_WeaponReady
+		LSRF A 0 A_GiveInventory("StealthCharge",1)
+		LSRF A 0 A_TakeInventory ("StealthFire", 1)
+		goto Ready+1
+	Ready.Blue:
+		LSRB A 0 A_JumpIfInventory("StealthMode",1,"Ready.StealthBlue")
+		LSRB A 35 A_WeaponReady
+		LSRB A 0 A_GiveInventory("StealthCharge",1)
+		LSRB A 0 A_TakeInventory ("StealthFire", 1)
+		loop
+	Ready.Stealth:
+		LSRF A 0 A_JumpIfInventory("StealthCharge", 1, 1)
+		goto AltFireOff
+		LSRF A 35 A_WeaponReady
+		LSRF A 0 A_TakeInventory("StealthCharge",1)
+		goto Ready
+	Ready.StealthBlue:
+		LSRB A 0 A_JumpIfInventory("StealthCharge", 1, 1)
+		goto AltFireOff.Blue
+		LSRB A 35 A_WeaponReady
+		LSRB A 0 A_TakeInventory("StealthCharge",1)
+		goto Ready.Blue
+	Deselect:
+		LSRF A 0 A_TakeInventory ("StealthFire", 1)
+		LSRF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "Deselect.Blue")
+		LSRF A 1 offset (-5, 34)
+		LSRF A 1 offset (-16, 38)
+		LSRF A 1 offset (-23, 45)
+		LSRF A 1 offset (-32, 56)
+		LSRF A 1 offset (-42, 66)
+		LSRF A 1 offset (-51, 73)
+		LSRF A 1 offset (-63, 87)
+		LSRF A 1 offset (-78, 97)
+		LSRF A 1 offset (-88, 111)
+		LSRF A 1 offset (-99, 121)
+		LSRF A 1 offset (-112, 133)
+		LSRF A 1 offset (-125, 154)
+		LSRF A 0 offset (-1, 33)
+		LSRF A 0 A_Lower
+		wait
+	Deselect.Blue:
+		LSRB A 1 offset (-5, 34)
+		LSRB A 1 offset (-16, 38)
+		LSRB A 1 offset (-23, 45)
+		LSRB A 1 offset (-32, 56)
+		LSRB A 1 offset (-42, 66)
+		LSRB A 1 offset (-51, 73)
+		LSRB A 1 offset (-63, 87)
+		LSRB A 1 offset (-78, 97)
+		LSRB A 1 offset (-88, 111)
+		LSRB A 1 offset (-99, 121)
+		LSRB A 1 offset (-112, 133)
+		LSRB A 1 offset (-125, 154)
+		LSRB A 0 offset (-1, 33)
+		LSRB A 0 A_Lower
+		wait
+	Select:
+		LSRF A 0 A_TakeInventory ("StealthFire", 1)
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "Select.Blue")
+		LSRF A 1 offset (-125, 154)
+		LSRF A 1 offset (-112, 133)
+		LSRF A 1 offset (-99, 121)
+		LSRF A 1 offset (-88, 111)
+		LSRF A 1 offset (-78, 97)
+		LSRF A 1 offset (-63, 87)
+		LSRF A 1 offset (-51, 73)
+		LSRF A 1 offset (-42, 66)
+		LSRF A 1 offset (-32, 56)
+		LSRF A 1 offset (-23, 45)
+		LSRF A 1 offset (-16, 38)
+		LSRF A 1 offset (-5, 34)
+		goto ready
+	Select.Blue:
+		LSRB A 1 offset (-125, 154)
+		LSRB A 1 offset (-112, 133)
+		LSRB A 1 offset (-99, 121)
+		LSRB A 1 offset (-88, 111)
+		LSRB A 1 offset (-78, 97)
+		LSRB A 1 offset (-63, 87)
+		LSRB A 1 offset (-51, 73)
+		LSRB A 1 offset (-42, 66)
+		LSRB A 1 offset (-32, 56)
+		LSRB A 1 offset (-23, 45)
+		LSRB A 1 offset (-16, 38)
+		LSRB A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		LSRF A 0 A_JumpIfInventory("StealthMode", 1, "Fire.Stealth")
+	FireGo:
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "Fire.Blue")
+		//LSRF A 0 A_PlayWeaponSound ("laser/fire")
+		LSRF A 0 A_PlaySound("laser/fire", CHAN_WEAPON, 0.5)
+		LSRF B 1 bright offset (0, 34) A_Light2
+		LSRF C 0 bright offset (0, 34) A_FireBullets (0, 0, 1, 0, "LaserPuff", 0, 5000)
+		LSRF B 1 bright offset (0, 36) A_RailAttack (16, 0, 1, none, "FF 00 00", 1, 0, "LaserPuff")
+		LSRF C 2 bright offset (0, 34)
+		LSRF A 5 offset (0, 32) A_Light0
+		LSRF A 0 A_Refire
+		LSRF D 3 offset(3,34)
+		LSRF D 3 offset(1,31)
+		LSRF E 2 offset(-2,28)
+		LSRF E 2 offset(-6,27)
+		LSRF FFFF 2 A_FireCustomMissile ("OverheatSmokeSpawner", 0, false)
+		LSRF F 1 offset(-3,30)
+		LSRF F 1 offset(-1,33)
+		LSRF F 1 offset(2,37)
+		LSRF F 1 offset(5,42)
+		LSRF F 1 offset(7,43)
+		LSRF F 1 offset(9,44)
+		goto Restealth
+	Fire.Blue:
+		//LSRB A 0 A_PlayWeaponSound ("laser/fire")
+		LSRF A 0 A_PlaySound("laser/fire", CHAN_WEAPON, 0.5)
+		LSRB B 1 bright offset (0, 34) A_Light2
+		LSRB C 0 bright offset (0, 34) A_FireBullets (0, 0, 1, 0, "LaserPuffBlue", 0, 5000)
+		LSRB B 1 bright offset (0, 36) A_RailAttack (16, 0, 1, none, "00 80 FF", 1, 0, "LaserPuffBlue")
+		LSRB C 2 bright offset (0, 34)
+		LSRB A 5 offset (0, 32) A_Light0
+		LSRB A 0 A_Refire
+		LSRB D 3 offset(3,34)
+		LSRB D 3 offset(1,31)
+		LSRB E 2 offset(-2,28)
+		LSRB E 2 offset(-6,27)
+		LSRB FFFF 2 A_FireCustomMissile ("OverheatSmokeSpawner", 0, false)
+		LSRB F 1 offset(-3,30)
+		LSRB F 1 offset(-1,33)
+		LSRB F 1 offset(2,37)
+		LSRB F 1 offset(5,42)
+		LSRB F 1 offset(7,43)
+		LSRB F 1 offset(9,44)
+		goto Restealth
+	Fire.Stealth:
+		LSRF A 0 A_JumpIfInventory ("StealthMode", 3, "FireGo")
+		LSRF A 0 A_GiveInventory ("StealthFire", 1)
+		LSRF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		goto FireGo
+	Restealth:
+		LSRF A 0 A_JumpIfInventory ("StealthFire", 1, 2)
+		goto Ready
+		LSRF A 0 A_TakeInventory ("StealthFire", 1)
+		LSRF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "Restealth.Blue")
+		LSRF AAAAAAAAAAAAAAA 1 A_WeaponReady
+		goto Ready
+	Restealth.Blue:
+		LSRB AAAAAAAAAAAAAAA 1 A_WeaponReady
+		goto Ready.Blue
+	AltFire:
+		LSRF A 0 A_JumpIfInventory ("IsBlue", 1, "AltFire.Blue")
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "AltRejected")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "AltRejected")
+		LSRF A 0 A_JumpIfNoAmmo ("AltRejected")
+		LSRF A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff")
+		LSRF A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		goto Ready
+	AltFireOff:
+		LSRF A 5 A_JumpIfInventory("StealthMode", 3, "AltRejected")
+		LSRF A 5
+		LSRF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		LSRF A 40 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltRejected:
+		LSRF A 16 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltFire.Blue:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "AltRejected.Blue")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "AltRejected.Blue")
+		LSRB A 0 A_JumpIfNoAmmo ("AltRejected.Blue")
+		LSRB A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff.Blue")
+		LSRB A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		goto Ready.Blue
+	AltFireOff.Blue:
+		LSRB A 5 A_JumpIfInventory("StealthMode", 3, "AltRejected.Blue")
+		LSRB A 5
+		LSRB A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		LSRB A 40 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready.Blue
+	AltRejected.Blue:
+		LSRB A 16 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready.Blue
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor LaserRifle : StealthLaserRifle 21050 {
+	//$Category Weapons
+	tag "Laser Rifle"
+	Weapon.AmmoType2 "LaserRifleAmmo"
+	Weapon.SelectionOrder 9
+	States {
+	AltFire:
+		stop
+	Spawn:
+		LSRF X -1
+		stop
+	}
+}
+
+actor LaserPuff : HHBulletPuff {
+	-ALLOWPARTICLES +PUFFONACTORS
+	Scale 0.5
+	DamageType "Energy"
+	Translation "192:207=224:247"
+	RenderStyle Add
+	Alpha 0.75
+	VSpeed 0
+	
+	States {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX ABCDEFEDCB 2 BRIGHT A_FadeOut(0.01)
+		VOLX A 1 A_FadeOut
+		wait
+	}
+}
+
+actor LaserPuffBlue : LaserPuff {
+	Translation "0:0=0:0"
+}

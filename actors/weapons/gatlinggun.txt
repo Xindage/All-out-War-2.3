@@ -1,0 +1,168 @@
+// Gatling gun
+actor GatlingGun : AOWWeapon 21045 {
+	Tag "Gatling Gun"
+	Obituary "$OB_GATLING"
+	Inventory.PickupMessage "You got the gatling gun!"
+	Weapon.SelectionOrder 7
+	Weapon.AmmoType "MachineGunAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 25
+	Weapon.AmmoType2 "MachineGunAmmo"
+	Weapon.AmmoUse2 2
+	Weapon.PreferredSkin "MarineChaingun"
+	Weapon.UpSound "weapons/up/gatling"
+	decal "BulletChip"
+	States {
+	Spawn:
+		GATG X -1
+		stop
+	Ready:
+		GATG A 1 A_WeaponReady
+		loop
+	Deselect:
+		GATG A 1 offset (-5, 34)
+		GATG A 1 offset (-16, 38)
+		GATG A 1 offset (-23, 45)
+		GATG A 1 offset (-32, 56)
+		GATG A 1 offset (-42, 66)
+		GATG A 1 offset (-51, 73)
+		GATG A 1 offset (-63, 87)
+		GATG A 1 offset (-78, 97)
+		GATG A 1 offset (-88, 111)
+		GATG A 1 offset (-99, 121)
+		GATG A 1 offset (-112, 133)
+		GATG A 1 offset (-125, 154)
+		GATG A 0 offset (-1, 33)
+		GATG A 0 A_Lower
+		wait
+	Select:
+		GATG A 1 offset (-125, 154)
+		GATG A 1 offset (-112, 133)
+		GATG A 1 offset (-99, 121)
+		GATG A 1 offset (-88, 111)
+		GATG A 1 offset (-78, 97)
+		GATG A 1 offset (-63, 87)
+		GATG A 1 offset (-51, 73)
+		GATG A 1 offset (-42, 66)
+		GATG A 1 offset (-32, 56)
+		GATG A 1 offset (-23, 45)
+		GATG A 1 offset (-16, 38)
+		GATG A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		GATG B 0 A_PlaySound ("gatling/spinup", CHAN_WEAPON)
+		GATG B 1 offset (-1, 30)
+		GATG B 1 offset (-2, 28)
+		GATG B 1 offset (-3, 26)
+		GATG B 1 offset (-5, 24)
+		GATG B 1 offset (-7, 22)
+		GATG A 1 offset (-9, 20)
+		GATG A 1 offset (-11, 17)
+		GATG A 1 offset (-14, 14)
+		GATG A 1 offset (-17, 11)
+		GATG B 3
+	Hold:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		//GATG A 0 Radius_Quake(1,6,0,1,0)
+		GATG A 1 offset (-19, 10) A_PlaySound ("minigun/loop", CHAN_WEAPON)
+		GATG A 0 A_Light2
+		GATG A 0 A_PlaySound ("minigun/fire2", 5)
+		GATF A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		GATF A 0 A_FireBullets (9.2, 4.8, 2, 2, "RiflePuff", 1, 2048)
+		TNT1 A 0 A_SetPitch(pitch-0.45)
+		GATF A 1 offset (-17, 10) Bright A_Light1
+		TNT1 A 0 A_SetPitch(pitch+0.45)
+		GATG B 0 A_Light2
+		GATF B 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		GATF B 0 A_FireBullets (9.2, 4.8, 2, random (1,2), "RiflePuff", 1, 2048)
+		GATF B 1 offset (-17, 8) Bright A_SetPitch(pitch-0.45)
+		TNT1 A 0 A_SetPitch(pitch+0.45)
+		GATG A 1 offset (-19, 8) A_Light1
+		GATG A 0 A_JumpIfNoAmmo ("SpinDown")
+		GATG A 0 A_ReFire
+		goto SpinDown
+	SpinDown:
+		GATG B 0 A_Light0
+		GATG B 0 A_PlaySound ("gatling/spin", CHAN_WEAPON)
+		GATG B 1 offset (-17, 11) A_ReFire
+		GATG B 1 offset (-14, 14) A_ReFire
+		GATG B 1 offset (-11, 17) A_ReFire
+		GATG A 1 offset ( -9, 20) A_ReFire
+		GATG A 1 offset ( -7, 22) A_ReFire
+		GATG A 1 offset ( -5, 24) A_ReFire
+		GATG A 1 offset ( -3, 26) A_ReFire
+		GATG A 1 offset ( -2, 28) A_ReFire
+		GATG B 1 offset ( -1, 30) A_ReFire
+		GATG B 5 offset (  0, 32) A_ReFire
+		GATG A 6
+		GATG B 7
+		goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		GATG B 0 A_PlaySound ("gatling/spinup", 5)
+		GATG B 1 offset (-1, 30)
+		GATG B 1 offset (-2, 28)
+		GATG B 1 offset (-3, 26)
+		GATG B 1 offset (-5, 24)
+		GATG B 1 offset (-7, 22)
+		GATG A 1 offset (-9, 20)
+		GATG A 1 offset (-11, 17)
+		GATG A 1 offset (-14, 14)
+		GATG A 1 offset (-17, 11)
+		GATG B 3
+		goto AltHold
+	AltHold:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		GATF A 0 A_PlaySound ("gatling/alt", CHAN_WEAPON)
+		GATF A 0 A_Light2
+		GATF AA 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		GATF A 0 A_FireBullets (2.6, 1.6, -1, 10, "ExplosionPuffSmall", 1, 3072)
+		GATF A 1 bright offset (-17, 12) A_SetPitch(pitch-0.47)
+		GATF A 1 bright offset (-17, 16) A_SetPitch(pitch+0.47)
+		GATG B 0 A_Light1
+		GATG B 1 bright offset (-17, 15)
+		GATG B 1 bright offset (-17, 13)
+		GATG B 1 bright offset (-17, 11)
+		GATF B 0 A_Light2
+		GATF B 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		GATF B 0 A_FireBullets (2.6, 1.6, -1, 10, "ExplosionPuffSmall", 1, 3072)
+		GATF B 1 bright offset (-17, 13) A_SetPitch(pitch-0.47)
+		GATF B 1 bright offset (-17, 16) A_SetPitch(pitch+0.47)
+		GATG A 0 A_Light1
+		GATG A 1 bright offset (-17, 15)
+		GATG A 1 bright offset (-17, 13)
+		GATG A 1 bright offset (-17, 11)
+		GATG A 0 A_JumpIfNoAmmo ("SpinDown")
+		GATG A 0 A_ReFire
+		goto SpinDown
+	}
+}
+
+actor ExplosionPuff {
+	+PUFFONACTORS
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	DamageType "Explosion"
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound ("gatling/boom", CHAN_BODY, 1.0)
+		TNT1 A 4 A_SpawnItemEx ("ExplosionSmall", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		stop
+	}
+}
+
+actor ExplosionPuffSmall : ExplosionPuff {
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound ("gatling/boom", CHAN_BODY, 0.6)
+		TNT1 A 4 A_SpawnItemEx ("ExplosionSmaller", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		stop
+	}
+}

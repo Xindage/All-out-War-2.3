@@ -1,0 +1,155 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 death script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// Death script
+script SC_DEATH DEATH {
+	// Killer information
+	int killer_t = GetTargetInfo (TARGETINFO_TID);
+	int killer_p = GetTargetInfo (TARGETINFO_PlayerNum);
+	
+	Thing_ChangeTID (0, TID_DeadPlayer);
+	TakeInventory ("ThermalCloakingTime", 90);
+	SetInventory ("InMenu", 0);
+	SetPlayerProperty (0, 0, PROP_FROZEN);
+	SetPlayerProperty (0, 0, PROP_TOTALLYFROZEN);
+	
+	// Tiberium dropped by dead harvesters
+	if (CheckInventory ("TiberiumCrystal") && !CheckInventory ("IsInSpawnRoom"))
+		SpawnSpotForced ("TiberiumCrystalDropped", 0, 0, 0);
+	
+	// Bomb-pack disarm sound
+	if (CheckWeapon ("BombPack") && !CheckInventory ("IsTerrorist"))
+		ActivatorSound ("c4/disarm", 127);
+	
+	// Activate Plasma Cannon cooldown, if player had one
+	if (CheckInventory ("PlasmaCannon"))
+		PlasmaCooldown[PlayerNumber()] = Timer() + intHolder[i_PlasmaCooldownTime];
+	
+	// How much is this thing worth?
+	int points = 1;
+	if (CheckInventory ("IsMech")) {
+		
+		if (CheckInventory ("OrcaWeapons") ||
+			CheckInventory ("RavenWeapons")) {
+			
+			points = 3;
+		}
+		else if (CheckInventory ("WolverineWeapons") ||
+			CheckInventory ("MadCatWeapons") ||
+			CheckInventory ("TitanWeapons") ||
+			CheckInventory ("JuggernautWeapons")) {
+			
+			points = 4;
+		}
+	}
+	
+	// If we're in alternate experience mode, we lose all experience now
+	if (GetConfig (CONFIG_ALTEXP))
+		SetExperience (0);
+	
+	// The victim is now allowed to request killer's health
+	CanCheckKillerHealth[PlayerNumber()] = true;
+	
+	// :V
+	deathtoll++;
+	if (deathtoll % 75 == (75 - 1))
+		SetActorState (0, "XDeath");
+	
+	// If the victim was a suicide bomber and was killed at close range with a
+	// melee weapon, the killer gets the bomb pack.
+	if (GetClass () == CLASS_SuicideBomber &&
+		AproxDistance (0, GetTargetInfo (TARGETINFO_TID)) < 80.0 && 
+		(
+			CheckTargetWeapon ("Unarmed") ||
+			CheckTargetWeapon ("EagerBeaver") ||
+			CheckTargetWeapon ("Knife")
+		))
+	{
+		GiveToTarget ("BombPackItem", 1);
+		TargetMessage ("You got the bomb pack! Terrorist!");
+		ThingSound (3800 + GetTargetInfo (TARGETINFO_TID), "terrorist/activate", 127);
+	}
+	
+	// =========================================================================
+	// KILLER POV STARTS HERE
+	
+	int n0 = PlayerNumber();
+	int t0 = PlayerTeam();
+	SetActivatorToTarget (0);
+	
+	// Remove tickets from the victim team.
+	TakeTickets (t0, points);
+	
+	if (PlayerNumber() != -1) {
+		// If the kill was done with a blood revolver, give a new clip.
+		if (!CheckInventory ("BloodRevolverKill") && CheckWeapon ("BloodRevolver"))
+			GiveInventory ("BloodRevolverAmmo", 1);
+		
+		int n1 = PlayerNumber();
+		int t1 = PlayerTeam();
+		
+		// No points for suicides
+		if (n0 != n1 && n1 != -1) {
+			GivePoints (2*points);
+			
+			LocalAmbientSound ("game/boink", 127);
+			GiveCredits (intHolder[i_CreditFragAward]);
+			
+			AddExperience(50);
+			
+			delay (5);
+			// [Cata] Moved to a_sprees.acs
+			/*
+			if (!intHolder[i_FirstBlood]) {
+				// We got first blood!
+				intHolder[i_FirstBlood] = true;
+				IntelMessage (strparam (n:0, s:"\c- gets first blood!"), true);
+			}
+			*/
+		}
+	}
+}
+
+// Client-side death script
+script SC_CL_PLAYERDEATH DEATH CLIENTSIDE {
+	// If we want our killer's health, request it now
+	int killernum = GetTargetInfo (TARGETINFO_PlayerNum);
+	if (PlayerNumber () == intHolder[i_consoleplayer] &&
+		killernum != intHolder[i_consoleplayer] &&
+		GetCVar ("zeta_cl_killerhealth"))
+	{
+		RequestScriptPuke(919, 0, 0, 0);
+	}
+	
+	// [Dusk] Mark down if we died.
+	if (PlayerNumber() == intHolder[i_consoleplayer])
+		intHolder[i_consoledead] = true;
+}
+
+// Juggernaut stomp health
+script SC_JUGGERNAUTSTOMP (void) {
+	SetActivatorToTarget (0);
+	
+	if (!CheckWeapon ("JuggernautWeapons"))
+		terminate;
+	
+	SetHealth (GetHealth () + 100);
+	if (GetHealth () > GetSpawnHealth ())
+		SetHealth (GetSpawnHealth ());
+}
+
+// [SP] Fragging a monster
+Script SC_MONSTERDEATH (int Amount) {
+	if (PlayerNumber() != -1) {
+		LocalAmbientSound ("game/boink", 127);
+		AddExperienceWithMessage (Amount);
+		GiveCredits ((3 * Amount) / 2);
+	}
+}

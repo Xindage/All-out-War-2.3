@@ -1,0 +1,116 @@
+// ============================================================================
+// The Open Deck is basically a crate chooser placed into your inventory.
+// When activated, it lets you pick an arbitrary crate effect, sans a few
+// game-breakers. The rarest effect of the powerup crate.
+actor OpenDeck : InventoryItem {
+	Inventory.PickupMessage "You got the Open Deck!"
+	Inventory.MaxAmount 1
+	Inventory.Icon "odekicon"
+	Tag "Open Deck"
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	Use:
+		TNT1 A 0 ACS_ExecuteAlways (951, 0, 5)
+		fail
+	}
+}
+
+actor CrateChooser : AOWWeapon {
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.NOAUTOFIRE
+	+WEAPON.CHEATNOTWEAPON
+	Obituary "$OB_DEFAULT"
+	Weapon.PreferredSkin "MarineFist"
+	DropItem "CrateChooserDrop"
+	States {
+	Select:
+		ODEK A 0 A_Raise
+		ODEK A 1 A_Raise
+		loop
+	DeselectFull:
+		ODEK A 0 A_Lower
+		ODEK A 1 A_Lower
+		ODEK A 0 A_Lower
+		ODEK A 1 A_Lower
+		ODEK A 0 A_Lower
+		ODEK A 1 A_Lower
+		ODEK A 0 A_Lower
+		ODEK A 1 A_Lower
+	Deselect:
+		TNT1 A 0 A_TakeInventory ("CrateChooser", 1)
+		TNT1 A 1 A_Lower
+		wait
+	Ready:
+		ODEK A 1 A_WeaponReady
+		wait
+	Rejected:
+		ODEK A 18 A_WeaponReady (WRF_NOPRIMARY)
+		goto Ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		ODEK A 0 A_JumpIf (ACS_ExecuteWithResult (955) == 0, "Rejected")
+		ODEK A 0 A_GiveInventory ("CrateChooserFiring", 1)
+		ODEK A 1 offset (0, 32)
+		ODEK A 1 offset (0, 40)
+		ODEK A 1 offset (0, 48)
+		ODEK A 1 offset (0, 56)
+		ODEK A 1 offset (0, 64)
+		ODEK A 1 offset (0, 72)
+		ODEK A 1 offset (0, 80)
+		ODEK A 1 offset (0, 88)
+		ODEK A 1 offset (0, 96)
+		ODEK A 1 offset (0, 104)
+		ODEK A 1 offset (0, 112)
+		ODEK A 1 offset (0, 120)
+		ODEK A 1 offset (0, 128)
+		TNT1 A 18 A_WeaponReady (WRF_NOSWITCH|WRF_NOPRIMARY|WRF_NOBOB) // Allow the user to cancel this
+		TNT1 A 0 A_TakeInventory ("CrateChooserFiring", 1)
+		TNT1 A 8 ACS_ExecuteAlways (955, 0, 2)
+		TNT1 A 0 A_JumpIfInventory ("CrateChooserFailure", 1, "Failure")
+		TNT1 A 0 A_TakeInventory ("CrateChooser", 1)
+		goto Ready
+	Failure:
+		ODEK A 1 offset (0, 128)
+		ODEK A 1 offset (0, 120)
+		ODEK A 1 offset (0, 112)
+		ODEK A 1 offset (0, 104)
+		ODEK A 1 offset (0, 96)
+		ODEK A 1 offset (0, 88)
+		ODEK A 1 offset (0, 80)
+		ODEK A 1 offset (0, 72)
+		ODEK A 1 offset (0, 64)
+		ODEK A 1 offset (0, 56)
+		ODEK A 1 offset (0, 48)
+		ODEK A 1 offset (0, 40)
+		ODEK A 1 offset (0, 32)
+		ODEK A 0 A_TakeInventory ("CrateChooserFiring", 1)
+		ODEK A 0 A_TakeInventory ("CrateChooserFailure", 1)
+		goto Ready
+	AltFire:
+		ODEK A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		ODEK A 0 A_JumpIfInventory ("CrateChooserFiring", 1, "Failure")
+		ODEK A 1 ACS_ExecuteAlways (955, 0, 1)
+		goto Ready
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor CrateChooserDrop : AOWWeapon {
+	states {
+	Spawn:
+		TNT1 AA 0 A_SpawnItemEx ("PowerupCrate")
+		stop
+	}
+}
+
+actor CrateChooserRotation : Inventory {
+	Inventory.MaxAmount 100
+}
+
+actor CrateChooserFiring : Inventory {}
+actor CrateChooserGo : Inventory {}
+actor CrateChooserFailure : Inventory {}

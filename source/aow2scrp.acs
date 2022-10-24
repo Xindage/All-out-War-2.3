@@ -1,0 +1,772 @@
+/****************************************************************************************************
+ ** All Out War 2: The Second Coming ACS script                                                    **
+ ** Credit to VoltlocK for originally creating the engine                                          **
+ ** With modifications by Eruanna, Dusk, the Omega team, Catastrophe, and Swordgrunt               **
+ ** Continued by jdagenet																		   **
+ **                                                                                                **
+ ** You may use portions of this script in your project as long as you give credit where credit is **
+ ** due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!        **
+ ****************************************************************************************************/
+
+#library "aow2scrp.acs"
+#include "zcommon.acs"
+
+// ============================================================================
+// CONSTANTS
+
+// Version numbers
+#libdefine VERSION_MAJOR 15
+#libdefine VERSION_MINOR 98
+
+// Spacing between SMALLFONT rows, in HUDMessage units
+#define SMALLSPACE 0.018
+
+// ============================================================================
+// Intel HudMessage coords
+#define INTEL_XPOS 0.5
+#define INTEL_YPOS 0.065
+#define INTEL_YPOS2 0.0575
+
+// [Cata] Supporting multiple messages on intel now.
+#define intel_maxMessages 18 	// Max amount of intel on the screen
+#define intel_msgSpacing 0.02	// Spacing between each intel message
+#define intel_msgBaseID 15000	// Base id of intel messages, so this will range from 15000 to 15000+intel_maxMessages
+int intel_activeMsg[intel_maxMessages];	//States whether or not a message is being displayed.
+#define intel_ticrate 5 // Update rate of active messages, would be 1 but changed to 5 to see how it affects performance.
+#define intel_yposlocal 0.77 // Global intel messages, like warnings take up the top area, so local messages (like you have ranked up..) are elsewhere.
+#define intel_xposlocal 0.5
+
+
+// ============================================================================
+// Rank identifiers
+#define RANK_PRIVATE 0
+#define RANK_CORPORAL 1
+#define RANK_SERGEANT 2
+#define RANK_MASTERSGT 3
+#define RANK_OFFICER 4
+#define RANK_LIEUTENANT 5
+#define RANK_CAPTAIN 6
+#define RANK_MAJOR 7
+#define RANK_LTCOLONEL 8
+#define RANK_COLONEL 9
+#define RANK_GENERAL 10
+// ----
+#define MAX_RANKS 11
+
+// These determine XP requirements for level-up
+#define XPREQ_CORPORAL 250
+#define XPREQ_SERGEANT 500
+#define XPREQ_MASTERSGT 1000
+#define XPREQ_OFFICER 1500
+#define XPREQ_LIEUTENANT 2000
+#define XPREQ_CAPTAIN 2500
+#define XPREQ_MAJOR 3000
+#define XPREQ_LTCOLONEL 3500
+#define XPREQ_COLONEL 4000
+#define XPREQ_GENERAL 5000
+
+// ============================================================================
+// Hudmessage values
+#define HM_1TIC  1872 // (1/35) << 16
+#define HM_2TICS 3745 // (2/35) << 16
+#define HM_3TICS 5617 // (3/35) << 16
+#define HM_4TICS 7489 // (4/35) << 16
+#define HM_5TICS 9362 // (5/35) << 16
+
+// ============================================================================
+// Building healths.. should use spawn healths instead of 
+#define HP_BARRACKS 18000
+#define HP_REFINERY 27000
+#define HP_PLANT 18000
+#define HP_FACTORY 27000
+#define HP_REPAIR 13500
+#define HP_OBELISK 13500
+#define HP_MINIREF 5850
+#define HP_REGENS 9000
+#define HP_PORTAL 3000
+
+// ============================================================================
+// Building identifiers
+#define BUILDING_ALL -1
+#define BUILDING_BARRACKS 0
+#define BUILDING_REFINERY 1
+#define BUILDING_RESCENTRE 2
+#define BUILDING_FACTORY 3
+#define BUILDING_REPAIR 4
+#define BUILDING_OBELISK 5
+#define BUILDING_MINIREF 6
+#define BUILDING_HEALTHREGEN 7
+#define BUILDING_AMMOREGEN 8
+#define BUILDING_PORTAL1 9
+#define BUILDING_PORTAL2 10
+// ----
+#define MAX_BUILDINGS 11
+
+// ============================================================================
+// Thing IDs
+// TODO: move these to 1000+ range
+#define TID_BARRACKS_BLUE 101
+#define TID_BARRACKS_RED 201
+#define TID_REFINERY_BLUE 103
+#define TID_REFINERY_RED 203
+#define TID_RESCENTRE_BLUE 105
+#define TID_RESCENTRE_RED 205
+#define TID_FACTORY_BLUE 107
+#define TID_FACTORY_RED 207
+#define TID_REPAIR_BLUE 109
+#define TID_REPAIR_RED 209
+#define TID_OBELISK_BLUE 114
+#define TID_OBELISK_RED 214
+#define TID_CRATE 401
+#define TID_TIBERIUM 402
+#define TID_CRATESPOT_START 410 // 410 - 422
+#define TID_CRATESPOT_END 442
+#define TID_MINIREF_BLUE 901
+#define TID_MINIREF_RED 900
+#define TID_HEALTHREGEN_BLUE 903
+#define TID_HEALTHREGEN_RED 902
+#define TID_AMMOREGEN_BLUE 905
+#define TID_AMMOREGEN_RED 904
+
+// New TIDs
+#define TID_TELENODE_BLUE1			1500
+#define TID_TELENODE_BLUE2			1501
+#define TID_TELENODE_RED1			1502
+#define TID_TELENODE_RED2			1503
+#define TID_TELENODE_TELEDEST		1504 // - 1507
+#define TID_TELENODE_FX				1508 // - 1511
+// 1512 - 1519
+#define TID_MARINE					1520 // - 1544
+
+#define TID_TEMP					5000 // - 5499
+#define MAX_TEMPTID					500
+
+#define TID_DeadPlayer				9999
+
+// ============================================================================
+// Script numbers. Commented ones are free.
+// 7** range reserved for menus.
+// TODO: Populate the 8** range
+#libdefine SC_BerserkSound				800
+#libdefine SC_ConsolePlayerDistance		801
+#libdefine SC_Pref_FreezeCMD			802
+#libdefine SC_Pref_MenuToggle			803
+#libdefine SC_Pref_RequestFreeze		804
+// [...]
+#libdefine SC_BombPackItem				807
+// [...]
+#libdefine SC_HUDDaemon					809
+// [...]
+#libdefine SC_AOWVersionInfo			813
+#libdefine SC_GiveCredits				815
+#libdefine SC_SelfHealHealth			816
+#libdefine SC_ServerSettings			817
+#libdefine SC_PlayerRespawn				818
+#libdefine SC_PlayerDisconnect			819
+#libdefine SC_RepairHUD					820
+#libdefine SC_BeaconTimer				821
+#libdefine SC_CL_Respawn				822
+#libdefine SC_RepairTurretCheck			823
+#libdefine SC_SuperNukeCheck			824
+#libdefine SC_PushAngle					825
+#libdefine SC_PopAngle					826
+#libdefine SC_InitMonster				827
+#libdefine SC_UseGrenade				828
+#libdefine SC_JuggArmorHelp				829
+#libdefine SC_CheckC4Timer				830
+#libdefine SC_CheckC4Placement			831
+// [...]
+#libdefine SC_BotEnter					888
+#libdefine SC_BotRespawn				889
+
+// ------------------------------------
+// 9** scripts
+#libdefine SC_IdentifyTarget			900
+//										901
+//										902
+#libdefine SC_SillyThings				903
+//#libdefine SC_TortoisePassenger			904
+#libdefine SC_WeaponCheck				905
+#libdefine SC_GiveToTarget				906
+#libdefine SC_JetpackToggle				907
+#libdefine SC_CL_JETPACKQUAKE			908
+#libdefine SC_CL_FXCVAR					909
+#libdefine SC_CL_RENDERERCVAR			910
+#libdefine SC_CL_SYNCTICKETS			911
+#libdefine SC_PLAYERENTER				912
+#libdefine SC_WEAPONFIRECHECK			913
+//#libdefine SC_TortoiseSpecial			914
+#libdefine SC_CREDITFLOW				915
+#libdefine SC_CL_SNIPERZOOM				916
+#libdefine SC_DEVELOPERMODE				917
+#libdefine SC_CL_UPDATEMENU				918
+#libdefine SC_KILLERHEALTH				919
+#libdefine SC_ARMORITEMUSE				920
+#libdefine SC_CL_SHOWSPEEDFACTOR		921
+#libdefine SC_CL_ARMORPREDICT			922
+#libdefine SC_JUGGERNAUTSTOMP			923
+#libdefine SC_BeaconInventory			924
+#libdefine SC_CL_NukeTimeWarning		925
+#libdefine SC_CL_HUDInit				926
+#libdefine SC_HUDInterpolator			927
+#libdefine SC_CL_PLAYERDISCONNECT		928
+#libdefine SC_CL_PLAYERENTER			929
+#libdefine SC_BUILDINGDAMAGE			930
+#libdefine SC_CL_UPDATEHUD				931
+#libdefine SC_SYNC_GETSNAPSHOT			932
+#libdefine sC_CL_SYNC_GETSNAPSHOT		933
+#libdefine SC_CL_SYNCCONFIG				934
+#libdefine SC_TELENODE_TIDREQUEST		935
+#libdefine SC_TELENODE_INIT				936
+#libdefine SC_TELENODE_FUNCTION			937
+#libdefine SC_MARINE_INIT				938
+#libdefine SC_MARINE_COMPENSATION		939
+#libdefine SC_CL_SPECTATORTELEPORT		940
+#libdefine SC_ADMIN_RCON				941
+#libdefine SC_CCMD_TEAMSWITCH			942
+#libdefine SC_CLIENT					943
+#libdefine SC_CL_BEACONPLANTED			944
+#libdefine SC_ADMIN_CLIENT				945
+#libdefine SC_WhoAmI					946
+#libdefine SC_MONSTERDEATH				947
+#libdefine SC_TIMEDELAY					948
+#libdefine SC_LOCATIONTEST				949
+#libdefine SC_CCMD_SELLWEAPON			950
+#libdefine SC_CUSTOMINVENTORY			951
+#libdefine SC_MEDICATIONFIELD			952
+#libdefine SC_THERMALCLOAK				953
+#libdefine SC_FullRefillPack			954
+#libdefine SC_OPENDECK					955
+#libdefine SC_CL_RADAR					956
+#libdefine SC_BEACON_UNDERWATER			957
+#libdefine SC_TIMEGUN					958
+#libdefine SC_CL_TIMEGUNHUD				959
+#libdefine SC_EventHandler				960
+#libdefine SC_DOTELEPORTTOFIELD			961
+#libdefine SC_TEAMSHUFFLE				962
+#libdefine SC_CL_MISSILETARGETER		963
+#libdefine SC_TargetInfo				964
+#libdefine SC_Menu						965
+#libdefine SC_CL_BOMBCRATEFX			966
+#libdefine SC_MARINE_STATS				967
+#libdefine SC_MARINE_DEATH				968
+#libdefine SC_MENU_SELECT				969
+#libdefine SC_MENU_SERVERINIT			970
+#libdefine SC_UTILITY_CHECKADVTURRETS	971
+//#libdefine SC_CL_TortoiseHUD			972
+#libdefine SC_CLIENTFX					973
+#libdefine SC_DAMAGEOVERTIME			974
+#libdefine SC_Stealth					975
+#libdefine SC_MechMorph					976
+#libdefine SC_CL_Effects2				977
+#libdefine SC_BerserkArmor				978
+#libdefine SC_CL_Effects				979
+#libdefine SC_UtilityHUD				980
+#libdefine SC_CCMD_SHOWARMOR			981
+#libdefine SC_CL_TEAMLOG				982
+#libdefine SC_RAZORWIRE					983
+#libdefine SC_DONATIONREQUEST			984
+#libdefine SC_SETARMORGRADE				985
+#libdefine SC_CL_EFFECTTRAIL			986
+#libdefine SC_CL_UPDATEDONATEHUD		987
+#libdefine SC_CL_DONATE					988
+#libdefine SC_DONATEHUD					989
+#libdefine SC_MARINE_COMENSATION		990
+#libdefine SC_CL_PLAYERDEATH			991
+#libdefine SC_TEAMMESSAGE_TICKER		992
+//										993
+#libdefine SC_Death						994
+//										995
+#libdefine SC_GameOver					996
+#libdefine SC_SuddenDeath				997
+#libdefine SC_SuddenDeathCounter		998
+#libdefine SC_GAMEINIT					999
+
+// ============================================================================
+#define STEALTH_On 0
+#define STEALTH_Off 1
+#define STEALTH_Flash 2
+#define STEALTH_ForceOff 3
+
+#define TARGETINFO_X			0  // X-coordinate
+#define TARGETINFO_Y			1  // Y-coordinate
+#define TARGETINFO_Z			2  // Z-coordinate
+#define TARGETINFO_Health		3  // Health
+#define TARGETINFO_Angle		4  // Angle
+#define TARGETINFO_TID			5  // Thing ID
+#define TARGETINFO_PlayerNum	9  // Player number
+#define TARGETINFO_SpawnHealth	10 // Spawn health
+#define TARGETINFO_Team			11 // Affiliated team
+#define TARGETINFO_WeaponCheck	12 // for CheckTargetWeapon
+#define TARGETINFO_Name			13 // Name (akin to print (n:0))
+#define TARGETINFO_ArmorType	14
+
+#define OVERTIME_FIRE 0
+#define OVERTIME_CHEM 1
+
+#define SELFHEALHEALTH 50
+
+// ============================================================================
+// Class array keys
+#define CK_NAME 0
+#define MAX_CLASSKEYS_str 1
+
+#define CK_ITEM0 		0
+#define CK_ITEM1 		1
+#define CK_ITEM2 		2
+#define CK_ITEM3 		3
+#define CK_ITEM4 		4
+#define CK_ITEM5 		5
+#define CK_COST 		6
+#define CK_SPEED 		7
+#define CK_DEPENDENCY 	8
+#define CK_ARMOR 		9
+#define CK_ARMOD 		10
+#define CK_FRAGS 		11
+#define CK_C4 			12
+#define CK_FLAGS 		13
+#define CK_FLASH		14	
+#define MAX_CLASSKEYS_int 15
+
+// Class flags
+#libdefine CF_NoPistol			1 << 0
+#libdefine CF_IsHarvester		1 << 1
+#libdefine CF_IsSniper			1 << 2
+#libdefine CF_IsStealth			1 << 3
+#libdefine CF_Warning			1 << 4
+#libdefine CF_CantPilot			1 << 5
+#libdefine CF_IsMedic			1 << 6
+#libdefine CF_IsTimeCop			1 << 7
+#libdefine CF_Support			1 << 8
+#libdefine CF_IsKarasawa		1 << 9
+
+// Dependency status
+#define DEP_NONE 0
+#define DEP_BARRACKS 1
+#define DEP_CENTRE 2
+#define DEP_REFINERY 3
+
+// ============================================================================
+// Item keys
+#define IK_NAME			0
+#define IK_ITEM0		1
+#define IK_ITEM1		2
+#define IK_ITEM2		3
+#define MAX_ITEMKEYS_STR 4
+
+#define IK_COUNT0		0
+#define IK_COUNT1		1
+#define IK_COUNT2		2
+#define IK_VALUE		3
+#define MAX_ITEMKEYS_INT 4
+
+// ============================================================================
+// Research keys and categories
+#define RCK_NAME 0
+#define RCK_DESCRIPTION 1
+#define NUM_RESEARCH_KEYS_STR 2
+
+#define RCK_COST 0
+#define RCK_CATEGORY 1
+#define NUM_RESEARCH_KEYS_INT 2
+
+#define RC_CAT_UPGRADE 0
+#define RC_CAT_EXTENSION 1
+#define RC_CAT_ADDON 2
+// ----
+#define NUM_RC_CATS 3
+
+// ============================================================================
+// Menu stuff
+#define UK_NAME 0
+#define UK_DESCRIPTION 1
+#define MAX_UTILKEYS_str 2
+
+#define UK_COST 1
+#define UK_HEALTH 2
+#define UK_BUILDTIME 3
+#define UK_MENUCATEGORY 4
+#define UK_MENUELEMENT 5
+#define MAX_UTILKEYS_int 6
+
+// ----
+
+#define MAX_MENU_CATEGORIES 8
+#define MAX_MENU_ITEMS 10
+
+#define MENU_HID 12000
+#define HID_UTILITY_SIDEHUD 900
+
+#define MENU_None			0
+#define MENU_Utility		1
+#define MENU_Purchase		2
+#define MENU_Research		3
+#define MENU_Factory		4
+#define MENU_Preferences	5
+#define MENU_OpenDeck		6
+// ----
+#define MAX_MENU			6
+
+// ===========================
+// Message types, for the menu
+#define MSGTYPE_NORMAL		0 // Normal message
+#define MSGTYPE_ERROR		1 // GenericError message; sound and red text
+#define MSGTYPE_SUCCESS		2 // Success message; beep and green text
+
+// Menu coordinates
+#define UMENU_X1 0.5
+#define UMENU_Y1 -0.15
+#define UMENU_X2 -0.3
+#define UMENU_Y2 -0.25
+#define UMENU_X3 -0.5
+#define UMENU_Y3 -0.25
+#define UMENU_X4 -0.3
+#define UMENU_Y4 -0.55
+#define UMENU_X5 UMENU_X4
+#define UMENU_Y5 UMENU_Y4-0.3
+
+// ============================================================================
+// MAXPLAYERS - max amount of players the engine caters for
+#define MAXPLAYERS 64
+
+// Ticrate stuff
+#define TICRATE 35
+#define MINUTETICS (TICRATE * 60)
+
+// ============================================================================
+// Armor constants
+#define NOCHANGE 255
+#define ARMOD_NOCHANGE 0
+#define ARMOD_FIRE 1
+#define ARMOD_CHEM 2
+#define ARMOD_ENERGY 3
+#define ARMOD_EXPLO 4
+#define ARMOD_BULLETPROOF 5
+#define ARMOD_NONE 6
+#define AGF_ADDITIVE 8
+#define AGF_DONTSUBTRACT 16
+#define AGF_DONTADD 32
+
+// Class identifiers
+#libdefine CLASS_None					-1
+#libdefine CLASS_Gunman					0
+#libdefine CLASS_Engineer				1
+#libdefine CLASS_Minigunner				2
+#libdefine CLASS_Technician				3
+#libdefine CLASS_Flamer					4
+#libdefine CLASS_Rifleman				5
+#libdefine CLASS_Machinegunner			6
+#libdefine CLASS_Grenadier				7
+#libdefine CLASS_Rocketeer				8
+#libdefine CLASS_StealthTrooper			9
+// ----
+#libdefine CLASS_GaussGunner			10
+#libdefine CLASS_ChemWarrior			11
+#libdefine CLASS_ShockTrooper			12
+#libdefine CLASS_Commando				13
+#libdefine CLASS_Shotgunner				14
+#libdefine CLASS_SuicideBomber			15
+#libdefine CLASS_Sniper					16
+#libdefine CLASS_UtilityGuy				17
+#libdefine CLASS_DemoExpert				18
+#libdefine CLASS_FieldMedic				19
+// ----
+#libdefine CLASS_LaserChaingunner		20
+#libdefine CLASS_JetTrooper				21
+#libdefine CLASS_TiberiumAutorifleman	22 // this thing needs a shorter name, seriously.
+#libdefine CLASS_DoubleShotgunner		23
+#libdefine CLASS_PlasmaGunner			24
+#libdefine CLASS_Artillery				25
+#libdefine CLASS_TimeCop				26
+#libdefine CLASS_Harvester				27
+#libdefine CLASS_AdvHarvester			28
+#libdefine CLASS_CombustionGunner		29
+#libdefine CLASS_ChronoArcher			30
+#libdefine CLASS_KarasawaSoldier		31
+#libdefine CLASS_NailMachineGunner		32
+// ----
+#libdefine NUMCLASSES					33 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
+
+// Item identifiers
+#define ITEM_None				0
+#define ITEM_Handgun			1
+#define ITEM_SMG				2
+#define ITEM_Shotgun			3
+#define ITEM_SSG				4
+#define ITEM_Machinegun			5
+#define ITEM_Gatling			6
+#define ITEM_Rifle				7
+#define ITEM_Gauss				8 
+#define ITEM_Grenade			9
+#define ITEM_Stealth			10
+// ----
+#define ITEM_LaserRifle			11
+#define ITEM_TimeGun			12
+#define ITEM_Artillery			13
+#define ITEM_LaserChain			14
+#define ITEM_Utility			15
+#define ITEM_PlasmaCannon		16
+#define ITEM_ChemSpray			17
+#define ITEM_TibRifle			18
+#define ITEM_TibRifleWeak		19
+#define ITEM_AdvRepair			20
+// ----
+#define ITEM_Repair				21
+#define ITEM_Decon				22
+#define ITEM_BombSquad			23
+#define ITEM_HealGun			24
+#define ITEM_Missile			25
+#define ITEM_Flamer				26
+#define ITEM_ShockRifle			27
+#define ITEM_Sniper				28
+#define ITEM_Plasma				29
+#define ITEM_Knife				30
+#define ITEM_Chainsaw			31
+// ----
+#define ITEM_BombPack			32 // for Suicide Bomber
+#define ITEM_RemoteC4			33
+#define ITEM_Jetpack			34 // Jetpack inventory for jet trooper
+#define ITEM_Mine_x4			35 // 4 mines
+#define ITEM_Mine_x6			36 // 6 mines
+#define ITEM_MedField			37
+#define ITEM_ArmorUp			38 // Armor upgrade
+#define ITEM_Beacon				39 // Beacon item
+#define ITEM_CombustRifle		40
+#define ITEM_CombustRifleWeak	41
+#define ITEM_SniperRifleWeak	42
+#define ITEM_CryoBow			43
+#define ITEM_Karasawa			44
+#define ITEM_NailMG				45
+// -- Total of items
+#define MAX_ITEMS				46 // Amount of items in the above list
+#define ITEM_maxGrenades		4
+#define ITEM_maxFlashBangs		4
+#define ITEM_maxC4 				4
+
+
+// ============================================================================
+// Miscallenous stuff
+
+// How many points does researching stuff give you?
+// Also used for miniref and utility-built ammo/health regens
+#define RESEARCHPOINTS 12
+
+#define MAX_MARINES 24
+
+// Utility limits
+//#define MAX_RAZORWIRE 20
+#define MAX_PROXYMINE 50
+#define MAX_MINIRAVENS 5
+#define MAX_TURRETS 15
+
+#define MAX_TURRET_DISTANCE 2500
+#define MIN_ENEMY_DISTANCE 1500
+
+#define TEAM_NONE 255
+
+// Flags for resign
+#define RF_FORCE 1
+
+#define MECH_ORCA 0
+#define MECH_Tortoise 1
+#define MECH_RAVEN 2
+#define	MECH_MASTODON 3
+#define MECH_WOLVERINE 4
+#define MECH_MADCAT 5
+#define MECH_TITAN 6
+#define MECH_RHINO 7
+#define MECH_JUGGERNAUT 8
+// ----
+#define NUM_MECHS 9
+
+#define MECHWEIGHT_LIGHT	0
+#define MECHWEIGHT_MEDIUM	1
+#define MECHWEIGHT_HEAVY	2 
+// ----
+#define NUM_MECH_WEIGHTS	3
+
+// [JD] The amount charged for players in mechs to use the Repair Pad.
+#define REPAIRPAD_LIGHTCHARGEAMOUNT		30
+#define REPAIRPAD_MECHCHARGEAMOUNT		40
+
+// [Dusk] How many troops can the tortoise carry?
+//#define TORTOISE_PASSENGERS 5
+
+// [Dusk] Flags for mechs.. just one here for now
+#define MF_POWER	(1 << 0)
+
+#define MK_NAME 0
+#define MK_MORPH 1
+#define MK_AMMO 2
+#define MK_DESCRIPTION 3
+#define NUM_MECH_KEYS_STR 4
+
+#define MK_COST 0
+#define MK_HEALTH 1
+#define MK_WEIGHT 2
+#define MK_FLAGS 3
+#define NUM_MECH_KEYS_INT 4
+
+// [Dusk] How long must clients wait until they ask for another snapshot?
+#define SNAPSHOT_DELAY 15
+
+#define SURRENDER_WAIT_TIME 20
+
+#define PEER_CLIENT 0
+#define PEER_SERVER 1
+
+// =============================
+// [Dusk] Team message selectors
+#define TMSG_NEWCLASS 0
+#define TMSG_ADDONPURCHASE 1
+#define TMSG_MECHPURCHASE 2
+#define TMSG_MECHEJECT 3
+#define TMSG_TIBREFINE 4
+#define TMSG_RESEARCH 5
+#define TMSG_RANKUP 6
+#define TMSG_CRATE 7
+#define TMSG_RESIGN 8
+#define TMSG_CONSTRUCT 9
+#define TMSG_DESTRUCT 10
+#define TMSG_TELELINK 11
+#define TMSG_TEAMSWITCH 12
+#define TMSG_IONNUKE 13
+// ----
+#define NUM_MSGTYPES 14
+
+// ============================================================================
+// VARIABLES
+
+int intHolder[256] =
+{
+	0,
+	0,
+	0,
+	1, //useteleporternodes
+	-1, //consoleplayer
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	300, //RedBeaconTime
+	300, //BlueBeaconTime
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	0 // end
+};
+
+#define i_Developer 0
+#define i_DeveloperSafetyLock 1
+#define i_FirstBlood 2
+#define i_UseTeleporterNodes 3
+#define i_consoleplayer 4
+#define i_consoledead 5
+#define i_CreditFragAward 6
+#define i_CreditAwardTime 7
+#define i_CreditAwardAmount 8
+#define i_CreditRepairAmount 9
+#define i_SuddenDeath 10
+#define i_TicketPool 11
+#define i_StartingTickets 12
+#define i_TournamentMode 13
+#define i_BeaconPurchaseDelay 14
+#define i_RedBeaconTime 15
+#define i_BlueBeaconTime 16
+#define i_gameover 17
+#define i_LastAttackMessage 18
+#define i_InterpolatorActive 19
+#define i_MedicBonusNeed 20
+#define i_g_CreditDelta 21
+#define i_MenuFrozen 22
+#define i_GotSnapshot 23
+#define i_g_CrateSeed 24
+#define i_PlasmaCooldownTime 25
+
+str MenuName;
+// [Dusk] Network state
+#libdefine NETSTATE_Unknown		0 // [Dusk] not determined yet
+#libdefine NETSTATE_Client		1
+#libdefine NETSTATE_Server		2
+#libdefine NETSTATE_Offline		(NETSTATE_Client | NETSTATE_Server) // 3
+int NetState = NETSTATE_UNKNOWN;
+
+// [Dusk] Amount of deaths on this server
+global int 63:deathtoll;
+
+// For intro msg
+#define introMsgID 5200
+#define maxIntroMsg 10
+
+// ============================================================================
+// FILE INCLUDES
+
+// ============================================================================
+// These come first as they provide globally used stuff
+#include "a_svnrevision.acs" // autogenerated
+#include "a_staticdata.acs"
+#include "a_defs.acs"
+#include "a_utildefs.acs"
+#include "a_armor.acs"
+#include "a_items.acs"
+#include "a_mapconfig.acs"
+#include "a_classes.acs"
+#include "a_functions.acs"
+#include "a_sync.acs"
+#include "a_credits.acs"
+#include "a_xp.acs"
+//#include "a_hax.acs"
+
+// Rest of the code
+#include "a_admin.acs"
+#include "a_basehud.acs"
+#include "a_bases.acs"
+#include "a_botmarines.acs"
+#include "a_bots.acs"
+#include "a_client.acs"
+#include "a_core.acs"
+#include "a_crate.acs"
+#include "a_death.acs"
+#include "a_donate.acs"
+#include "a_hud.acs"
+#include "a_jetpack.acs"
+#include "a_karasawa.acs"
+#include "a_mechs.acs"
+#include "a_menu.acs"
+#include "a_menu_util.acs"
+#include "a_menu_purchase.acs"
+#include "a_menu_research.acs"
+#include "a_menu_factory.acs"
+#include "a_menu_opendeck.acs"
+#include "a_misc.acs"
+#include "a_netscripts.acs"
+#include "a_nukes.acs"
+#include "a_opendeck.acs"
+#include "a_printf.acs"
+#include "a_regen.acs"
+#include "a_repfac.acs"
+#include "a_repair.acs"
+#include "a_research.acs"
+#include "a_spawnroom.acs"
+#include "a_sprees.acs"
+#include "a_stealth.acs"
+#include "a_surrender.acs"
+#include "a_suddendeath.acs"
+#include "a_teambalance.acs"
+#include "a_teleporter.acs"
+#include "a_timegun.acs"
+#include "a_tiberium.acs"
+#include "a_utility.acs"

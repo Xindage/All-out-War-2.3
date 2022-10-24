@@ -1,0 +1,59 @@
+// [Dusk] Some access functions for map configuration
+
+#libdefine MP_Flags				0
+// ----
+#define NUM_MapKeys				4
+
+#libdefine MAPF_NoMechs			1 << 0 // No mechs in the map
+#libdefine MAPF_EventScripts	1 << 1 // Use event scripts - add script SC_EventHandler to handle events
+#libdefine MAPF_NoDefEvents		1 << 2 // Don't use default events at all, only custom ones.
+
+#libdefine SC_EventScript				960
+
+// ============================================================================
+// Event scripts
+#libdefine ACTION_Destroy_Barracks		0
+#libdefine ACTION_Destroy_Refinery		1
+#libdefine ACTION_Destroy_Plant			2
+#libdefine ACTION_Destroy_Factory		3
+#libdefine ACTION_Destroy_Obelisk		4
+#libdefine ACTION_Destroy_Repair		5
+#libdefine ACTION_SuddenDeath			6
+#libdefine ACTION_CratePickup			7
+#libdefine ACTION_CrateRespawn			8
+#libdefine ACTION_ClassPurchase			9
+#libdefine ACTION_MechPurchase			10
+#libdefine ACTION_ResearchPurchase		11
+
+// =============================================================================
+function int GetMapProperty (int prop) {
+	if (prop < 0 || prop >= NUM_MapKeys) {
+		Log (s:"GetMapProperty: Tried to access unknown property ", d:prop, s:"!");
+		return 0;
+	}
+	
+	return MapConfig[prop];
+}
+
+function void SetMapProperty (int prop, int val) {
+	if (prop < 0 || prop >= NUM_MapKeys) {
+		Log (s:"SetMapProperty: Tried to access unknown property ", d:prop, s:"!");
+		return;
+	}
+	
+	MapConfig[prop] = val;
+}
+
+// =============================================================================
+// Convienence functions
+function void SetMapFlags (int mask) {
+	MapConfig[MK_Flags] |= mask;
+}
+
+function void ClearMapFlags (int mask) {
+	MapConfig[MK_Flags] &= ~mask;
+}
+
+function int CheckMapFlags (int mask) {
+	return (MapConfig[MK_Flags] & mask);
+}

@@ -1,0 +1,745 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 class and item definitions
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+/*================
+ *    ITEMS
+ * ===============
+ *
+ * Table of various weapons and items by identifier.
+ *
+ * Pass an identifier to GiveItem to give the player the item
+ * desired.
+ *
+ * Weapons must be defined here in order to be able to be given
+ * to classes or to be able to be sold.
+ *
+ * Identifier constant chain MUST be in the same
+ * order as the actual array.
+ *
+ * Keys:
+ *	- nice name
+ *	- item name 1
+ *	- item name 2
+ *	- item name 3
+ *	- item count 1
+ *	- item count 2
+ *	- item count 3
+ *	- credit value (0 = unsellable)
+ *
+ * To add a new item:
+ *	1. add a constant for it at the end of the list.
+ *	2. bump MAX_ITEMS at the end of the list, it must be equal to the amount of items.
+ *	3. add an entry to Items[][] at the end for it
+ */
+
+// BEGIN ITEM DEFINITION TABLE
+str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
+	{"", "", "", ""}, // Mandatory empty entry for no item
+	{"Handgun", "Handgun", "NewClipAmmo", ""},
+	{"Sub-Machine Gun", "SubMachineGun", "NewClipAmmo", ""},
+	{"Shotgun", "Boomstick", "ShotgunAmmo", ""},
+	{"Double Shotgun", "DoubleShotgun", "ShotgunAmmo", ""},
+	{"Machine Gun", "MachineGun", "MachineGunAmmo", ""},
+	{"Gatling Gun", "GatlingGun", "MachineGunAmmo", ""},
+	{"Rifle", "Rifle", "RifleAmmo", "RifleGrenadeAmmo"},
+	{"Gauss Rifle", "GaussRifle",  "GaussRifleAmmo", ""},
+	{"Grenade Launcher", "GrenadeLauncher", "GrenadeAmmo", ""},
+	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", "StealthCharge"},
+	{"Laser Rifle", "LaserRifle", "LaserRifleAmmo", ""},
+	{"Time Gun", "TimeGun", "TimeGunAmmo", ""},
+	{"Artillery Cannon", "ArtilleryCannon", "ArtilleryShellAmmo", ""},
+	{"Laser Chaingun", "LaserChaingun", "LaserChaingunAmmo", ""},
+	{"Utility Gun", "UtilityGun", "", ""},
+	{"Plasma Cannon", "PlasmaCannon", "PlasmaCannonAmmo", ""},
+	{"Chemical Sprayer", "ChemicalSprayer", "ChemicalAmmo", "ChemicalGrenadeAmmo"},
+	{"Tiberium Autorifle", "TiberiumAutorifle", "TE21CalAmmo", ""},
+	{"Tiberium Autorifle (weak)", "TiberiumAutorifleWeak", "TE21CalAmmo", ""},
+	{"Upgraded Repair Gun", "RepairGun", "RepairGunUpgrade", "",},
+	{"Repair Gun", "RepairGun", "", ""},
+	{"Deconstruction Gun", "RemoverGun", "", ""},
+	{"Bomb-Squad Gun", "BombSquadGun", "", ""},
+	{"Heal Gun", "HealGun", "", ""},
+	{"Missile Launcher", "MissileLauncher", "MissileAmmo", ""},
+	{"Flamethrower", "Flamer", "FlamerAmmo", "PhosphorusGrenadeAmmo"},
+	{"Shock Rifle", "ShockRifle", "GeneporiumCharge", ""},
+	{"Sniper Rifle", "SniperRifle", "SniperAmmo", ""},
+	{"Plasma Rifle", "PlasmaGun", "PlasmaRifleAmmo", ""},
+	{"Stealth Knife", "Knife", "StealthCharge", ""},
+	{"Chainsaw", "EagerBeaver", "", ""},
+	{"Bomb Pack", "BombPack", "", ""},
+	{"Remote C4", "RemoteC4", "RemoteC4Ammo", ""},
+	
+	{"Jetpack", "Jetpack", "JetpackFuel", ""},
+	{"Mines (x4)", "ProxyMine", "ProxyMineCount", ""},
+	{"Mines (x6)", "ProxyMine", "ProxyMineCount", ""},
+	{"Medication Field", "MedicationFieldItem", "MedicationFieldCount"},
+	{"+1 Armor Upgrade", "HasArmorUpgrade", "ArmorUpgrade", "CantMech"},
+	{"Superweapon Beacon", "BeaconItem", "", ""},
+	
+	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},
+	{"Combustion Autorifle (weak)", "CombustionAutorifleWeak", "FA21CalAmmo", ""},
+	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperAmmo", ""},
+	{"Chrono Bow", "ChronoBow", "ChronoBolt", ""},
+	{"Karasawa", "Karasawa", "KarasawaAmmo", ""},
+	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},/*
+	{"Advanced Sniper Rifle", "AdvancedSniperRifle", "RifleAmmo", ""},
+	
+	{"Automatic Shotgun", "AutoShotgun", "autoshellammo", "shotgunammo"},
+	{"Mortar Launcher", "MortarLauncher", "MortarAmmo", ""},*/
+};
+
+int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] = 
+{
+	// num weps to give, ammo for main fire, ammo for alt fire, resell value
+	{0, 0, 0, 0}, // Mandatory empty entry for no item
+	{1, 400, 0, 5}, //handgun
+	{1, 400, 0, 25}, //smg
+	{1, 50, 0, 25}, //shotgun
+	{1, 50, 0, 50}, //ssg
+	{1, 400, 0, 50}, //machine
+	{1, 400, 0, 100}, //gattling
+	{1, 30, 4, 25}, //Rifle
+	{1, 50, 0, 125}, //guass
+	{1, 40, 0, 125}, //grenade rifle
+	{1, 200, 100, 0}, //stealth rifle
+	{1, 200, 0, 25}, //laser rifle
+	{1, 175, 0, 0}, //time gun
+	{1, 40, 0, 125}, //artillery canon
+	{1, 400, 0, 150}, //laser chaingun
+	{1, 0, 0, 0}, //util
+	{1, 10, 0, 0}, //plasma cannon	// [SG] selling Plasma Cannon? no
+	{1, 200, 4, 125}, //chem spray
+	{1, 120, 0, 125}, // tib autorifle
+	{1, 120, 0, 75}, // tib autorifle weak
+	{1, 1, 0, 0}, // upgraded repair gun
+	{1, 0, 0, 0}, // repair gun
+	{1, 0, 0, 0}, // deconstruction gun
+	{1, 0, 0, 0}, // bomb squad gun
+	{1, 0, 0, 0}, // heal gun
+	{1, 15, 0, 125}, // missile launcher
+	{1, 400, 4, 125}, // flamethrower
+	{1, 200, 0, 150}, //shock rifle
+	{1, 40, 0, 125}, //sniper rifle
+	{1, 200, 0, 125}, //plasma rifle
+	{1, 100, 0, 0}, //stealth knife
+	{1, 0, 0, 125}, //chainsaw
+	{1, 0, 0, 0}, //bomb pack
+	{1, 4, 0, 75}, //remote c4
+	
+	{1, 40, 0, 0}, //jetpack
+	{4, 4, 0, 0}, //mines x4
+	{6, 6, 0, 0}, //mines x6
+	{1, 1, 0, 0}, //medic field
+	{1, 1, 1, 0}, //armor upgrade
+	{1, 0, 0, 0}, //ion/nuke
+	
+	{1, 120, 0, 125}, //combustion autorifle
+	{1, 120, 0, 75}, //combustion autorifle (weak)
+	{1, 40, 0, 125}, //sniper rifle(weak)
+	{1, 25, 0, 300}, //chrono bow
+	{1, 8, 0, 0}, // karasawa. Resell value was $125
+	{1, 250, 4, 125}, // Nail MachineGun
+	/*{1, 40, 0, 0}, //adv sniper rifle
+	
+	{1, 50, 8, 100}, //auto shottie
+	{1, 50, 50, 70},*/ //mortar launcher
+};
+
+/*============================================================================
+ *
+ *                       C L A S S E S
+ *
+ * ============================================================================
+ *
+ * List of classes and their definitions. Pass an
+ * identifier to PurchaseClass() / SetClass() to
+ * set a class to the player.
+ *
+ * Identifier constant chain MUST be in the same
+ * order as the actual class array.
+ *
+ * The class array is where the classes are actually
+ * defined in. Changes in here result in changes to class
+ * specs. New classes must use existing format and template.
+ *
+ * Array keys:
+ *	row 1:
+ *	- display name
+ *	- price (0 for free)
+ *	- speed (fixed point)
+ *	- dependency (constant)
+ *
+ *	row 2:
+ *	- armor grade (-1 - 5)
+ *	- armor modifier (ARMOD_NOCHANGE, ARMOD_EXPLO, ARMOD_ENERGY, ARMOD_CHEM, ARMOD_FIRE)
+ *
+ *	row 3:
+ *	- frag grenades & flashbangs
+ *	- timed C4 count
+ *	- flags
+ *		- CF_NoPistol (no handgun)
+ *		- CF_IsHarvester (is a harvester)
+ *		- CF_IsSniper (has powered-up sniper)
+ *		- CF_IsStealth (is a stealth class)
+ *		- CF_Warning (warning printed on purchase)
+ *		- CF_CantPilot (cannot use mechs)
+ *		- CF_IsMedic (gets medic regeneration)
+ *		- CF_IsTimeCop (counts as a timecop for limit)
+ *		- CF_Support (class is listed as a support class in the menu)
+ *		- CF_IsKarasawa (counts as a karasawa for limit)
+ *
+ *	row 4:
+ *	- item 1 | primary weapon
+ *	- item 2 |
+ *	- item 3 |
+ *	- item 4 |
+ *	- item 5 |
+ *	- item 6 |
+ */
+
+function void InitClasses (void) {
+	/* AddClass (token, "Name of class", cost, speed, dependency,
+		armor, armor_mod, frags, c4, enhanced, flags,
+		item0, item1, item2, item3, item4, item5);
+	*/
+	
+	AddClass (CLASS_Gunman, "Gunman", 0, 1.0, DEP_NONE,
+		0, ARMOD_NOCHANGE,
+		1, 1, 0,
+		ITEM_SMG, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Engineer, "Engineer", 0, 0.8, DEP_NONE,
+		0, ARMOD_NOCHANGE,
+		1, 1, CF_Support,
+		ITEM_REPAIR, ITEM_SMG, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.8, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		2, 1, 0,
+		ITEM_GATLING, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Technician, "Technician", 300, 0.8, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		2, 2, CF_Support,
+		ITEM_ADVREPAIR, ITEM_SMG, ITEM_MINE_X4, 0, 0, 0);
+	
+	AddClass (CLASS_Flamer, "Flamer", 450, 0.7, DEP_NONE,
+		1, ARMOD_FIRE,
+		2, 1, 0,
+		ITEM_FLAMER, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Rifleman, "Rifleman", 200, 0.8, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		2, 1, 0,
+		ITEM_RIFLE, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_MachineGunner, "Machine Gunner", 300, 0.9, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		2, 1, 0,
+		ITEM_MACHINEGUN, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Grenadier, "Grenadier", 450, 0.8, DEP_NONE,
+		2, ARMOD_EXPLO,
+		4, 2, 0,
+		ITEM_GRENADE, ITEM_RIFLE, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Rocketeer, "Rocket Soldier", 500, 0.7, DEP_BARRACKS,
+		2, ARMOD_EXPLO,
+		2, 2, 0,
+		ITEM_MISSILE, ITEM_RIFLE, 0, 0, 0, 0);
+	
+	AddClass (CLASS_StealthTrooper, "Stealth Trooper", 600, 1.0, DEP_NONE,
+		-1, ARMOD_ENERGY,
+		2, 2, CF_IsStealth,
+		ITEM_STEALTH, ITEM_KNIFE, 0, 0, 0, 0);
+	
+	AddClass (CLASS_GaussGunner, "Gauss Gunner", 600, 0.8, DEP_BARRACKS,
+		2, ARMOD_ENERGY,
+		2, 1, 0,
+		ITEM_GAUSS, ITEM_RIFLE, 0, 0, 0, 0);
+	
+	AddClass (CLASS_ChemWarrior, "Chem Warrior", 450, 0.7, DEP_BARRACKS,
+		2, ARMOD_CHEM,
+		2, 1, 0,
+		ITEM_CHEMSPRAY, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_ShockTrooper, "Shock Trooper", 600, 0.7, DEP_CENTRE,
+		1, ARMOD_ENERGY,
+		2, 1, 0,
+		ITEM_SHOCKRIFLE, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Commando, "Commando", 1000, 0.85, DEP_BARRACKS,
+		2, ARMOD_NOCHANGE,
+		4, 2, CF_Warning|CF_CantPilot,
+		ITEM_GAUSS, ITEM_MISSILE, ITEM_GATLING, ITEM_RIFLE, 0, 0);
+	
+	AddClass (CLASS_Shotgunner, "Shotgunner", 0, 0.9, DEP_NONE,
+		0, ARMOD_NOCHANGE,
+		1, 1, 0,
+		ITEM_SHOTGUN, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_SuicideBomber, "Suicide Bomber", 1750, 1.0, DEP_NONE,
+		0, ARMOD_NOCHANGE,
+		0, 0, (CF_NoPistol | CF_CantPilot | CF_Warning | CF_Support),
+		ITEM_BOMBPACK, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Sniper, "Sniper", 750, 0.675, DEP_BARRACKS,
+		1, ARMOD_NOCHANGE,
+		2, 1, CF_IsSniper,
+		ITEM_SNIPER, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_UtilityGuy, "Utility Guy", 650, 0.75, DEP_NONE,
+		2, ARMOD_NOCHANGE,
+		1, 1, CF_CantPilot|CF_Support,
+		ITEM_UTILITY, ITEM_REPAIR, ITEM_DECON, 0, 0, 0);
+	
+	AddClass (CLASS_DemoExpert, "Demolitions Expert", 550, 0.75, DEP_NONE,
+		2, ARMOD_EXPLO,
+		4, 4, (CF_CantPilot | CF_Support),
+		ITEM_BOMBSQUAD, ITEM_SHOTGUN, ITEM_REMOTEC4, ITEM_MINE_X6, 0, 0);
+	
+	AddClass (CLASS_FieldMedic, "Field Medic", 300, 0.85, DEP_NONE,
+		2, ARMOD_CHEM,
+		2, 1, (CF_IsMedic | CF_Support),
+		ITEM_HEALGUN, ITEM_TIBRIFLEWEAK, ITEM_MEDFIELD, 0, 0, 0);
+	
+	AddClass (CLASS_LaserChaingunner, "Laser Chaingunner", 650, 0.75, DEP_CENTRE,
+		2, ARMOD_ENERGY,
+		2, 1, 0,
+		ITEM_LASERCHAIN, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_JetTrooper, "Jet Trooper", 600, 0.65, DEP_BARRACKS,
+		2, ARMOD_NOCHANGE,
+		2, 1, 0,
+		ITEM_MACHINEGUN, ITEM_RIFLE, ITEM_JETPACK, 0, 0, 0);
+	
+	AddClass (CLASS_TiberiumAutorifleman, "Tiberium Autorifleman", 400, 0.85, DEP_NONE,
+		1, ARMOD_CHEM,
+		2, 1, 0,
+		ITEM_TIBRIFLE, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 200, 0.8, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		1, 1, 0,
+		ITEM_SSG, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_PlasmaGunner, "Plasma Gunner", 600, 0.75, DEP_CENTRE,
+		2, ARMOD_ENERGY,
+		2, 1, 0,
+		ITEM_PLASMA, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Artillery, "Artillery Soldier", 600, 0.7, DEP_BARRACKS,
+		2, ARMOD_EXPLO,
+		2, 1, 0,
+		ITEM_ARTILLERY, ITEM_RIFLE, 0, 0, 0, 0);
+	
+	AddClass (CLASS_TimeCop, "Time Cop", 2000, 0.9, DEP_CENTRE,
+		2, ARMOD_NOCHANGE,
+		4, 2, (CF_Warning | CF_CantPilot | CF_Support),
+		ITEM_TIMEGUN, ITEM_MACHINEGUN, 0, 0, 0, 0);
+	
+	AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.81, DEP_REFINERY,
+		1, ARMOD_CHEM,
+		2, 1, (CF_IsHarvester | CF_CantPilot | CF_Support),
+		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_Harvester, "Tiberium Harvester", 0, 0.65, DEP_REFINERY,
+		0, ARMOD_CHEM,
+		1, 1, (CF_IsHarvester | CF_Support),
+		ITEM_SMG, 0, 0, 0, 0, 0);
+	
+	AddClass (CLASS_CombustionGunner, "Combustion Gunner", 400, 0.85, DEP_BARRACKS,
+		1, ARMOD_FIRE,
+		2, 1, 0,
+		ITEM_COMBUSTRIFLE, 0, 0, 0, 0, 0);
+		
+	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.86, DEP_CENTRE,
+		2, ARMOD_NOCHANGE,
+		4, 2, CF_Warning|CF_CantPilot,
+		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
+		
+	AddClass (CLASS_KarasawaSoldier, "Karasawa Soldier", 2000, 0.81, DEP_CENTRE,
+		2, ARMOD_ENERGY,
+		2, 1, CF_IsKarasawa|CF_Warning|CF_CantPilot,
+		ITEM_KARASAWA, ITEM_MACHINEGUN, 0, 0, 0, 0);
+		
+	AddClass (CLASS_NailMachineGunner, "Nail-MachineGunner", 650, 0.72, DEP_BARRACKS,
+		2, ARMOD_NOCHANGE,
+		2, 1, 0,
+		ITEM_NAILMG, ITEM_RIFLE, 0, 0, 0, 0);
+		
+	/*AddClass (CLASS_AdvancedSniper, "Advanced Sniper", 1000, 0.55, DEP_CENTRE,
+		-1, ARMOD_NOCHANGE,
+		2, 1, CF_IsSniper,
+		ITEM_ADVANCEDSNIPER, 0, 0, 0, 0, 0);
+		
+	AddClass (CLASS_AutoShotgunner, "Auto Shotgunner", 650, 0.75, DEP_BARRACKS,
+		1, ARMOD_BULLET,
+		2, 1, 0,
+		ITEM_AutoShotgunner, 0, 0, 0, 0, 0);
+		
+	AddClass (CLASS_MortarLauncher, "Mortarier", 500, 0.65, DEP_BARRACKS,
+		1, ARMOD_EXPLO,
+		3, 2, 0,
+		ITEM_MortarLauncher, 0, 0, 0, 0, 0);*/
+}
+
+#define RESEARCH_ENHANCEDREFINING 0
+#define RESEARCH_ADVANCEDMECHS 1
+#define RESEARCH_HEALTHREGEN 2
+#define RESEARCH_AMMOREGEN 3
+#define RESEARCH_C4 4
+#define RESEARCH_REPAIRUPGRADE 5
+#define RESEARCH_ADVTURRETS 6
+#define RESEARCH_MORETURRETS 7
+#define RESEARCH_FRAGNADE 8
+#define RESEARCH_FLASHBANG 9
+//#define RESEARCH_ENHANCEDC4 10
+// ----
+#define NUM_RESEARCHES 10
+
+str Researches_str[NUM_RESEARCHES][NUM_RESEARCH_KEYS_STR] = {
+	/* {
+		name,
+		description
+	}*/
+	
+	{
+		"Enhanced Refining",
+		"New technology gets more purity\n
+		out of refining Tiberium.\n
+		\n
+		\t--- Increases Harvesting income for the team.\n"
+	}, {
+		"Advanced Mechs",
+		"New Mech chassis and hardened metal plating.\n
+		\n
+		\n
+		\t--- Enables construction of larger Mechs.\n"
+	}, {
+		"Health Regenerator",
+		"Implant advanced cell reproduction.\n
+		\n
+		\n
+		\t--- Gives entire team +1 health/s regeneration.\n
+		\t--- Builds a Regen. Health Cache behind the Research Centre.\n"
+	}, {
+		"Ammo Regenerator",
+		"Issue mini-ammo dispensers.\n
+		\n
+		\n
+		\t--- Gives entire team slow Ammo regeneration. Mechs Included.\n
+		\t--- Builds an Ammo Regenerator behind the Research Centre.\n"
+	}, {
+		"+1 Timed C4",
+		"An extra C4 explosive.\n
+		\n
+		\n
+		\t--- Lets you carry an additional timed C4 explosive.\n"
+	}, {
+		"Repair Gun Upgrade",
+		"Applies the latest nanotechnology enhancements to your\n
+		repair gun, allowing it to repair faster.\n
+		\n
+		\t--- Lets you repair faster.\n"
+	}, {
+		"Advanced Turrets",
+		"New turret tech has come in!\n
+		\n
+		\n
+		\t--- Enables use of higher level turrets.\n"
+	}, {
+		"More Turrets",
+		"More generators to power turrets.\n
+		\n
+		\n
+		\t--- Increases turret cap by 5.\n"
+	}, {
+		"+1 Frag Grenade",
+		"Adds an extra frag grenade to your arsenal.\n
+		\n
+		\n
+		\t--- Exactly what it says on the tin.\n"
+	}, {
+		"+1 Flashbang",
+		"Adds an extra flashbang to your arsenal.\n
+		\n
+		\n
+		\t--- Exactly what it says on the tin.\n"
+	}/*, {
+		"Enhanced Timed C4",
+		"More resistant circuits strengthen your timed C4s.\n
+		\n
+		\n
+		\t--- Team's Timed C4s take 25% longer to be disarmed.\n"
+	}*/
+};
+
+int Researches_int[NUM_RESEARCHES][NUM_RESEARCH_KEYS_INT] = {
+	/* {cost, category,}*/
+	{2000, RC_CAT_UPGRADE}, //enhanced refining
+	{2000, RC_CAT_UPGRADE}, //adv mechs
+	{2250, RC_CAT_EXTENSION}, //health regen
+	{2250, RC_CAT_EXTENSION}, //ammo regen
+	{200, RC_CAT_ADDON},  //+1 timed c4
+	{200, RC_CAT_ADDON},  //repair gun upgrade
+	{2000, RC_CAT_UPGRADE}, //adv turrets
+	{2000, RC_CAT_UPGRADE}, //turret cap increase
+	{150, RC_CAT_ADDON}, //+1 fraggrenade
+	{150, RC_CAT_ADDON}, //+1 flashbang
+	//{2000, RC_CAT_UPGRADE}, //enhanced c4
+};
+
+str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
+	/*  name, morph item, ammo item, description */
+	{
+		"Orca", 
+		//"1250", 
+		"OrcaSwitch",
+		"OrcaAmmoPackage", 
+		//"1000", 
+		//MECHWEIGHT_LIGHT, 
+		//"0",
+		"		A light VTOL armed with a machine gun and\n
+		rockets. Designed against infantry but\n
+		loses hard against heavier firepower.\n
+		\n
+		\n
+		\n
+		\n
+		Weapons:\n
+		\t- Machine Gun\n
+		\t- Rocket pods"
+	},
+	{
+		"Tortoise", 
+		//"1500", 
+		"TortoiseSwitch",
+		"TortoiseAmmoPackage", 
+		//"3500", 
+		//MECHWEIGHT_MEDIUM, 
+		//0,
+		"		A small but heavily armored mech\n
+		designed to infiltrate cramped corridors\n
+		and tear infantry apart. Its very slow\n
+		speed and inability to hit buildings from\n
+		the outside solidifies its role as area\n
+		denial and ambushing in enemy territory.\n
+		\n
+		Weapons:\n
+		\t- Explosive Plasma Rifle\n
+		\t- Impact Grenades"
+	},
+	{
+		"Raven", 
+		//"1250", 
+		"RavenSwitch",
+		"RavenAmmoPackage", 
+		//"2000", 
+		//MECHWEIGHT_LIGHT, 
+		//"0",
+		"		A light and \cdFAST\c- land mech, designed\n
+		for scouting and fending off infantry.\n
+		Reports also indicate harvesters using\n
+		Ravens for a safer harvesting trip.\n
+		These mechs can also be built by\n
+		Utility Guys.\n
+		\n
+		Weapons:\n
+		\t- AC-2\n
+		\t- LRM-5"
+	},
+	{
+		"Mastodon",
+		"MastodonSwitch",
+		"MastodonAmmoPackage",
+		"		A light land tank with moderate speed\n
+		designed for chasing off infantry rushes.\n
+		Armed with dual homing missiles and dual\n
+		exploding flame grenades allows the tank\n
+		to attack from all ranges.\n
+		\n
+		Weapons:\n
+		\t- Dual Homing Missiles\n
+		\t- Dual Flame Grenades"
+	},
+	{
+		"Wolverine", 
+		//"1500", 
+		"WolverineSwitch",
+		"WolverineAmmoPackage", 
+		//"3000", 
+		//MECHWEIGHT_MEDIUM, 
+		//"0",
+		"		A medium, heavier mechs packed with\n
+		heavier anti-infantry firepower at\n
+		the cost of speed. These mechs can\n
+		also be built by Utility Guys.\n
+		\n
+		\n
+		\n
+		Weapons:\n
+		\t- LRM-10\n
+		\t- Pulse Cannon\n
+		\t- Minigun"
+	}, 
+	{
+		"Mad Cat", 
+		//"1750", 
+		"MadCatSwitch",
+		"MadCatAmmoPackage", 
+		//"4000", 
+		//MECHWEIGHT_HEAVY, 
+		//MF_POWER,
+		"		A heavy all-around mech designed to hold\n
+		its own against both infantry and mechs\n
+		and can also hit on buildings.\n
+		\n
+		Weapons:\n
+		\t- 2x Shock Cannon\n
+		\t- 2x Shock Rifle\n
+		\t- LRM-20"
+	}, 
+	
+	{
+		"Titan", 
+		//"2000", 
+		"TitanSwitch",
+		"TitanAmmoPackage", 
+		//"5000", 
+		//MECHWEIGHT_HEAVY, 
+		//MF_POWER,
+		"		A very heavy mech designed for total\n
+		annihilation of buildings, though it\n
+		performs less good at infantry than\n
+		the Mad Cat. However, the 100mm cannon\n
+		has proven its use time and time\n
+		again...\n
+		\n
+		Weapons:\n
+		\t- 100mm Cannon\n
+		\t- 2x Flamer\n
+		\t- LRM-20"
+	}, 
+	
+	{
+		"Lancer", 
+		"LancerSwitch",
+		"LancerAmmoPackage", 
+		"		A medium mech designed for fighting\n
+		and defending against other mechs. Comes armed\n
+		with missiles, a chemical sprayer, and a plasma\n
+		cannon.\n
+		\n
+		Weapons:\n
+		\t- LRM-10\n
+		\t- Plasma Cannon\n
+		\t- Chemical Sprayer"
+	}, 
+	
+	{
+		"Juggernaut MKII", 
+		//"3000", 
+		"JuggernautSwitch",
+		"JuggernautAmmoPackage", 
+		//"5000", 
+		//MECHWEIGHT_HEAVY, 
+		//MF_POWER,
+		"		Extremely heavy anti-armor walker\n
+		This metal-tearing grinder turns mechs\n
+		to metal bits before they can even spell\n
+		its name. It is also effective on buildings.\n
+		However, its slow speed and anti-armor\n
+		weapons make it a sitting duck for infantry.\n
+		\n
+		\n
+		Weapons:\n
+		\t- 2x Artillery Cannon 80mm\n
+		\t- 2x Anti-Mech SRM-15\n
+		\t- 2x Flak Cannon\n
+		\t- Mini-Nuke Artillery"
+	}, 
+};
+
+int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
+	/*  cost, health, weight, type (does it need adv mechs researched) */
+	
+	//Orca
+	{
+		1500, 
+		1000, 
+		MECHWEIGHT_LIGHT, 
+		0,
+	},
+	
+	//Tortoise
+	{
+		2500, 
+		3000, 
+		MECHWEIGHT_MEDIUM, 
+		0,
+	},
+	
+	// Raven
+	{
+		1500, 
+		2000, 
+		MECHWEIGHT_LIGHT, 
+		0,
+	},
+	
+	// Mastodon
+	{
+		1750,
+		2500,
+		MECHWEIGHT_LIGHT,
+		0,
+	},
+	
+	// Wolverine
+	{
+		3000, 
+		3500, 
+		MECHWEIGHT_MEDIUM, 
+		0,
+	}, 
+	
+	// Madcat
+	{
+		3000, 
+		5000, 
+		MECHWEIGHT_HEAVY, 
+		MF_POWER,
+	}, 
+	
+	// Titan
+	{
+		3500, 
+		4000, 
+		MECHWEIGHT_HEAVY, 
+		MF_POWER,
+	}, 
+	
+	// [Cata] Lancer
+	{
+		3000, 
+		4000, 
+		MECHWEIGHT_MEDIUM, 
+		0,
+	},
+	
+	// Juggernaut
+	{
+		5000, 
+		5000, 
+		MECHWEIGHT_HEAVY, 
+		MF_POWER,
+	}, 
+};

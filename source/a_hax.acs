@@ -1,0 +1,84 @@
+/* WATCH OUT! HAX AHEAD!
+ * (aka the gross bits of the code)
+ *
+ * Because definition arrays contain both strings and integers, and since
+ * the engine tends to bump string values by 65536, it tends to either bump
+ * both strings AND integers or neither. Compensate for this - downbump
+ * integer values by 65536 if this is detected.
+ *     If the array is initialized with a function rather than initialized
+ * straight away, this does not happen. Therefore, the definitions should be
+ * moved into initializer functions. Once that's done, this function is no longer
+ * needed.
+ */
+function void FixFuckedUpArrays (void) {
+	int i, j, k;
+	
+	// Fix item table
+	if (Items_int[0][IK_COUNT0] >= 1.0) {
+		for (i = 0; i < MAX_ITEMS; i++) {
+			for (k = 4; k < MAX_ITEMKEYS_int; k++) {
+				// Values may not become negative
+				if (Items_int[i][k] < 1.0)
+					continue;
+				
+				Items_int[i][k] -= 1.0;
+			}
+		}
+	}
+	
+	// Add-ons
+	if (AddOns_int[0][ADK_COST] >= 1.0) {
+		for (i = 0; i < MAX_ADDONS; i++) {
+			for (k = 1; k < MAX_ADDON_KEYS_int; k++) {
+				// Values may not become negative
+				if (AddOns_int[i][k] < 1.0)
+					continue;
+				
+				AddOns_int[i][k] -= 1.0;
+			}
+		}
+	}
+	
+	// Researches
+	if (Researches_int[0][RCK_COST] >= 1.0) {
+		for (i = 0; i < NUM_RESEARCHES; i++) {
+			for (k = 0; k < NUM_RESEARCH_KEYS; k++) {
+				// Don't downbump strings
+				if (k == RCK_NAME || k == RCK_DESCRIPTION)
+					continue;
+				
+				Researches_int[i][k] -= 1.0;
+			}
+		}
+	}
+	
+	// Mechs
+	if (Mechs_int[0][MK_COST] >= 1.0) {
+		for (i = 0; i < NUM_MECHS; i++) {
+			for (k = 0; k < NUM_MECH_KEYS - 1; k++) {
+				if (k == MK_NAME || k == MK_MORPH || k == MK_DESCRIPTION || k == MK_AMMO)
+					continue;
+				
+				Mechs_int[i][k] -= 1.0;
+			}
+		}
+	}
+	
+	// Log (s:"FixFuckedUpArrays: Values in arrays corrected.");
+}
+
+// =========================================================================
+// [Dusk] hud_scale is forced true to get around a missing SBARINFO feature.
+// When Zandronum SBARINFO gets the forcescaled option, be sure to nuke this
+// script from orbit! And make sure nothing is left!
+
+// [Cata] And thus it was sent to orbit thanks to Zandro 3.0!
+/*
+script 666 OPEN CLIENTSIDE {
+	while (1) {
+		if (!GetCVAR ("hud_scale"))
+			ConsoleCommand ("set hud_scale true");
+		delay (1);
+	}
+}
+*/

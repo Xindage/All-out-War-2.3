@@ -1,0 +1,47 @@
+actor Shrub 3051 {
+	+CLIENTSIDEONLY
+	gravity 1000
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump (256, "Spawn1", "Spawn2", "Spawn3", "Spawn4",
+			"Spawn5", "Spawn6", "Spawn7", "Spawn8", "Spawn9")
+		goto Spawn1
+	Spawn1:
+		SHR1 A -1
+		stop
+	Spawn2:
+		SHR2 A -1
+		stop
+	Spawn3:
+		SHR3 A -1
+		stop
+	Spawn4:
+		SHR4 A -1
+		stop
+	Spawn5:
+		SHR5 A -1
+		stop
+	Spawn6:
+		SHR6 A -1
+		stop
+	Spawn7:
+		SHR7 A -1
+		stop
+	Spawn8:
+		SHR8 A -1
+		stop
+	Spawn9:
+		SHR9 A -1
+		stop
+	}
+}
+
+actor Shrub2 : Shrub 3052 {}
+actor Shrub3 : Shrub 3053 {}
+actor Shrub4 : Shrub 3054 {}
+actor Shrub5 : Shrub 3064 {}
+actor Shrub6 : Shrub 3065 {}
+actor Shrub7 : Shrub 3066 {}
+actor Shrub8 : Shrub 3067 {}
+actor Shrub9 : Shrub 3068 {}

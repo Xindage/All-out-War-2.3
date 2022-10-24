@@ -1,0 +1,99 @@
+// This array says which m0,m1 coordinate pair has which crate effect.
+int OpenDeckMenu[MAX_MENU_CATEGORIES][MAX_MENU_ITEMS];
+
+// Is said array initialized yet?
+int OpenDeckMenuInit = 0;
+
+// =============================================================================
+// MENU INIT
+script 716 (void) CLIENTSIDE {
+	MenuName = "CHOOSE YOUR CRATE";
+	
+	MenuCategories[0] = "ARMOR";
+	MenuCategories[1] = "POWERUP";
+	MenuCategories[2] = "UPGRADE";
+	MenuCategories[3] = "WEAPON";
+	MenuCategories[4] = "ITEM";
+	MenuCategories[5] = "MISC";
+	
+	// If we haven't initialized the open deck menu table yet, do so now.
+	// This table determines which menu coordinate points to which crate effect.
+	int i, j, k;
+	if (!OpenDeckMenuInit) {
+		for (i = 0; i <= 5; i++) {
+			for (j = 0; j < MAX_MENU_ITEMS; j++)
+				OpenDeckMenu[i][j] = -1;
+			
+			j = 0;
+			while (true) {
+				// Go through the crates to find a suitable effect
+				for (k = 0; k < NUM_Crates; k++) {
+					if (g_Crates_int[k][CRK_Flags] & (CRF_NoDeck | CRF_MarkedInMenu))
+						continue;
+					
+					if (g_Crates_int[k][CRK_Type] == i)
+						break;
+				}
+				
+				// Gone through all crates and couldn't find anything suitable
+				// anymore, so we're done with this category.
+				if (k >= NUM_Crates)
+					break;
+				
+				// This shouldn't happen..
+				if (j >= MAX_MENU_ITEMS) {
+					str msg = strparam (s:"Too many ", s:MenuCategories[i], s:" crates on the menu!");
+					FatalError (msg);
+				}
+				
+				// Add the crate to the table
+				OpenDeckMenu[i][j] = k;
+				g_Crates_int[k][CRK_Flags] |= CRF_MarkedInMenu;
+				j++;
+			}
+		}
+		
+		OpenDeckMenuInit = true;
+	}
+	
+	for (i = 0; i <= 5; i++) {
+		for (j = 0; j <= MAX_MENU_ITEMS; j++) {
+			int c = OpenDeckMenu[i][j];
+			
+			if (c != -1)
+				MenuItems[i][j] = g_Crates_str[c][CRK_Name];
+			else
+				MenuItems[i][j] = 0;
+		}
+	}
+}
+
+// =============================================================================
+// MENU DRAW - eh?
+script 717 (int m0, int m1, int y) CLIENTSIDE {
+	int hid = MENU_HID + 21;
+	SetResultValue (y);
+}
+
+// =============================================================================
+// MENU SELECT
+script 718 (int c) {
+	// Don't allow bad crates to go through
+	if (!CheckCrate (c))
+		terminate;
+	
+	SetInventory ("CrateChooserRotation", c);
+	SetResultValue (1);
+}
+
+// =============================================================================
+// MENU LIMIT
+script 719 (int m0, int m1) CLIENTSIDE {
+	SetResultValue (!CheckCrate (OpenDeckMenu[m0][m1]));
+}
+
+// =============================================================================
+// MENU SEND
+script 720 (int m0, int m1) CLIENTSIDE {
+	SetResultValue (OpenDeckMenu[m0][m1]);
+}

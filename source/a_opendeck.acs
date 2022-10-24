@@ -1,0 +1,40 @@
+// [Dusk] Scripts for open deck. The open deck is a crate powerup that allows
+// the user to pick an arbitrary crate effect.
+
+// ============================================================================
+// Which crates can the open deck give?
+function int IsOpenDeckCrate (int c) {
+	// Don't give bad crates or ones marked not to be given.
+	if (g_Crates_int[c][CRK_Type] == CRT_Bad || g_Crates_int[c][CRK_Flags] & CRF_NoDeck)
+		return false;
+	
+	return true;
+}
+
+// ============================================================================
+// INTERACTION
+script SC_OPENDECK (int action) {
+	if (!CheckWeapon ("CrateChooser"))
+		terminate;
+	
+	SetResultValue (1);
+	
+	switch (action) {
+	case 0:
+		// Check if our current selection is good
+		if (!CheckCrate (CheckInventory ("CrateChooserRotation")))
+			SetResultValue (0);
+		break;
+	case 1:
+		// User presses alt-fire.
+		ActivateMenu (MENU_OpenDeck);
+		break;
+	case 2:
+		// Player activates chooser
+		Log (n:0, s:" activates Open Deck.");
+		TakeInventory("OpenDeck", 1);
+		ACS_ExecuteAlways (309, 0, CheckInventory ("CrateChooserRotation"));
+		ActivatorSound ("powerup/basic", 127);
+		break;
+	}
+}

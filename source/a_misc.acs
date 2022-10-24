@@ -1,0 +1,364 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 miscallenous scripts
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// Player burnt and is burning script, unfortunately the killer who set the
+// player alight is not awarded for this.
+// [Dusk] Merged two scripts to one.
+
+script SC_DAMAGEOVERTIME (int type) {
+	int n;
+	
+	switch (type) {
+	case OVERTIME_FIRE:
+		// Fire burn
+		if (CheckInventory("CrispyPlayer"))
+			terminate;
+		
+		GiveInventory("CrispyPlayer",1);
+		n = 10;
+		while (n > 0 && GetHealth() > 1) {
+			Thing_Damage2 (0, 1, "FireSpecial");
+			delay(5);
+			n--;
+		}
+		
+		TakeInventory("CrispyPlayer",1);
+		break;
+	case OVERTIME_CHEM:
+		if (CheckInventory("CrispyPlayer2")) terminate;
+		
+		GiveInventory("CrispyPlayer2", 1);
+		n = 20;
+		while (n > 0 && GetHealth() > 1) {
+			Thing_Damage2 (0, 1, "ChemicalSpecial");
+			delay(8);
+			n--;
+		}
+		
+		TakeInventory ("CrispyPlayer2", 1);
+		break;
+	}
+}
+
+script SC_WEAPONCHECK OPEN {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame (i))
+			continue;
+		
+		SetActivator (3800 + i);
+		
+		// [SP] The following code removes redundant weapons
+		if (CheckInventory ("StealthLaserRifle")) CheckAndRemove("LaserRifle");
+		if (CheckInventory ("TiberiumAutorifle")) CheckAndRemove("TiberiumAutorifleWeak");
+		if (CheckInventory ("SniperRifle")) CheckAndRemove("SniperRifleWeak");
+		if (CheckInventory ("CombustionAutorifle")) CheckAndRemove("CombustionAutorifleWeak");
+		
+		// [Dusk] The player may not have stealth with anything but the known
+		// stealth weapons, aka laser rifle and knife.
+		if (CheckInventory ("StealthMode") == 2 &&
+			!CheckWeapon ("StealthLaserRifle") &&
+			!CheckWeapon ("Knife"))
+		{
+			ACS_ExecuteAlways (SC_Stealth, 0, STEALTH_ForceOff);
+		}
+		
+		// [Dusk] Force the player to destealth as long as he isn't using a stealth weapon.
+		if (!CheckWeapon ("StealthLaserRifle") && !CheckWeapon ("Knife"))
+			ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF);
+		
+		// [Dusk] If the player has become berserk, push his armor to stack
+		if (CheckInventory ("PowerBerserk"))
+			ACS_ExecuteAlways (978, 0);
+	}
+	
+	SetActivator (-1);
+	delay (35);
+	restart;
+}
+
+script SC_CHECKC4TIMER (void) 
+{
+	if (!TimeDelay (GetConfig (CONFIG_C4DELAY), true)) {
+			//g_Error = "It is too early to use this!";
+			SetResultValue(0);
+		}
+	else
+		SetResultValue(1);
+}
+
+// [Cata] Helper function for SC_CheckC4Placement
+function int isNearTeamTerminal(int team, int dist)
+{
+	for(int i = 0; i < MAX_BUILDINGS; i++)
+	{
+		if(CheckBuilding(i, team) && AproxDistance (BaseTIDs[2*i+team], activatortid()) < dist)
+			return true;
+	}
+
+	return false;
+}
+
+// [Cata] To prevent spectate griefing.
+script SC_CheckC4Placement (int team) 
+{
+	// We check if we can spawn this...
+	if(isNearTeamTerminal(team, 192.0) == true)
+	{
+		// Can't spawn, too close to team's terminal
+		SetResultValue(0);
+		terminate;
+	}
+	
+	// We're OK, spawn the c4
+	SetResultValue(1);
+}
+
+script 320 (int Which)
+{
+	//SetHudSize(1680,1050,0);
+	
+	switch(Which)
+	{
+		case 0:
+			FadeTo(128,0,0,0.6,0.0);
+			FadeTo(128,0,0,0.0,1.0);
+			break;
+			
+		case 1:
+			FadeTo(128,128,0,0.5,0.0);
+			FadeTo(128,128,0,0.0,1.0);
+			break;
+			
+		case 2:
+			FadeTo(0,125,0,0.5,0.0);
+			FadeTo(0,125,0,0.0,1.0);
+			break;
+		
+		case 3:	// [SG] Flashbang hit
+			FadeTo(255,255,255,1.0,0.0);
+			Delay(35*2);
+			FadeTo(255,255,255,0.0,2.0);
+			break;
+		
+		case 4:
+			FadeTo(128,0,0,0.6,0.0);
+			FadeTo(128,0,0,0.0,1.0);
+			break;
+			
+		case 5:
+			FadeTo(0, 255, 255, 0.25, 0.0);
+			FadeTo(0, 255, 255, 0.0, 0.5);
+			break;
+	}
+}
+
+//Self heal health
+
+script SC_SelfHealHealth (void) {
+	ACS_ExecuteAlways(320, 0, 5, 0, 0);
+	int i;
+	
+	// Give half the health now
+	GiveInventory("selfHealCoolDownItem", 1);
+	ACS_NamedExecuteAlways("selfHealCoolDownHandler", 0, 0, 0, 0);
+	//HealThing (SELFHEALHEALTH / 2);
+	// [JD] Had to rewrite this because Self Heal wouldn't work passed 100 HP.
+	SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH / 2));
+	if (GetHealth() >= GetSpawnHealth())
+	{
+		SetActorProperty(0, APROP_HEALTH, GetSpawnHealth());
+		terminate;
+	}
+	
+	// And then give the rest over time
+	for (i = 0; i < (SELFHEALHEALTH / 2) && GetHealth() < GetSpawnHealth(); ++i) {
+		//HealThing (1);
+		SetActorProperty(0, APROP_HEALTH, GetHealth() + 1);
+		delay (35);
+	}
+}
+
+Script "selfHealCoolDownHandler" (void)
+{
+	int coolDown = 30;
+	
+	while (!CheckInventory("SelfHealItem") && CheckInventory("selfHealCoolDownItem") && coolDown > 0 && GetHealth() > 0)
+	{
+		coolDown--;
+		Delay(35);
+	}
+	
+	if (GetHealth() <= 0 || CheckInventory("SelfHealItem"))
+		Terminate;
+	
+	TakeInventory("selfHealCoolDownItem", 1);
+	GiveInventory("SelfHealItem", 1);
+	IntelMessageNoLog("\cKSelf-applied medical attention\cJ is available", 0);
+}
+
+/*Script "selfHealCheck" (void)
+{
+	if (GetHealth() <= GetSpawnHealth() / 2 && !CheckInventory("selfHealCoolDownItem"))
+		GiveInventory("SelfHealItem", 1);
+}*/
+
+/*script SC_SelfHealHealth (void) {
+	// [JD] Not exactly sure what this is for... Just going to comment it out for now
+	//int cooldown = 30;
+	
+	SetHealth(GetHealth() + SELFHEALHEALTH);
+	
+	if (GetHealth() > GetSpawnHealth())
+		SetHealth(GetSpawnHealth());
+}*/
+
+script SC_TIMEDELAY (int time, int display)
+	SetResultValue (TimeDelay (time, display));
+
+function bool TimeDelay (int time, bool display) {
+	if (Time * MINUTETICS > Timer()) {
+		int TimeRemaining = (Time * MINUTETICS - Timer()) / 35;
+		if (Display) {
+			DisplayCross();
+			SetFont ("BIGFONT");
+			HudMessage (s:"You must wait \cK", d:TimeRemaining, s:"\c- seconds!";
+				HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
+		}
+		return 0;
+	}
+	return 1;
+}
+
+// [Dusk] beacon timer reset due to it being placed underwater
+script SC_BEACON_UNDERWATER (int Team) {
+	SetFont ("SMALLFONT");
+	
+	if (Team == 0) {
+		LastPurchasedBeacon[2] = 0;
+		IntelMessage ("Some \cARed\cJ mong planted a beacon \cNunderwater", true);
+		delay (3*35);
+		IntelMessage ("\cARed Team\cJ free to \cDrepurchase\n\cANuclear Strike Beacon", true);
+	} else {
+		LastPurchasedBeacon[1] = 0;
+		IntelMessage ("Some \cNBlue\cJ mong planted a beacon \cNunderwater", true);
+		delay (3*35);
+		IntelMessage ("\cNBlue Team\cJ free to \cDrepurchase\n\cNIon Cannon Beacon", true);
+	}
+}
+
+// Returns renderer
+script SC_CL_RENDERERCVAR (void)
+	SetResultValue (GetCVar ("vid_renderer"));
+
+// Berserker should have no armor. Thus, push the armor
+// to stack, and pop it out if/when the player unmorphs.
+script SC_BERSERKARMOR (void) {
+	PushArmor ();
+	while (CheckInventory ("PowerBerserk") && GetHealth () > 0)
+		delay (35);
+	PopArmor ();
+}
+
+// [Dusk] {9/27/12} Razor wire functionality
+script SC_RAZORWIRE (int myteam) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (!PlayerInGame (i) ||
+			GetPlayerInfo (i, PLAYERINFO_TEAM) == myteam ||
+			GetActorHealth (3800+i) <= 0)
+			continue;
+		
+		int dist = AproxDistance (0, 3800+i);
+		if (dist > 64.0)
+			continue;
+		
+		Thing_Damage (3800+i, 5, 0);
+		GiveActorInventory (3800+i, "RazorWireSlow", 1);
+	}
+}
+
+// [Dusk] Berserk sound control
+script SC_BERSERKSOUND (void) {
+	if (CheckInventory ("BerserkInit"))
+		terminate;
+	
+	SetInventory ("BerserkInit", 1);
+	GiveInventory ("BerserkSoundStart", 1);
+	
+	// The sound should be stopped upon unmorph but I'm not taking any chances.
+	while (CheckInventory ("PowerBerserk"))
+		Delay (5);
+	GiveInventory ("BerserkSoundStop", 1);
+	SetInventory ("BerserkInit", 0);
+}
+
+// [Dusk] Imp spawner spawns an imp
+script 808 (void) {
+	int tid = TemporaryTID ();
+	int imps = SpawnSpot ("DoomImp", 0, tid, 0);
+	if (imps) {
+		SpawnSpotForced ("TeleportFog", 0, 0, 0);
+		
+		// Make the imp hate what the spawner is targeting
+		Thing_Hate (tid, CheckInventory ("ImpSpawnerTarget"), 4);
+		Thing_ChangeTID (tid, 0);
+		
+		// Mark down that we have spawned an imp.
+		GiveInventory ("ImpSpawnerCount", 1);
+	}
+}
+
+// =============================================================================
+int AngleCache[MAXPLAYERS];
+script SC_PushAngle (int mindev, int maxdev) {
+	if (PlayerNumber() == -1)
+		terminate;
+	
+	AngleCache[PlayerNumber()] = GetActorAngle (0);
+	SetActorAngle (0, AngleCache[PlayerNumber()] + random (mindev, maxdev) * 0.00277);
+}
+
+script SC_PopAngle (void) {
+	SetActorAngle (0, AngleCache[PlayerNumber()]);
+}
+
+// =============================================================================
+script SC_InitMonster (void) {
+	SetThingSpecial (0, ACS_ExecuteWithResult, SC_MONSTERDEATH, GetSpawnHealth() / 6);
+}
+//==============================================================================
+
+/*script "SC_MISSILELAUNCHER_CHECK" (void)
+{
+	int TID = ActivatorTID();
+	SetActivatorToTarget(0);
+	int TargetTID = ActivatorTID();
+	
+	if (TargetTID == TID ||
+		GetHealth() <= 0 ||
+		!(ClassifyActor(0) & ACTOR_PLAYER) ||
+		!(ClassifyActor(0) & ACTOR_BOT))
+		terminate;
+	
+	SetActivator(TID);
+	GiveInventory("ML_HomingCheck", 1);
+}*/
+
+// [JD] Allows the Plasma Rifle to cool down without having the weapon out.
+script "SC_PLASMARIFLEHEAT" (void)
+{
+	while (GetHealth() > 0 &&
+			CheckInventory("PlasmaGun"))
+	{
+		if (!CheckInventory("FiringPlasmaRifle"))
+			TakeInventory("PlasmaHeat", 3);
+		
+		Delay(3);
+	}
+}

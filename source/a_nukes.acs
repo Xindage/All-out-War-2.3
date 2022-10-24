@@ -1,0 +1,178 @@
+// [Dusk] Deploy superweapon beacon, now in ACS.
+script SC_BeaconInventory (int team) {
+	// Already planting
+	if (CheckInventory ("PlantingBeacon"))
+		terminate;
+	
+	// [Cata] Prevent trolling as Zandro doesn't have specate trolling fixed yet... sigh.
+	if(isNearTeamTerminal(getplayerinfo(playernumber(), PLAYERINFO_TEAM), 1024.0))
+	{
+		GenericError ("You can't place this in your base!");
+		if (PlayerTeam () == TEAM_BLUE) giveinventory("IonCannonBeacon", 1);
+		else giveinventory("NuclearStrikeBeacon", 1);
+		terminate;
+	}
+	
+	// Safety lock
+	if (!CheckInventory ("BeaconUseToken")) {
+		GiveInventory ("BeaconUseToken", 1);
+		ActivatorSound ("beacon/safetylock", 80);
+		SetFont ("BIGFONT");
+		HudMessage (s:"BEACON SAFETY LOCK DISENGAGED";
+			HUDMSG_FADEOUT, 0, CR_RED,
+			0.1, 0.95, 2.0, 0.25);
+		delay (2*35);
+		TakeInventory ("BeaconUseToken", 1);
+		terminate;
+	}
+	
+	// Plant sound
+	if (PlayerTeam () == TEAM_BLUE)
+		ActivatorSound ("ion/place", 127);
+	else
+		ActivatorSound ("nuke/place", 127);
+	
+	TakeInventory ("BeaconUseToken", 1);
+	GiveInventory ("PlantingBeacon", 1);
+	SetPlayerProperty (0, 1, PROP_TOTALLYFROZEN);
+	
+	int waitsuccessful = true;
+	for (int i = 0; i < 175; i += 5) {
+		if (GetHealth () <= 0 || CheckInventory ("IsInSpawnRoom")) {
+			waitsuccessful = false;
+			break;
+		}
+		delay (5);
+	}
+	
+	// Unfreeze the player
+	TakeInventory ("PlantingBeacon", 1);
+	SetPlayerProperty (0, 0, PROP_TOTALLYFROZEN);
+	
+	if (waitsuccessful && ActivatorTID() != 9999) {
+		// Spawn the actual beacon
+		if (PlayerTeam () == TEAM_BLUE) {
+			SpawnProjectile (ActivatorTID(), "IonCannonBeaconThrown", 0, 0, -5, 1, 0);
+			Log (n:0, s:" plants Ion Cannon Beacon.");
+		} else {
+			SpawnProjectile (ActivatorTID(), "NuclearStrikeBeaconThrown", 0, 0, -5, 1, 0);
+			Log (n:0, s:" plants Nuclear Strike Beacon.");
+		}
+		
+		// Tell teammates where the beacon was planted.
+		TeamMessage (TMSG_IONNUKE, 0, playernumber());
+		
+		// Tell the enemy team a warning
+		ACS_ExecuteAlways (SC_CL_NukeTimeWarning, 0, !PlayerTeam(), GetCVAR ("zeta_nukecountdown"));
+		
+		// Remove the nuke item from the player now
+		SetInventory ("IonCannonBeacon", 0);
+		SetInventory ("NuclearStrikeBeacon", 0);
+	}
+}
+
+// =============================================================================
+// [Dusk] Beacon timer, now in ACS.
+script SC_BeaconTimer (int team, int ancrwarning) {
+	int timeleft = GetCVAR ("zeta_nukecountdown") - CheckInventory ("BeaconCountdown");
+	
+	// We're just playing the announcer warning
+	if (ancrwarning) 
+	{
+		if (timeleft == GetCVAR ("zeta_nukecountdown")) 
+		{
+			// Initial warning
+			AmbientSound (cond (team == TEAM_Blue, "eva/iondeployed", "eva/nukedeployed"), 127);
+			delay (93);
+			
+			if (CheckInventory ("BeaconDisarmed"))
+				terminate; // Was disarmed mid-announce
+			
+			AmbientSound (cond (team == TEAM_Blue, "eva/ionapproach", "eva/nukeapproach"), 127);
+		} 
+		
+		else if (timeleft == 30 || timeleft == 15) 
+		{
+			// Secondary warning
+			AmbientSound ("eva/youhave", 127);
+			delay (32);
+			
+			if (CheckInventory ("BeaconDisarmed"))
+				terminate;
+			
+			AmbientSound (strparam (s:"eva/", d:timeleft, s:"sec"), 127);
+			delay (26);
+			
+			if (CheckInventory ("BeaconDisarmed"))
+				terminate;
+			
+			AmbientSound ("eva/safe", 127);
+		}
+		
+		terminate;
+	}
+	
+	if (timeleft == 0) {
+		// Time's up! Go blow up.
+		SetActorState (0, "Detonate");
+		terminate;
+	}
+	
+	// Per-second beep
+	ActivatorSound (cond (team == TEAM_Blue, "beacon/ionbeep", "beacon/nukebeep"), 127);
+	
+	// Signal effect to prevent tunnel nukes.
+	if (GetCVar ("zeta_nukesurpreme"))
+		SpawnSpotForced (cond (team == TEAM_Blue, "BeaconFX", "BeaconFXRed"), 0, 0, 0);
+	
+	// Time-specific stuff:
+	if (timeleft == GetCVAR ("zeta_nukecountdown") || timeleft == 30 || timeleft == 15) 
+	{
+		// [Dusk] Has to be executed WithResult or it will only get executed
+		// after the countdown has been incremented - we don't want that.
+		ACS_ExecuteWithResult (SC_BeaconTimer, team, true);
+	} 
+	
+	else if (timeleft <= 10) 
+	{
+		// 10 second countdown
+		AmbientSound (strparam (s:"eva/", d:timeleft, s:"sec"), 127);
+	}
+	
+	GiveInventory ("BeaconCountdown", 1);
+}
+
+// =============================================================================
+// [Dusk] Script to tell teammates where a newly planted beacon is located.
+script SC_CL_BeaconPlanted (int p) CLIENTSIDE {
+	// Not if the planter is not on our team.
+	if (GetPlayerTeam (p) != ConsoleTeam ())
+		terminate;
+		
+	// Write it into the team log
+	if (GetCVar ("zeta_cl_noteamlog"))
+		terminate; // User doesn't want team intel, period.
+	
+	if (!PlayerInGame (intHolder[i_consoleplayer]) || PlayerTeam() != ConsoleTeam())
+		terminate; // Not a teammate or we're not in-game
+	
+	// Try determine where the nuke is.
+	int location = EstimateLocation (3800 + p);
+	str message;
+	
+	// Build the message
+	if (location != -1)
+		message = strparam (n:p + 1, s:"\c- has planted a beacon near \cD", s:LocationNames[location]);
+	else
+		message = strparam (n:p + 1, s:"\c- has planted a beacon somewhere");
+	
+	Log (s:TeamColors[ConsoleTeam ()], s:"<TEAM>\c- ", s:message);
+}
+
+// =============================================================================
+// [Dusk]
+script SC_CL_NukeTimeWarning (int team, int time) CLIENTSIDE {
+	str enemynukename = cond (team == TEAM_BLUE, "nuclear strike beacon", "ion cannon beacon");
+	Log (s:TeamColors[team], s:TeamNames[team], s:" team\c- has \cF", d:time,
+		s:" seconds\c- time to disarm the ", s:enemynukename, s:"!");
+}

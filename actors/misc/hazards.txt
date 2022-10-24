@@ -1,0 +1,235 @@
+// Various envionmental hazards:
+// - barrel
+// - mine field
+// - lava volcano
+// - airstrike
+
+actor NukageBarrel : ExplosiveBarrel replaces ExplosiveBarrel {
+	health 20
+	damagefactor "Disarm", 0.0
+	damagefactor "ChemicalSpecial", 0.0
+	// damagetype "ChemicalSpecial" - no worky
+	states {
+	Death:
+		BEXP A 5 bright
+		BEXP B 5 bright A_Scream
+		BEXP C 5 bright
+		TNT1 A 0 A_Explode (128, 160)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain", 0, 0, 16)
+		TNT1 A 0 A_SpawnItemEx ("AnthraxDecaySpecial", random(-16,16), random(-16,16), 4)
+		TNT1 A 20 
+		TNT1 E 0 A_NoBlocking
+		TNT1 A 1050
+		TNT1 A 5 A_Respawn
+		wait
+	}
+}
+
+// Disabled because of inability to set damagetype
+// without losing track of shooter...
+/*actor Utility_Barrel : NukageBarrel {
+	renderstyle translucent
+	alpha 0
+	-SOLID
+	-SHOOTABLE
+	states {
+	Spawn:
+		BAR1 A 0
+		BAR1 BBAABBAABB 3 A_FadeIn (0.05) // -> 0.5
+		BAR1 ABABABABABA 6
+		BAR1 B 0 A_SetSolid
+		BAR1 B 0 A_SetShootable
+		BAR1 BBBBBB 1 A_FadeIn (0.1) // -> 1.0
+		BAR1 ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB 3 // 10
+		BAR1 ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB 3 // 20
+		BAR1 ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB 3 // 30
+		BAR1 ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB 3 // 40
+		BAR1 ABABABABABABABABABABABABABABAB 3 // 45
+		BAR1 A 0 A_UnsetShootable
+		BAR1 A 0 A_UnsetSolid
+		BAR1 A 1 A_SetTranslucent (0.9, 1)
+		BAR1 AAABBB 1 A_FadeOut (0.1)
+		wait
+	Death:
+		BEXP A 5 bright
+		BEXP B 5 bright A_Scream
+		BEXP C 5 bright
+		TNT1 A 0 A_Explode (128, 160)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain", 0, 0, 16)
+		TNT1 A 0 A_SpawnItemEx ("AnthraxDecaySpecial", random(-16,16), random(-16,16), 4)
+		stop
+	}
+}*/
+
+actor Mine 21419
+{
+	//$Category Hazards
+	tag "Invisible Mine"
+	damagefactor "ChemicalSpecial", 0.0
+	hitobituary "%o tripped over a mine."
+	obituary "%o tripped over a mine."
+	health 5000
+	speed 0
+	radius 64
+	height 2
+	mass 999999
+	+LOOKALLAROUND
+	+SHOOTABLE
+	+NOBLOOD
+	meleedamage 4
+	meleerange 70
+	painchance 255
+	damagefactor "Fist", 1.0
+	damagefactor "Bullet", 1.0
+	damagefactor "Rifle", 1.0
+	damagefactor "Explosion", 1.0
+	damagefactor "Terrorist", 1.0
+	damagefactor "Suicide", 1.0
+	damagefactor "Fire", 0.0
+	damagefactor "Chemical", 0.0
+	damagefactor "Energy", 1.0
+	damagefactor "Disarm", 0.0
+	states {
+	Spawn:
+		TNT1 A 10 A_Look
+		loop
+	See:
+		TNT1 AA 2 A_Chase
+		loop
+	Melee:
+		TNT1 A 5
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_GetHurt
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 BB 0 bright A_CustomMeleeAttack(10,"none","none","Explosion",1)
+		TNT1 A 5 A_SpawnItemEx("ExplosionMain", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+		TNT1 A 157
+		goto See
+	Pain:  
+		TNT1 A 5
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 BB 0 bright A_CustomMeleeAttack(10,"none","none","Explosion",1)
+		TNT1 A 5 A_SpawnItemEx("ExplosionMain", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+		TNT1 A 330
+		goto See
+	Death:  
+		TNT1 A 5
+		TNT1 A 0 A_PlaySound("weapons/rocklx")
+		TNT1 BB 0 bright A_CustomMeleeAttack(10,"none","none","Explosion",1)
+		TNT1 A 5 A_SpawnItemEx("ExplosionMain", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+		TNT1 A 330
+		stop
+	}
+}
+
+ACTOR LavaVolcano 21420
+{
+	//$Category Hazards
+	tag "Lava ball spawner"
+  Radius 1
+  Height 1
+  -Solid
+  States
+  {
+  Spawn:
+    TNT1 AA 0 bright A_SpawnItemEx ("LavaBall1",0,0,0,random(-10,10),random(-10,10),random(5,15),random(0,359),0,0) 
+    TNT1 AAA 150 bright A_SpawnItemEx ("LavaBall2",0,0,0,random(-10,10),random(-10,10),random(5,15),random(0,359),0,0) 
+    TNT1 A 35 A_Jump(128,2)
+    TNT1 A 35
+    loop
+    TNT1 A 35
+    TNT1 A 35 A_Jump(128,2)
+    loop
+    TNT1 A 35
+    TNT1 A 35 A_Jump(128,2)
+    loop
+    TNT1 A 35
+    TNT1 A 35 A_Jump(128,2)
+    loop
+    TNT1 A 35
+    TNT1 A 35 A_Jump(128,2)
+    loop
+    TNT1 A 35
+    TNT1 A 35 A_Jump(128,2)
+    loop
+    TNT1 A 35
+    TNT1 A 35
+    loop
+  }
+}
+
+actor Lavaball1
+{
+  obituary "%o huggled a lava ball and was struck down by it."
+  radius 5
+  height 8
+  speed 13
+  damage (100)
+  deathsound "LAVA/Hit"
+  PROJECTILE
+  +SKYEXPLODE
+  +FORCEXYBILLBOARD
+  -FORCEYBILLBOARD
+  -NOGRAVITY
+  damagetype "Fire"
+  gravity 0.3
+  alpha 0.75
+  scale 1
+  states
+  {
+  Spawn:
+    COMT ABC 5 bright
+    Loop
+  Death:
+    TNT1 B 0 bright A_NoGravity
+    TNT1 A 0 bright A_StopSoundEx("Body")
+    TNT1 A 0 A_Explode (80, 128)
+    TNT1 A 0 A_SpawnItemEx("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, 0, 0)
+    TNT1 A 5 A_SpawnItemEx("ExplosionSmall", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+    TNT1 A 5 A_SpawnItemEx("ExplosionSmall", 0, 0, 0, 0, 0, 0, 0, 128, 0)
+    COMT DEFGHI 4 bright A_Stop
+    stop
+  }
+}
+
+actor Lavaball2 : Lavaball1 {
+  obituary "%o ate a lava ball."
+  damage (50)
+  scale 0.4
+}
+
+actor Airstrike {
+	PROJECTILE
+	+CEILINGHUGGER
+	Speed 40
+	Obituary "$OB_AIRSTRIKE"
+	states {
+	Spawn:
+		TNT1 A 0 A_PlaySound ("Airstrike/Plane", CHAN_VOICE, 1.0, 1)
+		TNT1 A 3 A_SpawnItemEx ("AirstrikeBomb", 0, random(-320, 320))
+		wait
+	Death:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor AirstrikeBomb {
+	PROJECTILE
+	-NOGRAVITY
+	obituary "$OB_AIRSTRIKE"
+	radius 11
+	height 8
+	damage 30
+	deathsound "weapons/rocklx"
+	damagetype "Monster"
+	states {
+	Spawn:
+		SGRN A 1 bright A_SpawnItemEx ("PulseBallSmokePuff", 0,0,0,0,0,0,0,0, 200)
+		wait
+	Death:
+		TNT1 A 0 A_Explode (120, 384)
+		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, 0, 240)
+		TNT1 A 5 A_SpawnItemEx ("ExplosionMain")
+		stop
+	}
+}

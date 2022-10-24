@@ -1,0 +1,1023 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 powerup crate-related scripts
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+/*
+	[Dusk] When adding/updating new crates, you need to take care of a few things:
+	1. Add a new crate identifier to list below.
+	2. Update CheckCrate. The function should return true if the player is
+		supposed to be able to get the crate. Don't use map variables in it!
+		The open deck HUD uses it, too.
+	3. Update CR_GiveCrateEffect to add the actual effect.
+*/
+
+// ---------------------------
+#define CRATE_ARMORUP		0
+#define CRATE_BASEMIRACLE	1
+#define CRATE_CHEMARMOR		2
+#define CRATE_FIREPOWER		3
+#define CRATE_BONUSCREDITS	4
+#define CRATE_BONUSXP		5
+#define CRATE_FIREARMOR		6
+#define CRATE_STEALTH		7
+#define CRATE_IRONCURTAIN	8
+#define CRATE_KAMIKAZE		9
+// ----
+#define CRATE_PLASMACANNON	10
+#define CRATE_CLASSSWAP		11
+#define CRATE_SPEEDUPGRADE	12
+#define CRATE_CREDITSSTOLEN	13
+#define CRATE_TIMEGUN		14
+#define CRATE_BOMB			15
+#define CRATE_BASECRASHER	16
+#define CRATE_UTILITYGUN	17
+#define CRATE_ENERGYARMOR	18
+#define CRATE_EXPLOARMOR	19
+// ----
+#define CRATE_BULLETARMOR	20
+#define CRATE_JUGGERNAUT	21
+#define CRATE_BERSERK		22
+#define CRATE_MEDFIELD		23
+#define CRATE_TEAMBOOST		24
+#define CRATE_CHAINSAW		25
+#define CRATE_MARINEBEACON	26
+#define CRATE_OPENDECK		27
+#define CRATE_THERMALCLOAK	28
+#define CRATE_DISARM		29
+// ----
+#define CRATE_FATIGUE		30
+#define CRATE_REMOTEC4		31
+#define CRATE_BLURSPHERE	32
+#define CRATE_RANDOMWEAPON	33
+#define CRATE_JETPACK		34
+#define CRATE_REVOLVER		35
+#define CRATE_RADAR			36
+#define CRATE_BOMBPACK		37
+#define CRATE_IMP			38
+#define CRATE_C4			39
+#define CRATE_GRENADES		40
+#define CRATE_QUADSHOTGUN	41
+#define CRATE_SOULSPHERE	42
+// ----
+// ----
+#define NUM_CRATES			43
+
+// --------------------------------------------------------------
+#define CRK_NAME		0 // Name of crate
+#define CRK_COLOR		1 // Color of crate name
+#define NUM_CRATEKEYS_STR 2
+
+#define CRK_DEFINED		0 // Is it defined?
+#define CRK_WEIGHT		1 // Weight of crate, affects probability
+#define CRK_TYPE		2 // Type of crate, used in open deck
+#define CRK_FLAGS		3 // Flags, see below
+#define NUM_CRATEKEYS_INT 4
+
+// --------------------------
+// yay monitors
+#define CRT_Armor		0
+#define CRT_Powerup		1
+#define CRT_Upgrade		2
+#define CRT_Weapon		3
+#define CRT_Item		4
+#define CRT_Misc		5
+#define CRT_Bad			6
+
+// Crate flags
+// -----------
+#define CRF_Announce		1 << 0 // announce this crate globally
+#define CRF_NoDeck			1 << 1 // effect isn't in open deck
+#define CRF_MarkedInMenu	1 << 2 // effect is listed on the menu (internal usage)
+
+str g_Crates_str[NUM_CRATES][NUM_CRATEKEYS_STR];
+int g_Crates_int[NUM_CRATES][NUM_CRATEKEYS_INT];
+
+// =============================================================================
+// CRATE DEFINITIONS
+function void CR_InitCrateList (void) {
+	// No need to define them if they already are.
+	if (g_Crates_int[0][CRK_DEFINED])
+		return;
+	
+	// token, name, color, weight,
+	// type, flags
+	
+	
+	AddCrateType (CRATE_ARMORUP,		"armor upgrade",		"F", 25, CRT_Armor,		(0));
+	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0));
+	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0));
+	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(0));
+	AddCrateType (CRATE_BONUSXP,		"bonus experience",		"D", 15, CRT_Upgrade,	(0));
+	AddCrateType (CRATE_FIREARMOR,		"fire proof",			"F", 10, CRT_Armor,		(0));
+	AddCrateType (CRATE_STEALTH,		"stealth suit",			"U", 10, CRT_Upgrade,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_IRONCURTAIN,	"iron curtain",			"J", 10, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_KAMIKAZE,		"kamikaze",				"K", 10, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_PLASMACANNON,	"plasma cannon",		"N", 10, CRT_Weapon,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_CLASSSWAP,		"class swap",			"F", 10, CRT_Misc,		(0));
+	AddCrateType (CRATE_SPEEDUPGRADE,	"speed upgrade",		"D", 10, CRT_Powerup,	(0));
+	AddCrateType (CRATE_CREDITSSTOLEN,	"credits stolen",		"G", 10, CRT_Bad,		(0));
+	AddCrateType (CRATE_TIMEGUN,		"time gun",				"I", 10, CRT_Weapon,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_BOMB,			"bomb crate",			"G", 25, CRT_Bad,		(0));
+	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE));
+	AddCrateType (CRATE_UTILITYGUN,		"utility gun",			"D", 10, CRT_Weapon,	(0));
+	AddCrateType (CRATE_ENERGYARMOR,	"energy resistance",	"N", 10, CRT_Armor,		(0));
+	AddCrateType (CRATE_EXPLOARMOR,		"explosive resistance",	"F", 10, CRT_Armor,		(0));
+	AddCrateType (CRATE_BULLETARMOR,	"bulletproof vest",		"C", 10, CRT_Armor,		(0));
+	AddCrateType (CRATE_JUGGERNAUT,		"instant juggernaut",	"F",  5, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_BERSERK,		"berserk",				"G",  4, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_MEDFIELD,		"medication field",		"A", 10, CRT_Item,		(0));
+	AddCrateType (CRATE_TEAMBOOST,		"team boost",			"A",  7, CRT_Upgrade,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_CHAINSAW,		"chainsaw",				"F", 15, CRT_Weapon,	(0));
+	AddCrateType (CRATE_MARINEBEACON,	"marine beacon",		"F", 15, CRT_Item,		(0));
+	AddCrateType (CRATE_OPENDECK,		"open deck",			"J",  5, CRT_Item,		(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_THERMALCLOAK,	"thermal cloak",		"U", 10, CRT_Powerup,	(0));
+	AddCrateType (CRATE_DISARM,			"disarm crate",			"A", 10, CRT_Bad,		(0));
+	AddCrateType (CRATE_FATIGUE,		"fatigue",				"G", 10, CRT_Bad,		(0));
+	AddCrateType (CRATE_REMOTEC4,		"remote C4",			"K", 10, CRT_Weapon,	(0));
+	AddCrateType (CRATE_BLURSPHERE,		"partial invisibility",	"U", 10, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_RANDOMWEAPON,	"random weapon",		"F", 25, CRT_Weapon,	(0));
+	AddCrateType (CRATE_JETPACK,		"jetpack",				"F", 10, CRT_Item,		(0));
+	AddCrateType (CRATE_REVOLVER,		"blood revolver",		"G",  2, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_RADAR,			"radar",				"D",  10, CRT_Powerup,	(CRF_ANNOUNCE));
+	AddCrateType (CRATE_BOMBPACK,		"bomb pack",			"F",  7, CRT_Item,		(CRF_ANNOUNCE));
+	AddCrateType (CRATE_IMP,			"imp attack",			"S",  8, CRT_Bad,		(CRF_ANNOUNCE));
+	AddCrateType (CRATE_C4,				"C4",					"K", 10, CRT_Item,		(0));
+	AddCrateType (CRATE_GRENADES,		"grenade pack",			"D", 10, CRT_Item,		(0));
+	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G", 5,	 CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0));
+
+	
+}
+
+// ============================================================================
+// [Dusk] Can the player acquire this crate effect? Returns true if the player
+// can get the crate, false if there is something preventing the effect.
+// Essentially this is a list of criteria for a crate to be picked. If these
+// criteria fail, the crate will pick another effect and keeps doing so until
+// a suitable effect is found.
+function int CheckCrate (int c) {
+	if (c < 0 || c >= NUM_CRATES)
+		return false;
+	
+	int rankIndex = MAX_RANKS - (GetRank() + 5);
+	
+	if (rankIndex <= 0)
+		rankIndex = 1;
+	
+	switch (c) {
+	case CRATE_ARMORUP:
+		return (GetArmorGrade () < 5); // not if the player already has G5
+	case CRATE_CHEMARMOR:
+		return	!CheckInventory ("ChemicalArmor") && // not if the player already is chem-proof
+				!CheckInventory ("PowerChemicalProof"); // or has the armor item
+	case CRATE_FIREPOWER:
+		return !CheckInventory ("PowerFirepowerUpgrade"); // not if the player already has the upgrade
+	case CRATE_BONUSXP:
+		return GetRank () < RANK_GENERAL; // not if the player is already max rank
+	case CRATE_CREDITSSTOLEN:
+		return GetRank() > RANK_CORPORAL;
+	case CRATE_FIREARMOR:
+		return	(!CheckInventory ("FireArmor") && // same logic here as in chemproof
+				!CheckInventory ("PowerFireProof"));
+	case CRATE_STEALTH:
+		return	!CheckInventory("StealthLaserRifle") && // not if the player is already stealth
+				!CheckInventory ("Knife") &&
+				!CheckInventory("PowerInvisibility"); // stealth and blursphere conflict
+	case CRATE_IRONCURTAIN:
+		return !GetConfig (CONFIG_TOURNAMENTMODE) && // don't give iron curtain in tournament mode
+				!CheckInventory ("IsMech"); // not if the player is a mech
+	case CRATE_KAMIKAZE:
+		return	(!CheckInventory ("IsKamikaze") && // not if the player already has kamikaze
+				!GetConfig (CONFIG_TOURNAMENTMODE)); // not in tournament mode
+	case CRATE_PLASMACANNON:
+		return	!CheckInventory("PlasmaCannon") && // not if the player already has the plasma cannon
+				!GetConfig (CONFIG_TOURNAMENTMODE); // not in tournament mode
+	case CRATE_CLASSSWAP:
+		return false/*CheckInventory ("HasClass")*/; // not if the player doesn't have a class to swap
+	case CRATE_SPEEDUPGRADE:
+		return	!CheckInventory ("PowerSpeedUpgrade") && // not if the player already has this
+				!CheckInventory ("StealthLaserRifle") && // don't give this to stealths, the speed trail
+				!CheckInventory ("Knife") && // ruins the invisibility effect!
+				!CheckInventory ("PowerInvisibility");
+	case CRATE_TIMEGUN:
+		return !CheckInventory ("TimeGun") ||
+				!CheckInventory("Karasawa"); // not if the player already has the time gun
+		break;
+	case CRATE_BOMB:
+		// [Dusk] High rankers get less of these.
+		// [Dusk] Clients cannot predict random numbers. Since it's
+		// still a low probability, just pretend that it's true.
+		// The client ATM doesn't even use this since the open deck
+		// doesn't provide the bomb crate.
+		if (netstate != NETSTATE_Client && GetRank () <= RANK_MASTERSGT && !random (0, 2))
+			return false;
+	case CRATE_BASECRASHER:
+		return CheckBaseCrasher(PlayerTeam()); // [SG] defined in a_functions.acs
+	case CRATE_BASEMIRACLE:
+		return CheckBaseMiracle(PlayerTeam()); // [SG] defined in a_functions.acs
+	case CRATE_UTILITYGUN:
+		return !TeamInvCount("UtilityGun", PlayerTeam() >= GetConfig(CONFIG_MAXUTILITYGUY)) &&
+				!CheckInventory ("UtilityGun"); // not if player already has utility
+	case CRATE_ENERGYARMOR:
+		return	!CheckInventory ("PowerEnergyResistance") && // not if the player is already energy-resistant
+				!CheckInventory ("EnergyArmor"); // or has an armor item that gives it
+	case CRATE_EXPLOARMOR:
+		return	!CheckInventory ("ExplosionArmor") && // ditto, for explosion resistance
+				!CheckInventory ("PowerExplosiveResistance");
+	case CRATE_BULLETARMOR:
+		return	!CheckInventory ("BulletProofArmor") && // ditto, for bullet proof
+				!CheckInventory ("PowerBulletProof");
+	case CRATE_JUGGERNAUT:
+		return	CheckMinutes (5) && // not until 5:00
+				!CheckInventory("IsMech") && // not if already mech
+				GetConfig (CONFIG_MECHS) && // only if mechs are enabled
+				!GetConfig (CONFIG_LIGHTMECHS) && // [JD] Disallows this on light mech maps
+				!CheckInventory ("JuggernautPowerup"); // not if player already has the item
+	case CRATE_BERSERK:
+		return	CheckMinutes (5) && // not until 5:00
+				!CheckInventory ("IsMech") && // not if the player is a mech
+				!CheckInventory("PowerBerserk"); // not if the player is already berserk
+	case CRATE_MEDFIELD:
+		return CheckInventory ("MedicationFieldItem") < 3; // not if the player already has 3 med fields
+	case CRATE_CHAINSAW:
+		return !CheckInventory ("EagerBeaver"); // not if the player already has the chainsaw
+	case CRATE_MARINEBEACON:
+		return CheckInventory("MarineBeaconItem") < 1;
+	case CRATE_OPENDECK:
+		return	CheckMinutes (5) && // not until 5:00
+				!CheckInventory ("OpenDeck") && // not if the player already has open deck
+				!GetConfig (CONFIG_TOURNAMENTMODE);
+	case CRATE_DISARM:
+		// Same logic here as in bomb crate.
+		if (GetRank () >= RANK_MASTERSGT &&
+			!random (0, 2))
+			return false;
+		return	!CheckInventory ("IsMech") && // don't disarm a mech
+				!CheckInventory("TimeGun") &&
+				!CheckInventory("Karasawa");
+	case CRATE_FATIGUE:
+		return	////!CheckInventory ("PowerFatigue") && // not if the player is already fatigue'd
+				////!CheckInventory ("StealthLaserRifle") && // don't slow down stealths or blurred
+				////!CheckInventory ("Knife") && // players, the speed trail ruins the invisibility effect.
+				////!CheckInventory ("PowerInvisibility");
+				false;
+	case CRATE_REMOTEC4:
+		return !CheckInventory ("RemoteC4"); // not if the player already has remote C4
+	case CRATE_BLURSPHERE:
+		return	!CheckInventory ("StealthLaserRifle") && // stealth and blursphere conflict
+				!CheckInventory ("Knife") &&
+				!CheckInventory ("PowerInvisibility"); // not if the player is already blurred
+	case CRATE_JETPACK:
+		return !CheckInventory ("Jetpack"); // not if the player already has the jetpack
+	case CRATE_REVOLVER:
+		return	!CheckInventory ("Revolver"); // not if the player already has the revolver
+	case CRATE_RADAR:
+		return	!CheckInventory ("PowerRadar") && // not if the player already has the radar
+				!GetConfig (CONFIG_NORADAR); // not if radars are disabled
+	case CRATE_BOMBPACK:
+		return	!CheckInventory ("BombPack") && // not if the player is already suicide bomber
+				!CheckInventory ("BombPackItem"); // or has the morph item
+	case CRATE_IMP:
+		return	!intHolder[i_SuddenDeath]; // not during sudden death
+	case CRATE_C4:
+		return	CheckInventory ("TimedC4") < 4;
+	case CRATE_GRENADES:
+		return	(CheckInventory ("FragGrenadeAmmo") < 4) &&
+				(CheckInventory ("FlashbangAmmo") < 4);
+	case CRATE_QUADSHOTGUN:
+		return !CheckInventory("Quad Shotgun");
+	case CRATE_SOULSPHERE:
+		return !CheckInventory("IsMech") &&
+				!CheckInventory("CRATE_SoulsphereDummyItem");
+	}
+	
+	return true;
+}
+
+// ============================================================================
+// Script 309: actual crate script
+// [Dusk] This uses identifiers now
+script 309 (int c) {
+	// Check that the crate is good - if not, find a good one.
+	while (!CheckCrate (c))
+		c = RandomCrate ();
+	
+	str name = g_Crates_str[c][CRK_NAME];
+	
+	// Log it
+	if (netstate == NETSTATE_Server)
+		Log (n:0, s:" gets ", s:name);
+	
+	// Announce it - either to player or globally.
+	if (g_Crates_int[c][CRK_Flags] & CRF_Announce) {
+		str teamname = cond (PlayerTeam() == TEAM_RED, "\cARed team\cJ", "\cNBlue team\cJ");
+		IntelMessage (strparam (s:teamname, s:" got ", s:name, s:"!"), true);
+	} else {
+		IntelMessage (strparam (s:"\c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), false);
+	}
+	
+	// [Dusk] {9/15/12} And to his teammates
+	TeamMessage (TMSG_CRATE, c, playernumber());
+	
+	// =============================================================================
+	// Give the player the effect. We use SMALLFONT by default
+	SetFont ("SMALLFONT");
+	switch (c) {
+	case CRATE_ARMORUP:
+		LocalAmbientSound ("powerup/armr", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		AddArmor (1);
+		break;
+	case CRATE_BASEMIRACLE:
+		AmbientSound ("powerup/base", 127);
+		
+		if (PlayerTeam() == TEAM_RED) {
+			if (GotBarracks[0])
+				SetActorHealth (201, GetActorSpawnHealth (201));
+			if (GotRefinery[0])
+				SetActorHealth (203, GetActorSpawnHealth (203));
+			if (GotPlant[0])
+				SetActorHealth (205, GetActorSpawnHealth (205));
+			if (GotFactory[0])
+				SetActorHealth (207, GetActorSpawnHealth (207));
+			if (GotObelisk[0])
+				SetActorHealth (214, GetActorSpawnHealth (214));
+		} else if (PlayerTeam() == TEAM_BLUE) {
+			if (GotBarracks[1])
+				SetActorHealth (101, GetActorSpawnHealth (101));
+			if (GotRefinery[1])
+				SetActorHealth (103, GetActorSpawnHealth (103));
+			if (GotPlant[1])
+				SetActorHealth (105, GetActorSpawnHealth (105));
+			if (GotFactory[1])
+				SetActorHealth (107, GetActorSpawnHealth (107));
+			if (GotObelisk[1])
+				SetActorHealth (114, GetActorSpawnHealth (114));
+		}
+		
+		SYNC_UpdateAllBuildings ();
+		break;
+	case CRATE_CHEMARMOR:
+		LocalAmbientSound ("powerup/chem", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		GiveInventory ("ChemicalArmor", 1);
+		break;
+	case CRATE_FIREPOWER:
+		LocalAmbientSound ("powerup/dama", 127);
+		GiveInventory ("FirepowerUpgrade", 1);
+		break;
+	case CRATE_BONUSCREDITS:
+		LocalAmbientSound ("powerup/cred", 127);
+		Delay (4);
+		ActivatorSound ("powerup/credsound", 127);
+		GiveCredits (intHolder[i_CreditAwardAmount]);
+		break;
+	case CRATE_BONUSXP:
+		LocalAmbientSound ("powerup/exp",255);
+		
+		for (int i = 0; i < 5; i++) {
+			Delay (5);
+			ActivatorSound ("c4/use", 127);
+			AddExperience (50);
+		}
+		break;
+	case CRATE_FIREARMOR:
+		LocalAmbientSound ("powerup/fire", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		GiveInventory ("FireArmor", 1);
+		break;
+	case CRATE_STEALTH:
+		LocalAmbientSound ("powerup/invi", 127);
+		ActivatorSound ("powerup/invisound", 127);
+		
+		AddArmor (-1);
+		GiveInventory ("StealthLaserRifle", 1);
+		GiveInventory ("LaserRifleAmmo", 100);
+		SetActorProperty (0, APROP_DeathSound, "stealth/death");
+		
+		// Info message
+		delay (2 * 35);
+		IntelMessage ("\cJUse the rifle's \cKAlt-Fire\cJ\nto toggle \cUstealth!", false);
+		break;
+	case CRATE_IRONCURTAIN:
+		LocalAmbientSound ("powerup/iron", 127);
+		ActivatorSound ("powerup/invisound", 127);
+		
+		GiveInventory("IronCurtain",1); // [SG] reverted Iron Curtain to invul instead of 1000 hp
+		
+		IntelMessage ("\cCIron curtain!!", false);
+		break;
+	case CRATE_KAMIKAZE:
+		LocalAmbientSound ("powerup/kama", 127);
+		
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("Some crazy ass \cARed player\cJ got\nthe \cKKamikaze Crate!!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("Some crazy ass \cNBlue player\cJ got\nthe \cKKamikaze Crate!!", true);
+		IntelMessage ("\cKKamikaze!", false);
+		
+		GiveInventory ("IsKamikaze", 1);
+		break;
+	case CRATE_PLASMACANNON:
+		LocalAmbientSound ("powerup/plas",255);
+		GiveItem (ITEM_PlasmaCannon, false);
+		RecountPlasma ();
+		break;
+	case CRATE_CLASSSWAP:
+		if(checkinventory("timegun") || CheckInventory("Karasawa"))
+		{
+			delay(1);
+			acs_executealways(309, 0, random(0, 10));
+			terminate;
+		}
+		
+		int oldclass = GetClass ();
+		
+		// [Dusk] First, resign the player
+		ACS_ExecuteAlways (95, 0, 0, RF_FORCE);
+		delay (25);
+		
+		// [Dusk] Next, give the player a new, random class. Do make sure it's
+		// not the same one he had before he got this crate.
+		int class;
+		do
+			class = random (0, NUMCLASSES - 1);
+		while (class == oldclass);
+		
+		SetClass (class, SCF_NOTELEPORT | SCF_NOBEEP);
+		break;
+	case CRATE_SPEEDUPGRADE:
+		LocalAmbientSound ("powerup/sped", 127);
+		GiveInventory ("SpeedUpgrade", 1);
+		break;
+	case CRATE_CREDITSSTOLEN:
+		LocalAmbientSound ("powerup/stol", 127);
+		Delay(4);
+		ActivatorSound ("powerup/stolsound", 127);
+		TakeCredits (-1, intHolder[i_CreditAwardAmount], false);
+		break;
+	case CRATE_TIMEGUN:
+		LocalAmbientSound ("powerup/time", 127);
+		ActivatorSound ("misc/timewarp", 64);
+		
+		GiveInventory ("TimeGun", 1);
+		RecountTimeCops ();
+		break;
+	case CRATE_BOMB:
+		if (GetCVar ("zeta_sillythings") && PlayerCount() >= 2) {
+			// :V
+			int player;
+			do {
+				player = random (0, MAXPLAYERS - 1);
+			} while (!PlayerInGame (player) || player == PlayerNumber());
+			
+			SetActivator (3800 + player);
+		}
+		
+		SetFont("BIGFONT");
+		HudMessage(s:"BOMB CRATE!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
+		
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (n:0, s:"\c- is gonna blow!"), true);
+		
+		// Give the effect to the player
+		if (PlayerTeam() == TEAM_BLUE)
+			GiveInventory ("BombCrateFXGiverBlue", 1);
+		else
+			GiveInventory ("BombCrateFXGiverRed", 1);
+		
+		// Sound
+		ActivatorSound ("powerup/bomb", 127);
+		
+		// For the victim himself, there isn't any fade actor as it
+		// would just get in the way of vision. Instead, give him a
+		// fade, which works as a nicer version. We however need to
+		// keep checking for the victim's health every second, if he
+		// is dead, we clear the fade.
+		for (i = 0; i <= 4; i++) {
+			// If he's dead, clear the fade.
+			if (GetHealth() <= 0) {
+				FadeTo (0, 0, 0, 0, 1.0);
+				terminate;
+			}
+			
+			if (PlayerTeam() == TEAM_BLUE)
+				FadeTo (0, 128, 255, i * 0.15, 1.0);
+			else
+				FadeTo (255, 128, 0, i * 0.15, 1.0);
+			
+			delay (33);
+		}
+		
+		// Clear it now.
+		FadeTo (0, 0, 0, 0, 1.0);
+		
+		if (GetHealth () <= 0)
+			break;
+		
+		// If he is in spawn room, do nothing.
+		if (CheckInventory ("IsInSpawnRoom"))
+			break;
+		
+		// Now blow him up.
+		GiveInventory ("IsKamikaze", 1);
+		delay (1);
+		Thing_Destroy (ActivatorTID(), 1);
+		break;
+	case CRATE_BASECRASHER:
+		// [Dusk] Set the activator to world first. A player cannot damage his own buildings
+		// now that buildings are team-designated. Also store his team first for the check below.
+		int team = PlayerTeam ();
+		SetActivator (-1);
+		
+		AmbientSound ("weapons/rocklx", 127);
+		AmbientSound ("powerup/crsh", 127);
+		if (team == TEAM_RED) {
+			IntelMessage ("Poor \cARed Team\cJ got a \cRBase Crasher\cJ!", true);
+			Thing_Damage(201,4000,0);
+			Thing_Damage(203,4000,0);
+			Thing_Damage(205,4000,0);
+			Thing_Damage(207,4000,0);
+			Thing_Damage(214,2500,0);
+		} else {
+			IntelMessage ("Poor \cNBlue Team\cJ got a \cRBase Crasher\cJ!", true);
+			Thing_Damage(101,4000,0);
+			Thing_Damage(103,4000,0);
+			Thing_Damage(105,4000,0);
+			Thing_Damage(107,4000,0);
+			Thing_Damage(114,2500,0);
+		}
+		
+		// Update the building healths to clients
+		SYNC_UpdateAllBuildings ();
+		break;
+	case CRATE_UTILITYGUN:
+		GiveInventory("UtilityGun", 75);
+		ActivatorSound ("switch/pulse", 127);
+		
+		delay (2*35);
+		IntelMessage ("Use \cFAlt-Fire\cJ for \cNitem selection menu!", false);
+		break;
+	case CRATE_ENERGYARMOR:
+		LocalAmbientSound ("powerup/resistlaser", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		GiveInventory ("EnergyArmor", 1);
+		break;
+	case CRATE_EXPLOARMOR:
+		LocalAmbientSound("powerup/resistexplosive", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		GiveInventory ("ExplosionArmor", 1);
+		break;
+	case CRATE_BULLETARMOR:
+		LocalAmbientSound ("powerup/resistbullet", 127);
+		ActivatorSound ("misc/armor_pkup", 127);
+		GiveInventory ("BulletProofArmor", 1);
+		break;
+	case CRATE_JUGGERNAUT:
+		GiveInventory ("JuggernautPowerup",1);
+		GiveInventory ("FlamerAmmo", 200);
+		GiveInventory ("NukeAmmo", 1);
+		ActivatorSound ("switch/lrm", 127);
+		break;
+	case CRATE_BERSERK:
+		GiveInventory ("BerserkSwitch", 1);
+		delay (5);
+		GiveInventory ("BerserkHue", 1);
+		break;
+	case CRATE_MEDFIELD:
+		GiveInventory ("MedicationFieldItem", 1);
+		GiveInventory ("MedicationFieldCount", 1);
+		break;
+	case CRATE_TEAMBOOST:
+		// [Dusk] This crate gives 15% max health and +1 armor to all teammates now.
+		for (int k = 0; k < MAXPLAYERS; k++) {
+			if (PlayerInGame (k) && GetPlayerTeam (k) == PlayerTeam()) {
+				GiveActorInventory(3800 + k, "hasTeamBoost", 1);
+				ThingSound (3800+k, "misc/health_pkup", 127);
+				ThingSound (3800+k, "misc/armor_pkup", 127);
+				SetActorSpawnHealth (3800+k, GetActorSpawnHealth (3800+k) + 15);
+				SetActorHealth (3800+k, GetActorSpawnHealth (3800+k));
+				SetPlayerArmorGrade (k, 1, AGF_ADDITIVE);
+			}
+		}
+		
+		break;
+	case CRATE_CHAINSAW:
+		IntelMessage ("\cKA chainsaw! Find some meat!", false);
+		GiveInventory ("EagerBeaver", 1);
+		
+		// [Dusk] The chainsaw replaces unarmed, therefore
+		// if we use the fists, switch to the chainsaw.
+		if (CheckWeapon ("Unarmed"))
+			SetWeapon ("EagerBeaver");
+		else
+			ActivatorSound ("weapons/sawup", 127);
+		
+		TakeInventory ("Unarmed", 1);
+		break;
+	case CRATE_MARINEBEACON:
+		GiveInventory("MarineBeaconItem",1);
+		break;
+	case CRATE_OPENDECK:
+		ActivatorSound ("powerup/invisound", 127);
+		GiveInventory ("OpenDeck", 1);
+		break;
+	case CRATE_THERMALCLOAK:
+		GiveInventory ("ThermalCloak", 1);
+		ACS_ExecuteAlways (953, 0);
+		
+		delay (35);
+		IntelMessage ("Turrets cannot see you for 90 seconds", false);
+		break;
+	case CRATE_DISARM:
+		SetFont ("BIGFONT");
+		HudMessage (s:"Disarm crate!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
+		
+		SetFont ("SMALLFONT");
+		IntelMessage ("Somebody lost all of his weapons.", true);
+		
+		// [Dusk] {11/2/12} Should this loop through the item table and
+		// remove weapons based on its information rather than relying on
+		// a static list? I almost forgot Combustion Autorifle out of it.
+		CheckAndRemove ("Boomstick");
+		CheckAndRemove ("DoubleShotgun");
+		CheckAndRemove ("Rifle");
+		CheckAndRemove ("GaussRifle");
+		CheckAndRemove ("GrenadeLauncher");
+		CheckAndRemove ("StealthLaserRifle");
+		CheckAndRemove ("LaserRifle");
+		CheckAndRemove ("MissileLauncher");
+		CheckAndRemove ("CrateChooser");
+		CheckAndRemove ("LaserChaingun");
+		CheckAndRemove ("UtilityGun");
+		CheckAndRemove ("PlasmaCannon");
+		CheckAndRemove ("ArtilleryCannon");
+		CheckAndRemove ("ChemicalSprayer");
+		CheckAndRemove ("TiberiumAutorifleWeak");
+		CheckAndRemove ("TiberiumAutorifle");
+		CheckAndRemove ("Flashbang");
+		CheckAndRemove ("FragGrenade");
+		CheckAndRemove ("RepairGunUpgrade");
+		if (GetRank () < RANK_MAJOR)
+			CheckAndRemove ("RepairGun");
+		CheckAndRemove ("HealGun");
+		CheckAndRemove ("BombSquadGun");
+		CheckAndRemove ("SubMachineGun");
+		CheckAndRemove ("Flamer");
+		CheckAndRemove ("ShockRifle");
+		CheckAndRemove ("SniperRifle");
+		CheckAndRemove ("SniperRifleWeak");
+		CheckAndRemove ("PlasmaGun");
+		CheckAndRemove ("MachineGun");
+		CheckAndRemove ("GatlingGun");
+		CheckAndRemove ("Karasawa");
+		CheckAndRemove ("CombustionAutorifle");
+		CheckAndRemove ("CombustionAutorifleWeak");
+		CheckAndRemove ("TimeGun");
+		CheckAndRemove ("ChronoBow");
+		CheckAndRemove ("Quad Shotgun");
+		CheckAndRemove ("Nail-Machine Gun");
+		
+		if (CheckInventory ("EagerBeaver")) {
+			TakeInventory ("EagerBeaver", 1);
+			GiveInventory ("Unarmed", 1);
+		}
+		
+		if (CheckInventory ("Knife"))
+			SetWeapon ("Knife");
+			
+		else {
+			
+			if (!CheckInventory("Handgun"))
+				GiveItem (ITEM_HANDGUN, false);
+				
+			SetWeapon ("Handgun");
+		}
+		
+		SetActorSpeed (0, 1.0);
+		PlayerSpeeds[PlayerNumber()] = 1.0;
+		
+		GiveCredits (CheckInventory ("Refunds"));
+		SetInventory ("Refunds", 0);
+		SpawnSpotForced ("TeleportFog", 0, 0, 0);
+		delay (15);
+		ActivatorSound ("heavy/argh", 127);
+		break;
+	case CRATE_FATIGUE:
+		GiveInventory ("SpeedDowngrade", 1);
+		break;
+	case CRATE_REMOTEC4:
+		ActivatorSound ("c4/remote", 127);
+		GiveItem (ITEM_REMOTEC4, false);
+		break;
+	case CRATE_BLURSPHERE:
+		GiveInventory ("BlurSphere", 1);
+		break;
+	case CRATE_RANDOMWEAPON:
+		int RandomWeapon = -1;
+		int x, n;
+		
+		// [Dusk] Try determine a random weapon the player doesn't have.
+		for (i = 0; i <= 7; i++) {
+			x = RandomWeaponCrateItems[random (0, MAX_RANDOMWEAPONCRATEITEMS-1)];
+			if (!CheckInventory (Items_str[x][IK_ITEM0])) {
+				RandomWeapon = x;
+				break;
+			}
+		}
+		
+		// [Dusk] Could not find a weapon the player doesn't have.
+		// Get another crate instead.
+		if (RandomWeapon == -1) {
+			c = 0;
+			restart;
+		}
+		
+		LocalAmbientSound ("misc/w_pkup", 127);
+		IntelMessage (strparam (s:"\cFRandom Weapon!\nYou get a \cF", s:Items_str[RandomWeapon][IK_NAME]), false);
+		
+		GiveItem (RandomWeapon, false);
+		break;
+	case CRATE_JETPACK:
+		GiveItem (ITEM_JETPACK, false);
+		break;
+	case CRATE_REVOLVER:
+		IntelMessage (strparam (n:0, s:"\cJ got \cAblood revolver!"), true);
+		GiveInventory ("BloodRevolver", 1);
+		GiveInventory ("BloodRevolverAmmo", 3);
+		delay (1);
+		SetWeapon ("BloodRevolver");
+		break;
+	case CRATE_QUADSHOTGUN:	
+		IntelMessage (strparam(n:0, s:"\cJ got the \cAQuad Shotgun!"), true);
+		GiveInventory("Quad Shotgun", 1);
+		Delay(1);
+		SetWeapon("Quad Shotgun");
+		break;
+	case CRATE_RADAR:
+		GiveInventory ("Radar", 1);
+		break;
+	case CRATE_BOMBPACK:
+		ActivatorSound ("terrorist/activate", 127);
+		IntelMessage ("\cFYou got the bomb pack! Terrorist!", false);
+		GiveInventory ("BombPackItem", 1);
+		break;
+	case CRATE_IMP:
+		// [Dusk] Spawns an invasion of imps in the team's base.
+		AmbientSound ("imp/sight", 127);
+		
+		// Check that this team actually has terminals
+		for (i = 0; i < 5; i++)
+			if (ThingCount (T_NONE, BaseTIDs[random (0, 5) * 2 + PlayerTeam()]))
+				break;
+		
+		if (i == 5)
+			break;
+		
+		// Pick a building and make sure that it exists, no point
+		// in assaulting dead buidings.
+		int building;
+		do
+			building = BaseTIDs[random (0, 5) * 2 + PlayerTeam()];
+		while (ThingCount (T_NONE, building) == 0);
+		
+		// Spawn 3 spawner actors, each spawns 7 imps. We do this instead of
+		// having one spawner of 21 imps for this way the imps spawn closer to
+		// the MCT.
+		for (i = 0; i < 3; i++) {
+			delay (18);
+			int tid = TemporaryTID ();
+			
+			// Spawn the spawner.
+			SpawnSpotForced ("ImpSpawner", building, tid, 0);
+			
+			// Tell the imp spawner which building it is targeting
+			GiveActorInventory (tid, "ImpSpawnerTarget", building);
+			
+			// Free the temporary TID
+			Thing_ChangeTID (tid, 0);
+		}
+		
+		break;
+	case CRATE_C4:
+		for (i = 0; i < ITEM_maxGrenades; i++) {
+			ActivatorSound ("c4/use", 127);
+			GiveInventory ("TimedC4", 1);
+			GiveInventory ("TimedC4Count", 1);
+			delay (15); }
+	case CRATE_GRENADES:
+		if (!CheckInventory("FragGrenade") || !CheckInventory("Flashbang"))
+		{
+			GiveInventory("FragGrenade", 1);
+			GiveInventory("Flashbang", 1);
+		}
+		
+		ActivatorSound ("flash/flashthrow", 127);
+		SetFragGrenades (ITEM_maxGrenades);
+		SetFlashbangs (ITEM_maxFlashBangs);
+		break;
+	case CRATE_SOULSPHERE:
+		ActivatorSound("misc/p_pkup", 127);
+		GiveInventory("CRATE_SoulsphereDummyItem", 1);
+		ACS_NamedExecuteAlways("CRATE_SoulsphereDegeneration", 0, 0, 0, 0);
+		break;
+		
+	}
+}
+
+Script "CRATE_SoulsphereDegeneration" (void)
+{	
+	SetHealth(GetHealth() + 100);
+	
+	if (GetHealth() > 200)
+		SetHealth(200);
+	
+	while (GetHealth() > GetSpawnHealth() && !CheckInventory("IsMech") && CheckInventory("CRATE_SoulsphereDummyItem"))
+	{
+		Delay(35*1);
+		SetHealth(GetHealth() - 1);
+	}
+	
+	/*if (GetHealth() < GetSpawnHealth())
+		SetHealth(GetSpawnHealth());*/
+	
+	TakeInventory("CRATE_SoulsphereDummyItem", 1);
+}
+
+// ============================================================================
+function void AddCrateType (int token, str name, str color, int weight, int type, int flags) {
+	// If this happens, NUM_CRATES probably was not updated for new crates.
+	if (token < 0 || token >= NUM_CRATES)
+		FatalError3f ("Tried to define a crate effect `%s` with invalid token %d! NUM_CRATES is %d",
+			name, token, NUM_CRATES);
+	
+	// Add the crate
+	g_Crates_int[token][CRK_DEFINED] = true;
+	g_Crates_str[token][CRK_NAME] = name;
+	g_Crates_str[token][CRK_COLOR] = color;
+	g_Crates_int[token][CRK_WEIGHT] = weight;
+	g_Crates_int[token][CRK_TYPE] = type;
+	g_Crates_int[token][CRK_FLAGS] = flags;
+}
+
+// ============================================================================
+// Get a random crate effect.
+function int RandomCrate (void) {
+	int x = 0;
+	int crate = -1;
+	
+	while (x < intHolder[i_g_CrateSeed])
+		x += g_Crates_int[++crate][CRK_WEIGHT];
+	
+	// Reseed the crate now so that if we come here again during
+	// the next second (for instance if checking failed), we won't
+	// have the same seed.
+	CR_Reseed ();
+	
+	return crate;
+}
+
+// ============================================================================
+// [Dusk] In order to keep crates random, keep seeding the random value. This
+// should eliminate any favoring towards effects. Before this there could be
+// for instance as much as 5-6 berserkers per game!
+script 805 open {
+	// Wait until crates are initialized
+	while (!g_Crates_int[0][CRK_DEFINED])
+		delay (5);
+	
+	while (1) {
+		CR_Reseed ();
+		delay (55);
+	}
+	
+	restart;
+}
+// ============================================================================
+function void CR_Reseed (void) {
+	// [Dusk] Get the overall crate weight
+	int w = 0;
+	for (int i = 0; g_Crates_int[i][CRK_DEFINED]; i++)
+		w += g_Crates_int[i][CRK_WEIGHT];
+	
+	// Get the random crate number
+	intHolder[i_g_CrateSeed] += random (0, w);
+	intHolder[i_g_CrateSeed] %= w;
+}
+
+// ============================================================================
+function str CR_GetDisplayName (int c) {
+	return g_Crates_str[c][CRK_NAME];
+}
+
+// ============================================================================
+// THERMAL CLOAKING
+// [Dusk] Converted into a `real` powerup
+script SC_THERMALCLOAK (void) {
+	SetPlayerProperty (0, 1, PROP_NOTARGET);
+	
+	while (CheckInventory ("PowerThermalCloak"))
+		delay (35);
+	
+	SetPlayerProperty (0, 0, PROP_NOTARGET);
+}
+
+// ============================================================================
+// [Dusk] BOMB CRATE EFFECTS
+// The effect actor calls this repeadetly
+script SC_CL_BOMBCRATEFX (void) CLIENTSIDE {
+	// [Dusk] Don't display this actor for the victim player, he gets a fade instead.
+	if (GetTargetInfo (TARGETINFO_PlayerNum) == intHolder[i_consoleplayer]) {
+		SetActorState (0, "Clear");
+		terminate;
+	}
+	
+	// The guy died prematurely, remove the fade.
+	if (GetTargetInfo (TARGETINFO_Health) <= 0) {
+		SetActorState (0, "Clear");
+		terminate;
+	}
+	
+	// Update position
+	SetActorPosition (0, GetTargetInfo (TARGETINFO_X), GetTargetInfo (TARGETINFO_Y),
+		GetTargetInfo (TARGETINFO_Z), 0);
+}
+
+// ============================================================================
+// [Dusk] Randomized crate spots
+// ============================================================================
+// Assigns a TID for a crate spot.
+script 810 (void) {
+	int i;
+	for (i = TID_CRATESPOT_START; i <= TID_CRATESPOT_END; i++) {
+		if (!ThingCount (0, i))
+			break;
+		else if (!CheckActorInventory (i, "IsCrateSpot"))
+			Print2f ("Warning: TID %d is reserved for a crate spot but is used by a %s.", i, GetActorClass (i));
+	}
+	
+	if (i > TID_CRATESPOT_END)
+		FatalError1f ("Too many crate spots! Can only have %d crate spots.",
+			TID_CRATESPOT_END - TID_CRATESPOT_START);
+	
+	Thing_ChangeTID (0, i);
+}
+
+// ============================================================================
+function int CountCrateSpots (void) {
+	// Find the amount of crates
+	int i;
+	for (i = TID_CRATESPOT_START; i <= TID_CRATESPOT_END; i++)
+		if (!ThingCount (0, i))
+			break;
+	return i - TID_CRATESPOT_START;
+}
+
+// ============================================================================
+// Governs crate spawning
+script 812 OPEN {
+	// Give some time for the crate spots to initialize.
+	delay (1);
+	
+	// The crate TID is expected to be free.
+	if (ThingCount (0, TID_CRATE)) {
+		Print4f ("WARNING: TID %d is reserved for the powerup crate, but is used by a %s at (%d, %d)! There will be no crates.",
+			TID_CRATE, GetActorClass (TID_CRATE), GetActorX (TID_CRATE) >> 16, GetActorY (TID_CRATE) >> 16);
+		terminate;
+	}
+	
+	int cratecount = CountCrateSpots ();
+	if (!cratecount)
+		terminate;
+	
+	while (1) {
+		// Get a random spot
+		int spot = random (0, cratecount - 1);
+		int spottid = TID_CRATESPOT_START + spot;
+		
+		// Spawn the crate to the spot
+		SpawnSpotForced ("PowerupCrate", spottid, TID_CRATE, 0);
+		SpawnSpotForced ("ItemFog", spottid, 0, 0);
+		ThingSound (spottid, "misc/spawn", 127);
+		
+		// Call the event script if this isn't the first spawn.
+		if (Timer() >= MINUTETICS)
+			CallEvent (ACTION_CrateRespawn, 0);
+		
+		// Wait until the crate has been picked up.
+		while (ThingCount (0, TID_CRATE))
+			delay (1);
+		
+		CallEvent (ACTION_CratePickup, 0);
+		
+		// The crate has been picked up, now wait one minute and then respawn the crate.
+		delay (MINUTETICS);
+	}
+}

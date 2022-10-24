@@ -1,0 +1,34 @@
+// Doom Doors ---------------------------------
+
+:DoorOpenNormal
+	play		door/start
+	delay		16
+	playloop	door/loop 27
+	stopsound	door/end
+	
+end
+
+:DoorCloseNormal
+	play		door/start
+	delay		16
+	playloop	door/loop 27
+	stopsound	door/end
+	
+end
+
+:DoorOpenBlazing
+	play		doors/dr2_open
+	nostopcutoff
+end
+
+:DoorCloseBlazing
+	play		doors/dr2_clos
+	nostopcutoff
+end
+
+[DoorNormal
+	0		DoorOpenNormal
+	1		DoorCloseNormal
+	2		DoorOpenBlazing
+	3		DoorCloseBlazing
+]

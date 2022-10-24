@@ -1,0 +1,927 @@
+// All Out War 2 Mech scripts
+// Credit to VoltlocK for originally creating the engine
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// =============================================================================
+// [Dusk] These functions stash and restore the armor values. PushArmor should be used
+// when a player goes into a mech, PopArmor should be used when the player ejects.
+function void PushArmor (void) {
+	SetInventory ("StoredArmorGrade", GetArmorGrade ());
+	SetInventory ("StoredArmorModifier", GetArmorModifier ());
+	SetArmorGrade (0, ARMOD_NONE);
+	
+	// Special check for armor upgrade. SetArmorGrade here
+	// will leave it to the player, and in PushArmor will
+	// give the player extra. catering for both:
+	if (CheckInventory ("HasArmorUpgrade")) {
+		CheckAndRemove ("PowerGrade1Armor");
+		TakeInventory ("StoredArmorGrade", 1);
+	}
+}
+
+// =============================================================================
+function void PopArmor (void) {
+	SetArmorGrade (CheckInventory ("StoredArmorGrade"), CheckInventory ("StoredArmorModifier"));
+	SetInventory ("StoredArmorModifier", 0);
+	SetInventory ("StoredArmorGrade", 0);
+}
+
+// =============================================================================
+function str WF_PurchaseMech (int mech) {
+	return ACS_ExecuteWithResult (SC_MECHMORPH, mech);
+}
+
+// =============================================================================
+function str WF_CheckAvailability (int mech) {
+
+	if (!GetConfig (CONFIG_MECHS))
+		return "Mechs are disabled!";
+	
+	if (!CheckBuilding (BUILDING_FACTORY, PlayerTeam()))
+		return "Your war factory has been destroyed!";
+	
+	if (mech == MECH_JUGGERNAUT &&
+		TeamInvCount ("JuggernautWeapons", PlayerTeam ()) >= GetConfig (CONFIG_JUGGERNAUTLIMIT))
+			return "Juggernauts at limit!";
+	
+	// [JD] For light-mech only maps.
+	if (GetConfig(CONFIG_LIGHTMECHS) && Mechs_int[mech][MK_WEIGHT] != MECHWEIGHT_LIGHT)
+		return "Only light mechs can be purchased!";
+	
+	if (Mechs_int[mech][MK_FLAGS] & MF_POWER && !GetConfig (CONFIG_ADVMECHS_BLUE + PlayerTeam()))
+		return "You need advanced mechs researched to purchase this!";
+	
+	if (!CanAfford(Mechs_int[mech][MK_COST]))
+		return "You need more credits!";
+	
+	return 0;
+}
+
+// =============================================================================
+// [Dusk] Mech morph script. Result value is 0 if success,
+// a script table index containing error message if failure
+script SC_MECHMORPH (int mech) {
+	str mechname = Mechs_str[mech][MK_NAME];
+	int dest = 108;
+	int mapspot = 6000;
+	int door = 10;
+	if (PlayerTeam() == TEAM_RED) {
+		dest = 208;
+		mapspot = 6001;
+		door = 12;
+	}
+	
+	// [Dusk] Check if a constraint prevents us from getting a mech.
+	str e = WF_CheckAvailability (mech);
+	if (e != 0) {
+		SetResultValue (e);
+		terminate;
+	}
+	
+	if (GettingMech[PlayerTeam ()]) {
+		SetResultValue ("Please wait for another mech to leave the hanger");
+		terminate;
+	}
+	
+	// Attempt to teleport the player into the hanger
+	if (!Teleport(dest)) {
+		// [Dusk] If we can't, try clear it of crap and try again.
+		SpawnSpotForced ("AntiUtilityExplosion", dest, 0, 0);
+		SpawnSpotForced ("AntiUtilityExplosionDisarm", dest, 0, 0);
+		
+		Delay(1);
+		
+		// [Dusk] If we STILL can't teleport, there isn't much we can do.
+		if (!Teleport (dest))
+			SetResultValue ("Cannot teleport into the hanger!");
+	}
+	
+	// If the player had the jetpack active while getting the mech, we need to
+	// deactivate it now.
+	if (CheckInventory ("JetpackActive"))
+		GiveInventory ("JumpjetDeactivate", 1);
+	
+	// At this point, we should be good.
+	SetResultValue (0);
+	
+	// [JD] The infinite mech menu was a result of varying client network connections,
+	//		hopefully with some brute force it won't happen anymore
+	for (int a = 0; a < 3; a++)
+	{
+		SetInventory ("InMenu", 0);
+	}
+	
+	SetActorProperty (0, APROP_SPEED, 1.0);
+	SetPlayerProperty (0, 1, PROP_TOTALLYFROZEN);
+	delay (1);
+	
+	CallEvent (ACTION_MechPurchase, mech);
+	
+	// Morph the player into the mech now.
+	GiveInventory ("IsMech", 1);
+	GiveInventory (Mechs_str[mech][MK_MORPH], 1);
+	GiveInventory (Mechs_str[mech][MK_AMMO], 1);
+	
+	SetThingSpecial (0, ACS_ExecuteAlways, 317, 0, PlayerTeam());
+	
+	SpendCredits (Mechs_int[mech][MK_COST]);
+	DisplayTick();
+	SetFont ("BIGFONT");
+	HudMessage(s:"You are now a \cF", s:mechname, s:"!";
+		HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+	
+	// extra notes
+	if (mech == MECH_JUGGERNAUT)
+		HudMessage(s:"Upon ejecting, the suit \ckself-destructs.";
+			HUDMSG_FADEOUT, 1860+PlayerNumber(), CR_WHITE, 0.45, 0.5, 2.0, 1.0);
+	
+	MechGetter[PlayerTeam()] = PlayerNumber();
+	
+	// Alert for power mechs
+	if (Mechs_int[mech][MK_FLAGS] & MF_POWER) {
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (s:"\cGWarning: ", s:TeamColors[PlayerTeam() + 2], s:TeamNames[PlayerTeam()],
+			s:"\cJ ", s:mechname, s:" in-field!"), true);
+	}
+	
+	// [Dusk] Tell teammates of the purchase
+	TeamMessage (TMSG_MECHPURCHASE, mech, playernumber());
+	/*
+	// [Dusk] Fire up the tortoise HUD
+	if (mech == MECH_Tortoise)
+		ACS_Execute (SC_CL_TortoiseHUD, 0);*/
+	
+	Log (n:0, s:" pilots ", s:mechname, s:".");
+	
+	// [Dusk] Freeze the player and wait for door to close if it's still open.
+	//SetPlayerProperty (0, 1, PROP_TOTALLYFROZEN);
+	GettingMech[PlayerTeam()] = true;
+	TagWait (door);
+	
+	// [Dusk] Lagging clients don't seem to have their angle changed properly
+	// online, brute-force it with several changes.
+	for (int i = 0; i < 3; i++) {
+		SetActorAngle (0, GetActorAngle (dest));
+		delay (18);
+	}
+	delay (18);
+	
+	
+	// [Cata] Special conditions for AOW13 (strange world)
+	if(getlevelinfo(LEVELINFO_LEVELNUM) == 13)
+	{
+		Plat_DownWaitUpStay (door, 64, 35*3);
+		delay(35 + 35/2);
+	}
+	
+	// Open the door.
+	else
+	{
+		Door_Open (door, 64);
+		TagWait (door);
+	}
+	
+	
+	// [NG] This will thrust the player out of the hanger.
+	ThrustThing (GetActorAngle (dest) >> 8, 35, 1, 0);
+	delay (35);
+	
+	
+	// Set the mech free
+	SetPlayerProperty (0, 0, PROP_FROZEN);
+	SetPlayerProperty (0, 0, PROP_TOTALLYFROZEN);
+	ActivatorSound ("mech/start", 127);
+	
+	// [Dusk] Store the armor values into inventory and take it from the actual
+	// mech, this way the mech is unaffected by armor but the armor can also be
+	// given back if and when the player ejects.
+	PushArmor ();
+	
+	SetFont ("BIGFONT");
+	if (mech == MECH_JUGGERNAUT)
+		HudMessage (s:"Powersuit online!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+	else if (mech == MECH_ORCA)
+		HudMessage (s:"Gunship online!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+	else
+		HudMessage (s:"Mech online!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+	
+	// Init the HUD.
+	ACS_ExecuteAlways (315, 0);
+	
+	int tid = 6000;
+	if (PlayerTeam() == TEAM_BLUE)
+		tid = 6001;
+	
+	// [Dusk] Close the hanger door. However, it has to be cleared out of crap
+	// if there is any, otherwise the door will not be able to close properly.
+	int x0 = GetActorX (tid);
+	int y0 = GetActorY (tid);
+	int z = GetActorZ (tid);
+	int d = 64.0; // Distance between center tid and "leaf" spots
+	int angle = GetActorAngle (tid);
+	
+	// Calculate coords for anti-utility clearers
+	int x1, x2, y1, y2;
+	x1 = x0 + FixedMul (sin (angle + 0.5), d);
+	y1 = y0 + FixedMul (cos (angle + 0.5), d);
+	x2 = x0 + FixedMul (sin (angle + 0.0), d);
+	y2 = y0 + FixedMul (cos (angle + 0.0), d);
+	
+	Spawn ("AntiUtilityExplosion", x0, y0, z);
+	Spawn ("AntiUtilityExplosion", x1, y1, z);
+	Spawn ("AntiUtilityExplosion", x2, y2, z);
+	
+	Door_Close (door, 64);
+	
+	TagWait(door);
+	GettingMech[PlayerTeam()] = false;
+}
+// =============================================================================
+// Frag bounty
+script 317 (int team) {
+	if (team == PlayerTeam())
+		terminate;
+	AwardCredits (200);
+	AddExperience (150);
+}
+
+// =============================================================================
+// Mech Weapon Switching
+script 314 (void) {
+	if (!CheckInventory ("IsMech"))
+		terminate;
+	
+	if (CheckInventory ("WolverineWeapons"))
+	{
+		if (CheckInventory("Wolverine-WhatWeapon") == 0)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfPulse Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/pulse",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfFlak Minigun"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/minigun",128);
+		}
+		
+		else
+		{
+			TakeInventory("Wolverine-WhatWeapon",3);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfLRM-10"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/lrm",128);
+		}
+	}
+	
+	else if (CheckInventory ("TitanWeapons"))
+	{
+		if (CheckInventory("Wolverine-WhatWeapon") == 0)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfDual Flamethrowers"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/flamer",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfLRM-20"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/lrm",128);
+		}
+		
+		else //if(CheckInventory("Wolverine-WhatWeapon") == 2)
+		{
+			TakeInventory("Wolverine-WhatWeapon",3);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cf100mm Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/80mm",128);
+		}
+	}
+	
+	else if (CheckInventory ("MadCatWeapons"))
+	{
+		if (CheckInventory("Wolverine-WhatWeapon") == 0)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfDual Shock Autorifles"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/minigun",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfLRM-20"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		}
+		
+		else
+		{
+			TakeInventory("Wolverine-WhatWeapon",3);
+			SetFont("DOOMFONT");
+			HudMessage(s:"\cfDual Shock Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/pulse",128);
+		}
+	}
+	
+	/*else if (CheckInventory("TortoiseWeapons"))
+	{
+		SetFont("SMALLFONT");
+		if (CheckInventory("Wolverine-WhatWeapon") == 0)
+		{
+			GiveInventory("Wolverine-WhatWeapon", 1);
+			HudMessage(s:"\cfFlak Minigun"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/minigun",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory("Wolverine-WhatWeapon", 1);
+			HudMessage(s:"\cfImpact Grenades"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		}
+		
+		else
+		{
+			TakeInventory("Wolverine-WhatWeapon", 2);
+			HudMessage(s:"\cfPulse Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/pulse",128);
+		}
+	}*/
+	
+	else if (CheckInventory ("JuggernautWeapons"))
+	{
+		SetFont ("SMALLFONT");
+		if (!CheckInventory("Wolverine-WhatWeapon"))
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			HudMessage(s:"\cfSRM-15"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory ("Wolverine-WhatWeapon", 1);
+			HudMessage(s:"\cfFlak Minigun"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("switch/minigun",128);
+		}
+		
+		else if (CheckInventory("Wolverine-WhatWeapon") == 2)
+		{
+			GiveInventory("Wolverine-WhatWeapon", 1);
+			
+			if (PlayerTeam() == TEAM_RED)
+				HudMessage(s:"\cfMini-nuke artillery"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);	
+				
+			else
+				HudMessage(s:"\cfIon-bomb artillery"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+				
+			ActivatorSound("switch/80mm",128);
+		}
+		
+		else
+		{
+			TakeInventory("Wolverine-WhatWeapon", 3);
+			HudMessage(s:"Twin Mass Drivers"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		}
+	}
+	
+	/*else if (CheckInventory ("LancerWeapons")) 
+	{
+		SetFont ("SMALLFONT");
+		if (!CheckInventory("Wolverine-WhatWeapon")) 
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			HudMessage(s:"\cfLRM-10"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		} 
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1) 
+		{
+			GiveInventory ("Wolverine-WhatWeapon", 1);
+			HudMessage(s:"\cfPlasma Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("weapons/up/plasmacannon",128);
+		} 
+		else
+		{
+			TakeInventory("Wolverine-WhatWeapon", 3);
+			HudMessage(s:"\cfChemical Sprayer"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("weapons/up/chem", 128);
+		} 
+	}*/
+	
+	else if (CheckInventory ("LancerWeapons")) 
+	{
+		SetFont ("SMALLFONT"); 
+		if (!CheckInventory("Wolverine-WhatWeapon")) 
+		{
+			GiveInventory ("Wolverine-WhatWeapon", 1);
+			HudMessage(s:"\cfPlasma Cannon"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("weapons/up/plasmacannon",128);
+		} 
+		else if (CheckInventory("Wolverine-WhatWeapon") == 1)
+		{
+			GiveInventory("Wolverine-WhatWeapon",1);
+			HudMessage(s:"\cfChemical Sprayer"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);		
+			ActivatorSound("weapons/up/chem", 128);
+		}
+		else 
+		{
+			TakeInventory("Wolverine-WhatWeapon", 3);
+			HudMessage(s:"\cfLRM-10"; HUDMSG_FADEOUT, 0, CR_Gold, 0.5, 0.8, 1.0, 0.5);
+			ActivatorSound("switch/lrm",128);
+		}
+	}
+}
+
+//Mech HUD
+script 315 (void) NET CLIENTSIDE {
+	if (!CheckInventory ("IsMech"))
+		terminate;
+	
+	SetHUDFont ();
+	
+	// Wolverine
+	if (CheckWeapon("WolverineWeapons")) 
+	{
+		HudMessage(s:MechHudColor(0, "Reload-LRM"), s:"LRM-10:\n",
+			s:MechHudColor(1, ""), s:"PULSE:\n",
+			s:MechHudColor(2, ""), s:"FLAK: ";
+			HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+		
+		HudMessage(d:CheckInventory("MechRocketAmmo"),
+			s:"\n-\n",d:CheckInventory("Wolverine-MinigunAmmo");
+			HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		delay(2);
+		restart;
+	}
+	
+	/*else if (CheckWeapon("TortoiseWeapons"))
+	{
+		HudMessage (s:MechHudColor(0, ""), s:"PULSE:\n",
+					s:MechHudColor(1, ""), s:"FLAK:\n",
+					s:MechHudColor(2, "Reload-LRM"), s:"GRENADES:";
+					HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+					
+		HudMessage (d:CheckInventory("Tortoise-BlasterAmmo"),
+					s:"\n", d:CheckInventory("Tortoise-MachinegunAmmo"),
+					s:"\n", d:CheckInventory("Tortoise-GrenadeAmmo");
+					HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		
+		Delay (2);
+		Restart;
+	}*/
+	
+	else if (CheckWeapon ("MadCatWeapons")) 
+	{
+		HudMessage(s:MechHudColor(0, "Reload-ShockCannon"), s:"SHOCK CANNON:\n",
+			s:MechHudColor(1, ""), s:"SHOCK RIFLE:\n",
+			s:MechHudColor(2, "Reload-LRM"), s:"LRM-20:\n";
+			HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+		HudMessage(s:"-",
+			s:"\n",d:CheckInventory("GeneporiumCharge"),
+			s:"\n",d:CheckInventory("MechRocketAmmo");
+			HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		delay(2);
+		restart;
+	} 
+	
+	else if (CheckWeapon("TitanWeapons")) 
+	{
+		HudMessage(s:MechHudColor(0, "Reload-80mm"), s:"100MM:\n",
+			s:MechHudColor(1, ""), s:"FLAMER:\n",
+			s:MechHudColor(2, "Reload-LRM"), s:"LRM-20: ";
+			HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+		HudMessage(d:CheckInventory("Titan-80mmAmmo"),
+			s:"\n",d:CheckInventory("Titan-FlamerAmmo"),
+			s:"\n",d:CheckInventory("MechRocketAmmo");
+			HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		delay(2);
+		restart;
+	} 
+	
+	else if (CheckWeapon ("JuggernautWeapons")) 
+	{
+		// [Dusk] Blue nuke is the ion bomb
+		str nukename = "NUKE";
+		if (PlayerTeam() == TEAM_BLUE)
+			nukename = "ION BOMB";
+		
+		HudMessage(s:MechHudColor(0, "Reload-80mm"), s:"80MM:\n",
+			s:MechHudColor(1, "Reload-LRM"), s:"SRM-15:\n",
+			s:MechHudColor(2, ""), s:"FLAK:\n",
+			s:MechHudColor(3, "Reload-Nuke"), s:nukename, s:":";
+			HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+		HudMessage(d:CheckInventory("ArtilleryShellAmmo"),
+			s:"\n", d:CheckInventory("ShortRangeMissileAmmo"),
+			s:"\n", d:CheckInventory("MachineGunAmmo"),
+			s:"\n", d:CheckInventory("NukeAmmo");
+			HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		delay(2);
+		restart;
+	}
+	
+	else if (CheckWeapon ("LancerWeapons")) 
+	{
+		HudMessage(	s:MechHudColor(0, "Reload-LRM"), s:"LRM-10:\n",
+					s:MechHudColor(1, "Reload-Plasma"), s:"PLASMA CANNON:\n",
+					s:MechHudColor(2, ""), s:"SPRAYER:\n";
+					HUDMSG_PLAIN, 0, CR_Gold, 0.8, 0.7, 0.2);
+					
+		HudMessage(	d:CheckInventory("MechRocketAmmo"),
+					s:"\n-",
+					s:"\n", d:CheckInventory("MechChemicalAmmo");
+					HUDMSG_PLAIN, 0, CR_White, 0.85, 0.7, 0.2);
+		delay(2);
+		restart;
+	} 
+}
+
+function str MechHudColor (int weapon, str cooldownitem) {
+	if (CheckInventory(cooldownitem)) {
+		if (CheckInventory("Wolverine-WhatWeapon") == weapon)
+			return "\cA";
+		return "\cG";
+	} else {
+		if (CheckInventory("Wolverine-WhatWeapon") == weapon)
+			return "\cD";
+		return "\cQ";
+	}
+	return "";
+}
+
+// [Cata] Checks the weapon you have and returns the index of the mech.
+function int getMechIndex(void)
+{
+	if (CheckInventory ("OrcaWeapons")) return 0;
+	else if (CheckInventory ("TortoiseWeapons")) return 1;
+	else if (CheckInventory ("RavenWeapons")) return 2;
+	else if (CheckInventory ("MastodonWeapons")) return 3;
+	else if (CheckInventory ("WolverineWeapons")) return 4;
+	else if (CheckInventory ("MadCatWeapons")) return 5;
+	else if (CheckInventory ("TitanWeapons")) return 6;
+	else if (CheckInventory ("LancerWeapons")) return 7;
+	else if (CheckInventory ("JuggernautWeapons")) return 8;
+	
+	log(s:"ERR: Script 697 - someone ran this script without mech weapons!");
+	return -1;
+}
+
+//EJECT MECH
+script 697 (void) 
+{
+	int MechType = getMechIndex();
+	if(MechType == -1) terminate;
+	
+	int x = GetActorX (0);
+	int y = GetActorY (0);
+	int z = GetActorZ (0);
+	int angle = GetActorAngle (ActivatorTID ());
+	
+	int mechHP = GetActorProperty(0, APROP_HEALTH);
+	
+	// [JD] If we can't eject because we don't have enough room, first clear any possible util guy geometry (pesky players...)
+	if (!UnMorphActor(0, 0))
+	{
+		SpawnForced("AntiUtilityExplosion", x, y, z);
+		SpawnForced("AntiUtilityExplosionDisarm", x, y, z);
+		
+		Delay(1);
+		
+		// [JD] If we STILL can't eject then that means the player is being dumb and trying to enter a building and got himself seriously stuck inside a wall (again -- pesky players)
+		//		In that case, we're forced to perform an emergency teleport to the repair pad in order to free the player from the obstruction
+		//		The likelyhood of this ever happening is quite rare, but you never know...
+		if (!UnMorphActor(0, 0))
+		{
+			int radius = 320.0;
+			int destTID;
+			int team = PlayerTeam();
+			
+			if (team == TEAM_BLUE)
+				destTID = TID_REPAIR_BLUE;
+				
+			else
+				destTID = TID_REPAIR_RED;
+				
+			int destX = GetActorX(destTID) + Random(-radius, radius);
+			int destY = GetActorY(destTID) + Random(-radius, radius);
+			int destZ = GetActorZ(destTID) + radius;
+			
+			SetActorPosition(0, destX, destY, destZ, FALSE);
+			
+			Delay(1);
+		}
+		
+		// [JD] Let's try this again...
+		UnMorphActor (0, 0);
+	}
+	
+	SetThingSpecial(0, 0); // [JD] Precaution
+	
+	// [Cata] Lets try this again...
+	TeamMessage (TMSG_MECHEJECT, MechType, playernumber());
+	
+	switch (MechType) {
+	case 0:
+		// Orca
+		giveinventory ("EjectedOrcaSpawnerItem", 1); // [TT] Prevent teamdamage
+		break;
+		
+	case 1:
+		// Tortoise
+		
+		if (mechHP >= 1750)
+			Spawn ("EjectedTortoise", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedTortoise", x, y, z, 0, angle);
+			
+		break;
+	
+	case 2:
+		// Raven
+		if(mechHP >= 1000)
+			Spawn ("EjectedRaven", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedRaven", x, y, z, 0, angle);
+		break;
+	
+	case 3:
+		// Mastodon
+		if(mechHP >= 1000)
+			Spawn("EjectedMastodon", x, y, z, 0, angle);
+		else
+			Spawn("DamagedMastodon", x, y, z, 0, angle);
+		break;
+	
+	case 4:
+		// Wolverine
+		if(mechHP >= 1500)
+			Spawn ("EjectedWolverine", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedWolverine", x, y, z, 0, angle);
+		break;
+	
+	case 5:
+		// Mad Cat
+		if(mechHP >= 2000)
+			Spawn ("EjectedMadCat", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedMadCat", x, y, z, 0, angle);
+		break;
+	
+	case 6:
+		// Titan
+		if (mechHP >= 2500)
+			Spawn ("EjectedTitan", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedTitan", x, y, z, 0, angle);
+		break;
+	
+	case 7:
+		//Lancer
+		if (mechHP >= 1500)
+			Spawn ("EjectedLancer", x, y, z, 0, angle);
+		else
+			Spawn ("DamagedLancer", x, y, z, 0, angle);
+			
+		break;
+	
+	case 8:
+		// Juggernaut
+		SpawnSpotFacing ("EjectedJuggernaut", 3800+PlayerNumber(), 0);
+		break;
+	}
+	
+	//UnMorphActor (0, 0);
+	
+	if (MechType == 0) {
+		ThrustThing (GetActorAngle(0) >> 8, 16, 0, 0); // EJECTO SEAT 3800 ACTIVATED
+		ThrustThingZ (0, 80, 0, 1);
+	}
+	
+	delay (1);
+	
+	SetActorProperty (0, APROP_Invulnerable, false);
+	SetPlayerProperty (0, 0, 3);
+	CheckAndRemove ("MechEjectButton");
+	TakeInventory ("IsMech", 1);
+	PopArmor ();
+
+	delay (1);
+
+	TakeInventory ("IsInSpawnRoom", 1);
+	SetPlayerProperty (0, false, PROP_FROZEN);
+	SetActorProperty (0, APROP_SPEED, PlayerSpeeds[PlayerNumber()]);
+}
+
+// [Cata] Orca troll check
+script 698 (void) 
+{
+	// [JD] The "GetPlayerInfo" method was breaking this for some reason
+	if(isNearTeamTerminal(PlayerTeam(), 312.0))
+	{
+		setresultvalue(1);
+		terminate;
+	}
+	setresultvalue(0);
+}
+
+// Get in Mech animation
+script 699 (void) {
+	delay (1);
+	SetActorState (0, "Spawn2");
+	
+	// [Dusk] If the player is still in a menu, get him out of it
+	SetInventory ("InMenu", 0);
+}
+
+// Activates weapon reload.
+script 319 (int Weapon, int ReloadTime) {
+	str item, sound;
+	
+	// [Dusk] {9/10/12} Use vars for item and sound instead of
+	// copy/pasting the block for each reload type
+	switch (Weapon) {
+	case 1:
+		item = "Reload-LRM";
+		sound = "lrm/reload";
+		break;
+	case 2:
+		item = "Reload-ShockCannon";
+		sound = "ppc/reload";
+		break;
+	case 3:
+		item = "Reload-80mm";
+		sound = "artillery/reload";
+		break;
+	case 4:
+		item = "Reload-Plasma";
+		sound = "artillery/reload";
+		break;
+	case 5:
+		item = "Reload-Artillery";
+		sound = "lrm/reload";
+		break;
+	case 6:
+		item = "Reload-Nuke";
+		sound = "artillery/reload";
+		break;
+	}
+	
+	GiveInventory (item, 1);
+	delay (35*ReloadTime-1);
+	ActivatorSound (sound, 127);
+	ActivatorSound (sound, 127);
+	delay (20);
+	TakeInventory (item, 1);
+}
+
+script 332 (void) CLIENTSIDE {
+	while (CheckInventory("IsMech")) {
+		if (GetHealth () <= GetSpawnHealth() / 5) {
+			SetFont ("BIGFONT");
+			HudMessage(s:"\cR== HEALTH LEVEL CRITICAL ==";
+				HUDMSG_PLAIN, 0, CR_Green, 0.5, 0.59, 0.75);
+			HudMessage(s:"\cFPREPARE TO EJECT";
+				HUDMSG_PLAIN, 0, CR_Green, 0.5, 0.63, 0.75);
+		}
+		delay (35*5);
+	}
+}
+
+// check if you can enter an ejected mech
+script 353 (void) {
+	int r = 1;
+	if(CheckInventory ("CantMech"))
+		r = 0;
+	else if (CheckInventory ("IsMech")) //[SP] disallow other mech pickups
+		r = 0;
+	
+	SetResultValue (r);
+	
+	// [Dusk] Push the armor to stack now.
+	if (r)
+	{
+		PushArmor ();
+		
+		// [JD] This prevents infinite self heals
+		if (CheckInventory("SelfHeal"))
+			TakeInventory("SelfHeal", 999);
+		
+		// [JD] No more infinite hyperspeed
+		if (CheckInventory("PowerTimeGunSpeed"))
+			TakeInventory("PowerTimeGunSpeed", 999);
+	}
+}
+
+script 359 (void) {
+	delay (5);
+	SetHealth (GetSpawnHealth() / 2);
+}
+
+// Tiger's hanger stuff
+script 84 (void) {
+	// [Dusk] Is this really necessary?
+	/* DisplayCross ();
+	SetFont ("BIGFONT");
+	HudMessage(s:"You can't go into the Hanger!";
+		HUDMSG_FADEOUT, 240+PlayerNumber(), CR_DarkRed, 0.5, 0.45, 2.0, 1.0); */
+}
+
+script 86 (int x) 
+{
+
+	// dont run if on roof on aow13
+	if(getactorz(activatortid()) > 342.0 && getlevelinfo(LEVELINFO_LEVELNUM) == 13) terminate;
+
+	// [Cata] push back based on tele. No more weird directions.
+	int team = getplayerinfo(playernumber(), PLAYERINFO_TEAM);
+	int angle;
+	
+	if(team == 0) // blue
+	angle = (getactorangle(108)) >> 8;
+	else //red
+	angle = (getactorangle(208)) >> 8;
+	
+	
+	if (LineSide ())
+		terminate;
+	
+	DisplayCross ();
+	SetFont ("BIGFONT");
+	
+	
+	HudMessage (s:"You can't enter here!";
+		HUDMSG_FADEOUT, 240+PlayerNumber(), CR_DarkRed, 0.5, 0.45, 2.0, 1.0);
+	if (!CheckInventory("IsMech"))
+		ThrustThing (angle, 35, 1, 0);
+	else
+		ThrustThing (angle, 35, 0, 0);
+}
+
+// Duplicates..
+script 85 (void) {ACS_ExecuteAlways (84, 0);}
+script 88 (void) {ACS_ExecuteAlways (86, 0, 1);}
+script 89 (void) {} // Dummy - present because maps actually call this. even though it was empty
+
+script SC_JUGGARMORHELP (void)
+{
+	ActivatorSound ("mech/start", 127);
+	
+	// [Dusk] Store the armor values into inventory and take it from the actual
+	// mech, this way the mech is unaffected by armor but the armor can also be
+	// given back if and when the player ejects.
+	PushArmor ();
+	
+	SetFont ("BIGFONT");
+	HudMessage (s:"Powersuit online!";
+	HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+}
+
+// [JD] Checks the area around us to determine if we have enough room to use the instant juggernaut
+function bool CheckInstantJuggernaut(void) {
+	int x0, y0, z0, JugGo, tempTID;
+	
+	tempTID = UniqueTID();
+	
+	x0 = GetActorX(0);
+	y0 = GetActorY(0);
+	z0 = GetActorZ(0);
+	
+	
+	if (Spawn("InstantJugCheck", x0, y0, z0, tempTID)) {
+		Thing_Remove(tempTID);
+		return true;
+	}
+
+	else
+		return false;
+	
+	return false;
+}
+
+script "CanJuggernautMorph" (void)
+{
+	if (!CheckInstantJuggernaut()) {
+		GenericError("You don't have enough room to use this!");
+		SetResultValue(0);
+		terminate;
+	}
+	
+	else
+		SetResultValue(1);
+}

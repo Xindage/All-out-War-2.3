@@ -1,0 +1,286 @@
+// Flamethrower
+actor Flamer : AOWWeapon 21047 {
+	+ALT_AMMO_OPTIONAL
+	Obituary "$OB_FLAMER"
+	Inventory.PickupMessage "You got the flamethrower!"
+	AttackSound "flamer2/fire"
+	Weapon.SelectionOrder 10
+	Weapon.Kickback 1
+	Weapon.AmmoType "FlamerAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 50
+	Weapon.AmmoType2 "PhosphorusGrenadeAmmo"
+	Weapon.AmmoUse2 1
+	Weapon.AmmoGive2 0
+	Weapon.PreferredSkin "MarineFlamer"
+	Weapon.UpSound "weapons/up/flamer"
+	// Why the fuck did the Flamethrower have a BulletChip decal...
+	Tag "Flamethrower"
+	States {
+	Spawn:
+		FLMR X -1
+		stop
+	Ready:
+		FL_R A 0 A_StopSound (CHAN_WEAPON)
+		FL_R A 0 A_JumpIfInventory ("IsBlue", 1, "Ready.Blue")
+		FL_R ABCABCABCABCABCABCABCABCABCABCABCABC 2 A_WeaponReady
+		loop
+	Ready.Blue:
+		FL_B ABCABCABCABCABCABCABCABCABCABCABCABC 2 A_WeaponReady
+		loop
+	Deselect:
+		FL_R A 0 A_JumpIfInventory ("IsBlue", 1, "DeSelect.Blue")
+		FL_R E 0 A_StopSound (CHAN_WEAPON)
+		FL_R E 1 offset (-5, 34)
+		FL_R E 1 offset (-16, 38)
+		FL_R E 1 offset (-23, 45)
+		FL_R E 1 offset (-32, 56)
+		FL_R E 1 offset (-42, 66)
+		FL_R E 1 offset (-51, 73)
+		FL_R E 1 offset (-63, 87)
+		FL_R E 1 offset (-78, 97)
+		FL_R E 1 offset (-88, 111)
+		FL_R E 1 offset (-99, 121)
+		FL_R E 1 offset (-112, 133)
+		FL_R E 1 offset (-125, 154)
+		FL_R E 0 offset (-1, 33)
+		FL_R E 0 A_Lower
+		wait
+	Deselect.Blue:
+		FL_B E 0 A_StopSound (CHAN_WEAPON)
+		FL_B E 1 offset (-5, 34)
+		FL_B E 1 offset (-16, 38)
+		FL_B E 1 offset (-23, 45)
+		FL_B E 1 offset (-32, 56)
+		FL_B E 1 offset (-42, 66)
+		FL_B E 1 offset (-51, 73)
+		FL_B E 1 offset (-63, 87)
+		FL_B E 1 offset (-78, 97)
+		FL_B E 1 offset (-88, 111)
+		FL_B E 1 offset (-99, 121)
+		FL_B E 1 offset (-112, 133)
+		FL_B E 1 offset (-125, 154)
+		FL_B E 0 offset (-1, 33)
+		FL_B E 0 A_Lower
+		wait
+	Select:
+		FL_R E 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
+		FL_R E 1 offset (-125, 154)
+		FL_R E 1 offset (-112, 133)
+		FL_R E 1 offset (-99, 121)
+		FL_R E 1 offset (-88, 111)
+		FL_R E 1 offset (-78, 97)
+		FL_R E 1 offset (-63, 87)
+		FL_R E 1 offset (-51, 73)
+		FL_R E 1 offset (-42, 66)
+		FL_R E 1 offset (-32, 56)
+		FL_R E 1 offset (-23, 45)
+		FL_R E 1 offset (-16, 38)
+		FL_R E 1 offset (-5, 34)
+		goto ready
+	Select.Blue:
+		FL_B E 1 offset (-125, 154)
+		FL_B E 1 offset (-112, 133)
+		FL_B E 1 offset (-99, 121)
+		FL_B E 1 offset (-88, 111)
+		FL_B E 1 offset (-78, 97)
+		FL_B E 1 offset (-63, 87)
+		FL_B E 1 offset (-51, 73)
+		FL_B E 1 offset (-42, 66)
+		FL_B E 1 offset (-32, 56)
+		FL_B E 1 offset (-23, 45)
+		FL_B E 1 offset (-16, 38)
+		FL_B E 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		FL_R E 0 A_JumpIfInventory("IsBlue",1,"FireBlue")
+		FL_R E 2 A_PlaySound ("flamer2/up", CHAN_WEAPON)
+		FL_R E 2
+		FL_R E 0 A_GunFlash
+		FL_R E 0 A_PlaySound ("flamer2/fire", CHAN_WEAPON, 1.0, true)
+		FL_R E 1 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
+		FL_R E 1 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_R E 1 A_ReFire
+		FL_R E 1
+		FL_R E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
+		goto Ready
+	Hold:
+		FL_R E 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		FL_R E 0 A_GunFlash
+		FL_R E 0 A_JumpIfInventory("IsBlue",1,"HoldBlue")
+		FL_R E 1 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
+		FL_R E 1 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_R E 1 A_ReFire
+		FL_R E 1 offset (4, 35)
+		FL_R E 1 offset (2, 33)
+		FL_R E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
+		goto Ready
+	FireBlue:
+		FL_B E 2 A_PlaySound ("flamer2/up", CHAN_WEAPON)
+		FL_B E 2
+		FL_B E 0 A_GunFlash
+		FL_B E 0 A_PlaySound ("flamer2/fire", CHAN_WEAPON, 1.0, true)
+		FL_B E 1 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
+		FL_B E 1 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_B E 1 A_ReFire
+		FL_B E 1 offset (2, 33)
+		FL_B E 1 offset (1, 32)
+		FL_B E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
+		goto Ready
+	HoldBlue:
+		FL_B E 1 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
+		FL_B E 1 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_B E 1 A_ReFire
+		FL_B E 1 offset (4, 35)
+		FL_B E 1 offset (2, 33)
+		FL_B E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
+		goto Ready
+	AltFire:
+		TNT1 A 0 A_StopSound (CHAN_WEAPON)
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "AltRejected")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "AltRejected")
+		TNT1 A 0 A_JumpIfNoAmmo ("AltRejected")
+		TNT1 A 0 A_JumpIfInventory("IsBlue", 1, "AltFireBlue")
+		FL_R E 0 A_PlaySound ("grenade/fire", CHAN_WEAPON)
+		TNT1 A 0 A_FireCustomMissile ("PhosphorusGrenade", 0, 1, 10, 0)
+		//FL_R E 6 offset (0, 32)
+		TNT1 A 0 Radius_Quake(4,6,0,1,0)
+		FL_R E 0 offset (0, 32) A_SetPitch(pitch-1.0)
+		goto AltReload
+	AltFireBlue:
+		FL_B E 0 A_PlaySound ("grenade/fire", CHAN_WEAPON)
+		FL_B E 0 offset (0, 32) A_FireCustomMissile ("PhosphorusGrenade", 0, 1, 10, 0)
+		TNT1 A 0 Radius_Quake(4,6,0,1,0)
+		FL_B E 0 offset (0, 32) A_SetPitch(pitch-1.0)
+		goto AltReloadBlue
+	AltReload:
+		FL_R E 1 offset (5, 35) A_SetPitch(pitch+1.0)
+		FL_R E 1 offset (10, 38)
+		FL_R E 1 offset (15, 41)
+		FL_R E 1 offset (20, 44)
+		FL_R E 1 offset (25, 47)
+		FL_R E 2 offset (30, 50)
+		FL_R E 1 offset (25, 47)
+		FL_R E 1 offset (20, 44)
+		FL_R E 1 offset (15, 41)
+		FL_R E 1 offset (10, 38)
+		FL_R E 1 offset (5, 35)
+		FL_R E 1 offset (0, 32)
+		FL_R E 25
+		FL_R E 0 A_ReFire
+		goto Ready
+	AltReloadBlue:
+		FL_B E 1 offset (5, 35) A_SetPitch(pitch+1.0)
+		FL_B E 1 offset (10, 38)
+		FL_B E 1 offset (15, 41)
+		FL_B E 1 offset (20, 44)
+		FL_B E 1 offset (25, 47)
+		FL_B E 2 offset (30, 50)
+		FL_B E 1 offset (25, 47)
+		FL_B E 1 offset (20, 44)
+		FL_B E 1 offset (15, 41)
+		FL_B E 1 offset (10, 38)
+		FL_B E 1 offset (5, 35)
+		FL_B E 1 offset (0, 32)
+		FL_B E 25
+		FL_B E 0 A_ReFire
+		goto Ready
+	AltRejected:
+		TNT1 A 0 A_JumpIfInventory("IsBlue", 1, "AltRejectedBlue")
+		FL_R E 35 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltRejectedBlue:
+		FL_B E 35 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	Flash:
+		TNT1 A 2 A_Light1
+		TNT1 A 2 A_Light2
+		TNT1 A 0 A_Light0
+		stop
+	}
+}
+
+actor FlameThrowerFire {
+	PROJECTILE
+	+FORCEXYBILLBOARD
+	obituary "$OB_FLAMER"
+	renderstyle Add
+	alpha 0.5
+	Scale 0.41
+	radius 4
+	height 4
+	speed 34
+	damage (random(2,3))
+	damagetype "Fire"
+	decal "FlameScorch"
+	states {
+	Spawn:
+		FLMX B 0
+		FLMX BCDEFGHIJK 2 bright A_Explode(2,128,0)
+		TNT1 A 0 A_SpawnItemEx("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, SXF_TRANSFERPOINTERS, 240)
+		FLMX LMNO 2 bright A_FadeOut(0.16)
+		stop
+	Death:
+		TNT1 A 0 A_Explode(2,128)
+		TNT1 A 0 A_SpawnItemEx("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, SXF_TRANSFERPOINTERS, 240)
+		TNT1 AAA 1 A_SpawnItemEx("FlameThrowerFireRemains", random(0,1), 0, random(0,8), random(0,1), 0, random(0,3), random(0,12)*30, SXF_TRANSFERPOINTERS, 32)
+		stop
+	}
+}
+
+actor FlameThrowerFireRemains {
+	PROJECTILE
+	+RANDOMIZE
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	-ACTIVATEIMPACT
+	-ACTIVATEPCROSS
+	
+	RenderStyle Add
+	radius 2
+	height 4
+	alpha 0.4
+	Speed 2
+	Damage 0
+	Scale 0.8
+	states {
+	Spawn:
+		TNT1 A 4
+		FLMB A 2 bright
+		FLMB BCDEFGH 2 bright
+		FLMB ABCDEFGH 2 bright A_FadeOut(0.05)
+		Stop
+	}
+}
+
+// Phosphorus grenade
+actor PhosphorusGrenade {
+	PROJECTILE
+	-RANDOMIZE
+	-NOGRAVITY
+	Obituary "$OB_FLAMER_GRENADE"
+	Radius 11
+	Height 8
+	Speed 35
+	Damage (30)
+	Gravity 0.125
+	DeathSound "weapons/rocklx"
+	DamageType "Fire"
+	Decal "Scorch"
+	translation "1:31=128:143", "32:39=174:174"
+	States {
+	Spawn:
+		SGRN A 2 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		loop
+	Death:
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_Explode (120, 128, 1)
+		TNT1 A 5 A_SpawnItem ("ExplosionMain")
+		TNT1 A 0 A_SpawnItemEx ("FlameDecay", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERPOINTERS)
+		TNT1 AAAAAAAA 70 A_SpawnItemEx ("FlameDecay", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERPOINTERS)
+		TNT1 A 0
+		stop
+	}
+}

@@ -1,0 +1,397 @@
+//Utility Gun markers
+actor Utility_MarkerBase {
+	+NOBLOCKMAP +NOGRAVITY
+	+CLIENTSIDEONLY
+	Translation "0:255=[0,255,0]:[0,0,0]"
+	RenderStyle add
+	Alpha 0.5
+}
+
+actor Utility_MiniRefCacheMarker : Utility_MarkerBase
+{
+  Scale 0.1875
+  states
+  {
+  Spawn:
+    MREF A 0
+    MREF A 6 bright 
+    MREF AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+
+actor Utility_StepMarker : Utility_MarkerBase
+{
+  Scale 0.25
+  states
+  {
+  Spawn:
+    USTP A 6 bright 
+    USTP AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+actor Utility_RavenMarker : Utility_MarkerBase
+{
+  Scale 0.65
+  states
+  {
+  Spawn:
+    RAV2 B 6 bright 
+    RAV2 BBBBB 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_WolfMarker : Utility_MarkerBase
+{
+  scale 1.75
+  states
+  {
+  Spawn:
+    ROB1 B 6 bright 
+    ROB1 BBBBB 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_MiniRavenMarker : Utility_MarkerBase
+{
+  Scale 0.2
+  states
+  {
+  Spawn:
+    RAVN I 6 bright 
+    RAVN IIIII 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_RazorWireMarker : Utility_MarkerBase
+{
+  Scale 0.25
+  states
+  {
+  Spawn:
+    WIRE A 6 bright 
+    WIRE AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_SandbagsMarker : Utility_MarkerBase
+{
+  Scale 0.35
+  states
+  {
+  Spawn:
+    BAGG A 6 bright 
+    BAGG AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_MedikitMarker : Utility_MarkerBase
+{
+  states
+  {
+  Spawn:
+    MEDI A 6 bright 
+    MEDI AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_BackpackMarker : Utility_MarkerBase
+{
+  states
+  {
+  Spawn:
+    BKPK A 6 bright 
+    BKPK AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_MedicalCacheMarker : Utility_MarkerBase
+{
+  Scale 0.65
+  states
+  {
+  Spawn:
+    CACH A 0 
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",-64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",0,64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",0,-64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",45,-45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",-45,-45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",-45,45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",45,45,0,0,0,0,0,32,0)
+    CACH A 6 bright 
+    CACH AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_AmmoCacheMarker : Utility_MarkerBase
+{
+  Scale 0.65
+  states
+  {
+  Spawn:
+    CACH A 0 
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",-64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",0,64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",0,-64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",45,-45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",-45,-45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",-45,45,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",45,45,0,0,0,0,0,32,0)
+    CACH A 6 bright 
+    CACH AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_SuperCacheMarker : Utility_MarkerBase
+{
+  Scale 0.65
+  states
+  {
+  Spawn:
+    CACH A 0 
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",-64,0,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",0,64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_BackpackMarker",0,-64,0,0,0,0,0,128,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",64,-32,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",-64,32,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",-32,64,0,0,0,0,0,32,0)
+    CACH A 0 A_SpawnItemEx("Utility_StimpackMarker",32,-64,0,0,0,0,0,32,0)
+    CACH A 6 bright 
+    CACH AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_StimpackMarker : Utility_MarkerBase
+{
+  states
+  {
+  Spawn:
+    STIM A 6 bright 
+    STIM AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_TurretMarker : Utility_MarkerBase
+{
+  scale 0.75
+  states
+  {
+  Spawn:
+    CIGN A 6 bright 
+    CIGN AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_ArtilleryTurretMarker : Utility_MarkerBase
+{
+  scale 0.75
+  states
+  {
+  Spawn:
+    CIGN F 6 bright 
+    CIGN FFFFF 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+Actor Utility_FlameTurretMarker : Utility_MarkerBase
+{
+	Scale 0.75
+	States
+	{
+		Spawn:
+			FLTU A 6 Bright
+			FLTU AAAAA 2 Bright A_FadeOut(0.1)
+			Stop
+	}
+}
+
+Actor Utility_ChemTurretMarker : Utility_MarkerBase
+{
+	Scale 0.75
+	States
+	{
+		Spawn:
+			CHTU A 6 Bright
+			CHTU AAAAA 2 Bright A_FadeOut(0.1)
+			Stop
+	}
+}
+
+actor Utility_CacheMarker : Utility_MarkerBase
+{
+  Scale 0.65
+  states
+  {
+  Spawn:
+    CACH A 6 bright 
+    CACH AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_MinesMarker : Utility_MarkerBase
+{
+  Scale 0.2
+  states
+  {
+  Spawn:
+    PC4T A 6 bright 
+    PC4T AAAAA 2 bright A_FadeOut(0.1)
+    stop
+  }
+}
+
+actor Utility_FullRefillMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		BPK2 A 6 bright 
+		BPK2 AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_PlatformMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (750, 0) == 0, "Spawn.Red")
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -84, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -28, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 28, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 84, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -56, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 0, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 56, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -84, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -28, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 28, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 84, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -84, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -28, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 28, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 84, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -56, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 0, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 56, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -84, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", -28, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 28, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarker", 84, 84)
+		stop
+	Spawn.Red:
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -84, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -28, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 28, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 84, -84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -56, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 0, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 56, -56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -84, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -28, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 28, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 84, -28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -56, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 0, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 56, 0)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -84, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -28, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 28, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 84, 28)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -56, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 0, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 56, 56)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -84, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", -28, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 28, 84)
+		TNT1 A 0 A_SpawnItemEx ("Utility_StepMarkerRed", 84, 84)
+		stop
+	}
+}
+
+actor Utility_StepMarkerRed : Utility_StepMarker {Translation "1:254=176:191"}
+
+actor Utility_PortalStandMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		DGIZ A 6 bright 
+		DGIZ AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_PortalSphereMarker : Utility_MarkerBase {
+	scale 0.5
+	states {
+	Spawn:
+		GIZB A 6 bright 
+		GIZB AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_RifleMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		RIFL X 6 bright 
+		RIFL XXXXX 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_MachineGunMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		AK47 X 6 bright 
+		AK47 XXXXX 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_C4BoxMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		C4BX A 6 bright 
+		C4BX AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_ArmourMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		ARM7 A 6 bright 
+		ARM7 AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}
+
+actor Utility_BarrelMarker : Utility_MarkerBase {
+	states {
+	Spawn:
+		BAR1 A 6 bright 
+		BAR1 AAAAA 2 bright A_FadeOut(0.1)
+		stop
+	}
+}

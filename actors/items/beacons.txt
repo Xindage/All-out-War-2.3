@@ -1,0 +1,425 @@
+//Beacons
+actor IonCannonBeacon : InventoryItem {
+	inventory.icon "ionicon"
+	tag "Ion Cannon Beacon"
+	states {
+	Use:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("PowerBerserk", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("timeGunSafety", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "Use.Mech")
+		TNT1 A 0 A_JumpIfInventory ("StealthMode", 1, "Destealth")
+		TNT1 A 0 A_Stop
+		TNT1 A 0 ACS_ExecuteWithResult (SC_BeaconInventory, 1)
+		fail // ACS removes the item
+	}
+}
+
+actor NuclearStrikeBeacon : InventoryItem {
+	inventory.icon "nukeicon"
+	tag "Nuclear Strike Beacon"
+	states {
+	Use:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("PowerBerserk", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("timeGunSafety", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "Use.Mech")
+		TNT1 A 0 A_JumpIfInventory ("StealthMode", 1, "Destealth")
+		TNT1 A 0 A_JumpIfInventory ("BeaconUseToken", 1, 1)
+		TNT1 A 0 A_Stop
+		TNT1 A 0 ACS_ExecuteWithResult (SC_BeaconInventory, 1)
+		fail
+	}
+}
+
+// [Dusk] Safety lock
+actor BeaconUseToken : Inventory {}
+actor PlantingBeacon : Inventory {}
+
+actor BeaconCountdown : Inventory {
+	Inventory.MaxAmount 60
+}
+
+actor BeaconDisarmed : Inventory {}
+
+// [Dusk] NOTE: the beacon has to be a projectile so that CMF_TRACKOWNER can
+// track all the way to the player who planted it to credit him for the damage.
+// If the target is lost, the beacon can teamkill buildings, which isn't exactly
+// desirable, especially with super nukes around!
+actor IonCannonBeaconArmed {
+	PROJECTILE
+	-SOLID
+	-NOBLOCKMAP
+	+NOGRAVITY
+	+SHOOTABLE
+	+THRUGHOST
+	+NOBLOOD
+	+NOTARGETSWITCH
+	+NOCLIP
+	Health 1750
+	Radius 6
+	Height 8
+	Scale 0.25
+	Mass 0x7FFFFFFF
+	DamageFactor "Fist", 0.0
+	DamageFactor "Bullet", 0.0
+	DamageFactor "Rifle", 0.0
+	DamageFactor "Explosion", 0.0
+	DamageFactor "Fire", 0.0
+	DamageFactor "Chemical", 0.0
+	DamageFactor "Energy", 0.0
+	DamageFactor "AntiArmor", 0.0
+	DamageFactor "Time", 0.0
+	DamageFactor "Superweapon", 0.0
+	DamageFactor "MassDriver", 0.0
+	DamageFactor "Mechstomp", 0.0
+	DamageFactor "Monster", 0.0
+	DamageFactor "Flash", 0.0
+	Obituary "$OB_IONCANNON"
+	DamageType "Superweapon"
+	states {
+	Spawn:
+		BEAC D 0
+		BEAC D 0 Thing_SetSpecial (0, 226, 350, 0, TEAM_Blue)
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 0, 2)
+			TNT1 A 0 DamageThing (health / 2) // Halve the health if super nukes are enabled.
+		BEAC D 35 ACS_ExecuteAlways (821, 0, TEAM_Blue)
+		wait
+	Detonate:
+		BEAC D 0 A_UnsetShootable
+		BEAC D 389 A_SpawnItemEx ("IonBeaconFX")
+		TNT1 A 0 A_SpawnItemEx ("BlueStrike", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 1, "SuperDetonate")
+		TNT1 A 5 A_Explode (40000, 512, 1)
+		stop
+	SuperDetonate:
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,   0, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,  22, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,  45, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,  67, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,  90, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 112, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 135, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 157, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 180, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 202, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 225, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 247, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 270, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 292, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 315, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0, 327, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 5
+		stop
+	Death:
+		"----" A 0 A_PlaySound ("eva/iondisarmed", CHAN_BODY, 1.0, 0, ATTN_NONE)
+		goto Disarm
+	Disarm:
+		"----" A 0 A_GiveInventory ("BeaconDisarmed", 1)
+		"----" A 0 A_PlaySound ("c4/disarm", 6)
+		"----" AAAAAAAAA 1 A_Fadeout(0.1)
+		// [Dusk] The beacon has to linger around for a bit so that the script
+		// can pick up on it and cut any announcers off
+		"----" A 90 A_SetTranslucent (0, 0)
+		wait
+	}
+}
+
+actor NuclearStrikeBeaconArmed : IonCannonBeaconArmed {
+	Obituary "$OB_NUKE"
+	Scale 0.15
+	States {
+	Spawn:
+		BEAC C 0
+		BEAC C 0 Thing_SetSpecial (0, 226, 350, 0, TEAM_Red)
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 0, 2)
+			TNT1 A 0 DamageThing (health / 2)
+		BEAC C 35 ACS_ExecuteAlways (821, 0, TEAM_Red)
+		wait
+	Detonate:
+		BEAC D 0 A_UnsetShootable
+		BEAC C 350 A_PlaySound ("nuke/approach", CHAN_VOICE, 1.0, 0, ATTN_NONE)
+		TNT1 A 0 A_SpawnItemEx ("HyperNuke", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 1, "SuperDetonate")
+		TNT1 A 5 A_Explode (40000, 512, 1)
+		stop
+	SuperDetonate:
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,   0, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,  22, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,  45, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,  67, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,  90, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 112, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 135, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 157, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 180, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 202, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 225, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 247, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 270, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 292, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 315, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0, 327, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
+		TNT1 A 5
+		stop
+	Death:
+		"----" A 0 A_PlaySound ("eva/nukedisarmed", CHAN_BODY, 1.0, 0, ATTN_NONE)
+		goto Disarm
+	}
+} 
+
+// This item gives the player the correct beacon based on his team.
+actor BeaconItem : CustomInventory {
+	Inventory.MaxAmount 0
+	Inventory.Amount 0
+	States {
+	Pickup:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "GiveBlue")
+		TNT1 A 0 A_GiveInventory ("NuclearStrikeBeacon", 1)
+		stop
+	GiveBlue:
+		TNT1 A 0 A_GiveInventory ("IonCannonBeacon", 1)
+		stop
+	}
+}
+
+// Falls to the floor and spawns the armed beacon when landed.
+actor IonCannonBeaconThrown {
+	PROJECTILE
+	-NOGRAVITY
+	+THRUGHOST
+	Radius 6
+	Height 8
+	Speed 0
+	Damage 0
+	Gravity 2.5
+	Scale 0.25
+	Health 300
+	States {
+	Spawn:
+		BEAC D 1 A_JumpIf(waterlevel > 1, "Water")
+		wait
+	Death:
+		TNT1 A 0 A_SpawnItemEx("IonCannonBeaconArmed", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		TNT1 A 4
+		stop
+	Water:
+		BEAC D 35 A_PlaySound ("c4/disarm", 6)
+		BEAC D 0 ACS_ExecuteAlways (957, 0, 1)
+		BEAC D 1 A_Fadeout(0.1) 
+		wait
+	}
+}
+
+actor NuclearStrikeBeaconThrown : IonCannonBeaconThrown {
+	states {
+	Spawn:
+		BEAC C 1 A_JumpIf(waterlevel > 1, "Water")
+		wait
+	Death:
+		TNT1 A 0 A_SpawnItemEx("NuclearStrikeBeaconArmed", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		TNT1 A 4 bright 
+		stop
+	Water:
+		BEAC C 35 A_PlaySound ("c4/disarm", 6)
+		BEAC C 0 ACS_ExecuteAlways (957, 0)
+		BEAC C 1 A_Fadeout(0.1)
+		wait
+	}
+}
+
+// [Dusk] Debug stuff
+actor IonMissile : Rocket {
+	Obituary "$OB_IonCannon"
+	DamageType Superweapon
+	states {
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("BlueStrike")
+		TNT1 A 5 A_Explode (40000, 512, 1)
+		stop
+	}
+}
+
+actor NuclearMissile : Rocket {
+	Obituary "$OB_NUKE"
+	DamageType Superweapon
+	states {
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("HyperNuke")
+		TNT1 A 5 A_Explode (40000, 512, 1)
+		stop
+	}
+}
+
+// =============================================================================
+// [Dusk] Super nukes
+actor NuclearShockwave {
+	PROJECTILE
+	+NOCLIP
+	+FLOORHUGGER
+	+SERVERSIDEONLY
+	Radius 1
+	Height 1
+	Speed 60
+	DamageType "Superweapon"
+	Obituary "$OB_NUKE"
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAA 1 A_Explode (40000, 512)
+		TNT1 AAA 1 A_Explode (30000, 512)
+		TNT1 AAA 1 A_Explode (20000, 512)
+		TNT1 AAA 1 A_Explode (10000, 512)
+		TNT1 AAA 1 A_Explode (5000, 512)
+		TNT1 AAA 1 A_Explode (2500, 512)
+		TNT1 AAA 1 A_Explode (1000, 512)
+		TNT1 AAA 1 A_Explode (500, 512)
+		TNT1 AAAAAAAAAA 1 A_Explode (250, 512) // Light shockwave to devastate the base without destroying it
+		TNT1 AAAAAAAAAA 1 A_Explode (125, 512)
+		TNT1 AAAAAAAAAA 1 A_Explode (75, 512)
+		TNT1 AAAAAAAAAA 1 A_Explode (25, 512)
+		stop
+	}
+}
+
+actor IonShockwave : NuclearShockwave {
+	Obituary "$OB_IONCANNON"
+}
+
+// =============================================================================
+actor BeaconFX {
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOINTERACTION
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  1,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  2,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  3,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  4,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  5,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  6,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  7,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  8,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0,  9,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 10,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 11,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 12,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 13,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 14,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 15,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 16,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 18,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 20,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 22,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 24,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 28,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 32,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 36,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 40,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 48,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2",  0,  0,  0,  0,  0, 56,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0,  2,  0,  0,  2,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0,  3,  0,  0,  3,  23, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0,  4,  0,  0,  4,  45, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0,  5,  0,  0,  5,  68, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0,  6,  0,  0,  6,  90, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0,  7,  0,  0,  7, 113, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0,  8,  0,  0,  8, 135, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0,  9,  0,  0,  9, 158, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0, 10,  0,  0, 10, 180, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0, 11,  0,  0, 11, 203, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0, 12,  0,  0, 12, 225, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0, 13,  0,  0, 13, 247, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0, 14,  0,  0, 14, 270, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0, 15,  0,  0, 15, 293, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3", 32,  0, 16,  0,  0, 16, 315, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3", 32,  0, 17,  0,  0, 17, 338, SXF_NOCHECKPOSITION)
+		stop
+	}
+}
+
+
+actor BeaconFXRed : BeaconFX {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  1,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  2,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  3,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  4,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  5,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  6,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  7,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  8,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0,  9,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 10,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 11,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 12,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 13,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 14,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 15,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 16,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 18,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 20,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 22,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 24,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 28,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 32,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 36,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 40,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 48,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX2Red",  0,  0,  0,  0,  0, 56,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  2,  0,  0,  2,   0, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  3,  0,  0,  3,  23, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  4,  0,  0,  4,  45, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  5,  0,  0,  5,  68, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  6,  0,  0,  6,  90, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  7,  0,  0,  7, 113, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  8,  0,  0,  8, 135, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0,  9,  0,  0,  9, 158, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 10,  0,  0, 10, 180, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 11,  0,  0, 11, 203, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 12,  0,  0, 12, 225, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 13,  0,  0, 13, 247, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 14,  0,  0, 14, 270, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 15,  0,  0, 15, 293, SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 16,  0,  0, 16, 315, SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx ("BeaconFX3Red", 32,  0, 17,  0,  0, 17, 338, SXF_NOCHECKPOSITION)
+		stop
+	}
+}
+
+actor BeaconFX2 {
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOINTERACTION
+	Renderstyle Add
+	Alpha 0.7
+	Scale 0.35
+	States {
+	Spawn:
+		PLSB A 1 Bright A_FadeOut (0.02)
+		wait
+	}
+}
+
+actor BeaconFX3 : BeaconFX2 {
+	Scale 0.2
+}
+
+actor BeaconFX2Red : BeaconFX2 {
+	States {
+	Spawn:
+		PLSR A 1 Bright A_FadeOut (0.02)
+		wait
+	}
+}
+
+
+actor BeaconFX3Red : BeaconFX2Red {
+	Scale 0.25
+}

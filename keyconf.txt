@@ -1,0 +1,111 @@
+// =============================================================================
+// AOW KEYCONF
+weaponsection AOW2
+setslot 0 RemoverGun RepairGun HealGun BombSquadGun
+setslot 1 Unarmed EagerBeaver FragGrenade Flashbang RemoteC4 Knife
+setslot 2 Handgun Rifle SniperRifleWeak SniperRifle BloodRevolver advancedsniperrifle
+setslot 3 Boomstick DoubleShotgun AutoShotgun "Quad Shotgun"
+setslot 4 SubMachineGun MachineGun GatlingGun JumpjetGatlingGun "Nail-Machine Gun"
+setslot 5 GrenadeLauncher MissileLauncher ArtilleryCannon MortarLauncher
+setslot 6 Flamer CombustionAutorifleWeak CombustionAutorifle ChemicalSprayer TiberiumAutorifleWeak TiberiumAutorifle
+setslot 7 LaserRifle LaserChaingun GaussRifle ShockRifle PlasmaGun StealthLaserRifle Karasawa
+setslot 8 ChronoBow PlasmaCannon TimeGun UtilityGun BFG2704
+
+clearplayerclasses
+addplayerclass Player
+
+// =============================================================================
+// Key section
+addkeysection "All Out War 2" AOW2Keybinds
+addmenukey "Donation: Open/close menu" donationmenu
+addmenukey "Donation: Change name" donationname
+addmenukey "Donation: Donate $100" donationgive
+addmenukey "Surrender" surrender
+addmenukey "Switch to weaker team" teamswitch
+addmenukey "Sell Current Weapon" sellweapon
+addmenukey "Use self-heal" useselfheal
+addmenukey "Use timed C4" usec4
+addmenukey "Open preferences" aow_preferences
+addmenukey "Use Frag Grenade" usefraggrenade
+addmenukey "Use Flashbang" useflashbang
+addmenukey "Remote C4 Detonator" usedetonator
+
+defaultbind g usefraggrenade
+defaultbind f useflashbang
+defaultbind r usedetonator
+
+// =============================================================================
+// ALIAS CCMDS
+alias sellweapon "puke 950"
+alias donationmenu "puke 988 0"
+alias donationname "puke 988 1"
+alias donationgive "puke 984 $__zeta_donatee $zeta_cl_donateamount"
+alias donateall "puke 984 255"
+
+alias surrender "puke 342"
+alias spectatorteleport "puke 940"
+
+// Weapons
+alias usefraggrenade "puke 828 0"
+alias useflashbang "puke 828 1"
+alias usedetonator "puke 828 2"
+
+// Items
+alias useselfheal "use SelfHealItem"
+alias usec4 "use TimedC4"
+
+// Player number of our own self
+alias whoami "puke 946"
+
+// Request to switch to the other team
+alias teamswitch "puke 942"
+
+// Stats information
+alias showarmor "puke 981"
+alias showspeed "puke 921"
+
+// AI marine information
+alias dumpmarinestats "puke -967"
+
+// Insta-refreshes the HUD
+alias updatehud "puke -931"
+
+// Manual command to ask for a snapshot. I think this would be useful
+// in case something gets screwed up. There's already been problems
+// with credits syncing...
+alias getsnapshot "puke -932"
+
+// Open preferences
+alias aow_preferences "puke -803"
+
+// Version information
+alias aow_versioninfo "puke -813"
+
+// =============================================================================
+// RCON ADMIN COMMANDS
+alias gamemaster "puke 941 %1 3"
+alias forceblue "puke 941 %1 1"
+alias forcered "puke 941 %1 2"
+alias teamshuffle "puke 962"
+
+alias tournamentmode "set aow_tournamentmode 1;set aow_maxcannonsperteam 1;set aow_jugglimit 1;set aow_suddendeathtime 30;set aow_tickets 40;echo Tournament set-up complete - please restart the map."
+
+// =============================================================================
+// GAMEMASTER COMMANDS
+alias a_warp "puke 945 1 %1 %2"
+alias a_teleport "puke 945 2 %1"
+alias a_crate "puke 945 3 %1"
+alias a_berserk "puke 945 6"
+alias a_resign "puke 945 7"
+alias a_givebeacon "puke 945 8"
+alias a_admin "puke 945 9"
+alias a_team "puke 945 10 %1"
+alias a_forcered "puke 945 10 1"
+alias a_forceblue "puke 945 10 0"
+alias a_utility "puke 945 11"
+alias a_speed "puke 945 12 %1"
+alias a_opendeck "puke 945 14"
+alias a_notarget "puke 945 15"
+alias a_exit "puke 945 16"
+alias a_health "puke 945 17 %1"
+alias a_fly "puke 945 18"

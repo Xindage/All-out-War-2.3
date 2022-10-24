@@ -1,0 +1,59 @@
+// Armor flags
+const int ARMOD_NOCHANGE = 0;
+const int ARMOD_FIRE = 1;
+const int ARMOD_CHEM = 2;
+const int ARMOD_LASER = 3;
+const int ARMOD_EXPLO = 4;
+const int ARMOD_BULLET = 5;
+const int ARMOD_BULLETPROOF = 6;
+const int ARMOD_NONE = 7;
+const int AGF_ADDITIVE = 8;
+const int AGF_DONTSUBTRACT = 16;
+const int AGF_DONTADD = 32;
+
+// Teams
+const int TEAM_BLUE = 0;
+const int TEAM_RED = 1;
+
+// Buildings
+const int BUILDING_BARRACKS = 0;
+const int BUILDING_REFINERY = 1;
+const int BUILDING_RESCENTRE = 2;
+const int BUILDING_FACTORY = 3;
+const int BUILDING_REPAIR = 4;
+const int BUILDING_OBELISK = 5;
+const int BUILDING_MINIREF = 6;
+const int BUILDING_HEALTHREGEN = 7;
+const int BUILDING_AMMOREGEN = 8;
+const int BUILDING_PORTAL = 9;
+
+// Script numbers
+const int SC_SuperNukeCheck = 824;
+const int SC_PushAngle = 825;
+const int SC_PopAngle = 826;
+const int SC_InitMonster = 827;
+const int SC_SillyThings = 903;
+const int SC_WEAPONFIRECHECK = 913;
+const int SC_TortoiseEject = 904;
+const int SC_BeaconInventory = 924;
+const int SC_MARINE_INIT = 938;
+const int SC_MARINE_COMPENSATION = 939;
+const int SC_TELENODE_TIDREQUEST = 935;
+const int SC_TELENODE_INIT = 936;
+const int SC_TELENODE_FUNCTION = 937;
+const int SC_FullRefillPack = 954;
+const int SC_MARINE_DEATH = 968;
+const int SC_SETPITCH = 979;
+const int SC_DAMAGEOVERTIME = 974;
+const int SC_STEALTH = 975;
+
+const int STEALTH_ON = 0;
+const int STEALTH_OFF = 1;
+const int STEALTH_FLASH = 2;
+const int STEALTH_FORCEOFF = 3;
+
+// Menu numbers
+const int MENU_UTIL = 1;
+
+const int OVERTIME_FIRE = 0;
+const int OVERTIME_CHEM = 1;

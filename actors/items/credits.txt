@@ -1,0 +1,61 @@
+actor Credit : Inventory {
+	Inventory.MaxAmount 0x7FFFFFFF
+}
+
+actor Credits1 : CustomInventory 21412 {
+	//$Category Pickups
+	+ALWAYSPICKUP
+	Inventory.PickupMessage "Picked up a lucky coin. +\cq$\cd1"
+	Inventory.PickupSound "misc/credit_pkup"
+	tag "Credit coin ($1)"
+	states {
+	Spawn:
+		COIN A -1
+		stop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteAlways (814, 0, 1)
+		stop
+	}
+}
+
+actor Credits20 : Credits1 21413 {
+	Inventory.PickupMessage "Picked up a pile of credits! +\cq$\cd20"
+	Inventory.RespawnTics 1575
+	Tag "Credit pile ($20)"
+	states {
+	Spawn:
+		CRED A -1
+		stop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteAlways (814, 0, 20)
+		stop
+	}
+}
+
+actor Credits40 : Credits20 21414 {
+	Inventory.PickupMessage "Picked up bag of credits! +\cq$\cd40"
+	Inventory.RespawnTics 2100
+	Tag "Bag of credits ($40)"
+	States {
+	Spawn:
+		SACK A -1
+		stop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteAlways (814, 0, 40)
+		stop
+	}
+}
+
+actor Credits75 : Credits20 21415 {
+	Inventory.PickupMessage "Picked up a chest of credits! +\cq$\cd75"
+	Inventory.RespawnTics 3150
+	Tag "Chest of credits ($75)"
+	States {
+	Spawn:
+		CHST A -1
+		stop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteAlways (814, 0, 75)
+		stop
+	}
+}

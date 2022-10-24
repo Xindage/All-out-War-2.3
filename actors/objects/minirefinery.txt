@@ -1,0 +1,101 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Mini-Refinery
+ *
+ * The utility-built mini-refinery is a credit flow booster. Must be built into
+ * a tiberium field, in which it will start to refine the crystals there and
+ * turning them into cash for you and your friends. A good thing to have around
+ * when the main Refinery is destroyed. Credit flow is boosted by 75% when
+ * the mini-refinery is active.
+ */
+
+actor Utility_MiniRefCacheRed {
+	+SHOOTABLE
+	+NOBLOOD
+	+ACTIVATEMCROSS
+	+DONTGIB
+	+NOICEDEATH
+	+NOGRAVITY
+	+ISMONSTER
+	+QUICKTORETALIATE
+	Obituary "%o ventured too close to the \cARed Mini-Refinery\c-."
+	DesignatedTeam 1		// [SG] this was missing!
+	Radius 32
+	Height 48
+	Health 5850
+	RenderStyle Translucent
+	Alpha 0.0
+	Scale 0.1875
+	Mass 0x7FFFFFFF
+	PainChance 255
+	DamageType ChemicalSpecial
+	DamageFactor "Fist", 0.2
+	DamageFactor "Bullet", 0.5
+	DamageFactor "Rifle", 0.5
+	DamageFactor "Explosion", 0.75
+	DamageFactor "Fire", 0.6
+	DamageFactor "Chemical", 0.0
+	DamageFactor "Energy", 1.0
+	DamageFactor "AntiArmor", 0.25
+	DamageFactor "Time", 1.0
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Superweapon", 1.0
+	DamageFactor "MassDriver", 0.75
+	DamageFactor "ChemicalSpecial", 0.0
+	DamageFactor "Deconstruction",	1.0
+	DamageFactor "Mechstomp", 0.0
+	DamageFactor "Monster", 0.0
+	States {
+	Spawn:
+		MREF AA 0 Thing_ChangeTID(0,900)
+		MREF AAAAAAAAAA 3 A_FadeIn(0.1)
+		MREF A 0 A_SetTranslucent(1.0,0)
+		MREF A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Approved:
+		MREF A 5 A_RadiusThrust (4000, 40, 1)
+		MREF A 0 A_ChangeFlag("NOCLIP", 0)
+		MREF A 0 A_SetSolid
+		MREF A 0 A_SpawnItemEx("MiniRefCacheFlare",0,0,48,0,0,0,128,0)
+		MREF A 35 A_PlaySound("misc/i_pkup")
+		MREF A 0 A_ChangeFlag("FRIENDLY",0)
+		goto Working
+	Working:
+		MREF A 35 A_SpawnItemEx("MiniRefCacheFlare",0,0,48,0,0,0,128,0)
+		loop
+	Pain:
+		MREF A 0 ACS_ExecuteAlways (930, 0, BUILDING_MINIREF, TEAM_RED)
+		MREF A 1 A_Stop
+		goto Working
+	Death:  
+		TNT1 A 0 
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_Explode (256, 512)
+		TNT1 A 0 A_PlaySound ("weapons/rocklx", CHAN_ITEM)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMainLarge", 0, 0, 32, 0, 0, 0, 0, 128)
+		TNT1 AAAA 0 A_SpawnItemEx ("AnthraxDecay", random(-48,48), random(-48,48), 4)
+		TNT1 A 4 bright 
+		stop
+	Disapproved:
+	Death.Deconstruction:
+		"----" A 2 A_PlaySound ("utility/deconstruct")
+		"----" AAAAAAAAAA 2 A_Fadeout(0.1)
+		stop
+	}
+}
+
+ACTOR Utility_MiniRefCacheBlue : Utility_MiniRefCacheRed {
+	obituary "%o ventured too close to the \cNBlue Mini-Refinery\c-."
+	DesignatedTeam 0
+	states {
+	Spawn:
+		MREF AA 0 Thing_ChangeTID (0, 901)
+		MREF AAAAAAAAAA 3 A_FadeIn (0.1)
+		MREF A 0 A_SetTranslucent (1.0, 0)
+		MREF A -1 A_Gravity // wait until the script approves the cache.
+		stop
+	Pain:
+		MREF A 0 ACS_ExecuteAlways (930, 0, BUILDING_MINIREF, TEAM_BLUE)
+		MREF A 1 A_Stop
+		goto Working
+	}
+}

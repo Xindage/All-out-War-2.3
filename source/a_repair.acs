@@ -1,0 +1,266 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 repair gun script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by Dusk and the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+// [Dusk] Code for handling repairing. This supercedes the older "Repair"
+// damagetype-based hack which was extremely bandwidth-intensive.
+
+// [JD] Repairing is now done based on how many people are currently repairing the terminal.
+	
+/*function int GetRepairers (int WhatBuilding)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+		if (Repairing_int[WhatBuilding * 2][i] == 1)
+			Repairing_int[WhatBuilding * 2][MAXPLAYERS]++;
+	
+	return Repairing_int[WhatBuilding * 2][MAXPLAYERS];
+}*/
+
+#define REPAIRTYPE_REPAIR 0
+#define REPAIRTYPE_MEDIC 1
+script 650 (int amount, int repairtype, int turret) {
+	// Can't repair dead buildings
+	if (GetHealth() <= 0)
+		terminate;
+	
+	// Gather some info
+	int hp, newhp;
+	int tid = ActivatorTID();
+	int origid = ActivatorTID ();
+	int pn = PlayerNumber ();
+	int team = PlayerTeam ();
+	int bonus;
+	
+	// Activator: repairer -> terminal
+	SetActivatorToTarget (0);
+	tid = ActivatorTID ();
+	
+	// No target, break out.
+	if (tid == origid)
+		terminate;
+	
+	// Out of range
+	if (!CheckActorDistance (origid, tid, 800))
+		terminate;
+	
+	int newpn;
+	int what = -1;
+	int tteam = -1;
+	
+	// Are we shooting at a terminal?
+	// If so, find its information
+	for (int i = 0; i < MAX_BUILDINGS * 2; i++) {
+		if (tid == BaseTIDs[i]) {
+			what = i / 2;
+			tteam = i % 2;
+		}
+	}
+	
+	if (what != -1 && tteam == team) {
+		// Can only repair things with repair guns
+		if (repairtype != REPAIRTYPE_REPAIR)
+			terminate;
+		
+		// No repairing of main buildings in sudden death
+		if (intHolder[i_SuddenDeath] && tid < 900)
+			terminate;
+		
+		if (!Repairing_int[what * 2][pn])
+		{
+			Repairing_int[what * 2][pn] = 1;
+			ACS_NamedExecuteAlways("SC_FREEREPAIRING", 0, what, pn, 0);
+		}
+		
+		// Heal the terminal actor
+		hp = GetHealth ();
+		//newhp = hp + amount;
+		
+		// [JD] Implemented a formula to calculate the final repair amount based on how many players are currently repairing the same terminal.
+		int numRepairers = ACS_NamedExecuteWithResult("SC_RETURNMAXREPAIRERS", what, 0, 0, 0);
+		int finalAmount;
+		
+		if (numRepairers >= 4)
+			finalAmount = RepairAmounts[4];
+		else
+			finalAmount = RepairAmounts[numRepairers];
+
+		newhp = hp + finalAmount;
+		
+		if (hp >= GetSpawnHealth ()) // already at full health
+			terminate;
+		
+		if (newhp >= GetSpawnHealth ())
+			newhp = GetSpawnHealth();
+		
+		SetHealth (newhp);
+		
+		// Save the current health.
+		RecordedBuildingHealths[what*2 + team] = GetHealth ();
+		
+		// REPAIR AWARDS
+		// Activator -> repair guy
+		SetActivator (origid);
+		
+		// Increase his repair bonus counter
+		if (RepairBonus[pn] < 150) {
+			RepairBonus[pn]++;
+		} else {
+			// Every 150 count, add a point to him.
+			RepairBonus[pn] = 0;
+			GivePoints (1);
+		}
+		
+		// Every 10 count, give him some cash and exp
+		if (!(RepairBonus[pn] % 10)) {
+			GiveCredits (intHolder[i_CreditRepairAmount]);
+			AddExperience (2 + !(RepairBonus[pn] % 20));
+		}
+		
+		// Update the building health to the clients
+		SYNC_UpdateBuildingHealth (what, tteam);
+	}
+	
+	else if (PlayerNumber() != -1 || CheckInventory ("IsAIMarine")) {
+		// Teammate healing
+		
+		// Repair gun does less healing
+		if (repairtype == REPAIRTYPE_REPAIR)
+			amount = 1;
+		
+		bonus = amount*3;
+		newpn = tid-3800;
+		
+		// Not enemies
+		if (PlayerTeam() != team)
+			terminate;
+		
+		// Medics cannot repair mechs, repairmen only.
+		if (CheckInventory ("IsMech")) {
+			if (repairtype == REPAIRTYPE_MEDIC)
+				terminate;
+			else {
+				amount = 4;
+				bonus = 1;
+			}
+		}
+		
+		// Heal the teammate
+		hp = GetHealth ();
+		newhp = hp + amount;
+		
+		if (hp >= GetSpawnHealth ())
+			terminate;
+		
+		if (newhp >= GetSpawnHealth ())
+			newhp = GetSpawnHealth();
+		
+		SetHealth (newhp);
+		
+		// Award the healer
+		if (!CheckInventory ("PowerNoHealXP"))
+		{
+			SetActivator (3800+pn);
+			if (MedicBonus[pn] < intHolder[i_MedicBonusNeed])
+			{
+				MedicBonus[pn] += bonus;
+			}
+			else
+			{
+				MedicBonus[pn] = 0;
+				AddExperience (25); // [JD] 50 XP was way to high, now it's the same as Engineer/Technician.
+				//LocalAmbientSound ("c4/use", 127);
+				GivePoints (1);
+			}
+			
+			if (!(MedicBonus[pn] % 6))
+				GiveCredits (intHolder[i_CreditRepairAmount]);
+		}
+	}
+}
+
+// =============================================================================
+// Repair turret ACS
+// The repair turret, being a non-player, uses a simpler version
+// of the above code. Result value of 1 means repair turret
+// should display the repairing animation, 0 means it should not.
+script 823 (int check, int team) {
+	SetResultValue (0);
+	int tid = GetTargetInfo (TARGETINFO_TID);
+	
+	if (intHolder[i_SuddenDeath] && tid < 900) {
+		// It's sudden death. We can't repair here, so
+		// transform into a klaxon turret instead!
+		// SetActorState (0, "NoLongerMrNiceGuy");
+		
+		// SetActorState crashes here as this function is used
+		// as a parameter for A_JumpIf.. thus signal the turret
+		// that it should replace itself.
+		GiveInventory ("SDReplace", 1);
+		terminate;
+	}
+	
+	// Find terminal info
+	int what = -1;
+	int tteam = -1;
+	for (int i = 0; i < 18; i++) {
+		if (tid == BaseTIDs[i]) {
+			what = i/2;
+			tteam = i%2;
+		}
+	}
+	
+	/*if (check) {
+		Log (s:"TID: ", d:tid, s:", what: ", d:what, s:", tteam: ", d:tteam);
+	}*/
+	
+	if (what == -1 || tteam != team)
+		terminate; // check returns with 0
+	
+	// Handle checking target validity
+	if (check) {
+		SetResultValue (1);
+		terminate;
+	}
+	
+	// Heal the terminal
+	int hp = GetActorHealth (tid);
+	int newhp = hp + 8;
+	if (hp >= GetActorSpawnHealth (tid)) terminate;
+	if (newhp >= GetActorSpawnHealth (tid)) newhp = GetActorSpawnHealth(tid);
+	SetActorHealth (tid, newhp);
+	
+	// Update the building health to the clients
+	SYNC_UpdateBuildingHealth (what, tteam);
+	
+	SetResultValue (1);
+}
+
+// =============================================================================
+// [Dusk] Display health of friendly players while healing them
+script SC_RepairHUD (void) CLIENTSIDE {
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		terminate;
+	
+	int myteam = PlayerTeam ();
+	str nc = cond (myteam == TEAM_BLUE, "\cH", "\cG");
+	
+	if (!SetActivatorToTarget (0) || // no target
+		PlayerNumber() == -1 || // non-player as target
+		PlayerTeam () != myteam) // enemy player as target
+	{
+		terminate;
+	}
+	
+	int shp = GetSpawnHealth ();
+	int hp = GetHealth ();
+	str c = FractionColor (hp, shp);
+	SetFont ("SMALLFONT");
+	HudMessageBold (s:nc, n:0, s:"\n", s:c, d:hp, s:" / ", d:shp;
+		HUDMSG_FADEOUT, 2000, 0, 0.5, 0.4, 1.0, 0.5);
+}

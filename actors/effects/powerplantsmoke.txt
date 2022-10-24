@@ -1,0 +1,30 @@
+// Smoke spanwers
+actor PowerPlantSmokeGenerator 21406 {
+	//$Category Effects
+	tag "Research Centre smoke"
+	+NOGRAVITY
+	+INVULNERABLE
+	+SHOOTABLE
+	+NOINTERACTION
+	states {
+	Spawn: 
+		TNT1 A 2 A_SpawnItemEx ("PowerPlantSmokePuff", random(-32,32), random(-32,32), 0, 0, 0, 3)
+		wait
+	Death:
+		TNT1 A -1
+		stop
+	Raise:
+		TNT1 A 0
+		goto Spawn
+	}
+}
+
+actor PowerPlantSmokeGeneratorSmall 24002 {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 2 A_SpawnItemEx ("PowerPlantSmokePuffSmall", random(-32,32), random(-32,32), 0, 0, 0, 3)
+		wait
+	}
+}

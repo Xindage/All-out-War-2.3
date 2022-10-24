@@ -1,0 +1,585 @@
+// All Out War 2 Class purchase scripts
+// Credit to VoltlocK for originally creating AOW2
+// With modifications by the Omega Team
+
+// You may use portions of this script in your project as long as you give credit where credit is
+// due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
+
+// Add-on definitions
+#define MAX_ADDONS 7 //increase this and add stuff below in the two arrs to add a new addon
+
+#define ADK_NAME 0
+#define MAX_ADDON_KEYS_STR 1
+int AddOns_str[MAX_ADDONS][MAX_ADDON_KEYS_STR] = {
+	{"+1 Armor"},
+	{"Tiberium Autorifle"},
+	{"Combustion Autorifle"},
+	{"Artillery Cannon"},
+	{"Chainsaw"},
+	{"Plasma Cannon"},
+	{"Superweapon Beacon"}
+};
+
+#define ADK_COST 0
+#define ADK_ITEM 1
+#define MAX_ADDON_KEYS_INT 2
+int AddOns_int[MAX_ADDONS][MAX_ADDON_KEYS_INT] = {
+	// cost, price
+	{250, ITEM_ArmorUp}, //armor upgrade
+	{300, ITEM_TibRifleWeak},
+	{300, ITEM_CombustRifleWeak},
+	{550, ITEM_Artillery},
+	{250, ITEM_Chainsaw},
+	{1750, ITEM_PlasmaCannon},
+	{1750, ITEM_Beacon} //nuke/ion
+};
+
+
+
+// =============================================================================
+// [Dusk] Adds a class type. Holy SHIT what a long ass prototype.
+/*
+	"Name of class", cost, speed, dependency,
+		armor, armor_mod,
+		frags, c4, flags,
+		item0, item1, item2, item3, item4, item5
+*/
+function void AddClass (int token, str name, int cost, int speed,
+	int dep, int armor, int armod, int frags, int c4, int flags,
+	int item0, int item1, int item2, int item3, int item4, int item5)
+{
+	if (token < 0 || token >= NUMCLASSES) {
+		FatalError3f ("Invalid token %d for class `%s` (should be between [0 - %d], did you forget to update NUMCLASSES?)",
+			token, name, NUMCLASSES - 1);
+	}
+	
+	Classes_str[token][CK_NAME] = name;
+	Classes_int[token][CK_COST] = cost;
+	Classes_int[token][CK_SPEED] = speed;
+	Classes_int[token][CK_DEPENDENCY] = dep;
+	Classes_int[token][CK_ARMOR] = armor;
+	Classes_int[token][CK_ARMOD] = armod;
+	Classes_int[token][CK_FRAGS] = frags;
+	Classes_int[token][CK_C4] = c4;
+	Classes_int[token][CK_FLAGS] = flags;
+	Classes_int[token][CK_ITEM0] = item0;
+	Classes_int[token][CK_ITEM1] = item1;
+	Classes_int[token][CK_ITEM2] = item2;
+	Classes_int[token][CK_ITEM3] = item3;
+	Classes_int[token][CK_ITEM4] = item4;
+	Classes_int[token][CK_ITEM5] = item5;
+	Classes_int[token][CK_FLASH] = 1; // todo: change amount of flash per class
+}
+
+// =============================================================================
+// [Dusk] Tries to purchase a class for the player. Returns true if successful,
+// if not, g_Error is set and the function returns false.
+function bool PurchaseClass (int id) {
+	int cost = Classes_int[id][CK_COST];
+	
+	// Check barracks
+	if (Classes_int[id][CK_DEPENDENCY] == DEP_BARRACKS) {
+		if (!CheckBarracks (PlayerTeam ())) {
+			g_Error = "Your barracks have been destroyed!";
+			return false;
+		}
+	}
+	
+	// Check research centre
+	if (Classes_int[id][CK_DEPENDENCY] == DEP_CENTRE) {
+		if (!CheckPlant (PlayerTeam ())) {
+			g_Error = "Your research centre has been destroyed!";
+			return false;
+		}
+	}
+	
+	// Check refinery
+	if (Classes_int[id][CK_DEPENDENCY] == DEP_REFINERY) {
+		if (!CheckRefinery (PlayerTeam ())) {
+			g_Error = "Your refinery has been destroyed!";
+			return false;
+		}
+	}
+	
+	// If the class is a time cop, we need to check the limit
+	int TimeCopMax = GetCVar ("zeta_maxtimecopsperteam");
+	if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop && TimeCopMax > 0) {
+		if (TeamInvCount ("TimeGun", PlayerTeam()) >= TimeCopMax) {
+			g_Error = "Timecop's at limit!";
+			return false;
+		}
+	}
+	
+	// [JD] If the class we're trying to purchase is a Karasawa then we need to check for the limit (just like TimeCop).
+	if (Classes_int[id][CK_FLAGS] & CF_IsKarasawa && GetConfig(CONFIG_MAXKARASAWAS) > 0)
+	{
+		if (TeamInvCount("Karasawa", PlayerTeam() >= GetConfig(CONFIG_MAXKARASAWAS)))
+		{
+			g_Error = "Karasawa's at limit!";
+			return false;
+		}
+	}
+	
+	if (id == CLASS_UtilityGuy &&
+		TeamInvCount("UtilityGun", PlayerTeam()) >= GetConfig(CONFIG_MAXUTILITYGUY))
+		{
+			g_Error = "Utility Guy limit has been reached!";
+			return false;
+		}
+	
+	// Must not have a class already
+	if (CheckInventory ("HasClass")) {
+		g_Error = "You must resign first!";
+		return false;
+	}
+	
+	// Must afford it!
+	if (!CanAfford (cost)) {
+		g_Error = "You need more credits!";
+		return false;
+	}
+	
+	TakeInventory ("PurchaseToken", 1);
+	SpendCredits (cost);
+	
+	if (!SetClass (id, 0)) {
+		g_Error = "Couldn't set the class! Something's going nuts here!";
+		return false;
+	}
+	
+	// Call an event script here
+	CallEvent (ACTION_ClassPurchase, id);
+	
+	return true;
+}
+
+
+// =============================================================================
+// [Dusk] Sets the player class
+#define SCF_NOTELEPORT		1	// don't teleport the player to his base
+#define SCF_NOBEEP			2	// no beep sound
+#define SCF_SILENT			3	// stay shush
+function int SetClass (int id, int scflags) {
+	// If we pass CLASS_None, we resign.
+	if (id == CLASS_None) {
+		SetActorProperty (0, APROP_DeathSound, "generic/death");
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
+		SetActorProperty (0, APROP_Alpha, 1.0);
+		
+		RefundCredits (-1, CheckInventory("Refunds"));
+		
+		// First mark down the stuff that we wish to carry over the resign.
+		if (CheckInventory ("JumpjetSwitch"))
+			GiveInventory ("JumpjetDeactivate", 1);
+		if (CheckInventory ("PlasmaCannon"))
+			bool HasPlasma = True;
+		if (CheckInventory ("ArtilleryCannon"))
+			bool HasArtillery = True;
+		if (CheckInventory ("TiberiumAutorifleWeak"))
+			bool HasTiberiumAutorifle = True;
+		if (CheckInventory ("IonCannonBeacon") || CheckInventory("NuclearStrikeBeacon"))
+			bool HasSuperWeapon = True;
+		if (CheckInventory ("PowerIronCurtain"))
+			bool HasIronCurtain = True;
+		if (CheckInventory ("PowerBerserk"))
+			bool HasBerserk = True;
+		if (CheckInventory ("EagerBeaver"))
+			bool HasChainsaw = True;
+		if (CheckInventory ("BombPack"))
+			bool HasKamikaze = True;
+		if (CheckInventory ("PowerTimeGunFloat") || CheckInventory ("PowerTimeGunBoost") || CheckInventory ("IsTeleporting"))
+			bool HasTimeGunPositiveEffect = true;
+		if (CheckInventory ("PowerTimeGunWeaken") || CheckInventory ("PowerTimeGunSlow"))
+			bool HasTimeGunNegativeEffect = true;
+		if (CheckInventory ("IsInSpawnRoom"))
+			bool InSpawn = true;
+		if (CheckInventory ("InMenu"))
+			int MenuCount = CheckInventory ("InMenu");
+		SetPlayerProperty (0, 0, PROP_FLY);
+		SetPlayerProperty (0, 0, PROP_FROZEN);
+		
+		ClearInventory ();
+		
+		// [TT] Fix display bug
+		takeinventory("classID", 999);
+		
+		// If he was in the menu, re-activate it now.
+		if (MenuCount)
+			ActivateMenu (MENU_Purchase);
+		
+		// Set the essentials
+		if (PlayerTeam() == TEAM_RED)
+			GiveInventory ("IsRed", 1);
+		else
+			GiveInventory ("IsBlue", 1);
+		
+		GiveInventory ("Unarmed", 1);
+		SetWeapon ("Unarmed");
+		SetAmmoCapacity ("TimedC4Ammo", 1);
+		SetAmmoCapacity ("FragGrenadeAmmo", 1);
+		SetAmmoCapacity ("FlashbangAmmo", 1);
+		SetActorProperty (0, APROP_SPEED, 1.0);
+		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
+		SetActorProperty (0, APROP_Alpha, 1.0);
+		SetInventory ("Credit", Credits[PlayerNumber()]);
+		SetInventory ("Experience", Experience[PlayerNumber()]);
+		
+		GiveInventory ("IsInSpawnRoom", InSpawn);
+		
+		// Restore the marked stuff
+		if (HasPlasma)
+			GiveItem (ITEM_PlasmaCannon, false);
+		
+		if (HasArtillery)
+			GiveItem (ITEM_Artillery, false);
+		
+		if (HasTiberiumAutorifle)
+			GiveItem (ITEM_TibRifleWeak, false);
+		
+		GiveInventory ("GreenHueRemover", HasIronCurtain);
+		GiveInventory ("RedHueRemover", HasBerserk);
+		GiveInventory ("BeaconItem", HasSuperWeapon);
+		GiveInventory ("EagerBeaver", HasChainsaw);
+		GiveInventory ("NoMoreTerrorism", HasKamikaze);
+		GiveInventory ("DimGoldHueRemover", HasTimeGunPositiveEffect);
+		GiveInventory ("DimRedHueRemover", HasTimeGunNegativeEffect);
+		GiveInventory ("IsFemale", (GetPlayerInfo (PlayerNumber(), PLAYERINFO_GENDER) == 1));
+		GiveInventory ("IsAdmin", IsAdmin[PlayerNumber()]);
+		
+		if (!(scflags & SCF_SILENT)) {
+			DisplayTick();
+			SetFont ("BIGFONT");
+			HudMessage(s:"You have resigned from your class.";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_ORANGE, 0.5, 0.45, 2.0, 1.0);
+			
+			Log (n:0, s:" resigns.");
+			TeamMessage (TMSG_RESIGN, 0, playernumber());
+		}
+		
+		ACS_ExecuteAlways (97, 0);
+		RecountTimeCops ();
+		RecountKarasawas();
+		RecountUtilityGuy();
+		return true;
+	}
+	
+	// =========================================================================
+	if (id < CLASS_None || id > NUMCLASSES) {
+		print1f ("SetClass: Tried to set an unknown class %d!", id);
+		return false;
+	}
+	
+	bool silent = (scflags & SCF_SILENT);
+	
+	int cflags = Classes_int[id][CK_FLAGS];
+	str name = Classes_str[id][CK_NAME];
+	
+	// Display message to purchaser
+	if (!(scflags & SCF_NOBEEP | SCF_SILENT))
+		DisplayTick ();
+	
+	SetFont ("BIGFONT");
+	HudMessage (s:"You are a \cf", s:name, s:"!";
+		HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+	
+	// If the class is flagged as dangerous, also print a warning to others
+	if (cflags & CF_Warning) {
+		SetFont ("SMALLFONT");
+		if (PlayerTeam () == TEAM_RED)
+			IntelMessage (strparam (s:"\cGWarning: \cARed\cJ ", s:name, s:" in-field!"), true);
+		else
+			IntelMessage (strparam (s:"\cGWarning: \cNBlue\cJ ", s:name, s:" in-field!"), true);
+			
+		print(s:GetClass());
+			
+		if (id == CLASS_SuicideBomber)
+			ActivatorSound("misc/commando",255);
+	}
+	
+	// The essentials
+	GiveInventory ("HasClass", 1);
+	GiveInventory ("Refunds", Classes_int[id][CK_COST] / 2);
+	GiveInventory ("ClassID", id+1);
+	
+	// Speed and armor
+	SetActorProperty (0, APROP_SPEED, Classes_int[id][CK_SPEED]);
+	SetArmorGrade (Classes_int[id][CK_ARMOR], Classes_int[id][CK_ARMOD]);
+	
+	// Give a handgun unless undesired
+	/*if (!(cflags & CF_NoPistol))
+		GiveItem (ITEM_HANDGUN, false);*/
+	
+	// C4
+	int c4 = Classes_int[id][CK_C4] + checkInventory("TimedC4Count");
+	
+	if (c4 > 0) {
+		SetInventory ("TimedC4", c4);
+		SetInventory ("TimedC4Count", c4);
+	}
+	
+	if(c4 < checkInventory("TimedC4Count"))
+	{
+		c4 = checkInventory("TimedC4Count");
+		SetInventory ("TimedC4", c4);
+		SetInventory ("TimedC4Count", c4);
+	}
+	
+	if(c4 > ITEM_maxC4)
+	{
+		SetInventory ("TimedC4", ITEM_maxC4);
+		SetInventory ("TimedC4Count", ITEM_maxC4);
+	}
+	
+	// [JD] Officer rank now comes with Enhanced C4.
+	if(GetRank() >= RANK_OFFICER)
+		GiveInventory("EnhancedTimedC4",1);
+	
+	// Frag grenades & Flashbangs
+	// [Cata] Changed to work with research in spawn room.
+	int nades, flashs; 
+	
+	nades = Classes_int[id][CK_FRAGS] + CheckInventory ("fraggrenadeammo");
+	flashs = Classes_int[id][CK_FLASH] + CheckInventory ("FlashbangAmmo");
+	
+	if(CheckInventory ("fraggrenadeammo") > Classes_int[id][CK_FRAGS]) nades = CheckInventory ("fraggrenadeammo");
+	if(CheckInventory ("FlashbangAmmo") > Classes_int[id][CK_FLASH]) flashs = CheckInventory ("FlashbangAmmo");
+	
+	
+	if(nades > ITEM_maxGrenades) nades = ITEM_maxGrenades;
+	if(flashs > ITEM_maxFlashBangs) flashs = ITEM_maxFlashBangs;
+	
+	
+	SetFragGrenades (nades); 
+	SetFlashbangs (flashs); // [SG] for convenience, same amount as grenades
+	
+	// [SG] If the player is changing his armor, cancel that action.
+	
+	if (CheckInventory("IsChangingArmor"))
+		GiveInventory("CancelChangingArmor",1);
+	
+	// If the class is a sniper, flag as such
+	if (cflags & CF_IsSniper)
+		GiveInventory ("IsSniper", 1);
+	
+	if (id == CLASS_ShockTrooper)
+		ActivatorSound("misc/volt", 255);
+		
+	if (id == CLASS_NailMachineGunner)
+		GiveInventory("IsNailMachineGunner", 1);
+	
+	// If the class shouldn't use mechs, flag as such
+	if (cflags & CF_CantPilot)
+		GiveInventory ("CantMech", 1);
+	
+	// If the class is flagged as a medic, they should get the regeneration
+	if (cflags & CF_IsMedic) {
+		GiveInventory ("IsMedic", 1);
+		ACS_ExecuteAlways (352, 0);
+	}
+	
+	// If the class is counts as a time cop, the limit has to be
+	// recounted now.
+	if (cflags & CF_IsTimeCop)
+		RecountTimeCops ();
+	
+	if (cflags & CF_IsKarasawa)
+		RecountKarasawas();
+	
+	// If the class is flagged as a harvester, they should be able
+	// to collect Tiberium
+	if (cflags & CF_IsHarvester) {
+		GiveInventory ("IsHarvester", 1);
+		GiveInventory ("TiberiumProof", 1);
+		
+		// Info message
+		if (!silent) {
+			SetFont ("BIGFONT");
+			HudMessage (s:"Pick-up \cDtiberium crystals \c-and";
+				HUDMSG_FADEOUT, 1840+PlayerNumber(), CR_GRAY, 0.5, 0.6, 2.0, 1.0);
+			HudMessage (s:"return them to your \cDrefinery \c-for \cQcash!";
+				HUDMSG_FADEOUT, 1880+PlayerNumber(), CR_GRAY, 0.5, 0.65, 2.0, 1.0);
+		}
+	}
+	
+	if (id == CLASS_ChemWarrior || id == CLASS_AdvHarvester || id == CLASS_Harvester)
+		ActivatorSound("misc/chem",255);
+	
+	// Stealth troopers have a specific death sound
+	if (cflags & CF_IsStealth) {
+		SetActorProperty (0, APROP_DeathSound, "stealth/death");
+		ActivatorSound("misc/stealth",255);
+		}
+	
+	// Tag the artillery soldier so it can have its fast reloading
+	if (id == CLASS_ARTILLERY)
+		GiveInventory ("IsArtillerySoldier", 1);
+	
+	// Give the player the weapons and items.
+	for (int i = 0; i < 6; i++)
+		GiveItem (Classes_int[id][CK_ITEM0 + i], false);
+	
+	// The weapon in the first slot is considered primary
+	// and the player will select it.
+	SetWeapon (Items_str[Classes_int[id][CK_ITEM0]][IK_ITEM0]);
+	
+	// Check for rank for possible upgrades
+	ACS_ExecuteAlways (91, 0);
+	
+	// Send the player to field unless undesired
+	if (!(scflags & SCF_NOTELEPORT)) {
+		ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, 1-PlayerTeam ());
+		
+		// Don't give spawn invul if zeta_nospawninvul is set.
+		if (!GetCVar ("zeta_nospawninvul"))
+			GiveInventory ("SpawnInvulnerability", 1);
+	}
+	
+	// Give self-heal now. We give this last so that it is never selected automatically.
+	if (id != CLASS_SuicideBomber)
+		GiveInventory ("SelfHealItem", 1);
+	
+	// Save the player speed for morph handling
+	PlayerSpeeds[PlayerNumber()] = Classes_int[id][CK_SPEED];
+	
+	// Inform teammates of the class change
+	TeamMessage (TMSG_NEWCLASS, id, playernumber());
+	
+	// Log it, unless offline
+	if (netstate != NETSTATE_Offline || PlayerTeam() != ConsoleTeam())
+		Log (n:0, s:" becomes ", s:Classes_str[id][CK_NAME]);
+	
+	return true;
+}
+
+/* [Dusk] Class scripts. This is what
+ * remains of that old copy/paste nightmare :)
+ * These now just call the menu.
+ */
+// {9/10/12} Script 20 is NET w/ extra checks so it can be called from console.
+script 20 (void) NET {
+	if (PlayerInGame (PlayerNumber ()) && CheckInventory ("IsInSpawnRoom"))
+		ActivateMenu (MENU_PURCHASE);
+}
+
+script 21 (void) ActivateMenu (MENU_PURCHASE);
+script 22 (void) ActivateMenu (MENU_PURCHASE);
+script 23 (void) ActivateMenu (MENU_PURCHASE);
+script 24 (void) ActivateMenu (MENU_PURCHASE);
+script 25 (void) ActivateMenu (MENU_PURCHASE);
+script 26 (void) ActivateMenu (MENU_PURCHASE);
+script 27 (void) ActivateMenu (MENU_PURCHASE);
+script 28 (void) ActivateMenu (MENU_PURCHASE);
+script 29 (void) ActivateMenu (MENU_PURCHASE);
+script 33 (void) ActivateMenu (MENU_PURCHASE);
+script 35 (void) ActivateMenu (MENU_PURCHASE);
+script 38 (void) ActivateMenu (MENU_PURCHASE);
+script 62 (void) ActivateMenu (MENU_PURCHASE);
+script 40 (void) ActivateMenu (MENU_PURCHASE);
+script 41 (void) ActivateMenu (MENU_PURCHASE);
+script 42 (void) ActivateMenu (MENU_PURCHASE);
+script 43 (void) ActivateMenu (MENU_PURCHASE);
+script 44 (void) ActivateMenu (MENU_PURCHASE);
+script 52 (void) ActivateMenu (MENU_PURCHASE);
+script 53 (void) ActivateMenu (MENU_PURCHASE);
+script 54 (void) ActivateMenu (MENU_PURCHASE);
+script 60 (void) ActivateMenu (MENU_PURCHASE);
+script 61 (void) ActivateMenu (MENU_PURCHASE);
+script 57 (void) ActivateMenu (MENU_PURCHASE);
+script 37 (void) ActivateMenu (MENU_PURCHASE);
+script 49 (void) ActivateMenu (MENU_PURCHASE);
+script 50 (void) ActivateMenu (MENU_PURCHASE);
+script 51 (void) ActivateMenu (MENU_PURCHASE);
+script 55 (void) ActivateMenu (MENU_PURCHASE);
+script 56 (void) ActivateMenu (MENU_PURCHASE);
+script 39 (void) ActivateMenu (MENU_PURCHASE);
+script 34 (void) ActivateMenu (MENU_PURCHASE);
+script 36 (void) ActivateMenu (MENU_PURCHASE);
+script 63 (void) ActivateMenu (MENU_PURCHASE);
+script 64 (void) ActivateMenu (MENU_PURCHASE);
+
+// =============================================================================
+// Instantly turn the player into a suicide bomber
+script SC_BOMBPACKITEM (void) {
+	if (CheckWeapon ("BombPack"))
+		terminate;
+	
+	SetClass (CLASS_None, SCF_SILENT);
+	SetClass (CLASS_SuicideBomber, SCF_SILENT);
+	SpawnSpotForced ("TeleportFog", 0, 0, 0);
+	
+	SetFont ("BIGFONT");
+	HudMessage (s:"\cfYou are now a suicide bomber! Go blast 'em!";
+		HUDMSG_FADEOUT, 1800 + PlayerNumber(), CR_Untranslated, 0.5, 0.45, 2.0, 1.0);
+}
+
+// =============================================================================
+function int GetClass (void) {
+	return GetPlayerClass (PlayerNumber ());
+}
+
+function int GetPlayerClass (int i) {
+	if ((!PlayerInGame (i) || !CheckActorInventory (3800 + i, "HasClass")) && !CheckActorinventory(3800 + i, "ClassID"))
+		return CLASS_None;
+	
+	return CheckActorInventory (3800 + i, "ClassID")-1;
+}
+
+// [Cata] This is for the menu to gray out classes once a building is destroyed.
+function int menuPurchase_ExistsBuilding (int b, int t) 
+{
+	if (GetActorSpeed (BaseTIDs[2*b + t]) > 0) 
+			return true;
+	return false;
+}
+
+// ============================================================================
+// Returns true if the given class can be bought, false if it can't
+// This is just client-side prediction on the menu.
+function int CheckClassAvailability (int id) {
+	int cost = Classes_int[id][CK_COST];
+	int ct = PlayerTeam ();
+	
+	// Can't buy a class without resigning first
+	if (CheckInventory ("HasClass"))
+		return false;
+	
+	// Check cost
+	if (CheckInventory ("Credit") < Classes_int[id][CK_COST])
+		return false;
+	
+	// Check building dependencies
+	switch (Classes_int[id][CK_DEPENDENCY]) 
+	{
+		case DEP_BARRACKS:
+			if (!menuPurchase_ExistsBuilding (BUILDING_BARRACKS, ct))
+				return false;
+			break;
+		case DEP_CENTRE:
+			if (!menuPurchase_ExistsBuilding (BUILDING_RESCENTRE, ct))
+				return false;
+			break;
+		case DEP_REFINERY:
+			if (!menuPurchase_ExistsBuilding (BUILDING_REFINERY, ct))
+				return false;
+			break;
+	}
+	
+	if (id == CLASS_UtilityGuy &&
+		TeamInvCount("UtilityGun", PlayerTeam()) >= GetConfig(CONFIG_MAXUTILITYGUY))
+			return false;
+	
+	// Check timecop limit
+	int TimeCopMax = GetConfig (CONFIG_MAXTIMECOPS);
+	if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop && TimeCopMax > 0)
+		if (TeamInvCount ("TimeGun", PlayerTeam()) >= TimeCopMax)
+			return false;
+	
+	int KarasawaMax = GetConfig(CONFIG_MAXKARASAWAS);
+	if (Classes_int[id][CK_FLAGS] & CF_IsKarasawa && KarasawaMax > 0)
+	{
+		if (TeamInvCount("Karasawa", PlayerTeam()) >= KarasawaMax)
+			return false;
+	}
+	
+	return true;
+}

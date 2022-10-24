@@ -1,0 +1,267 @@
+// --------------------------------------------------
+//               EXPERIENCE
+// --------------------------------------------------
+
+//Experience add
+function void AddExperience (int XP) {
+	DoAddExperience (XP, false);
+}
+
+function void AddExperienceWithMessage (int XP) {
+	DoAddExperience (XP, true);
+}
+
+function void DoAddExperience (int XP, int forcemessage) {
+	// If we're already at the highest rank, we don't
+	// benefit from any new experience
+	int maxexp = GetExpNeed (MAX_RANKS - 1);
+	if (Experience[PlayerNumber()] >= maxexp)
+		return;
+	
+	// Because we're tampering with experience here,
+	// we need to get the rank information now since it
+	// may change after it's increased
+	int expneed = GetExpNeed (GetRank () + 1);
+	
+	// Game masters never have their status changed
+	if (IsAdmin[PlayerNumber()]) return;
+	
+	Experience[PlayerNumber()] += XP;
+	if (Experience[PlayerNumber()] >= maxexp) Experience[PlayerNumber()] = maxexp;
+	
+	SetInventory ("Experience", Experience[PlayerNumber()]);
+	
+	// Don't announce minor exp awards
+	if (XP > 20 || forcemessage) {
+		SetFont ("SMALLFONT");
+		IntelMessage(strparam(s:"You have gained \cD",d:XP, s:" \cQXP"), false);
+	}
+	
+	// If we rank up because of this, announce it
+	SetFont ("SMALLFONT");
+	if (Experience[PlayerNumber ()] >= expneed) {
+		LocalAmbientSound ("game/rank", 127);
+		IntelMessage (strparam (s:"You have ranked up to \cD", s:RankTitles[GetRank ()], s:"!"), false);
+		ACS_ExecuteAlways (91, 0);
+		
+		TeamMessage (TMSG_RANKUP, GetRank(), playernumber());
+		Log (n:0, s:"\c- ranks up to ", s:RankTitles[GetRank ()]);
+	}
+}
+
+// Note: this function does not cater for demoting!
+function void SetExperience (int exp) {
+	// Clamp the value
+	if (exp < 0) exp = 0;
+	if (exp > 3250) exp = 3250;
+	
+	Experience[PlayerNumber ()] = exp;
+	SetInventory ("Experience", Experience[PlayerNumber()]);
+	
+	SetFont ("SMALLFONT");
+	if (!exp) {
+		HudMessage(s:"You lose all experience.";
+			HUDMSG_FADEOUT, 140+PlayerNumber(), CR_RED,
+			0.5, 0.59, 2.0, 1.0);
+	} else {
+		HudMessage(s:"Your experience has been set to \cD", d:exp, s:" \cQXP";
+			HUDMSG_FADEOUT, 140+PlayerNumber(), CR_WHITE,
+			0.5, 0.59, 2.0, 1.0);
+	}
+}
+
+// =============================================================================
+function int GetPlayerExperience (int p) {
+	// [Dusk] Clients don't know the values of Experience[], instead use inventory.
+	if (netstate == NETSTATE_Client)
+		return CheckActorInventory (3800 + p, "Experience");
+	return Experience[p];
+}
+
+// =============================================================================
+function int GetExperience (void) {
+	return GetPlayerExperience (PlayerNumber ());
+}
+
+// =============================================================================
+// [Dusk] What rank is a player at?
+function int GetPlayerRank (int p) {
+	int xp = GetPlayerExperience (p);
+	
+	for (int i = MAX_RANKS - 1; i > 0; i--) {
+		if (xp >= GetExpNeed (i)) {
+			return i;
+		}
+	}
+	
+	// We didn't hit anything at the code above, thus
+	// we must be at the first rank defined.
+	return 0;
+}
+
+function int GetRank (void) {
+	return GetPlayerRank (PlayerNumber ());
+}
+
+// How much experience do we need to reach a certain rank?
+function int GetExpNeed (int r) {
+	//Log (s:"Checking exp need for rank ", d:r);
+	int need;
+	switch (r) {
+		case RANK_CORPORAL: need = XPREQ_CORPORAL; break;
+		case RANK_SERGEANT: need = XPREQ_SERGEANT; break;
+		case RANK_MASTERSGT: need = XPREQ_MASTERSGT; break;
+		case RANK_OFFICER: need = XPREQ_OFFICER; break;
+		case RANK_LIEUTENANT: need = XPREQ_LIEUTENANT; break;
+		case RANK_CAPTAIN: need = XPREQ_CAPTAIN; break;
+		case RANK_MAJOR: need = XPREQ_MAJOR; break;
+		case RANK_LTCOLONEL: need = XPREQ_LTCOLONEL; break;
+		case RANK_COLONEL: need = XPREQ_COLONEL; break;
+		case RANK_GENERAL: need = XPREQ_GENERAL; break;
+		default: return 0;
+	}
+	
+	// If in alternate experience mode, exp needs are down to a third
+	if (GetConfig (CONFIG_ALTEXP))
+		need /= 3;
+	
+	return need;
+}
+
+function str GetRankPic (int p) {
+	switch (GetPlayerRank (p)) {
+		case RANK_PRIVATE: return "RANK01";
+		case RANK_CORPORAL: return "RANK02";
+		case RANK_SERGEANT: return "RANK03";
+		case RANK_MASTERSGT: return "RANK04";
+		case RANK_OFFICER: return "RANK05";
+		case RANK_LIEUTENANT: return "RANK06";
+		case RANK_CAPTAIN: return "RANK07";
+		case RANK_MAJOR: return "RANK08";
+		case RANK_LTCOLONEL: return "RANK09";
+		case RANK_COLONEL: return "RANK10";
+		case RANK_GENERAL: return "RANK11";
+	}
+	return -1;
+}
+
+//Rank awards/checks
+script 91 (void) {
+	if (CheckInventory ("IsMech"))
+		terminate;
+	
+	int rank = GetRank ();
+	int newhealth = GetSpawnHealth ();
+	switch (rank) {
+		case RANK_CORPORAL: newhealth = 105; break;
+		case RANK_SERGEANT: newhealth = 110; break;
+		case RANK_MASTERSGT: newhealth = 115; break;
+		case RANK_OFFICER: newhealth = 120; break;
+		case RANK_LIEUTENANT: newhealth = 125; break;
+		case RANK_CAPTAIN: newhealth = 130; break;
+		case RANK_MAJOR: newhealth = 135; break;
+		case RANK_LTCOLONEL: newhealth = 140; break;
+		case RANK_COLONEL: newhealth = 145; break;
+		case RANK_GENERAL: newhealth = 150; break;
+	}
+	
+	SetSpawnHealth (newhealth);
+	
+	if (GetHealth() < newhealth)
+		SetHealth(newhealth);
+	
+	if (!CheckInventory ("HasRankUpgrades"))
+	{	
+		// Suicide bomber doesn't benefit from anything past this
+		if (CheckInventory ("BombPack"))
+			terminate;
+		
+		if (rank >= RANK_SERGEANT)
+			GiveInventory ("SubMachineGun", 1);
+		
+		if (rank >= RANK_OFFICER && GetAmmoCapacity ("FragGrenadeAmmo") < 2)
+		{
+			SetFragGrenades (2);
+		}
+		
+		else if (rank >= RANK_MAJOR && GetAmmoCapacity ("FragGrenadeAmmo") < 3)
+		{
+			SetFragGrenades (3);
+		}
+		
+		else if (rank >= RANK_COLONEL && GetAmmoCapacity ("FragGrenadeAmmo") < 4)
+		{
+			SetFragGrenades (4);
+		}
+		
+		if (rank >= RANK_OFFICER && GetAmmoCapacity ("FlashbangAmmo") < 2)
+		{
+			SetFlashbangs (2);
+		}
+		
+		else if (rank >= RANK_MAJOR && GetAmmoCapacity ("FlashbangAmmo") < 3)
+		{
+			SetFlashbangs (3);
+		}
+		
+		else if (rank >= RANK_COLONEL && GetAmmoCapacity ("FlashbangAmmo") < 4)
+		{
+			SetFlashbangs (4);
+		}
+		
+		if (rank >= RANK_CAPTAIN) {
+			GiveInventory ("EagerBeaver", 1);	
+			TakeInventory ("Unarmed", 1);
+		}
+		
+		if (rank >= RANK_MAJOR) {
+			if (CheckInventory("RepairGun") && !CheckInventory("RepairGunUpgrade"))
+				GiveInventory ("RepairGunUpgrade", 1);
+			else
+				GiveInventory ("RepairGun", 1);
+		}
+		
+		GiveInventory ("HasRankUpgrades", 1);
+	}
+}
+
+//Just add experience.
+Script 318 (VOID)
+{
+	for (int i = 0; i < 5; i++) {
+		LocalAmbientSound ("c4/use", 255);
+		AddExperience (50);
+		Delay(5);
+	}
+}
+
+script 324 (int n) {
+	while (n > 0) {
+		n--;
+		LocalAmbientSound ("c4/use", 127);
+		AddExperience (50);
+		Delay (5);
+	}
+}
+
+//Bonuses for disarming C4.
+Script 328 (int team) {
+	if (PlayerNumber() == -1 || !PlayerInGame (PlayerNumber()) || PlayerTeam() == team)
+		terminate;
+	AddExperience (10);
+	AwardCredits (75);
+	Team_GivePoints (PlayerTeam(), 2, false);
+	LocalAmbientSound ("c4/use", 127);
+}
+
+//Bonuses for disarming Beacon.
+Script 350 (int team) {
+	if (team == PlayerTeam()) terminate;
+	
+	ACS_ExecuteAlways(324,0,3,0,0);			//150 XP
+	Team_GivePoints (PlayerTeam(), 10, false);
+	AwardCredits (250);
+	
+	// [Dusk] Log it
+	Log(n:0, s:" disarms beacon.");
+}

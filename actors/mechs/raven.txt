@@ -1,0 +1,290 @@
+// RAVEN MECH
+actor Raven : MechPlayer_Base {
+	+NOSKIN
+	radius 58
+	height 144
+	mass 4000
+	health 2000
+	player.maxhealth 2000
+	player.displayname "Raven"
+	player.forwardmove 0.85
+	player.sidemove 0.25
+	player.soundclass "mech"
+	player.viewheight 132
+	player.attackzoffset 36
+	player.morphweapon "RavenWeapons"
+	scale 0.65
+	states {
+	Spawn2:
+		RAV2 BB 6 SetPlayerProperty (0, 1, 0)
+		RAV2 BA 6
+		RAVN ZYXWVUI 6
+		RAVN I 0 SetPlayerProperty (0, 0, 0)
+		goto Spawn+6
+	Spawn:
+		RAVN A 1
+		RAVN A 0 SetPlayerProperty (0, 0, 3)
+		RAVN A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		RAVN A 0 ACS_Execute (315,0)
+		RAVN A 0 A_GiveInventory ("MechEjectButton", 1)
+		RAVN A 0 A_GiveInventory ("IsMech", 1)
+		RAVN A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -30, 4, 0, 0, 0, 0, 128, 0)
+		RAVN A 5 A_SpawnItemEx ("MechStepDamageWeak", 0, -30, 4, 0, 0, 0, 0, 0, 0)
+		RAVN I 35
+		RAVN IIII 35 A_PlaySound ("mech/idle", 5)
+		RAVN I 35
+		goto Spawn+6
+	See:
+		RAVN A 0 SetPlayerProperty (0, 0, 3)
+		RAVN ABC 3 A_JumpIfHealthLower (300, "SeeDamaged")
+		RAVN D 0 A_PlaySound ("mech/idle", 5)
+		RAVN D 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -30, 4)
+		RAVN D 3 A_SpawnItemEx ("MechStepDamageWeak", 0, -30, 4)
+		RAVN EFG 3
+		RAVN H 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 30, 4)
+		RAVN H 3 A_SpawnItemEx ("MechStepDamageWeak", 0, 30, 4)
+		RAVN A 0 A_JumpIf (waterLevel >= 1, "Drown")
+		Goto Spawn
+	SeeDamaged:
+		RAVN ABC 3 
+		RAVN D 0 A_PlaySound ("mech/idle", 5)
+		RAVN D 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -30, 4)
+		RAVN D 0 A_SpawnItemEx ("MechStepDamageWeak", 0, -30, 4)
+		RAVN D 3 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32, 32), random(-32, 32), random(96, 128), 0, 0, 3)
+		RAVN EFG 3
+		RAVN H 0 A_SpawnItemEx("MechStepSmokePuff", 0, 30, 4, 0, 0, 0, 0, 128, 0)
+		RAVN H 0 A_SpawnItemEx("MechStepDamageWeak", 0, 30, 4, 0, 0, 0, 0, 0, 0)
+		RAVN H 3 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32, 32), random(-32, 32), random(96, 128), 0, 0, 3)
+		RAVN A 0 A_JumpIf (waterlevel >= 1, "Drown")
+		Goto Spawn
+	Drown:
+		TNT1 A 0 Thing_Damage (0, 200, 12)
+		goto Spawn
+	Death:
+		RAVN A 0
+		TNT1 A 0 A_JumpIfInventory("IsKamikaze",1,"Death.IonExplosion")
+		TNT1 A 0 A_JumpIfInventory("IsBombCrate", 1, "Death.BombExplosion")
+	DeathGo:
+		RAVN K 4 A_NoBlocking
+		RAVN LMNOPQRS 4
+		RAVN T 8
+		RAVN T 15 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+		DISR Z -1 A_SetTranslucent(0,0.0)
+		Stop
+	Death.IonExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Death.NukeExplosion")
+		TNT1 A 0 A_SpawnItemEx("BlueStrikeKamikaze", 0, 0, 32)
+		goto DeathGo
+	Death.NukeExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("NukeKamikaze", 0, 0, 32)
+		goto DeathGo
+	Death.BombExplosion:
+		ROB3 A 0
+		ROB3 A 0 A_SpawnItemEx("BombExplosion")
+		goto DeathGo
+	}
+}
+
+actor RavenUsed : Raven {health 1000}
+
+actor RavenSwitch : PermanentPowerup {powerup.type "Raven"}
+actor RavenSwitch2 : PermanentPowerup {powerup.type "Raven2"}
+
+actor PowerRaven : AOWMorph {powermorph.playerclass "Raven"}
+actor PowerRaven2 : AOWMorph {PowerMorph.PlayerClass "RavenUsed"}
+
+actor RavenSwitchPickup : CustomInventory {
+	inventory.pickupsound "mech/start"
+	Translation "112:127=[255,255,255]:[0,0,0]"
+	+INVENTORY.AUTOACTIVATE
+	scale 0.65
+	states {
+	Spawn:
+		RAV2 B -1
+		loop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult (353, 0, 0, 0)
+		stop
+	Use:
+		TNT1 A 0 ACS_ExecuteAlways (699, 0, 1)
+		TNT1 A 0 A_GiveInventory ("RavenSwitch2", 1)
+		RAVN I 0 A_GiveInventory ("IsMech", 1)
+		RAVN I 0 A_GiveInventory("MechEjectButton",1)
+		stop
+	}
+}
+
+actor RavenWeapons : AOWWeapon {
+	+CHEATNOTWEAPON +DONTBOB
+	weapon.selectionorder 1
+	weapon.ammotype "RavenAC2Ammo"
+	weapon.ammotype2 "Raven-RocketAmmo"
+	weapon.ammouse 1
+	weapon.ammouse2 1
+	weapon.ammogive 0
+	weapon.ammogive2 0
+	obituary "$OB_RAVEN"
+	states {
+	Ready:
+		MHUD A 1 A_WeaponReady
+		loop
+	Deselect:
+		MHUD A 0 A_JumpIfHealthLower(1,1)
+		goto Ready
+		TNT1 A 1 A_Lower
+		wait
+	Select:
+		MHUD CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 0 A_Raise
+		MHUD A 1 A_Raise
+		wait
+	WaitReload:
+		MHUD A 2
+		MHUD A 2 A_ReFire
+		Goto Ready
+	Fire:
+		MHUD A 0 A_JumpIfInventory("RavenAC2Ammo", 1, 1)
+		Goto Ready
+		MHUD A 0 Radius_Quake(1,4,0,1,0)
+		MHUD D 0 A_FireCustomMissile("RavenAC2FX", 0, 0, -48, 20)
+		MHUD A 0 A_SpawnItemEx("ArtilleryCasing", 0, -48, 128, random(0,3), 0, random(1,3), random(45,60), 128)
+		MHUD D 0 A_GunFlash
+		MHUD D 8 BRIGHT A_FireCustomMissile("RavenAC2", 0, 1, -48, 20)
+		MHUD C 6
+		MHUD C 0 A_Refire
+		Goto Ready
+	AltFire:
+		MHUD A 0 A_JumpIfInventory("Reload-LRM", 1, "Ready")
+		MHUD A 0 A_JumpIfInventory("Raven-RocketAmmo",5,1)
+		goto Ready
+		MHUD A 2 A_PlayWeaponSound ("lrm/fire")
+		MHUD B 0 Radius_Quake (2,20,0,1,0)
+		MHUD A 0 ACS_ExecuteAlways (319, 0, 1, 3) // reload
+		MHUD A 0 Bright A_GunFlash
+		MHUD A 0 A_JumpIfInventory("IsBlue", 1, "FireBlueMissiles")
+		MHUD BBBBB 2 A_FireCustomMissile ("LongRangeMissile", 0, 1, random(42, 48), 14)
+		MHUD A 20
+		MHUD A 2 A_Refire
+		goto Ready
+	FireBlueMissiles:
+		MHUD BBBBB 2 A_FireCustomMissile ("LongRangeMissileBlue", 0, 1, random(42, 48), 14)
+		Goto AltFire+12
+	Flash:
+		TNT1 A 1 Bright A_Light2
+		TNT1 A 2 Bright A_Light1
+		Goto LightDone
+	Spawn:
+		TNT1 A 0 
+		stop
+	}
+}
+
+actor RavenAC2Ammo : Ammo {
+	inventory.amount 10
+	inventory.maxamount 120
+	ammo.backpackamount 10
+	ammo.backpackmaxamount 120
+}
+
+actor RavenAC2 : FastProjectile {
+	Radius 4
+	Height 8
+	Speed 250
+	Damage (20)
+	Projectile
+	-RANDOMIZE
+	Obituary "$OB_RAVEN"
+	DamageType "Rifle"
+	seesound "mech/ac2"
+	scale 0.5
+	decal "Scorch"
+	states {
+	Spawn:
+		SHRP A 1 bright A_SpawnItemEx ("PulseBallSmokePuff", -25)
+		wait
+	Death:
+		TNT1 A 0 A_Explode (20, 128)
+		TNT1 A 0 A_SpawnItemEx ("RavenAC2Explosion", -1)
+		TNT1 A 5 A_SpawnItemEx ("ExplosionSmall")
+		stop
+	}
+}
+
+actor RavenAC2FX {
+	+CLIENTSIDEONLY
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx ("PulseBallSmokePuff", 0,0,0, random(-1,1),random(-1,1),random(1,2))
+		stop
+	}
+}
+
+actor RavenAC2Explosion {
+	Obituary "$OB_RAVEN"
+	DamageType "Explosion"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 bright A_Explode (20, 128, 1)
+		stop
+	}
+}
+
+actor Raven-RocketAmmo : Ammo {
+	inventory.amount 5
+	inventory.maxamount 120
+	ammo.backpackamount 5
+	ammo.backpackmaxamount 120
+}
+
+actor DamagedRaven {
+	Health 200
+	Radius 58
+	Height 128
+	Mass 2000
+	+SHOOTABLE
+	PainChance 0
+	scale 0.65
+	bloodtype "HHMetalHit"
+	bloodcolor "White"
+	damagefactor "Disarm", 0.0
+	Translation "112:127=[255,255,255]:[0,0,0]"
+	states {
+	Spawn:
+		RAVN IIII 35
+		RAVN I 35 
+		RAVN IIII 5 A_SpawnItemEx ("EjectedMechSmokePuff",random(-32,32),random(-32,32),random(96,128),0,0,3,0,128,0)
+		RAVN I 5 A_SpawnItemEx ("EjectedMechSmokePuff",random(-32,32),random(-32,32),random(96,128),0,0,3,0,128,0)
+		goto Spawn+5
+	Death:
+		RAVN JKLMNOPQRS 4
+		RAVN T 8
+		RAVN T 10 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+		DISR Z -1 A_SetTranslucent(0,0.0)
+		Stop
+	}
+}
+
+actor EjectedRaven {
+	scale 0.65
+	Translation "112:127=[255,255,255]:[0,0,0]"
+	states {
+	Spawn:
+		RAVN IUVWXYZ 6
+		RAV2 AB 6
+		RAV2 B 0 A_SpawnItemEx ("RavenSwitchPickup")
+		stop
+	}
+}
+
+actor RavenAmmoPackage : CustomInventory {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	states {
+	Pickup:
+		TNT1 A 0 A_GiveInventory ("RavenAC2Ammo", 600)
+		TNT1 A 0 A_GiveInventory ("Raven-RocketAmmo", 120)
+		stop
+	}
+}

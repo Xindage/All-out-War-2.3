@@ -1,0 +1,169 @@
+// Stealth Trooper's Knife
+actor Knife : AOWWeapon {
+	+MELEEWEAPON
+	+NOALERT
+	+THRUGHOST
+	+NOAUTOAIM
+	+MELEEWEAPON
+	+ALT_AMMO_OPTIONAL
+	Inventory.PickupSound "misc/w_pkup" 
+	Inventory.PickupMessage "The Ninja Knife. This is a hard weapon to get. Use it wisely."
+	obituary "$OB_KNIFE" // "%o \ckwas cut up by %k!"
+	Inventory.PickupSound "weapons/KnifeSelect"
+	Decal "BulletChip"
+	weapon.PreferredSkin "MarineKnife"
+	weapon.ammotype2 "StealthCharge"
+	weapon.ammouse2 0
+	weapon.ammogive2 0
+	weapon.selectionorder 17
+	states
+	{
+	Ready:
+		KNIF AA 0 A_JumpIfInventory ("StealthMode", 1, "ReadyStealthed")
+		KNIF AAAAAAAAAAAA 3 offset (0,0) A_WeaponReady
+		KNIF A 0 A_GiveInventory ("StealthCharge", 1)
+		KNIF A 0 A_TakeInventory ("StealthFire", 1)
+		goto Ready+1
+	ReadyStealthed:
+		KNIF A 0 A_JumpIfInventory("StealthCharge", 1, 1)
+		goto AltFireOff
+		KNIF AAAAAAAAAAAA 3 A_WeaponReady
+		KNIF A 0 A_TakeInventory("StealthCharge",1)
+		goto Ready
+	Select:
+		KNIF A 0
+		KNIF A 0 A_TakeInventory ("StealthFire", 1)
+		KNIF A 0 A_PlayWeaponSound ("Weapons/KnifeSelect")
+		KNIF A 1 offset (130,154)
+		// KNIF A 1 offset (120,139)
+		// KNIF A 1 offset (110,125)
+		KNIF A 1 offset (100,112)
+		// KNIF A 1 offset (90,100)
+		// KNIF A 1 offset (80,89)
+		KNIF A 1 offset (70,79)
+		// KNIF A 1 offset (60,70)
+		// KNIF A 1 offset (50,62)
+		KNIF A 1 offset (40,55)
+		// KNIF A 1 offset (30,49)
+		// KNIF A 1 offset (20,44)
+		KNIF A 1 offset (15,40)
+		// KNIF A 1 offset (10,37)
+		// KNIF A 1 offset (5,34)
+		KNIF A 1 offset (0,0)
+		Goto Ready
+	Deselect:
+		KNIF A 0
+		KNIF A 2 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		KNIF A 1 offset (4,34)
+		// KNIF A 1 offset (8,40)
+		KNIF A 1 offset (16,49)
+		// KNIF A 1 offset (24,62)
+		KNIF A 1 offset (32,79)
+		// KNIF A 1 offset (40,100)
+		KNIF A 1 offset (48,125)
+		// KNIF A 1 offset (56,154)
+		TNT1 A 0 offset (1, 33)
+		goto DeselectLoop
+	DeselectLoop:
+		TNT1 AA 0 A_Lower
+		TNT1 A 1 A_Lower
+		loop
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "AltRejected") // [Cata] Prevent knife from being used in spawn room.
+		KNIF A 5 A_JumpIfInventory ("StealthMode", 1, "AltFireOff")
+		KNIF A 0 A_JumpIfNoAmmo ("AltRejected")
+		KNIF A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		goto Ready
+	AltFireOff:
+		KNIF A 5 A_JumpIfInventory ("StealthMode", 3, "AltRejected")
+		KNIF A 5
+		KNIF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		KNIF A 48 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltRejected:
+		KNIF A 18 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		KNIF A 0 A_JumpIfInventory ("StealthMode", 1, "Fire.Stealth")
+	Fire.Go:
+		KNIF B 1
+		KNIF B 1 offset (0, 0)
+		KNIF B 1 offset (-16, 32)
+		KNIF B 1 offset (-40, 28)
+		KNIF B 1 offset (-64, 24)
+		KNIF B 1 offset (-88, 20)
+		KNIF B 1 offset (-112, 16)
+		KNIF B 1 offset (-136, 12)
+		KNIF C 1 offset (-232, -2)
+		KNIF C 1 offset (-224, -4)
+		KNIF C 1 offset (-256, -6)
+		KNIF C 1 offset (-262, -7)
+		KNIF C 1 offset (-268, -8)
+		KNIF C 0 A_PlayWeaponSound("Weapons/KnifeSwing")
+		KNIF C 0 A_CustomPunch (16, 1, 1, "KnifePuff",100)
+		KNIF C 1 offset (-180, -14)
+		KNIF C 0 A_CustomPunch (16, 1, 1, "KnifePuff",100)
+		KNIF C 1 offset (-92, -18)
+		KNIF C 0 A_CustomPunch (16, 1, 1, "KnifePuff",100)
+		KNIF C 1 offset (-4, -14)
+		KNIF C 0 A_CustomPunch (16, 1, 1, "KnifePuff",100)
+		KNIF C 0 A_CustomPunch (16, 1, 1, "KnifePuff", 100)
+		KNIF C 1 offset (84, -10)
+		KNIF C 1 offset (116, -8)
+		KNIF C 1 offset (148, -6)
+		KNIF C 1 offset (164, -4)
+		KNIF C 1 offset (172, -2)
+		KNIF C 1 offset (176, 0)
+		KNIF C 1 offset (178, 0)
+		KNIF C 1 offset (176, 0)
+		KNIF C 1 offset (168, 2)
+		KNIF C 1 offset (160, 4)
+		KNIF C 1 offset (144, 8)
+		KNIF C 1 offset (128, 12)
+		KNIF C 1 offset (112, 16)
+		KNIF C 1 offset (96, 20)
+		KNIF C 1 offset (80, 24)
+		KNIF B 1 offset (64, 26)
+		KNIF B 1 offset (48, 38)
+		KNIF B 1 offset (32, 30)
+		KNIF B 1 offset (32, 32)
+		KNIF B 0 A_Refire
+		KNIF AAAAA 2 A_WeaponReady
+		goto Restealth
+	Fire.Stealth:
+		KNIF A 0 A_JumpIfInventory ("StealthMode", 3, "Fire.Go")
+		KNIF A 0 A_GiveInventory ("StealthFire", 1)
+		KNIF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		goto Fire.Go
+	Restealth:
+		KNIF A 0 A_JumpIfInventory ("StealthFire", 1, 2)
+		goto Ready
+		KNIF A 0 A_TakeInventory ("StealthFire", 1)
+		KNIF A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		KNIF A 15 A_WeaponReady
+		goto Ready
+	}
+}
+
+actor KnifePuff : BulletPuff {
+	+NOBLOCKMAP
+	+NOGRAVITY
+	-ALLOWPARTICLES
+	+PUFFONACTORS
+	alpha 0.5
+	DamageType "StealthKnife"
+}
+
+/*actor KnifeDisarm {
+	DamageType "Disarm"
+	states {
+	Spawn:
+		TNT1 A 1 bright
+		stop
+	Melee:
+		TNT1 A 1 bright
+		stop
+	}
+}*/

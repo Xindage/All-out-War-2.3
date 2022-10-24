@@ -1,0 +1,60 @@
+actor CactusSpawner : RandomSpawner 10500 {
+	//$Category Vegetation
+	tag "Cactus"
+	dropitem "Cactus1"
+	dropitem "Cactus2"
+	dropitem "Cactus3"
+	dropitem "Cactus4"
+	states {
+	Spawn:
+		CACN A 0
+		stop
+	}
+}
+
+actor Cactus1 {
+  Radius 16
+  Height 112
+  +SOLID
+  States {
+  Spawn:
+    CACN A -1
+    Stop
+  }
+}
+
+actor Cactus2 10501 {
+  Radius 16
+  Height 112
+  +SOLID
+  States
+  {
+  Spawn:
+    CACN B -1
+    Stop
+  }
+}
+
+actor Cactus3 10502 {
+  Radius 16
+  Height 88
+  +SOLID
+  States
+  {
+  Spawn:
+    CACN C -1
+    Stop
+  }
+}
+
+actor Cactus4 {
+  Radius 16
+  Height 88
+  +SOLID
+  States
+  {
+  Spawn:
+    CACN D -1
+    Stop
+  }
+}

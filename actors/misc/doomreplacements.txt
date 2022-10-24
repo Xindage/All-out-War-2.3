@@ -1,0 +1,297 @@
+// the doomednum 21039 was once used by the spawned Bomb-PackPack
+// It's the number of this to prevent exclamation marks.
+actor Nothing 21039 {
+	states {
+	spawn:
+		TNT1 A 1
+		stop
+	}
+}
+actor AOWClip : AmmoPack replaces Clip { }
+
+// Monsters
+actor AOWLostSoul : LostSoul replaces LostSoul {
+	DamageType "FireSpecial"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	+FIREDAMAGE
+	states {
+	Spawn:
+		SKUL A 0
+		SKUL A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		SKUL A 10 A_Look
+		wait
+	Death.TimeBlue:
+	Death.TimeRed:
+		SKUL E 0 A_PlaySound("weapons/timedeath")
+		SKUL E 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWCacodemon : Cacodemon replaces Cacodemon {
+	damagetype "Monster"
+	damagefactor "Disarm", 0.0
+	damagefactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		HEAD A 0
+		HEAD A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		HEAD A 10 A_Look
+		wait
+	Missile:
+		HEAD BC 5 A_FaceTarget
+		HEAD D 5 bright A_CustomComboAttack ("CacodemonBall", 28, 8, "", "Monster", true)
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		HEAD E 0 A_PlaySound("weapons/timedeath")
+		HEAD E 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWDoomImp : DoomImp replaces DoomImp {
+	DamageType "Monster"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		TROO A 0
+		TROO A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		TROO AB 10 A_Look
+		loop
+	Melee:
+	Missile:
+		TROO EF 8 A_FaceTarget
+		TROO G 6 A_CustomComboAttack ("DoomImpBall", 28, 3, "imp/melee", "Monster", true)
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		TROO H 0 A_PlaySound("weapons/timedeath")
+		TROO H 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWBaronOfHell : BaronOfHell replaces BaronOfHell {
+	DamageType "Monster"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		BOSS A 0
+		BOSS A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		BOSS AB 10 A_Look
+		loop
+	Melee:
+	Missile:
+		BOSS EF 8 A_FaceTarget
+		BOSS G 8 A_CustomComboAttack ("BaronBall", 28, 8, "baron/melee", "Monster", true)
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		BOSS H 0 A_PlaySound("weapons/timedeath")
+		BOSS H 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWHellKnight : HellKnight replaces HellKnight {
+	DamageType "Monster"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		BOS2 A 0
+		BOS2 A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		BOS2 AB 10 A_Look
+		loop
+	Melee:
+	Missile:
+		BOS2 EF 8 A_FaceTarget
+		BOS2 G 8 A_CustomComboAttack ("BaronBall", 28, 8, "baron/melee", "Monster", true)
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		BOS2 H 0 A_PlaySound("weapons/timedeath")
+		BOS2 H 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWDemon : Demon replaces Demon {
+	DamageType "Monster"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		SARG A 0
+		SARG A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		SARG AB 10 A_Look
+		loop
+	Melee:
+		SARG EF 8 A_FaceTarget
+		SARG G 8 A_CustomMeleeAttack (5, "demon/melee", "demon/melee", "Monster", true)
+		Goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		SARG H 0 A_PlaySound("weapons/timedeath")
+		SARG H 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWSpectre : AOWDemon replaces Spectre {
+	RenderStyle optfuzzy
+	Alpha 0.5
+	HitObituary "$OB_SPECTREHIT"
+}
+
+actor AOWZombieman : Zombieman replaces Zombieman {
+	DamageType "Monster"
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		POSS A 0
+		POSS A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		POSS AB 10 A_Look
+		loop
+	Missile:
+		POSS E 10 A_FaceTarget
+		POSS F 8 A_CustomBulletAttack (22.5, 0, 1, 5, "AOWBulletPuff")
+		POSS E 8
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		POSS G 0 A_PlaySound("weapons/timedeath")
+		POSS G 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+actor AOWShotgunGuy : ShotgunGuy replaces ShotgunGuy {
+	damagetype "Monster"
+	damagefactor "Disarm", 0.0
+	damagefactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		SPOS A 0
+		SPOS A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		SPOS AB 10 A_Look
+		loop
+	Missile:
+		SPOS E 10 A_FaceTarget
+		SPOS F 10 bright A_CustomBulletAttack (22.5, 0, 3, 5, "AOWBulletPuff")
+		SPOS E 10
+		goto See
+	Death.TimeBlue:
+	Death.TimeRed:
+		SPOS G 0 A_PlaySound("weapons/timedeath")
+		SPOS G 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+
+actor AOWArachnotron : Arachnotron replaces Arachnotron {
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	States {
+	Spawn:
+		BSPI A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		BSPI AB 10 A_Look
+		loop
+	Missile:
+		BSPI A 20 bright A_FaceTarget
+		BSPI G 4 bright A_CustomMissile ("AOWArachnotronPlasma", 16)
+		BSPI H 4 bright
+		BSPI H 1 bright A_SpidRefire
+		goto Missile+1
+	Death.TimeBlue:
+	Death.TimeRed:
+		BSPI I 0 A_PlaySound("weapons/timedeath")
+		BSPI I 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+
+actor AOWPainElemental : PainElemental replaces PainElemental {
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	states {
+	Spawn:
+		PAIN A 0
+		PAIN A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		PAIN A 10 A_Look
+		wait
+	Death.TimeBlue:
+	Death.TimeRed:
+		PAIN G 0 A_PlaySound("weapons/timedeath")
+		PAIN G 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+
+actor AOWFatso : Fatso replaces Fatso {
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Deconstruction", 0.0
+	DamageFactor "Fire", 0.5
+	DamageFactor "FireSpecial", 0.5
+	DamageFactor "Chemical", 1.5
+	DamageFactor "ChemicalSpecial", 1.5
+	
+	States {
+	Spawn:
+		FATT A 0
+		FATT A 0 ACS_ExecuteWithResult (SC_InitMonster)
+		goto Idle
+	Idle:
+		FATT AB 10 A_Look
+		loop
+	Melee:
+		FATT G 8 A_FatRaise
+		FATT H 0 A_CustomMissile ("FatFlamethrowerFire", 16, -16)
+		FATT H 8 A_CustomMissile ("FatFlamethrowerFire", 16, 16)
+		FATT H 0 A_SpidReFire
+		goto Melee+2
+	Death:
+		FATT J 0 A_PlaySound ("weapons/timedeath")
+		FATT J 2 bright A_FadeOut (0.05)
+		wait
+	}
+}
+
+actor FatFlamethrowerFire : FlamethrowerFire {
+	DamageType "FireSpecial"
+}
+
+actor RandomNoble : RandomSpawner {
+	DropItem "AOWBaronOfHell" 255 1
+	DropItem "AOWHellKnight" 255 2
+}
+
+actor RandomPinky : RandomSpawner {
+	DropItem "AOWSpectre" 255 1
+	DropItem "AOWDemon" 255 2
+}
+
+// Doom Monster Attacks
+actor AOWBaronBall : BaronBall replaces BaronBall { damagetype "FireSpecial" }
+actor AOWDoomImpBall : DoomImpBall replaces DoomImpBall { damagetype "FireSpecial" }
+actor AOWCacodemonBall : CacodemonBall replaces CacodemonBall { damagetype "FireSpecial" }
+actor AOWBulletPuff : BulletPuff replaces BulletPuff { damagetype "Monster" }
+actor AOWArachnotronPlasma : ArachnotronPlasma { damagetype "Monster" }

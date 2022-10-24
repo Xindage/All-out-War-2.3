@@ -1,0 +1,349 @@
+// Proxy mine
+actor ProxyMine : InventoryItem {
+	inventory.icon "mineicon"
+	tag "Proxy C4 -mine"
+	inventory.maxamount 6
+	states {
+	Use:
+		TNT1 A 0 A_JumpIfInventory("IsInSpawnRoom", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "Use.Mech")
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(346, 2) == 0, "Limit")
+		TNT1 A 0 A_JumpIfInventory ("PowerBerserk", 1, "Failure")
+		TNT1 A 0 A_PlaySound ("c4/proxy", CHAN_ITEM)
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "UseBlue")
+		TNT1 A 0 A_SpawnItemEx ("ProxyMineRed", 32,0,1, 0,0,0, 0, SXF_TRANSFERPOINTERS)
+		TNT1 A 0 ACS_ExecuteAlways (349, 0, 2)
+		stop
+	UseBlue:
+		TNT1 A 0 A_SpawnItemEx ("ProxyMineBlue", 32,0,1, 0,0,0, 0, SXF_TRANSFERPOINTERS)
+		TNT1 A 0 ACS_ExecuteAlways (349, 0, 2)
+		stop
+	Limit:
+		TNT1 A 0 ACS_ExecuteAlways (349, 0, 2)
+		fail
+	}
+}
+
+actor ProxyMineCount : Inventory {
+	inventory.maxamount 6
+}
+
+// [SG] Mines no longer take damage from bullets
+
+Actor ProxyMineRed {
+	MONSTER
+	-SOLID
+	-FRIENDLY
+	-COUNTKILL
+	+FLOORCLIP
+	+NOICEDEATH
+	+NOTARGET
+	+NEVERRESPAWN
+	+NOBLOOD
+	+NOCLIP
+	+LOOKALLAROUND
+	+AMBUSH
+	+QUICKTORETALIATE
+	+CANPASS
+	Obituary "$OB_MINEBARREL"
+	Radius 8
+	Height 14
+	Health 160
+	Damage 0
+	Speed 0
+	Scale .2
+	Mass 0x7FFFFFFF
+	DamageFactor "Fist",			0.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "Chemical",		0.0
+	DamageFactor "Energy",			1.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Deconstruction",	0.0 //[JD] Prevents RemoverGun from disarming these
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+	DamageFactor "Flash", 			0.0
+	Translation "112:127=228:246"
+	
+	States {
+	Spawn:
+		PC4T AA 0 //A_CheckSight("Death.Deconstruction") [Cata] Unintended behavior from Zandro 3.0. Deprecating this.
+		PC4T A 0 ACS_ExecuteAlways (980, 0)
+		PC4T A 0 A_ChangeFlag("Friendly", 0)
+	Idle:
+		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
+		Loop
+	See:
+		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Clear:
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Melee:
+		PC4T A 0
+		PC4T AA 1 A_JumpIfInTargetInventory ("IsBlue", 1, "Death") //If you are blue, you get blown up
+		goto Clear
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (980, 0)
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+		TNT1 A 0 A_CustomMissile ("ProxyMineExplosion")
+		TNT1 A 1
+		stop
+	Death.Fist:
+	Death.Bullet:
+	Death.Rifle:
+		// [Dusk] If the mine was shot, it does the damage itself, thus
+		// acting like a barrel. This way someone can be fragged by
+		// detonating his own mines.
+		TNT1 A 0 ACS_ExecuteAlways (980, 0)
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (150, 256, 1)
+		stop
+	Death.Energy:
+	Death.Deconstruction:
+	Death.Disarm:
+		PC4T A 18 A_PlaySound("c4/disarm")
+		PC4T A 1 A_Fadeout(0.1) 
+		wait
+	}
+}
+
+actor ProxyMineExplosion {
+	PROJECTILE
+	-RANDOMIZE
+	+NOCLIP
+	Speed 1
+	Damage 0
+	Obituary "$OB_MINE"
+	DamageType "MassDriver"
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (150, 256, 1)
+		stop
+	}  
+}
+
+actor ProxyMineBlue : ProxyMineRed {
+	Translation "112:127=194:207"
+	States {
+	Melee:
+		PC4T A 0
+		PC4T AA 1 A_JumpIfInTargetInventory ("IsRed", 1, "Death")
+		goto Clear
+	}
+}
+
+//==============================================================================
+//These are for AOW13 (Space Camp) They're seperate from the original mines
+Actor ProxyMineRedSpawn : Custominventory 30003 {	
+	States {
+	Spawn:
+		TNT1 A 6
+        TNT1 A 0 A_SpawnItemex ("ProxyMineRedd")
+		stop
+	}
+}
+Actor ProxyMineBlueSpawn : Custominventory 30004 {	
+	States {
+	Spawn:
+		TNT1 A 6
+        TNT1 A 0 A_SpawnItemex ("ProxyMineBluee")
+		stop
+	}
+}
+Actor ProxyMineRedd {
+	MONSTER
+	-SOLID
+	-FRIENDLY
+	-COUNTKILL
+	+FLOORCLIP
+	+NOICEDEATH
+	+NOTARGET
+	+NEVERRESPAWN
+	+NOBLOOD
+	+NOCLIP
+	+LOOKALLAROUND
+	+AMBUSH
+	+QUICKTORETALIATE
+	+CANPASS
+
+	Obituary "%k tripped over a proxy mine."
+	Radius 8
+	Height 14
+	Health 160
+	Damage 0
+	Speed 0
+	Scale .2
+	Mass 0x7FFFFFFF
+
+	DamageFactor "Fist",			0.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "Suicide",         0.0	
+	DamageFactor "Chemical",		0.0
+	DamageFactor "Normal",          0.0	
+	DamageFactor "Energy",			1.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+	translation "112:127=175:190"
+	
+	States {
+	Spawn:
+		PC4T A 0
+	Idle:
+		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
+		Loop
+	See:
+		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Clear:
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Melee:
+		PC4T A 0
+		PC4T AA 1 A_JumpIfInTargetInventory ("IsBlue", 1, "Death") //If you are blue, you get blown up
+		goto Clear
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+		TNT1 A 0 A_CustomMissile ("ProxyMineExplosion")
+		TNT1 A 1
+		stop
+	Death.Fist:
+	Death.Bullet:
+	Death.Rifle:
+		// [Dusk] If the mine was shot, it does the damage itself, thus
+		// acting like a barrel. This way someone can be fragged by
+		// detonating his own mines.
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+        TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (150, 256, 1)
+		stop
+	Death.Energy:
+	Death.Deconstruction:
+	Death.Disarm:
+		PC4T A 18 A_PlaySound("c4/disarm")
+		PC4T A 1 A_Fadeout(0.1) 
+		wait
+	}
+}
+Actor ProxyMineBluee {
+	MONSTER
+	-SOLID
+	-FRIENDLY
+	-COUNTKILL
+	+FLOORCLIP
+	+NOICEDEATH
+	+NOTARGET
+	+NEVERRESPAWN
+	+NOBLOOD
+	+NOCLIP
+	+LOOKALLAROUND
+	+AMBUSH
+	+QUICKTORETALIATE
+	+CANPASS
+
+	Obituary "%k tripped over a proxy mine."
+	Radius 8
+	Height 14
+	Health 160
+	Damage 0
+	Speed 0
+	Scale .2
+	Mass 0x7FFFFFFF
+
+	DamageFactor "Fist",			0.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "Suicide",         0.0	
+	DamageFactor "Chemical",		0.0
+	DamageFactor "Normal",          0.0	
+	DamageFactor "Energy",			1.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+	translation "112:127=200:207"
+	
+	States {
+	Spawn:
+		PC4T A 0
+	Idle:
+		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
+		Loop
+	See:
+		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Clear:
+		PC4T A 2 A_ClearTarget
+		goto Idle
+	Melee:
+		PC4T A 0
+		PC4T AA 1 A_JumpIfInTargetInventory ("IsRed", 1, "Death") //If you are red, you get blown up
+		goto Clear
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+		TNT1 A 0 A_CustomMissile ("ProxyMineExplosion")
+		TNT1 A 1
+		stop
+	Death.Fist:
+	Death.Bullet:
+	Death.Rifle:
+		// [Dusk] If the mine was shot, it does the damage itself, thus
+		// acting like a barrel. This way someone can be fragged by
+		// detonating his own mines.
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound ("weapons/rocklx")
+        TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 1 A_Explode (150, 256, 1)
+		stop
+	Death.Energy:
+	Death.Deconstruction:
+	Death.Disarm:
+		PC4T A 18 A_PlaySound("c4/disarm")
+		PC4T A 1 A_Fadeout(0.1) 
+		wait
+	}
+}
+//==============================================================================

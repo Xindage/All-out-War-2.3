@@ -1,0 +1,92 @@
+actor HHBulletPuff : bulletpuff
+{
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+FORCEXYBILLBOARD
+	-ALLOWPARTICLES
+	states 
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("SparkPuff", 0, 0, 0, Random(-8, 8), Random(-8, 8), Random(-8, 8))
+			TNT1 AA 0 A_SpawnItemEx("SparkSmoke", 0, 0, 0, Random(-1, 1), Random(-1, 1), Random(-1, 1))
+			TNT1 A 0 A_PlaySound("bullet/ricochet")
+			//TNT1 A 1 
+		Stop
+		/*Melee:
+			PUFF CD 4
+		stop*/
+	}
+}
+
+Actor SparkPuff : BulletPuff
+{
+	+NOCLIP
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+clientsideonly
+	-ALLOWPARTICLES
+	Scale 0.5
+	Radius 0
+	Height 0
+	Speed 0
+	VSpeed 0
+	renderstyle translucent
+	Alpha 1.0
+	States
+	{
+	  Spawn:
+		PUFF A 1 Bright A_FadeOut
+		loop
+	}
+}
+
+Actor SparkSmoke : SparkPuff
+{
+	Scale 0.6
+	Alpha 0.7
+	
+	States
+	{
+		Spawn:
+			PUFF D 1 Bright A_FadeOut(0.025)
+			Loop
+	}
+}
+
+/*actor HHMetalHit : BulletPuff {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	-ALLOWPARTICLES
+	vspeed 0
+	bloodcolor "White"
+	states {
+	Spawn:
+		PUFF A 0 
+		PUFF A 0 A_PlaySound("bullet/metal")
+		TNT1 A 0 bright A_SpawnDebris("SparkPuff", 1, 0.5, 0.25)
+		TNT1 A 0 Bright A_SpawnItemEx("PulseBallSmokePuff", 0, 0, 0, 0, 0, 1, 0, 128, 192)
+		TNT1 A 0
+	Melee:
+		PUFF CD 4
+		stop
+	}
+}*/
+
+Actor HHMetalHit : SparkPuff
+{
+	BloodColor "White"
+	
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("SparkPuff", 0, 0, 0, Random(-8, 8), Random(-8, 8), Random(-8, 8))
+			TNT1 AA 0 A_SpawnItemEx("SparkSmoke", 0, 0, 0, Random(-1, 1), Random(-1, 1), Random(-1, 1))
+			TNT1 A 0 A_PlaySound("bullet/metal")
+			//TNT1 A 1 
+		Stop
+	}
+}

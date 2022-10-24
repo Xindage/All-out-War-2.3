@@ -1,0 +1,124 @@
+// Texture animations
+texture slmfall1 range slmfall4 tics 8
+texture wfall1   range wfall4   tics 8
+texture lfall1   range lfall4   tics 8
+texture gfall1   range gfall4   tics 8
+texture ofall1   range ofall4   tics 8
+texture portalr1 range portalr9 tics 4
+texture compcg1a range compcg1g tics 4
+texture compe6a  range compe6d  tics 4
+texture fan1     range fan4     tics 3
+
+cameratexture ct_1     128 128
+cameratexture ct_2     128 128
+
+warp texture wfwater1
+warp texture a14nuke
+warp texture wnukage
+warp texture wlava
+warp flat sinkinsa
+warp texture biof1
+warp texture spwlava
+warp texture hynuke
+warp2 texture hywater
+warp texture e1sky1
+warp texture wsflr6_4
+
+texture compex4a
+	pic compex4a tics 4
+	pic compex4b tics 4
+	pic compex4c tics 4
+	pic compex4d tics 4
+	pic compex4e tics 4
+	pic compex4f tics 4
+	pic compex4g tics 4
+	pic compex4h tics 4
+	pic compex4c tics 4
+	pic compex4d tics 4
+	pic compex4e tics 4
+	pic compex4f tics 4
+	pic compex4g tics 4
+	pic compex4h tics 4
+	pic compex4b tics 4
+
+texture ffieldb1
+	pic ffieldb1 tics 2
+	pic ffieldb2 tics 2
+	pic ffieldb3 tics 2
+	pic ffieldb4 tics 2
+	pic ffieldb5 tics 2
+	pic ffieldb6 tics 2
+	pic ffieldb7 tics 2
+	pic ffieldb8 tics 2
+	pic ffieldb9 tics 2
+	pic ffieldba tics 2
+
+texture ffieldr1
+	pic ffieldr1 tics 2
+	pic ffieldr2 tics 2
+	pic ffieldr3 tics 2
+	pic ffieldr4 tics 2
+	pic ffieldr5 tics 2
+	pic ffieldr6 tics 2
+	pic ffieldr7 tics 2
+	pic ffieldr8 tics 2
+	pic ffieldr9 tics 2
+	pic ffieldra tics 2
+
+texture a6store9
+	pic a6store9 tics 4
+	pic a6storea tics 4
+	pic a6storeb tics 4
+
+texture sfall1
+	range sfall4 tics 8
+
+// =============================================================================
+// Warping flats
+warp2 texture fwater1
+warp texture lava1
+warp texture nukage1
+warp texture fireblu1
+warp texture wslime01
+warp texture slime01
+warp texture slime05
+warp texture blood1
+warp texture oil1
+
+texture fwater1
+	pic fwater1 tics 8
+	pic fwater1 tics 8
+
+texture lava1
+	pic lava1 tics 8
+	pic lava1 tics 8
+
+texture nukage1
+	pic nukage1 tics 8
+	pic nukage1 tics 8
+
+texture fireblu1
+	pic fireblu1 tics 8
+	pic fireblu1 tics 8
+
+texture slime01
+	pic slime01 tics 8
+	pic slime01 tics 8
+
+texture slime05
+	pic slime05 tics 8
+	pic slime05 tics 8
+
+texture blood1
+	pic blood1 tics 8
+	pic blood1 tics 8
+
+// [Cata] For my map.
+warp2 texture GN_WISQ
+
+
+texture CRYSSLI1
+	pic CRYSSLI1 tics 8
+	pic CRYSSLI2 tics 8
+	pic CRYSSLI3 tics 8
+	pic CRYSSLI4 tics 8

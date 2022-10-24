@@ -1,0 +1,137 @@
+// MACHINE GUN
+actor MachineGun : AOWWeapon replaces Chaingun 21044 {
+	+NOEXTREMEDEATH
+	Obituary "$OB_MACHINEGUN"
+	Weapon.selectionorder 14
+	Weapon.AmmoType "MachineGunAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 50
+	Weapon.AmmoType2 "MachineGunAmmo"
+	Weapon.AmmoUse2 1
+	Inventory.PickupMessage "You got the machine gun!"
+	Weapon.PreferredSkin "MarineMachineGun"
+	Weapon.UpSound "weapons/up/machinegun"
+	AttackSound "ak47/fire"
+	Tag "Machinegun"
+	decal "BulletChip"
+	states {
+	Ready:
+		AK47 A 1 A_WeaponReady
+		loop
+	Deselect:
+		AK47 A 1 offset (-5, 34)
+		AK47 A 1 offset (-16, 38)
+		AK47 A 1 offset (-23, 45)
+		AK47 A 1 offset (-32, 56)
+		AK47 A 1 offset (-42, 66)
+		AK47 A 1 offset (-51, 73)
+		AK47 A 1 offset (-63, 87)
+		AK47 A 1 offset (-78, 97)
+		AK47 A 1 offset (-88, 111)
+		AK47 A 1 offset (-99, 121)
+		AK47 A 1 offset (-112, 133)
+		AK47 A 1 offset (-125, 154)
+		AK47 A 0 offset (-1, 33)
+		AK47 A 0 A_Lower
+		wait
+	Select:
+		AK47 A 1 offset (-125, 154)
+		AK47 A 1 offset (-112, 133)
+		AK47 A 1 offset (-99, 121)
+		AK47 A 1 offset (-88, 111)
+		AK47 A 1 offset (-78, 97)
+		AK47 A 1 offset (-63, 87)
+		AK47 A 1 offset (-51, 73)
+		AK47 A 1 offset (-42, 66)
+		AK47 A 1 offset (-32, 56)
+		AK47 A 1 offset (-23, 45)
+		AK47 A 1 offset (-16, 38)
+		AK47 A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		AK47 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		AK47 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		AK47 D 0 A_Light2
+		AK47 D 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 D 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 5, "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 D 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 E 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 G 0 A_Light2
+		AK47 G 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 G 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 5, "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 G 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 H 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 D 0 A_Light2
+		AK47 D 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 D 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 5, "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 D 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 E 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 B 4 A_ReFire
+		AK47 A 2
+		goto Ready
+	Hold:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		AK47 A 0 A_JumpIfInventory ("MachineGunSwitch", 1, "Hold2")
+		AK47 G 0 A_Light2
+		AK47 G 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 G 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 G 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 H 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 D 0 A_Light2
+		AK47 D 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 D 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 D 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 E 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 G 0 A_Light2
+		AK47 G 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 G 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 G 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 H 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 B 0 A_GiveInventory ("MachineGunSwitch", 1)
+		AK47 B 6 A_ReFire
+		goto Ready
+	Hold2:
+		AK47 D 0 A_Light2
+		AK47 D 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 D 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 D 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 E 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 G 0 A_Light2
+		AK47 G 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 G 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 G 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 H 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 D 0 A_Light2
+		AK47 D 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
+		AK47 D 0 BRIGHT A_FireBullets (4.5, 4.5, -1, random(4, 5), "RiflePuff", FBF_USEAMMO, 3072)
+		AK47 D 1 bright A_SetPitch(pitch-0.42)
+		TNT1 A 0 A_SetPitch(pitch+0.42)
+		AK47 E 1 BRIGHT A_Light1
+		AK47 A 2 A_Light0
+		AK47 B 0 A_TakeInventory ("MachineGunSwitch", 1)
+		AK47 B 6 A_ReFire
+		goto Ready
+	Spawn:
+		AK47 X -1
+		stop
+	}
+}
+
+actor MachineGunSwitch : Inventory {}

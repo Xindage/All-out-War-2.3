@@ -1,0 +1,51 @@
+//White Smoke Code by dark-slayer
+
+actor PuffSmoke {
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+CLIENTSIDEONLY
+	+WINDTHRUST
+	Renderstyle Add
+	alpha 0.5
+	Scale 0.5
+	states
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (909) < 0, "LowFX")
+		TNT1 A 0 A_Jump(128,"Spawn2","Spawn3","Spawn4")
+		SMK1 ABCDEFGHIJKLMNOP 2 bright A_FadeOut(0.025)
+		stop
+	Spawn2:
+		SMK2 ABCDEFGHIJKLMNOP 2 bright A_FadeOut(0.025)
+		stop
+	Spawn3:
+		SMK3 ABCDEFGHIJKLMNOP 2 bright A_FadeOut(0.025)
+		stop
+	Spawn4:
+		SMK4 ABCDEFGHIJKLMNOP 2 bright A_FadeOut(0.025)
+		stop
+	LowFX:
+		TNT1 A 0 A_Jump (128, "Nope")
+		// [Dusk] There's half the actors, thus increase the alpha
+		TNT1 A 0 A_SetTranslucent ((alpha*3)/2, 1)
+		goto Spawn+2
+	Nope:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor PulseBallSmokePuff : PuffSmoke {scale 1.0}
+actor PlayerStepSmokePuff : PuffSmoke	{Alpha 0.25	Scale 1.0}
+actor FireSmokePuff : PuffSmoke		{Scale 4.0}
+actor PowerPlantSmokePuff : PuffSmoke	{Scale 8.0}
+actor PowerPlantSmokePuffSmall : PuffSmoke{Scale 4.0}
+actor BurnDeathSmokePuff : PuffSmoke	{Scale 4.0}
+actor EjectedMechSmokePuff : PuffSmoke	{Scale 8.0}
+actor MechStepSmokePuff : PuffSmoke		{Scale 4.0}
+actor MechStepSmokePuffLarge : PuffSmoke	{Scale 6.0}
+actor OrcaSmokePuff : PuffSmoke		{Scale 2.0}
+actor RocketSmoke : PuffSmoke			{Scale 1.0}
+actor GrenadeSmoke : PuffSmoke		{Scale 1.0}
+// actor LavaSmoke : PuffSmoke			{Scale 1.0} [TT] Deprecated(?)

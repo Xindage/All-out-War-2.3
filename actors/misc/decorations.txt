@@ -1,0 +1,527 @@
+// Various props
+actor Box 29024 {
+	//$Category Decorations
+	Radius 16
+	Height 56
+	+SOLID
+	states {
+	Spawn:
+		BOX1 A -1
+		stop
+	}
+}
+
+actor FakeBFG 29007 {
+	+NOINTERACTION
+	states {
+	Spawn:
+		BFUG A -1
+		stop
+	}
+}
+
+actor BrownMetalBarrel 29025 {
+	//$Category Decorations
+	+SOLID
+	+FLOORCLIP
+	tag "Brown Metal Barrel"
+	radius 12
+	height 32
+	states {
+	Spawn:
+		BBAR A -1
+		stop
+	}
+}
+
+Actor EmptyNukageBarrel 29014 {
+	//$Category Decorations
+	+SOLID
+	+FLOORCLIP
+	radius 12
+	height 32
+	tag "Empty Nukage Barrel" 
+	states {
+	Spawn:
+		EBAR A -1
+		stop
+	}
+}
+
+// alias for aow14
+actor EmptyNukageBarrel2 : EmptyNukageBarrel 19000 {}
+
+actor TLamp1 12850 {
+	//$Category Light sources
+	tag "Techno lamp (tall)"
+	+SOLID
+	radius 16
+	height 80
+	states {
+	Spawn:
+		LAMT A -1 bright
+		stop
+	}
+}
+
+ACTOR TLamp2 12851 {
+	//$Category Light sources
+	+SOLID
+	radius 16
+	height 60
+	tag "Techno lamp (short)"
+	states {
+	Spawn:
+		LAMT B -1 bright
+		stop
+	}
+}
+
+actor TLamp3 12852 {
+	//$Category Light sources
+	+SOLID
+	radius 16
+	height 70
+	states {
+	Spawn:
+		LAMT C -1 bright
+		stop
+	}
+}
+
+actor TechLanternBig 500 {
+	//$Category Light sources
+	+SPAWNCEILING
+	+NOGRAVITY
+	+SOLID
+	radius 10
+	height 80
+	tag "Hanging tech lamp (large)"
+	states {
+	Spawn:
+		HLMP ABCD 6 bright
+		loop
+	}
+}
+
+actor TechLanternSmall 501 {
+	//$Category Light sources
+	+SPAWNCEILING
+	+NOGRAVITY
+	+SOLID
+	radius 6
+	height 45
+	tag "Hanging tech lamp (small)"
+	States {
+	Spawn:
+		HLMP EFGH 6 bright
+		Loop
+	}
+}
+
+ACTOR BlackCandleChandelier 502 {
+	//$Category Light sources
+	+SPAWNCEILING
+	+NOGRAVITY
+	+SOLID
+	radius 20
+	height 55
+	tag "Chandelier"
+	states {
+	Spawn:
+		HLMP I -1 bright
+		stop
+	}
+}
+
+actor StoneTorch : SwitchableDecoration 12320 {
+	//$Category Light sources
+	+SOLID
+	radius 16
+	height 64
+	tag "Stone torch (togglable)"
+	states {
+	Active:
+		STOR A 0 Bright A_PlaySound ("Ignite")
+		goto Spawn
+	Spawn:
+		STOR ABCDEFGHI 4 Bright
+		loop
+	Inactive:
+		STOF A -1
+		stop
+  }
+}
+//////////////////////////////
+/////TRASH CAN1///////////////SPRITE//DUKE NUKEM
+//////////////////////////////
+
+actor TrashCan 29012 {
+	//$Category Decorations
+	+SOLID
+	radius 16
+	height 40
+	tag "Trash can"
+	states {
+	Spawn:
+		TRAC A -1
+		Stop
+	}
+}
+
+actor TechLampBroken 12321 {
+	//$Category Light sources
+	+SOLID
+	radius 4
+	height 80
+	tag "Broken tech lamp (large)"
+	states {
+	Spawn:
+		BLMP A -1
+		Stop
+	}
+}
+
+actor TechLampBroken2 12322 {
+	//$Category Light sources
+	+SOLID
+	radius 4
+	height 64
+	tag "Broken tech lamp (small)"
+	states {
+	Spawn:
+		BLPN A -1
+		Stop
+	}
+}
+
+actor TreeBrokenBurnt 12323 {
+	//$Category Decorations
+	+SOLID
+	radius 4
+	height 39
+	tag "Burnt broken tree"
+	States {
+	Spawn:
+		TREN C -1
+		Stop
+	}
+}
+
+actor TreeBroken2 12324 {
+	//$Category Decorations
+	+SOLID
+	radius 4
+	height 39
+	tag "Broken tree"
+	states {
+	Spawn:
+		TREN B -1
+		Stop
+	}
+}
+
+actor TreeBroken3 12325 {
+	//$Category Decorations
+	+SOLID
+	Radius 5
+	Height 42
+	tag "Broken tree (large)"
+	states {
+	Spawn:
+		TREN E -1
+		stop
+	}
+}
+
+actor NTree 12326 {
+	//$Category Decorations
+	+SOLID
+	radius 4
+	height 64
+	tag "Tree"
+	States {
+	Spawn:
+		TREN A -1
+		Stop
+	}
+}
+
+actor NTreeBurnt 12327 {
+	//$Category Decorations
+	+SOLID
+	radius 4
+	height 64
+	tag "Burnt tree"
+	states {
+	Spawn:
+		TREN A -1
+		Stop
+	}
+}
+
+// Fake Tiberium
+actor FakeTiberiumCrystal 24000 {
+	//$Category Decorations
+	+FLOORCLIP
+	+CLIENTSIDEONLY
+	tag "Tiberium Crystal (fake)"
+	states {
+	Spawn:
+		// The TID change is delayed by 15 tics
+		// This is to make the fake tiberium not
+		// get mapmarkers
+		TIBE A 15 bright
+		TIBE A 0 bright Thing_ChangeTID (0, 402)
+		TIBE A -1 bright 
+		stop
+	}
+}
+
+// ===== new aow10 stuff
+//without SPAWNCEILING
+ACTOR TechLanternBigFree : TechLanternBig 503 {
+	//$Category Light sources
+	-SPAWNCEILING
+	tag "Hanging tech lamp (large, free)"
+}
+
+//without SPAWNCEILING
+ACTOR TechLanternSmallFree : TechLanternSmall 504 {
+	//$Category Light sources
+	-SPAWNCEILING
+	tag "Hanging tech lamp (small, free)"
+}
+
+//without SPAWNCEILING + clipped
+ACTOR TechLanternBigFreeShort : TechLanternBig 505 {
+	Radius 10
+	Height 54
+	-SPAWNCEILING
+	tag "Hanging tech lamp (large, free, clipped)"
+}
+
+//clipped
+ACTOR TechLanternBigShort : TechLanternBig 506 {
+	Radius 10
+	Height 54
+	+SPAWNCEILING
+	tag "Hanging tech lamp (large, clipped)"
+}
+
+// AOW14 specific actors
+actor A14RedTowerFX 27500 {
+	//$Category Effects
+	tag "Red particle spawner"
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 5 A_SpawnItemEx ("A14RedTowerFX2", 0, 0, 0, 0, 0, 7)
+		wait
+	}
+}
+
+actor A14RedTowerFX2 {
+	PROJECTILE
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	renderstyle add
+	alpha 0.75
+	scale 0.25
+	states {
+	Spawn:
+		SPKR E 70
+		SPKR E 10 A_FadeOut
+		wait
+	}
+}
+
+actor A14BlueTowerFX 27501 {
+	//$Category Effects
+	tag "Blue particle spawner"
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 5 A_SpawnItemEx ("A14BlueTowerFX2", 0, 0, 0, 0, 0, 7)
+		wait
+	}
+}
+
+actor A14BlueTowerFX2 : A14RedTowerFX2 {
+	states {
+	Spawn:
+		SPKB E 70
+		SPKB E 10 A_FadeOut
+		wait
+	}
+}
+
+actor PhobosRock1 19004 {
+	//$Category Decorations
+	tag "Phobos rock"
+	Radius 24
+	Height 16
+	+SOLID
+	States {
+	Spawn:
+		ROK1 A -1
+		Loop
+	}
+}
+
+actor PhobosRock2 19005 {
+	//$Category Decorations
+	tag "Phobos rock"
+	Radius 24
+	Height 16
+	+SOLID
+	States {
+		Spawn:
+		ROK2 A -1
+		Loop
+	}
+}
+
+actor PhobosRockSmall 19006 {
+	//$Category Decorations
+	tag "Phobos rock (small)"
+	Radius 1
+	Height 1
+	States {
+	Spawn:
+		ROK3 A -1
+		Loop
+	}
+}
+
+// [JD] AOW16
+actor Flowers1 30011
+{ 
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWA A -1
+	  stop
+	}
+}
+actor Flowers2 30005
+{ 
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWB A -1
+	  stop
+	}
+}
+actor Flowers3 30006
+{ 
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWC A -1
+	  stop
+	}
+}
+actor Flowers4 30007
+{ 
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWD A -1
+	  stop
+	}
+}
+actor Flowers5 30008
+{ 
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWE A -1
+	  stop
+	}
+}
+actor Flowers6 30009
+{  
+   Radius 24
+   Height 24
+   scale 0.95
+
+   States
+   {
+   Spawn:
+      FLWF A -1
+	  stop
+	}
+}
+
+Actor RainSpawner  30010
+{
+  Radius 1
+  Height 1
+  +NoClip
+  +ClientSideOnly
+  +SpawnCeiling
+  +NoGravity
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 0 A_JumpIf(Args[2] > 0, "NoSound")
+    TNT1 A 0 A_JumpIf(Args[3] > 0, "Circle")
+    TNT1 A 0 A_PlaySoundEx("Ambient/Rain", "SoundSlot7", 1)
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), Random(-Args[0], Args[0]), -2, 0, 0, 0, 0, 128, Args[1])
+    Loop
+  Circle:
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), 0, -2, 0, 0, 0, Random(0, 360), 128, Args[1])
+  NoSound:
+    TNT1 A 0 A_Jumpif(Args[3] > 0, "NoSoundCircle")
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), Random(-Args[0], Args[0]), -2, 0, 0, 0, 0, 128, Args[1])
+    Loop
+  NoSoundCircle:
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), 0, -2, 0, 0, 0, Random(0, 360), 128, Args[1])
+    Loop
+  }
+}
+
+Actor RainDrop
+{
+  +Missile
+  +NoBlockMap
+  -NoGravity
+  Height 2
+  Radius 2
+  Renderstyle Translucent
+  Alpha 0.6
+  Scale 0.2
+  States
+  {
+  Spawn:
+    RNDR A 1 A_JumpIf(WaterLevel > 0, "Death")
+    Loop
+  Death:
+    RNDR BCDEFGH 3 A_FadeOut(0.15)
+    Stop
+  }
+}

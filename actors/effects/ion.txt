@@ -1,0 +1,708 @@
+// ION EFFECTS
+Actor BlueBeam
+{
+ +CLIENTSIDEONLY
+ +NoClip
+ +NoBlockmap
+ +ForceYBillboard
+ +NoInteraction
+ RenderStyle Add
+ XScale 0.5
+ YScale 5.0
+ Alpha 0.0
+ States
+ {
+  Spawn:
+   SBBL A 0
+   SBBL AAAAAAAAAA 1 BRIGHT A_FadeIn (0.05)
+   SBBL AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 7 BRIGHT A_FadeIn(0.02)
+   SBBL A 66 BRIGHT
+   SBBL A 1 Bright A_FadeOut(0.05)
+   Wait
+ }
+}
+
+Actor BlueBeam2
+{
+ +CLIENTSIDEONLY
+ +NoClip
+ +NoBlockmap
+ +ForceYBillboard
+ +NoInteraction
+ RenderStyle Add
+ XScale 5.0
+ YScale 5.0
+ Alpha 0.0
+ States
+ {
+  Spawn:
+   SBBL A 0
+   SBBL AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 7 BRIGHT A_FadeIn(0.02)
+   SBBL A 69 BRIGHT
+   SBBL A 1 Bright A_FadeOut(0.05)
+   Wait
+ }
+}
+
+Actor BeamFire
+{
+ +CLIENTSIDEONLY
+ +NoInteraction
+ +FORCEXYBILLBOARD
+ RenderStyle Add
+ Alpha 1
+ Scale 0.2
+ 
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   TNT1 A 0 A_SpawnItemEx("BeamSmoke", 0, 0, 0, momx, momy, momz, 0, 128, 0)
+   ION1 A 1 Bright A_FadeOut(0.02)
+   Wait
+  Spawn2:
+   ION1 B 1 Bright A_FadeOut(0.02)
+   Wait
+  Spawn3:
+   ION1 C 1 Bright A_FadeOut(0.02)
+   Wait
+  Spawn4:
+   ION1 D 1 Bright A_FadeOut(0.02)
+   Wait
+ }
+}
+
+Actor BeamSmoke
+{
+ +CLIENTSIDEONLY
+ +NoInteraction
+ +FORCEXYBILLBOARD
+ 
+ Scale 0.4
+ 
+ States
+ {
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   SMOK A 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn2:
+   SMOK B 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn3:
+   SMOK C 1 Bright A_FadeOut(0.015)
+   Wait
+  Spawn4:
+   SMOK D 1 Bright A_FadeOut(0.015)
+   Wait
+ }
+}
+
+Actor BlueStrike
+{
+ +CLIENTSIDEONLY
+ +NoGravity
+ +ForceRadiusDmg
+ +ForceYBillboard
+ RenderStyle Add
+ Scale 1.0
+ YScale 4.0
+ damagetype "Superweapon"
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 A 0 A_SpawnItemEx ("BlueStrikeFX")
+   BBLU A 1 Bright A_SetTranslucent(0.9, 1)
+   BBLU A 1 Bright A_SetTranslucent(1.0, 1)
+   BBLU A 1 Bright A_FadeOut(0.01)
+   Wait
+ }
+}
+
+actor BlueStrikeFX {
+	+CLIENTSIDEONLY
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound ("ion/strike", CHAN_BODY, 1.0, 0, ATTN_NONE)
+		TNT1 A 0 A_SpawnItemEx ("BlueFlare") // these two are same on both renderers
+		TNT1 A 0 A_SpawnItemEx ("IonPole")
+		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (910, 0) == 0, "Software")
+		TNT1 A 0 A_SpawnItemEx  ("IonFloor")
+		TNT1 A 0 A_SpawnItemEx  ("IonSphere")
+		TNT1 A 0 A_SpawnItemEx ("IonBlasphemy")
+		TNT1 A 0 A_SpawnItemEx ("IonSmokePole")
+		TNT1 A 2 A_SpawnItemEx ("IonDebris")
+		stop
+	Software:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("IonFloorSoftware")
+		TNT1 A 0 A_SpawnItemEx ("IonSphereSoftware")
+		TNT1 A 0 A_SpawnItemEx ("IonBlasphemySoftware")
+		TNT1 A 0 A_SpawnItemEx ("IonSmokePoleSoftware")
+		TNT1 A 2 A_SpawnItemEx ("IonDebrisSoftware")
+		stop
+	}
+}
+
+Actor BlueFlare : BlueStrike
+{
+ +FORCEXYBILLBOARD
+ XScale 1.0
+ YScale 1.0
+ Scale 10.0
+ Alpha 0.8
+ States
+ {
+  Spawn:
+   FBLU A 0 Bright
+   FBLU A 1 Bright A_FadeOut(0.01)
+   Wait
+ }
+}
+
+Actor IonBeaconFX
+{
+ +CLIENTSIDEONLY
+ +Missile
+ +DoomBounce
+ Speed 15
+ Radius 8
+ Height 16
+ Translation "Ice"
+ RenderStyle Add
+ reactiontime 1
+ scale 2.0
+ damagetype "Superweapon"
+ States
+ {
+  Spawn:
+   BAL1 A 1 A_Countdown
+   Wait
+  Death:
+   BFLR A 0 A_PlaySound ("ion/warmup", CHAN_BODY, 1.0, 0, ATTN_NONE)
+   BFLR A 0 A_SpawnItemEx ("BlueBeam")
+   BFLR A 0 A_SpawnItemEx ("BlueBeam2")
+   BFLR A 1 A_SetTranslucent(0.8, 1)
+   BFLR A 1 A_SetTranslucent(0.5, 1)
+   BFLR A 1 A_SetTranslucent(0.2, 1)
+   BFLR A 1 A_SetTranslucent(0.1, 1)
+   BFLR A 1 A_SetTranslucent(0.0, 1)
+   BFLR A 1 Bright A_SetTranslucent(0.1, 1)
+   BFLR A 1 Bright A_SetTranslucent(0.3, 1)
+   BFLR A 1 Bright A_SetTranslucent(0.7, 1)
+   BFLR A 1 Bright A_SetTranslucent(1.0, 1)
+   BFLR AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("BeamFire", 0, 0, 0, 0.1 * Random(-3, 3), 0.1 * Random(-3, 3), 0.01 * Random(20, 150), 0, 128, 0)
+   BFLR A 1 A_SpawnItemEx("IonRain",0,0,0,0,0,0,0,128,0)
+   TNT1 AAAAAAAAA 35 //A_FadeOut(0.05)
+   // BFLR A 0 A_SpawnItemEx("BlueStrike",0,0,0,0,0,0,0,0,0) moved to beacon actor
+   stop
+ }
+}
+
+Actor BeaconSpark
+{
+ +CLIENTSIDEONLY
+ +NoInteraction
+ +FORCEXYBILLBOARD
+ Gravity 1
+ Height 3
+ Radius 2
+ RenderStyle Add
+ Scale 0.1
+ States
+ {
+  Spawn:
+   ION1 A 20 Bright
+   ION1 A 1 Bright A_FadeOut(0.2)
+   Wait
+ }
+}
+
+Actor IonRain
+{
+ +CLIENTSIDEONLY
+ +NoInteraction
+ Height 3
+ Radius 2
+ RenderStyle Add
+ Scale 0.10
+ reactiontime 11
+ States
+ {
+  Spawn:
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 3 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 2 A_SpawnItemEx("IonRainFlare",random(-900,900),random(-900,900),random(128,512),0,0,2,0,128,0)
+   TNT1 A 0 A_Countdown
+   loop
+  Death:
+   TNT1 A 0
+   stop
+ }
+}
+
+actor IonRainFlare
+{
+ +CLIENTSIDEONLY
+ +NoInteraction
+  RenderStyle Add
+  alpha 0.75
+  +RANDOMIZE
+  +NOCLIP
+  +NOGRAVITY
+  +FORCEXYBILLBOARD
+  Scale 0.10
+  states
+  {
+  Spawn:
+    PPCX A 35 bright
+    PPCX A 2 bright A_FadeOut(0.2)
+    Wait
+  }
+}
+Actor IonRing
+{
+ +CLIENTSIDEONLY
++NOBLOCKMAP
++NOCLIP
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("IonSmokefx", 0, 0, 0 ,0.00001 * Random(0, 300000), 0.00001 * Random(0, 300000), 0, Random(0, 359), 128, 0)
+TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_SpawnitemEx("IonFx3", 0, 0, 0, random(-6,6), random(-6,6), random(0,6), 0, (128|32), 0)
+TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_SpawnitemEx("IonFx3", 0, 0, 0, random(-1,1), random(-1,1), 0.0001 * Random(10000, 20000), 0, (128|32), 0)
+TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_SpawnitemEx("IonSmoke2", 0, 0, 0,0.0001 * Random(-80000, 80000), 0.0001 * Random(-80000, 80000), 0.0001 * Random(0, 80000), 0, (128|32), 0)
+//TNT1 AAAAA 0 A_SpawnitemEx("IonSmoke2", 0.0001 * Random(-60000, 60000), 0.0001 * Random(-60000, 60000), 0.0001 * Random(-60000, 60000), 0, 0, 0.0001 * Random(0, 10000), 0, (128|32), 0)
+TNT1 AAAAA 0 A_SpawnitemEx("IonFire", random(-1,1), random(-1,1), 0, 0.0001 * Random(0, 100), 0.0001 * Random(0, 100), 0.0001 * Random(0, 7000), 0, (128|32), 0)
+//TNT1 AAAAAAAAAA 0 A_SpawnitemEx("IonBigSmoke", 0, 0, 16, 0.0001 * Random(0, 10000), 0.0001 * Random(0, 10000), 0.0001 * Random(0, 10000), 0, (128|32), 0)
+TNT1 A 0 
+TNT1 A 1
+stop
+}}
+
+Actor IonFloor : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("IonSmokefx", 0, 0, 0 ,0.00001 * Random(-800000, 800000), 0.00001 * Random(-800000, 800000),0,0, 128, 0)
+stop
+}}
+
+Actor IonSphere : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("IonSmokefx", 0, 0, 0 ,0.00001 * Random(-500000, 500000), 0.00001 * Random(-500000, 50000),0.00001 * Random(0, 500000),0, 128, 0)
+stop
+}}
+
+Actor IonBlasphemy : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("Ionfx2", 0, 0, 0 ,0.00001 * Random(-500000, 500000), 0.00001 * Random(-500000, 500000),0.00001 * Random(0, 500000),0, 128, 0)
+stop
+}}
+
+Actor IonPole : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("Ionfx2", 0, 0, 0 ,0.00001 * Random(-10000, 10000), 0.00001 * Random(-10000, 10000),0.00001 * Random(0, 2000000),0, 128,0)
+stop
+}
+}
+
+Actor IonSmokePole : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("Ionsmokefx", 0, 0, 0 ,0.00001 * Random(-10000, 10000), 0.00001 * Random(-1000, 10000),0.00001 * Random(0, 2000000),0, 128,0)
+stop
+}
+}
+
+// [NF] toned this down a little bit
+Actor IonDebris : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAA 2 A_SpawnItemEx("Ionfx3", 0, 0, 0 ,0.00001 * Random(-2000000, 2000000), 0.00001 * Random(-2000000, 2000000),0.00001 * Random(0, 2000000),0, 128,0)
+stop
+}
+}
+
+Actor IonFx {
+	+CLIENTSIDEONLY
+	+NOBLOCKMAP
+	+NOCLIP
+	+NOINTERACTION
+	+NOGRAVITY
+	+FORCEXYBILLBOARD
+	Renderstyle Add
+	alpha 0.2
+	ReactionTime 10
+	Speed 28
+	Scale 5.0
+	PROJECTILE
+	States {
+	Spawn:
+		ION1 ABCD 10 bright A_SpawnitemEx("IonFx2", 0, 0, 0, 0, 0, 0, 0, (128|32), 0)
+		ION1 A 0 bright A_Countdown
+		loop
+	Death:
+		Stop
+	}
+}
+
+Actor IonFx2 : IonFx
+{
+reactionTime 0
+Speed 0
+scale 4.0
+States
+{
+Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   ION1 A 1 Bright A_FadeOut(0.001)
+   Wait
+  Spawn2:
+   ION1 B 1 Bright A_FadeOut(0.001)
+   Wait
+  Spawn3:
+   ION1 C 1 Bright A_FadeOut(0.001)
+   Wait
+  Spawn4:
+   ION1 D 1 Bright A_FadeOut(0.001)
+   Wait
+ }
+}
+
+Actor IonFx3 : IonFx
+{
+ReactionTime 5
+Scale 3.7
+renderstyle Add
+Alpha 0.02
+States
+{
+Spawn:
+ION1 ABCD 4 bright A_SpawnitemEx("IonFx4", 0, 0, 0, 0, 0, 0, 0, (128|32), 0)
+ION1 A 0 bright A_Countdown
+loop
+Death:
+Stop
+}
+}
+
+Actor IonFx4 : IonFx2
+{
+scale 3.0
+renderstyle Add
+Alpha 0.05
+}
+
+Actor IonSmoke1 : IonFx
+{
++NOINTERACTION
++ForceRadiusDmg
+Speed 28
+ReactionTime 70
+States
+{
+Spawn:
+TNT1 A 2 A_SpawnitemEx("IonSmokeFx", 0, 0, 0, 0, 0, 0.0001 * Random(80000, 100000), 0, (128|32), 0)
+TNT1 A 0 A_Explode(255, 256, 1)
+TNT1 A 0 A_Countdown
+loop
+}
+}
+
+Actor IonSmokeFx : IonSmoke1
+{
++NOGRAVITY
+RenderStyle Normal
+reactionTime 0
+Speed 0
+Alpha 0.2
+scale 8.0
+States
+{
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   SMOK A 1 Bright A_FadeOut(0.0005)
+   Wait
+  Spawn2:
+   SMOK B 1 Bright A_FadeOut(0.0005)
+   Wait
+  Spawn3:
+   SMOK C 1 Bright A_FadeOut(0.0005)
+   Wait
+  Spawn4:
+   SMOK D 1 Bright A_FadeOut(0.0005)
+   Wait
+ }
+}
+
+Actor IonSmoke2 : IonSmoke1
+{
++NoInteraction
+RenderStyle Normal
+reactionTime 0
+Speed 0
+scale 5.4
+States
+{
+  Spawn:
+   TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+   SMOK A 1 Bright A_FadeOut(0.0002)
+   Wait
+  Spawn2:
+   SMOK B 1 Bright A_FadeOut(0.0002)
+   Wait
+  Spawn3:
+   SMOK C 1 Bright A_FadeOut(0.0002)
+   Wait
+  Spawn4:
+   SMOK D 1 Bright A_FadeOut(0.0002)
+   Wait
+ }
+}
+
+Actor IonBigSmoke : IonSmoke1
+{
++NoInteraction
+-Noclip
+-Nogravity
++LowGravity
++Hexenbounce
++Doombounce
+-ForceRadiusDmg
+}
+
+Actor IonFire : IonSmokeFx
+{
+Scale 1.0
+Renderstyle Add
+alpha 0.25
+States
+{
+  Spawn:
+   IOF1 A 5 A_FadeOut(0.003)
+   Wait
+ }
+}
+
+// ==========================================================================
+// [NF] more toned-down variants for ion bomb (aka Blue Juggernaut Mini-Nuke)
+// ==========================================================================
+actor IonFXSmall {
+	+NOINTERACTION +NOBLOCKMAP
+	+CLIENTSIDEONLY
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("BlueFlareSmall")
+		TNT1 A 0 A_SpawnItemEx("IonPoleSmall")
+		TNT1 A 0 A_SpawnItemEx("IonSmokePoleSmall")
+		TNT1 A 2 A_SpawnItemEx("IonDebrisSmall")
+		stop
+	}
+}
+
+Actor IonSmokePoleSmall : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAAA 2 A_SpawnItemEx("IonSmokeFxSmall", 0, 0, 0 ,0.00001 * Random(-10000, 10000), 0.00001 * Random(-1000, 10000),0.00001 * Random(0, 700000),0, 128,0)
+stop
+}
+}
+
+Actor IonSmokeFxSmall : IonSmokeFx {
+	scale 6.0
+	States {
+	Spawn:
+		TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+		SMOK A 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn2:
+		SMOK B 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn3:
+		SMOK C 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn4:
+		SMOK D 1 Bright A_FadeOut(0.001)
+		Wait
+	}
+}
+
+Actor IonPoleSmall : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAAAAAAAAAA 2 A_SpawnItemEx("Ionfx2Small", 0, 0, 0 ,0.00001 * Random(-10000, 10000), 0.00001 * Random(-10000, 10000),0.00001 * Random(0, 700000),0, 128,0)
+stop
+}
+}
+
+Actor IonFx2Small : IonFx2 {
+	scale 3.0
+	States {
+	Spawn:
+		TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+		ION1 A 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn2:
+		ION1 B 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn3:
+		ION1 C 1 Bright A_FadeOut(0.001)
+		Wait
+	Spawn4:
+		ION1 D 1 Bright A_FadeOut(0.001)
+		Wait
+	}
+}
+
+Actor IonDebrisSmall : IonRing
+{
+States
+{
+Spawn:
+TNT1 AAAAAAA 2 A_SpawnItemEx("Ionfx3", 0, 0, 0 ,0.00001 * Random(-1000000, 1000000), 0.00001 * Random(-1000000, 1000000),0.00001 * Random(0, 1000000),0, 128,0)
+stop
+}
+}
+
+Actor IonFx3Small : IonFx3
+{
+ReactionTime 3
+Scale 2.0
+renderstyle Add
+Alpha 0.02
+States
+{
+Spawn:
+ION1 ABCD 4 bright A_SpawnitemEx("IonFx4Small", 0, 0, 0, 0, 0, 0, 0, (128|32), 0)
+ION1 A 0 bright A_Countdown
+loop
+Death:
+Stop
+}
+}
+
+Actor IonFx4Small : IonFx2Small
+{
+scale 1.7
+renderstyle Add
+Alpha 0.05
+}
+
+Actor BlueFlareSmall : BlueFlare {Scale 3.0}
+
+// software compat
+actor IonFloorSoftware : IonRing {
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 4 A_SpawnItemEx("IonSmokeFXSoftware", 0, 0, 0 ,0.00001 * Random(-800000, 800000), 0.00001 * Random(-800000, 800000),0,0, 128, 0)
+		stop
+	}
+}
+
+actor IonSphereSoftware : IonRing {
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAA 4 A_SpawnItemEx("IonSmokeFXSoftware", 0, 0, 0 ,0.00001 * Random(-500000, 500000), 0.00001 * Random(-500000, 50000),0.00001 * Random(0, 500000),0, 128, 0)
+		stop
+	}
+}
+
+actor IonBlasphemySoftware : IonRing {
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAA 4 A_SpawnItemEx("IonFX2", 0, 0, 0 ,0.00001 * Random(-500000, 500000), 0.00001 * Random(-500000, 500000),0.00001 * Random(0, 500000),0, 128, 0)
+		stop
+	}
+}
+
+actor IonSmokePoleSoftware : IonRing {
+	states {
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAA 4 A_SpawnItemEx("IonSmokeFXSoftware", 0, 0, 0 ,0.00001 * Random(-10000, 10000), 0.00001 * Random(-1000, 10000),0.00001 * Random(0, 2000000),0, 128,0)
+		stop
+	}
+}
+
+actor IonDebrisSoftware : IonRing {
+	states {
+	Spawn:
+		TNT1 AAAAA 4 A_SpawnItemEx("IonFX3Software", 0, 0, 0 ,0.00001 * Random(-2000000, 2000000), 0.00001 * Random(-2000000, 2000000),0.00001 * Random(0, 2000000),0, 128,0)
+		stop
+	}
+}
+
+actor IonSmokeFXSoftware : IonSmokeFX {
+	Alpha 0.6
+	States {
+	Spawn:
+		TNT1 AA 0 A_Jump(196, "Spawn2", "Spawn3", "Spawn4")
+		SMOK A 1 Bright A_FadeOut(0.0067)
+		Wait
+	Spawn2:
+		SMOK B 1 Bright A_FadeOut(0.0067)
+		Wait
+	Spawn3:
+		SMOK C 1 Bright A_FadeOut(0.0067)
+		Wait
+	Spawn4:
+		SMOK D 1 Bright A_FadeOut(0.0067)
+		Wait
+	}
+}
+
+actor IonFX3Software : IonFX3 {alpha 0.04}

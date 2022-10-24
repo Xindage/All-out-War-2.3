@@ -1,0 +1,111 @@
+// CHAINSAW
+actor EagerBeaver : AOWWeapon replaces Chainsaw {
+	+MELEEWEAPON
+	// +EXTREMEDEATH
+	weapon.kickback 0
+	weapon.selectionorder 18
+	weapon.upsound "weapons/sawup"
+	weapon.preferredskin "MarineChainsaw"
+	inventory.pickupmessage "$GOTCHAINSAW"
+	obituary "$OB_CHAINSAW"
+	tag "Chainsaw"
+	decal "BulletChip"
+	states {
+	Ready:
+		SAWG B 0 A_TakeInventory ("IsSawing", 1)
+		SAWG C 0 A_PlaySound ("weapons/sawidle", CHAN_WEAPON)
+		SAWG CD 4 A_WeaponReady
+		goto Ready+1
+	Deselect:
+		SAWG C 1 A_Lower
+		wait
+	Select:
+		SAWG C 0 A_TakeInventory ("Unarmed", 1)
+		SAWG C 1 A_Raise
+		wait
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Denied")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Denied")
+		SAWG B 0 A_GiveInventory ("IsSawing", 1)
+		SAWG B 0 A_PlayWeaponSound("weapons/sawfull")
+		SAWG A 4 A_CustomPunch(random(20,25), 1, 0, "SawPuff", 80)
+		SAWG B 0 A_PlayWeaponSound("weapons/sawfull")
+		SAWG B 4 A_CustomPunch(random(20,25), 1, 0, "SawPuff", 80)
+		SAWG B 0 A_ReFire
+		goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Denied")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Denied")
+		TNT1 A 0 A_FireCustomMissile ("ChainSawThrown")
+		TNT1 A 0 A_StopSound (CHAN_WEAPON)
+		TNT1 A 0 A_GiveInventory ("Unarmed", 1)
+		TNT1 A 0 A_TakeInventory ("EagerBeaver", 1)
+		goto Deselect
+	Denied:
+		SAWG CD 4 A_WeaponReady (WRF_NOFIRE)
+		goto Ready
+	Spawn:
+		CSAW A -1
+		stop
+	}
+}
+
+actor SawPuff : BulletPuff {
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	// +EXTREMEDEATH
+	-ALLOWPARTICLES
+	DamageType "Fist"
+}
+
+actor ChainsawThrown {
+	PROJECTILE
+	//+RIPPER
+	+EXTREMEDEATH
+	speed 40
+	radius 20
+	height 20
+	damage (55)
+	scale 0.3
+	damagetype "Fist"
+	obituary "$OB_CHAINSAW_ALT" // "%o was mutilated by %k's flying chainsaw!"
+	decal "Scorch"
+	states {
+	Spawn:
+		SAWW A 0
+		SAWW A 0 A_PlaySound ("weapons/sawfull", CHAN_VOICE, 1.0, 1)
+		SAWW AA 2 A_SpawnItemEx ("PulseBallSmokePuff", -8)
+		SAWW A 1
+		SAWW A 1 A_LowGravity
+		SAWW A 2 A_SpawnItemEx ("PulseBallSmokePuff", -8)
+		wait
+	Death:
+		TNT1 A 0 A_PlaySound ("weapons/rocklx", CHAN_VOICE)
+		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
+		TNT1 A 0 A_SpawnItemEx ("ChainSawThrownBoom")
+		stop
+	}
+}
+
+Actor ChainSawThrownBoom
+{
+	PROJECTILE
+	+RIPPER
+	+BLOODLESSIMPACT
+	+PAINLESS
+	Damagetype "Explosion"
+	obituary "$OB_CHAINSAW_ALT"
+	Damage 0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Explode(128,128)
+		Stop
+	}
+}
+
+// [Dusk] Workaround for +EXTREMEDEATH - this is given when the player 'fires'
+// the chainsaw. When a victim dies, if his target (the killer) has this item,
+// he will goto XDeath instead, thus emulating the behavior of +EXTREMEDEATH.
+actor IsSawing : Inventory {}

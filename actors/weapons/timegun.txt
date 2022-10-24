@@ -1,0 +1,537 @@
+// TIME GUN
+actor TimeGun : AOWWeapon {
+	+WEAPON.NOAUTOFIRE
+	+BLOODLESSIMPACT
+	DropItem "NewBackpack"
+	Obituary "%o was sucked in a time-space continuum vortex."
+	Inventory.PickupMessage "\cGYOU HAS ACTIVATED THE TIMESPACE PARADOX D="
+	Inventory.PickupSound "Weapons/Pickup"
+	Weapon.AmmoGive 100
+	Weapon.AmmoType "TimeGunAmmo"
+	Weapon.AmmoUse 0
+	Weapon.Kickback 25
+	Weapon.PreferredSkin "MarineTimegun"
+	Weapon.UpSound "weapons/up/timegun"
+	AttackSound "mech/gauss"
+
+	States {
+	Spawn:
+		TNT1 A 0
+		stop
+	Ready:
+		TNT1 A 0
+		TNT1 A 0 A_TakeInventory("timeGunSafety")
+		TMGN A 10 A_WeaponReady
+		TMGN A 0 A_GiveInventory ("TimeGunAmmo", 2)
+		Goto Ready+2
+	Deselect:
+		TMGN A 1 offset (-5, 34)
+		TMGN A 1 offset (-16, 38)
+		TMGN A 1 offset (-23, 45)
+		TMGN A 1 offset (-32, 56)
+		TMGN A 1 offset (-42, 66)
+		TMGN A 1 offset (-51, 73)
+		TMGN A 1 offset (-63, 87)
+		TMGN A 1 offset (-78, 97)
+		TMGN A 1 offset (-88, 111)
+		TMGN A 1 offset (-99, 121)
+		TMGN A 1 offset (-112, 133)
+		TMGN A 1 offset (-125, 154)
+		TMGN A 0 offset (-1, 33)
+		TMGN A 0 A_Lower
+		wait
+	Select:
+		TMGN A 0
+		TMGN A 0 ACS_ExecuteAlways (959, 0)
+	SelectLoop:
+		TMGN A 1 offset (-125, 154)
+		TMGN A 1 offset (-112, 133)
+		TMGN A 1 offset (-99, 121)
+		TMGN A 1 offset (-88, 111)
+		TMGN A 1 offset (-78, 97)
+		TMGN A 1 offset (-63, 87)
+		TMGN A 1 offset (-51, 73)
+		TMGN A 1 offset (-42, 66)
+		TMGN A 1 offset (-32, 56)
+		TMGN A 1 offset (-23, 45)
+		TMGN A 1 offset (-16, 38)
+		TMGN A 1 offset (-5, 34)
+		goto ready
+	Fire:
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("timeGunSafety")
+		TMGN A 0 A_JumpIfInventory ("PowerTimeGunSpeed", 1, "HyperspeedLoop")
+		TMGN A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		TMGN A 0 A_JumpIfInventory ("TimeGunRotation", 3, "Fire.Hyperspeed")
+		TMGN A 0 A_JumpIfInventory ("TimeGunRotation", 2, "Fire.Teleport")
+		TMGN B 2 bright
+		TMGN C 2 bright
+		TMGN A 0 A_JumpIfInventory ("TimeGunRotation", 1, "Fire.Float")
+		goto Fire.Boost
+	Fire.Boost:
+		TMGN A 0 A_JumpIfInventory ("TimeGunAmmo", 25, 1)
+		goto OutOfAmmo
+		TMGN B 0 A_TakeInventory ("TimeGunAmmo", 25)
+		TMGN B 0 A_PlayWeaponSound ("mech/gauss")
+		TMGN B 0 bright A_JumpIfInventory ("IsBlue", 1, "Fire.BoostBlue")
+		TMGN B 0 A_FireBullets (0, 0, 1, 0, "BoostPuffRed", 0)
+		TMGN B 0 A_ChangeFlag ("PICKUP", 0)
+		TMGN D 0 ACS_ExecuteAlways (958, 0, 2) // reward
+		TMGN D 3 bright A_RailAttack (0, 2, 1, "FF 96 00","FF D4 00", 0, 0, "GoldenPuff")
+		TMGN EFA 1
+		TMGN A 0 A_ChangeFlag ("PICKUP", 1)
+		TMGN A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TMGN A 0 A_GunFlash
+		TMGN A 25 A_PlayWeaponSound("80mm/reload")
+		goto Ready
+	Fire.BoostBlue:
+		TMGN B 0 bright
+		TMGN B 0 A_FireBullets(0, 0, 1, 0, "BoostPuffBlue", 0)
+		TMGN B 0 A_ChangeFlag ("PICKUP", 0)
+		TMGN D 0 ACS_ExecuteAlways (958, 0, 2)
+		TMGN D 3 bright A_RailAttack (0, 2, 1, "FF 96 00","FF D4 00", 0, 0, "GoldenPuff")
+		TMGN EFA 1
+		TMGN A 0 A_ChangeFlag ("PICKUP", 1)
+		TMGN A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TMGN A 0 A_GunFlash
+		TMGN A 25 A_PlayWeaponSound("80mm/reload")
+		goto Ready
+	Fire.Float:
+		TMGN C 0 A_JumpIfInventory ("TimeGunAmmo", 25, 1)
+		goto OutOfAmmo
+		TMGN C 0 A_TakeInventory ("TimeGunAmmo", 25)
+		TMGN B 0 A_PlayWeaponSound ("mech/gauss")
+		TMGN B 0 A_JumpIfInventory ("IsBlue", 1, "Fire.FloatBlue")
+		TMGN B 0 A_FireBullets(0, 0, 1, 0, "FloatPuffRed", 0)
+		TMGN B 0 A_ChangeFlag ("PICKUP", 0)
+		TMGN D 0 ACS_ExecuteAlways (958, 0, 2)
+		TMGN D 3 Bright A_RailAttack (0, 2, 1, "FF 96 00","FF D4 00", 0, 0, "GoldenPuff")
+		TMGN EFA 1
+		TMGN A 0 A_ChangeFlag ("PICKUP", 1)
+		TMGN A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TMGN A 0 A_GunFlash
+		TMGN A 25 A_PlaySound ("80mm/reload", CHAN_WEAPON)
+		goto Ready
+	Fire.FloatBlue:
+		TMGN B 0 A_FireBullets (0, 0, 1, 0, "FloatPuffBlue", 0)
+		TMGN B 0 A_ChangeFlag ("PICKUP", 0)
+		TMGN D 0 ACS_ExecuteAlways (958, 0, 2)
+		TMGN D 3 Bright A_RailAttack (0, 2, 1, "FF 96 00","FF D4 00", 0, 0, "GoldenPuff")
+		TMGN EFA 1
+		TMGN A 0 A_ChangeFlag ("PICKUP", 1)
+		TMGN A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TMGN A 0 A_GunFlash
+		TMGN A 25 A_PlaySound ("80mm/reload", CHAN_WEAPON)
+		goto Ready
+	Fire.Teleport:
+		TMGN G 16 BRIGHT A_PlayWeaponSound ("plasmacannon/fire")
+		TMGN H 12
+		TMGN H 0 A_JumpIfInventory ("HasClass", 1, 1)
+		goto Nope
+		TMGN H 0 A_JumpIfInventory ("TimeGunAmmo", 100, 1)
+		goto OutOfAmmo
+		TMGN H 0 A_TakeInventory ("TimeGunAmmo", 100)
+		TMGN H 0 A_PlaySound ("misc/timewarp", CHAN_WEAPON)
+		TMGN H 0 A_Stop
+		TMGN H 0 A_SetTranslucent (0.5, 1)
+		TMGN H 0 SetPlayerProperty (0, 1, 0)
+		TMGN H 0 A_GiveInventory ("GoldHue", 1)
+		TMGN H 0 A_SpawnItemEx ("TimeGunFlareCluster")
+		TMGN H 35 BRIGHT A_GiveInventory ("IsTeleporting", 1)
+		TMGN H 0 A_JumpIfInventory ("HasClass", 1, 1)
+		goto Nope
+		TMGN A 0 A_TakeInventory ("IsInSpawnRoom", 1)
+		TMGN A 3 BRIGHT ACS_ExecuteAlways (94, 0, random (0, 1))
+		TMGN A 0 A_SetTranslucent (1.0, 0)
+		TMGN A 0 A_SpawnItemEx ("TimeGunFlareExplosion")
+		TMGN A 0 SetPlayerProperty (0, 0, 0)
+		TMGN A 0 A_TakeInventory ("IsTeleporting", 1)
+		TMGN A 35 BRIGHT A_PlaySound ("misc/timeunwarp", CHAN_WEAPON)
+		goto Ready
+	Fire.Hyperspeed:
+		TMGN G 16 BRIGHT A_PlayWeaponSound ("plasmacannon/fire")
+		TMGN H 12
+		TMGN H 0 A_ZoomFactor(0.700)
+		TMGN H 0 A_PlaySound ("misc/timewarp", CHAN_WEAPON)
+		TMGN H 0 A_SetTranslucent (0.5, 1)
+		TMGN H 0 A_GiveInventory ("TimeGunSpeed", 1)
+	HyperspeedLoop:
+		TMGN A 0 A_JumpIfInventory ("InMenu", 1, "HyperspeedEnd")
+		TMGN H 1 bright DamageThing (1)
+		TMGN H 0 bright A_ReFire
+	HyperspeedEnd:
+		TMGN H 0 A_ZoomFactor(1)
+		TMGN H 0 A_TakeInventory ("PowerTimeGunSpeed", 1)
+		TMGN H 0 A_GiveInventory ("GoldHue", 1)
+		TMGN A 0 A_SetTranslucent (1.0, 0)
+		TMGN A 0 SetPlayerProperty (0, 0, 0)
+		TMGN A 35 BRIGHT A_PlaySound ("misc/timeunwarp", CHAN_WEAPON)
+		goto Ready
+	Nope:
+		TMGN A 35 SetPlayerProperty (0, 0, 0)
+		goto Ready
+	OutOfAmmo:
+		TMGN A 2 A_PlaySound ("Plasma/FailFire", 6)
+		TMGN A 0 A_PlaySound ("Plasma/Vapour", 7)
+		TMGN A 0 A_TakeInventory ("TimeGunCharged", 1)
+		TMGN AAAAAA 2 A_FireCustomMissile("OverheatSmokeSpawner",0,0,6,-2)
+		TMGN A 35
+		goto Ready
+	AltFire:
+		TMGN A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		TMGN A 0 ACS_Execute (958, 0, 1)
+		goto Ready
+	Flash:
+		TNT1 A 0
+		TNT1 AAAAAAA 2 A_FireCustomMissile("OverheatSmokeSpawner",0,0,6,-2)
+		Goto LightDone
+	}
+}
+
+Actor timeGunSafety : Inventory {}
+
+actor IsTeleporting : Inventory {}
+
+actor TimeGunRotation : Inventory {inventory.maxamount 5}
+actor TimeGunCharged : Inventory {inventory.maxamount 1}
+
+actor Nope {
+	+CLIENTSIDEONLY
+	+NOGRAVITY
+	renderstyle translucent
+	alpha 1.0
+	scale 0.1
+	states {
+	Spawn:
+		NOPE A 0
+		NOPE A 0 A_PlaySound ("misc/nope")
+		NOPE A 0 ThrustThingZ (0, 12, 0, 0)
+		NOPE A 3 A_FadeOut (0.1)
+		wait
+	}
+}
+
+// ===================================================
+// ----------------------------------- EFFECT POWERUPS
+// ===================================================
+
+// BOOST
+actor PowerTimeGunBoost : PowerSpeed {
+	speed 1.4
+	powerup.duration -15
+}
+
+actor TimeGunBoost : PowerupGiver {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	powerup.type "TimeGunBoost"
+	inventory.pickupsound ""
+	powerup.duration -15
+	// powerup.color GoldMap, 0.25
+	powerup.color "FF AA 00", 0.15
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor TimeGunBoostRed : CustomInventory {
+	inventory.maxamount 0
+	inventory.pickupmessage "`"
+	inventory.pickupsound "misc/p_pkup"
+	states {
+	Spawn:
+		TNT1 A 5
+		stop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Slow")
+		TNT1 A 0 A_JumpIfInventory ("Knife", 1, "Failure") // Not on stealths because this reveals them
+		TNT1 A 0 A_JumpIfInventory("IsMech", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("StealthLaserRifle", 1, "Failure")
+		TNT1 A 0 ACS_Execute (958, 0, 0, 0) // intel message
+		TNT1 A 0 A_GiveInventory ("TimeGunBoost", 1)
+		stop
+	Slow:
+		TNT1 A 0 ACS_Execute (958, 0, 0, 2)
+		TNT1 A 0 A_GiveInventory ("TimeGunSlow", 1)
+		stop
+	Failure:
+		TNT1 A 0
+		fail
+	}
+}
+
+actor TimeGunBoostBlue : TimeGunBoostRed {
+	states {
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Slow")
+		TNT1 A 0 A_JumpIfInventory ("Knife", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory("IsMech", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("StealthLaserRifle", 1, "Failure")
+		TNT1 A 0 ACS_Execute (958, 0, 0, 0) // intel message
+		TNT1 A 0 A_GiveInventory ("TimeGunBoost", 1)
+		stop
+	}
+}
+
+// FLOAT
+actor PowerTimeGunFloat : PowerFlight {}
+actor TimeGunFloat : PowerupGiver {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	inventory.pickupsound ""
+	powerup.type "TimeGunFloat"
+	powerup.duration -20
+	// powerup.color GoldMap, 0.25
+	powerup.color "FF AA 00", 0.15
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor TimeGunFloatRed : TimeGunBoostRed {
+	states {
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Weaken")
+		TNT1 A 0 A_JumpIfInventory ("Knife", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory("IsMech", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("StealthLaserRifle", 1, "Failure")
+		TNT1 A 0 ACS_Execute (958, 0, 0, 1) // intel message
+		TNT1 A 0 A_GiveInventory ("TimeGunFloat", 1)
+		stop
+	Weaken:
+		TNT1 A 0 ACS_Execute (958, 0, 0, 3)
+		TNT1 A 0 A_GiveInventory ("TimeGunWeaken", 1)
+		stop
+	}
+}
+
+actor TimeGunFloatBlue : TimeGunFloatRed {
+	states {
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Weaken")
+		TNT1 A 0 A_JumpIfInventory ("Knife", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory("IsMech", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("StealthLaserRifle", 1, "Failure")
+		TNT1 A 0 ACS_Execute (958, 0, 0, 1) // intel message
+		TNT1 A 0 A_GiveInventory ("TimeGunFloat", 1)
+		stop
+	}
+}
+
+// SLOW
+actor PowerTimeGunSlow : PowerSpeed {
+	speed 0.6
+}
+
+actor TimeGunSlow : PowerupGiver {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	powerup.type "TimeGunSlow"
+	inventory.pickupsound ""
+	powerup.duration -20
+	powerup.color "AA 00 00", 0.25
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+// WEAKEN
+actor PowerTimeGunWeaken : PowerDamage {
+	damagefactor "Fist", 0.7
+	damagefactor "Bullet", 0.7
+	damagefactor "Rifle", 0.7
+	damagefactor "Explosion", 0.7
+	damagefactor "Fire", 0.7
+	damagefactor "Chemical", 0.7
+	damagefactor "Energy", 0.7
+	damagefactor "AntiArmor", 0.7
+	damagefactor "Time", 0.7
+	damagefactor "Disarm", 0.7
+	damagefactor "MassDriver", 0.7
+	damagefactor "Mechstomp", 0.7
+	damagefactor "Monster", 0.7
+	powerup.duration -15
+}
+
+actor TimeGunWeaken : PowerupGiver {
+	+AUTOACTIVATE
+	inventory.maxamount 0
+	powerup.type "TimeGunWeaken"
+	inventory.pickupsound ""
+	powerup.duration -20
+	powerup.color "AA 00 00", 0.25
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+// HYPAHSPEED
+actor PowerTimeGunSpeed : PowerSpeed {
+	speed 7
+}
+
+actor TimeGunSpeed : TimeGunBoost {
+	powerup.type "TimeGunSpeed"
+	powerup.duration 0x7fffffff // removed manually
+}
+
+// ===================================================
+// -------------------------------------- EFFECT PUFFS
+// ===================================================
+actor GoldenPuff {
+	+PUFFONACTORS
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+BLOODLESSIMPACT
+	+PUFFGETSOWNER
+	renderstyle Add
+	alpha 0.75
+	translation "192:207=128:143"
+
+	states {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX A 1 Bright A_FadeOut(0.01)
+		Loop
+	}
+}
+
+actor BoostPuffRed : GoldenPuff {
+	damagetype "Time"
+	states {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX AA 0 A_SpawnItem ("TimeGunBoostRed", -1)
+		VOLX A 0 A_Explode (5, 16)
+		VOLX A 1 Bright A_FadeOut(0.01)
+		wait
+	}
+}
+
+actor BoostPuffBlue : GoldenPuff {
+	damagetype "Time"
+	states {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX AA 0 A_SpawnItem ("TimeGunBoostBlue", -1)
+		VOLX A 0 A_Explode (5, 16)
+		VOLX A 1 Bright A_FadeOut(0.01)
+		wait
+	}
+}
+
+actor FloatPuffRed : GoldenPuff {
+	damagetype "Time"
+	states {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX AA 0 A_SpawnItem ("TimeGunFloatRed", -1)
+		VOLX A 0 A_Explode (5, 16)
+		VOLX A 1 Bright A_FadeOut(0.01)
+		wait
+	}
+}
+
+actor FloatPuffBlue : GoldenPuff {
+	damagetype "Time"
+	states {
+	Spawn:
+	Melee:
+	Crash:
+		VOLX AA 0 A_SpawnItem ("TimeGunFloatBlue", -1)
+		VOLX A 0 A_Explode (5, 16)
+		VOLX A 1 Bright A_FadeOut(0.01)
+		wait
+	}
+}
+
+// ===================================================
+// ----------------------------------- SPECIAL EFFECTS
+// ===================================================
+
+// flare effects for teleportation
+actor TimeGunFlareCluster {
+	+CLIENTSIDEONLY +NOINTERACTION
+	reactiontime 19
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAA 0 A_SpawnItemEx ("TimeGunFlare", random(-64,64), random(-64,64), random(0,128), 0, 0, 1)
+		TNT1 A 2
+		TNT1 A 0 A_Countdown
+		loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx ("TimeGunFlareExplosion")
+		stop
+	}
+}
+
+actor TimeGunFlareExplosion {
+	+CLIENTSIDEONLY +NOINTERACTION
+	states {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx ("TimeGunFlareGravity", 0, 0, 0, random (-12, 12), random (-12, 12), random (4, 9))
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx ("TimeGunFlareGravity", 0, 0, 0, random (-12, 12), random (-12, 12), random (4, 9))
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx ("TimeGunFlareGravity", 0, 0, 0, random (-12, 12), random (-12, 12), random (4, 9))
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx ("TimeGunFlareGravity", 0, 0, 0, random (-12, 12), random (-12, 12), random (4, 9))
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx ("TimeGunFlareGravity", 0, 0, 0, random (-12, 12), random (-12, 12), random (4, 9))
+		TNT1 A 2 A_SpawnItemEx ("GoldBeam")
+		stop
+	}
+}
+
+actor TimeGunFlare : IonRainFlare {
+	+FORCEXYBILLBOARD
+	scale 0.04
+	translation "168:173=147:151", "174:191=148:159", "116:127=148:159"
+}
+
+actor TimeGunFlareGravity : TimeGunFlare {-NOGRAVITY -NOINTERACTION}
+
+actor GoldBeam : BlueBeam {
+	xscale 1.0
+	yscale 3.0
+	alpha 0.2
+	States {
+	Spawn:
+		SBGL A 0
+		SBGL AAAA 1 A_FadeIn (0.2)
+		SBGL A 1 Bright A_FadeOut(0.05)
+		Wait
+	}
+}
+
+// hues
+actor GoldHue : PowerupGiver {
+	+INVENTORY.AUTOACTIVATE
+	inventory.pickupmessage "wat are you doing"
+	inventory.maxamount 0
+	powerup.color GoldMap
+	powerup.duration -1
+	powerup.type "Null"
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor PlayerSpeedTrail2 replaces PlayerSpeedTrail {
+	+NOBLOCKMAP
+	renderStyle None
+	alpha 0.0
+	scale 0.0
+}

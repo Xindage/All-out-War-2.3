@@ -1,0 +1,125 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * All Out War 2 sudden death script
+ * Credit to VoltlocK for originally creating the engine
+ * With modifications by the Omega Team
+ *
+ * You may use portions of this script in your project as long as you give
+ * credit where credit is due. Please don't be lame and just copy-paste any
+ * of this and call it your own. Thanks!
+ */
+
+script SC_SuddenDeathCounter OPEN {
+	delay (5);
+	
+	while (Timer() < GetCVAR ("zeta_suddendeathtime") * MINUTETICS)
+		delay (35);
+	
+	ACS_Execute (SC_SUDDENDEATH, 0);
+}
+
+script SC_SuddenDeath (void) {
+	SetActivator (-1);
+	intHolder[i_SuddenDeath] = true;
+	
+	GiveActorInventory (100, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (101, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (102, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (103, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (104, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (105, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (106, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (107, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (108, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (114, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (115, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (200, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (201, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (202, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (203, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (204, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (205, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (206, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (207, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (208, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (214, "SuddenDeathVulnerability", 1);
+	GiveActorInventory (215, "SuddenDeathVulnerability", 1);
+	if (Timer() > 5*35 + 10) {
+		if (random (0, 1))
+			SetMusic ("razor-ub");
+		else
+			SetMusic ("razorub2");
+	}
+	
+	// [Dusk] Allow maps to take action on sudden death
+	CallEvent (ACTION_SUDDENDEATH, 0);
+	
+	Log (s:"=== Sudden Death begins ===");
+	
+	// If not in tournament mode, give everybody beacons
+	if (!intHolder[i_TournamentMode])
+		GiveToAll ("BeaconItem", 1);
+	
+	// Big notice
+	SetFont ("BIGFONT");
+	if (!intHolder[i_TicketPool])
+	{
+		HudMessageBold (s:"\cgSUDDEN DEATH!\n\nNo more repairs can be done\nEvery death counts!";
+			HUDMSG_FADEOUT, 15001, CR_YELLOW,
+			INTEL_XPOS, 0.25, 7.0, 1.0);
+	}
+	
+	else
+	{
+		HudMessageBold (s:"\cgSUDDEN DEATH!\n\nNo more repairs can be done!";
+			HUDMSG_FADEOUT, 15001, CR_YELLOW,
+			INTEL_XPOS, 0.25, 7.0, 1.0);
+	}
+	
+	// Begin degeneration if its set
+	int degeneration = GetCVar ("zeta_degeneration");
+	if (degeneration) {
+		SetFont("BIGFONT");
+		HudMessageBold (s:"WARNING: BUILDING DEGENERATION ACTIVE!";
+			HUDMSG_FADEOUT, 15002, CR_RED,
+			INTEL_XPOS, 0.45, 7.0, 1.0);
+	}
+	
+	// If ticket pool was not active in regular play, activate it now
+	if (!intHolder[i_TicketPool]) {
+		SetTickets (TEAM_BLUE, GetCVAR ("zeta_tickets"));
+		SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
+	}
+	
+	// [JD] If Either team's tickets are above 75 when SD hits, set them to 75.
+	else
+	{
+		if (Tickets[TEAM_BLUE] > 75)
+			SetTickets(TEAM_BLUE, 75);
+		
+		if (Tickets[TEAM_RED] > 75)
+			SetTickets(TEAM_RED, 75);
+	}
+	
+	int ticker = 0;
+	int i;
+	while (1) {
+		if (!(ticker % 60)) {
+			SetFont("SMALLFONT");
+			IntelMessage ("Sudden Death!", false);
+		}
+		
+		if (degeneration && !(ticker % GetCVar ("zeta_degenerationinterval"))) {
+			// Crash all buildings by 1% every interval seconds
+			for (i = 0; i <= 1; i++) {
+				Thing_Damage (101+(i*100), HP_BARRACKS / 100);
+				Thing_Damage (103+(i*100), HP_REFINERY / 100);
+				Thing_Damage (105+(i*100), HP_PLANT / 100);
+				Thing_Damage (107+(i*100), HP_FACTORY / 100);
+				Thing_Damage (114+(i*100), HP_OBELISK / 100);
+			}
+		}
+		
+		delay (35);
+		ticker++;
+	}
+}

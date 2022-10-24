@@ -1,0 +1,81 @@
+// determine should we pick up Tiberium or leave it there
+script 357 (void) {
+	SetResultValue (0);
+	if (CheckInventory ("IsHarvester") && !CheckInventory ("TiberiumCrystal")) {
+		SetResultValue (1);
+		SetFont ("SMALLFONT");
+		IntelMessage ("\cJTake it back to the \cQRefinery!", false);
+	}
+}
+
+function bool RefineTiberium (int team) {
+	if (Team != PlayerTeam()) {
+		GenericError ("This is not your terminal!");
+		return false;
+	}
+	
+	if (!CheckRefinery (Team))
+		return false;
+	
+	if (!CheckInventory ("IsHarvester") || !CheckInventory ("TiberiumCrystal")) {
+		GenericError ("You need to be a \cfHarvester\c- and have \cdTiberium!");
+		return false;
+	}
+	
+	int i;
+	
+	TakeInventory ("TiberiumCrystal",1);
+	
+	// How much to give for others?
+	int amount = GetCVar ("zeta_tiberium_other");
+	if (EnhancedRefining[Team]) {
+		if(GetCVar ("zeta_tiberium_advperc") == 260)
+			amount = 200;	// [SG] I like nice, round numbers.
+		else {
+		int factor = (GetCVar ("zeta_tiberium_advperc") << 16) / 100;
+		amount = (amount * factor) >> 16;
+		}
+	}
+	
+	int self = PlayerNumber ();
+	if (GetCVar ("zeta_tiberium_self") > 0) {
+		GiveCredits (GetCVar ("zeta_tiberium_self") - GetCVar ("zeta_tiberium_other"));
+		GivePoints (1);
+		AddExperience (50);
+		
+		SetFont ("BIGFONT");
+		if (amount <= 0)
+			HudMessage (s:"You have refined the \cDTiberium\c and have earned \cQ$\cD",
+				d:GetCVar ("zeta_tiberium_self"), s:"\c-!";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+		else
+			HudMessage (s:"You have refined the \cDTiberium!\n\cQ$\cD",
+				d:(GetCVar ("zeta_tiberium_self") - GetCVar ("zeta_tiberium_other") + amount), s:"\c- for you, \cq$\cd", d:amount,
+				s:"\c- for teammates!";
+				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+	}
+	
+	Log (n:0, s:" refines for ", s:TeamNames[PlayerTeam()], s:" Team");
+	TeamMessage (TMSG_TIBREFINE, 0, playernumber());
+	
+	// Distribute amounts to teammeats
+	if (amount > 0) {
+		for (i = 0; i < MAXPLAYERS; i++) {
+			if (!PlayerInGame(i) || GetPlayerInfo (i, PLAYERINFO_TEAM) != PlayerTeam())
+				continue;
+			
+			GivePlayerCredits (i, amount);
+			
+			SetActivator (3800+i);
+			LocalAmbientSound ("powerup/credsound", 127);
+		}
+	} else {
+		LocalAmbientSound ("powerup/credsound", 127);
+	}
+	
+	return true;
+}
+
+// Tiberium refining terminal
+script 110 (int Team)
+	RefineTiberium (1 - team);

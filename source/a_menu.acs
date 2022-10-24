@@ -1,0 +1,670 @@
+// ---------------------------------
+// [Dusk] MENU DISPLAY
+// ---------------------------------
+
+// Flags for MenuTables which determine which tables are built.
+#define MTABLE_CLASSES		1
+#define MTABLE_RESEARCHES	2
+#define MTABLE_MECHS		4
+
+int MenuTables;
+int MenuSelection[2], MenuHorPos;
+
+#define MSC_Init			0
+#define MSC_Draw			1
+#define MSC_Select			2
+#define MSC_Limit			3
+#define MSC_Send			4
+// ----
+#define NUM_MenuScripts		5
+
+#define MENU_X_Controls -0.3
+#define MENU_Y_Controls -0.875
+#define MENU_X_Response -0.3
+#define MENU_Y_Response -0.85
+
+// =============================================================================
+// This is a table of script numbers that instructs the menu code which script
+// to call for menu-specific code.
+// 
+// - Init:   Takes no arguments and returns no arguments. Sets initial stuff in
+//           the menu, such as top-level, category and item names.
+//
+// - Draw:   Takes m0, m1 and y as arguments. m0 is the item's left-side selection,
+//           i.e. which category, m1 is the right-side selection, i.e. which item.
+//           y is the current HUD y position. The script is expected to move the y
+//           cursor as it draws the stuff and to return y afterwards.
+//
+// - Select: This is a server-side script, which takes m0 and m1 as arguments by
+//           default (see Send). This script is called when a player actually requests
+//           something from the menu. Result value should be 1 if the menu is supposed
+//           to close after, or 0 if the menu is supposed to stick around.
+//
+// - Limit:  Takes m0 and m1 as arguments and sets result value to whether the item
+//           in question is off-limits (1) or not (0). This is for the item table
+//           display, off-limits stuff is drawn black.
+//
+// - Send:   Takes m0 and m1 as arguments and returns a value that is sent to the server
+//           The Select script will recieve this value instead of m0 and m1.
+//
+// =============================================================================
+int MenuScripts[MAX_MENU][NUM_MenuScripts] = {
+	// INIT, DRAW, SELECT, LIMIT, SEND
+	// Note: Limit means the limitations of usage. So a limitation of purchasing classes is money and thigns like that.
+	{700, 701, 708, 712,   0}, // Utility
+	{702, 703, 709, 713,   0}, // Purchase
+	{704, 705, 710, 714,   0}, // Research
+	{706, 707, 711, 715,   0}, // Factory
+	{  0,   0,   0,   0,   0}, // Preferences (managed elsewhere)
+	{716, 717, 718, 719, 720}, // Open Deck
+};
+
+// =============================================================================
+// Shortcut function.
+function void MenuResponse (int type, str text) {
+	if (!CheckInventory ("InMenu"))
+		return;
+	
+	// Determine color
+	int color = CR_WHITE;
+	switch (type) {
+	case MSGTYPE_ERROR:
+		color = CR_RED;
+		LocalAmbientSound ("misc/nope", 127);
+		break;
+	case MSGTYPE_SUCCESS:
+		color = CR_GREEN;
+		LocalAmbientSound ("c4/use", 127);
+		break;
+	}
+	
+	// Print it
+	HudMessage (s:text;
+		HUDMSG_FADEOUT, MENU_HID + 100, color, MENU_X_Response, MENU_Y_Response, 2.0, 1.0);
+}
+
+// =============================================================================
+function int MenuCallback (int type, int arg0, int arg1, int arg2) {
+	if (CheckInventory ("InMenu") > MAX_MENU || type < 0 || type >= NUM_MenuScripts)
+		return 0;
+	
+	return ACS_ExecuteWithResult (MenuScripts[CheckInventory ("InMenu") - 1][type], arg0, arg1, arg2);
+}
+
+// =============================================================================
+// Initialize the menu and its variables.
+function void InitMenu (void) {
+	int a, c, i, j;
+	
+	// Reset the cursor
+	MenuSelection[0] = 0;
+	MenuSelection[1] = 0;
+	
+	// Zero the stuff first
+	for (i = 0; i < MAX_MENU_CATEGORIES; i++)
+		for (j = 0; j < MAX_MENU_ITEMS; j++)
+			MenuItems[i][j] = 0;
+	
+	for (i = 0; a < MAX_MENU_CATEGORIES; a++)
+		MenuCategories[a] = 0;
+	
+	// Fill in the menu-specific configuration
+	MenuCallback (MSC_Init, 0, 0, 0);
+}
+
+script SC_MENU_SERVERINIT (int menu) {
+	// Sanity checks
+	if (menu < 0 || menu > MAX_MENU || !PlayerInGame (PlayerNumber ()) || CheckInventory ("InMenu"))
+		terminate;
+	
+	// Preferences are handled elsewhere
+	if (menu == MENU_PREFERENCES)
+		terminate;
+	
+	// Menu-specific stuff
+	switch (menu) {
+	case MENU_Utility:
+		ActivatorSound ("switch/pulse", 127);
+		TakeInventory ("Utility_Percent", 100);
+		break;
+	}
+	
+	// Set menu item
+	SetInventory ("InMenu", menu);
+	
+	// Activate the menu
+	ACS_ExecuteAlways (SC_MENU, 0, PlayerNumber (), menu);
+	
+	// Freeze the player for the duration of menu usage
+	SetPlayerProperty (0, 1, PROP_FROZEN);
+}
+
+// ============================================================================
+// Display name of an add-on. Substitutes superweapon beacon name.
+function str GetAddOnName (int i) {
+	str name = AddOns_str[i][ADK_NAME];
+	
+	// Substitute beacon name
+	if (AddOns_int[i][ADK_ITEM] == ITEM_BEACON)
+		name = cond (PlayerTeam() == TEAM_BLUE, "Ion Cannon Beacon", "Nuclear Strike Beacon");
+	
+	return name;
+}
+
+// ============================================================================
+// Server receives selection from menu user
+script SC_MENU_SELECT (int sel0, int sel1, int primary) NET {
+	if (!CheckInventory ("InMenu"))
+		terminate;
+	
+	// Alt-fire means cancel - release the player and be done with it
+	if (!primary) {
+		LocalAmbientSound ("menu/dismiss", 127);
+		
+		delay (8);
+		SetInventory ("InMenu", 0);
+		SetPlayerProperty (0, 0, PROP_FROZEN);
+		
+		if (CheckInventory ("InMenu") == MENU_Utility) {
+			ActivatorSound ("switch/pulse", 127);
+			ACS_ExecuteAlways (SC_UTILITYHUD, 0);
+		}
+		
+		terminate;
+	}
+	
+	if (MenuScripts[CheckInventory ("InMenu") - 1][MSC_SEND] == 0 &&
+		(sel0 < 0 || sel0 >= MAX_MENU_CATEGORIES || sel1 < 0 || sel1 >= MAX_MENU_ITEMS))
+	{
+		// Out of bounds. This shouldn't happen in normal conditions, but the script is pukable
+		// which allows for arbitrary selection which can definitely be out of bounds.
+		MenuResponse (MSGTYPE_ERROR, "Bad selection!");
+		terminate;
+	}
+	
+	if (!MenuCallback (MSC_Select, sel0, sel1, 0))
+		terminate; // menu didn't desire to close
+	
+	// Release the player out of the menu
+	LocalAmbientSound ("menu/dismiss", 127);
+	
+	delay(8);
+	SetInventory ("InMenu", 0);
+	SetPlayerProperty (0, 0, PROP_FROZEN);
+}
+
+// ============================================================================
+// MENU LOOP
+bool MenuActive = false;
+script SC_MENU (int player) CLIENTSIDE {
+	// If it wasn't us who went to menu, then do nothing
+	// Maybe display a menu icon above his head?
+	if (player != intHolder[i_consoleplayer] || MenuActive)
+		terminate;
+		
+	// Clear intro msg (welcome to all out war!!!)
+	for(int i = 0; i < maxIntroMsg; i++)
+	HudMessage (s:" ";
+	HUDMSG_PLAIN, IntroMsgID + i, CR_GOLD, 0.0, 0.0, 1.0, 1.0, 1.0);
+	
+	// Initialize menu variables
+	InitMenu ();
+	
+	LocalAmbientSound ("menu/prompt", 127);
+	
+	delay (1);
+	DrawMenu ();
+	
+	int MenuDelay = 25;
+	int buttons;
+	int MenuID = CheckInventory ("InMenu");
+	
+	MenuActive = true;
+	
+	while (CheckInventory ("InMenu") && GetHealth () > 0) 
+	{
+		delay (1);
+		
+		if (MenuDelay)
+			MenuDelay--;
+		
+		buttons = GetPlayerInput (PlayerNumber(), INPUT_BUTTONS);
+		if (buttons & BT_FORWARD) {
+			MoveMenuCursorVertical (true);
+			delay (5);
+		}
+		
+		if (buttons & BT_BACK) {
+			MoveMenuCursorVertical (false);
+			delay (5);
+		}
+		
+		if (buttons & BT_MOVERIGHT) {
+			MoveMenuCursorHorizontal (true);
+			delay (5);
+		}
+		
+		if (buttons & BT_MOVELEFT) {
+			MoveMenuCursorHorizontal (false);
+			delay (5);
+		}
+		
+		if (buttons & (BT_ATTACK | BT_ALTATTACK | BT_USE) && MenuDelay <= 0) {
+			// Send the selection to the server
+			int arg0 = MenuSelection[0];
+			int arg1 = MenuSelection[1];
+			
+			// Allow specific menus to tamper with the arg0 value.
+			if (MenuScripts[MenuID - 1][MSC_Send] != 0) {
+				arg0 = MenuCallback (MSC_Send, MenuSelection[0], MenuSelection[1], 0);
+				arg1 = 0;
+			}
+			
+			//Puke3 (SC_MENU_SELECT, arg0, arg1, !(buttons & (BT_ALTATTACK))); // [Cata] Attempting to stop the menu from presisting after pressing "use"
+			RequestScriptPuke(SC_MENU_SELECT, arg0, arg1, !(buttons & (BT_ALTATTACK)));
+			
+			// Tell the user if we used alt-fire to dismiss
+			if (buttons & BT_ALTATTACK)
+				Log (s:"Selection cancelled.");
+			
+			MenuDelay = 25;
+		}
+	}
+	
+	ClearMenu ();
+}
+
+function void ClearMenu (void) {
+	// Clear top-level name and categories
+	for (int i = 0; i < MAX_MENU_CATEGORIES + 1; i++)
+		ClearHudMessage (MENU_HID + i);
+	
+	// Clear item header
+	for (i = 0; i <= MAX_MENU_ITEMS; i++)
+		ClearHudMessage (MENU_HID + 10 + i);
+	
+	// Clear item description and arrow markers
+	for (i = 0; i <= 3; i++) {
+		ClearHudMessage (MENU_HID + 20 + i);
+		ClearHudMessage (MENU_HID + 60 + i);
+	}
+	ClearHudMessage (MENU_HID + 50);
+	ClearHudMessage (MENU_HID + 51);
+	ClearHudMessage (MENU_HID + 52);
+	
+	// Menu ends.
+	MenuActive = false;
+}
+
+// ============================================================================
+// Is the selection an action category?
+function int IsActionCategory (int i) {
+	// Action categories don't have items.
+	return (MenuItems[i][0] == 0);
+}
+
+// ============================================================================
+// Cursor moves up/down
+function void MoveMenuCursorVertical (bool up) {
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		return;
+	
+	LocalAmbientSound ("menu/cursor", 127);
+	int levelnum = GetLevelInfo (LEVELINFO_LEVELNUM);
+	int h = MenuHorPos;
+	
+	// When moving left selection up/down, right selection resets.
+	if (!h)
+		MenuSelection[1] = 0;
+	
+	// Figure out the amount of items in the current category.
+	int max = NumCategoryItems();
+	
+	// If there's no items, we can't move anything anywhere.
+	if (!max)
+		return;
+	
+	// Move the cursor
+	if (!up) {
+		if (MenuSelection[h] >= max)
+			MenuSelection[h] = 0;
+		else
+			MenuSelection[h]++;
+	} else {
+		if (MenuSelection[h] <= 0)
+			MenuSelection[h] = max;
+		else
+			MenuSelection[h]--;
+	}
+	
+	// Refresh
+	DrawMenu ();
+}
+
+// ============================================================================
+// Cursor moves right/left
+function void MoveMenuCursorHorizontal (bool right) {
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		return;
+	
+	// Can't move "action categories"
+	if (IsActionCategory (MenuSelection[0]))
+		return;
+	
+	// Not moving anywhere
+	if (right == MenuHorPos)
+		return;
+	
+	LocalAmbientSound ("menu/cursor", 127);
+	MenuHorPos = !MenuHorPos;
+	
+	DrawMenu ();
+}
+
+// ============================================================================
+/* Classes are divided into four groups:
+ *	- generic (no dependency)
+ *	- combat (barracks dependency)
+ *	- power (centre dependency)
+ *	- support (flagged with CF_Support)
+ */
+
+// Checks the given counter against overflows
+function void CheckMenuClassCount (int v, str n) {
+	// This should NEVER happen with properly configured menus.
+	if (v >= MAX_MENU_ITEMS)
+		FatalError (strparam (s:"Too many ", s:n, s:" registered!"));
+}
+
+// ============================================================================
+// Fills the MenuClasses array with appropriate class values. The array
+// determines where in the menu certain classes are positioned.
+// MenuClasses[1][2] = the class at the second (1) item in the third (2)
+// category. The value is a class ID.
+// TODO: This function should sort classes by cost!
+function void BuildMenuClasses (void) {
+	if (MenuTables & MTABLE_CLASSES)
+		return;
+	
+	int c0, c1, c2, c3;
+	int f, d;
+	
+	int i, j;
+	
+	// First, set menu items to -1 - this means the slot is empty.
+	for (i = 0; i <= 3; i++)
+		for (j = 0; j < MAX_MENU_ITEMS; j++)
+			MenuClasses[i][j] = -1;
+	
+	for (i = 0; i < NUMCLASSES; i++) {
+		f = Classes_int[i][CK_FLAGS];
+		d = Classes_int[i][CK_DEPENDENCY];
+		
+		if (f & CF_Support) {
+			// Support classes go into support category.
+			CheckMenuClassCount (c3, "support classes");
+			MenuClasses[3][c3] = i;
+			c3++;
+		} else if (d == DEP_CENTRE) {
+			// Power classes
+			CheckMenuClassCount (c2, "power classes");
+			MenuClasses[2][c2] = i;
+			c2++;
+		} else if (d == DEP_BARRACKS) {
+			// Combat classes
+			CheckMenuClassCount (c1, "combat classes");
+			MenuClasses[1][c1] = i;
+			c1++;
+		} else {
+			// Generic classes
+			CheckMenuClassCount (c0, "generic classes");
+			MenuClasses[0][c0] = i;
+			c0++;
+		}
+	}
+	
+	MenuTables |= MTABLE_CLASSES;
+}
+
+// ============================================================================
+// Same but for researches
+function void BuildMenuResearches (void) {
+	if (MenuTables & MTABLE_RESEARCHES)
+		return;
+	
+	int c0, c1, c2;
+	
+	for (int i = 0; i <= 3; i++)
+		for (int j = 0; j < MAX_MENU_ITEMS; j++)
+			MenuResearches[i][j] = -1;
+	
+	for (int r = 0; r < NUM_RESEARCHES; r++) {
+		switch (Researches_int[r][RCK_CATEGORY]) {
+		case RC_CAT_UPGRADE:
+			CheckMenuClassCount (c0, "upgrade researches");
+			MenuResearches[0][c0] = r;
+			c0++;
+			break;
+		case RC_CAT_EXTENSION:
+			CheckMenuClassCount (c1, "extension researches");
+			MenuResearches[1][c1] = r;
+			c1++;
+			break;
+		case RC_CAT_ADDON:
+			CheckMenuClassCount (c2, "addon researches");
+			MenuResearches[2][c2] = r;
+			c2++;
+			break;
+		}
+	}
+	
+	MenuTables |= MTABLE_RESEARCHES;
+}
+
+// ============================================================================
+// Same but for mechs
+function void BuildMenuMechs (void) {
+	if (MenuTables & MTABLE_MECHS)
+		return;
+	
+	int c0, c1, c2;
+	
+	for (int i = 0; i < NUM_MECH_WEIGHTS; i++)
+		for (int j = 0; j < MAX_MENU_ITEMS; j++)
+			MenuMechs[i][j] = -1;
+	
+	for (int m = 0; m < NUM_MECHS; m++) {
+		switch (Mechs_int[m][MK_WEIGHT])
+		{
+		case MECHWEIGHT_LIGHT:
+			CheckMenuClassCount (c0, "light mechs");
+			MenuMechs[MECHWEIGHT_LIGHT][c0] = m;
+			c0++;
+			break;
+		case MECHWEIGHT_MEDIUM:
+			CheckMenuClassCount (c1, "medium mechs");
+			MenuMechs[MECHWEIGHT_MEDIUM][c1] = m;
+			c1++;
+			break;
+		case MECHWEIGHT_HEAVY:
+			CheckMenuClassCount (c2, "heavy mechs");
+			MenuMechs[MECHWEIGHT_HEAVY][c2] = m;
+			c2++;
+			break;
+		}
+
+	}
+	
+	MenuTables |= MTABLE_MECHS;
+}
+
+// ============================================================================
+// DrawMenu: Draws the menu to the screen.
+#define MENU_SPACING 0.03
+#define MENU_BIGSPACING 0.03
+
+// [Cata] Draws menu options
+function void DrawMenu (void) 
+{
+	if (!CheckInventory ("InMenu") || CheckInventory ("InMenu") == MENU_PREFERENCES)
+		return;
+	
+	int i;
+	
+	SetFont ("BIGFONT");
+	
+	// Print top-level name
+	HudMessage (s:MenuName;
+		HUDMSG_PLAIN, MENU_HID, CR_YELLOW, UMENU_X1, UMENU_Y1, 0.0);
+	
+	// Print categories
+	for (i = 0; i < MAX_MENU_CATEGORIES; i++) 
+	{
+		int name = MenuCategories[i];
+		
+		if (name != 0 && name != "")
+			HudMessage (s:MenuItemColor (0, i), s:name;
+				HUDMSG_PLAIN, MENU_HID + 1 + i, CR_UNTRANSLATED, UMENU_X2, UMENU_Y2 - (i*MENU_BIGSPACING), 0.0);
+		else
+			ClearHudMessage (MENU_HID + 1 + i);
+	}
+	
+	int levelnum = GetLevelInfo (LEVELINFO_LEVELNUM);
+	int m0 = MenuSelection[0];
+	int m1 = MenuSelection[1];
+	
+	int y;
+	
+	// With action categories, there is no item list.
+	if (IsActionCategory (m0)) 
+	{
+		for (i = 0; i <= MAX_MENU_ITEMS; i++)
+			ClearHudMessage (MENU_HID + 10 + i);
+		
+		y = UMENU_Y3;
+	} 
+	else 
+	{
+		// Print the item names.
+		for (i = 0; i < MAX_MENU_ITEMS; i++) {
+			name = MenuItems[m0][i];
+			
+			if (name != 0 && name != "")
+				HudMessage (s:MenuItemColor (1, i), s:name;
+					HUDMSG_PLAIN, MENU_HID + 10 + i, CR_UNTRANSLATED, UMENU_X3, UMENU_Y3 - (i*MENU_BIGSPACING), 0.0);
+			else // Was zero - clear it
+				ClearHudMessage (MENU_HID + 10 + i);
+		}
+		
+		y = UMENU_Y4;
+	}
+	
+	// Print information of current selection
+	if (!IsActionCategory (m0)) 
+	{
+		// Name
+		SetFont ("BIGFONT");
+		HudMessage (s:MenuItems[m0][m1];
+			HUDMSG_PLAIN, MENU_HID + 20, CR_YELLOW, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING;
+	}
+	
+	SetFont ("CONFONT");
+	
+	y = MenuCallback (MSC_Draw, m0, m1, y);
+	
+	// Draw usage info
+	SetHudFont ();
+	str msg = sprint6f ("Controls: %k %k %k %k\nSelect: %k, dismiss: %k",
+		"+forward", "+back", "+moveleft", "+moveright", "+attack", "+altattack");
+	HudMessage (s:msg; HUDMSG_PLAIN, MENU_HID + 52, CR_GOLD, MENU_X_Controls, MENU_Y_Controls, 0.0);
+}
+
+// ============================================================================
+// MenuItemColor: Determines how should a menu entry be colored
+// i: horizontal position of the item, value matches with MenuHorPos
+// j: vertical position of the item, value matches with MenuPosition[MenuHorPos]
+function str MenuItemColor (int i, int j) {
+	int isactcat = !i && IsActionCategory (j);
+	
+	// Item is on the left side and is our current highlight - display in green
+	// or white, depending on selected column. Action categories are colored
+	// yellow.
+	if (!i && MenuSelection[0] == j) 
+	{
+		if (!MenuHorPos) 
+		{
+			if (isactcat)
+				return "\cJ";
+			
+			return "\cD";
+		} 
+		else 
+		{
+			if (isactcat)
+				return "\cI";
+			
+			return "\cJ";
+		}
+	}
+	
+	// Item is on the left side and is not our current highlight - display in dark green.
+	if (!i && MenuSelection[0] != j && !MenuHorPos) 
+	{
+		if (isactcat)
+			return "\cF";
+		
+		return "\cQ";
+	}
+	
+	// If the item is under a menu-specific limit, display its list entry in black.
+	if (i) 
+	{
+		if (MenuCallback (MSC_Limit, MenuSelection[0], j, 0) == true) 
+		{
+			// If it is highlighted, display in dark gray
+			if (MenuHorPos && MenuSelection[1] == j)
+				return "\cU";
+			else
+				return "\cM";
+		}
+	}
+	
+	// The selection is on the right side, is not disabled out
+	// and is our current highlight. Display in green or white,
+	// depending on which column is highlighted.
+	if (i && MenuSelection[1] == j) 
+	{
+		if (MenuHorPos)
+			return "\cD";
+		else
+			return "\cJ";
+	}
+	
+	// Item is on the right side, but it is not our current highlight.
+	// Display in dark green or dark gray.
+	if (i && MenuSelection[1] != j && MenuHorPos)
+		return "\cQ";
+	
+	return "\cU";
+}
+
+function int NumCategoryItems (void) {
+	int h = MenuHorPos;
+	int m0 = MenuSelection[0];
+	int max = 0;
+	
+	while (1) {
+		max++;
+		
+		if (h) {
+			if (max == MAX_MENU_ITEMS - 1 || MenuItems[m0][max + 1] == 0)
+				break;
+		} else {
+			if (max == MAX_MENU_CATEGORIES - 1 || MenuCategories[max + 1] == 0)
+				break;
+		}
+	}
+	
+	return max;
+}

@@ -1,0 +1,179 @@
+//CHTU
+
+// [JD] Chemical Turret - Sprites by Madcat.
+actor Utility_ChemTurretRed : Utility_TurretBase {
+	obituary "%o died to a \cgRed \c-chemical turret."
+	health 300
+	painchance 50
+	//seesound "turret/sight"
+	attacksound "Chem/fire"
+	activesound "turret/sight"
+	DamageFactor "Chemical", 0.0
+	DamageFactor "Fire", 2.0
+	states {
+	Spawn:
+		CHTU AA 0 A_CheckSight("Death.Deconstruction")
+		CHTU A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
+	Idle:
+		CHTU A 0 A_TakeInventory ("GunTurretClip", 23)
+		CHTU A 0 A_StopSound (6)
+		CHTU A 2 A_Look
+		goto Idle+2
+	See:
+		CHTU A 2
+		CHTU A 0 A_GiveInventory("IsRed",1)
+		CHTU A 0 A_ChangeFlag("FRIENDLY",0)
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		CHTU A 0 A_JumpIfTargetInLOS("Missile")
+		CHTU A 0 A_TakeInventory("GunTurretClip",23)
+		CHTU A 0 A_ClearTarget
+		goto Spawn+3
+	Clear:
+		CHTU A 2 A_ClearTarget
+		goto See
+	// [JD] Is this state even used? Idk...
+	See3:
+		CHTU A 1 A_JumpIfInTargetInventory ("IsBlue", 1, 1)
+		goto Clear
+		CHTU A 0 A_Jump(16,"MissileGo")
+		CHTU A 0 A_JumpIfCloser(128,"MissileGo")
+		goto See
+	MissileCheck:
+		CHTU A 0 A_JumpIfInTargetInventory ("IsBlue", 1, 1)
+		goto Clear
+		CHTU A 0 A_Chase("","",CHF_DONTMOVE)
+		CHTU A 0 
+		goto MissileGo+4
+	Missile:
+		CHTU A 0 
+		CHTU A 1 A_JumpIfInTargetInventory ("IsBlue", 1, 1)
+		goto Clear
+		CHTU A 0 A_JumpIfInTargetInventory("StealthMode",1,"Clear")
+		CHTU A 1 A_JumpIfCloser(1024,"MissileGo")
+		CHTU A 0 
+		goto Clear
+	MissileGo:
+		CHTU B 8 A_FaceTarget
+		TNT1 A 0 A_JumpIfCloser(1024, 1)
+		Goto Clear
+		CHTU F 0 A_CPosRefire
+		CHTU B 2 A_PlaySoundEx("Chem/fire","SoundSlot6",1)
+		CHTU B 0 A_JumpIfInventory("GunTurretClip",23,"Pain")
+		CHTU B 0 A_CustomMissile("ChemicalShot", 46)
+		CHTU B 0 A_FaceTarget
+		CHTU B 2 BRIGHT
+		CHTU B 1 BRIGHT
+		CHTU B 0 A_CustomMissile("ChemicalShot", 46)
+		CHTU B 0 A_PlaySoundEx("Chem/fire","Weapon")
+		CHTU B 0 A_FaceTarget
+		CHTU B 2 BRIGHT
+		CHTU B 1 BRIGHT A_ChangeFlag("FRIENDLY",0)
+		TNT1 A 0 A_JumpIfCloser(1024, 1)
+		Goto Clear
+		CHTU F 0 A_CPosRefire
+		CHTU F 0 A_GiveInventory("GunTurretClip",1)
+		goto MissileCheck
+	Pain:
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		CHTU A 0 A_ClearTarget
+		CHTU A 9 A_TakeInventory("GunTurretClip",23)
+		goto See
+	Death:  
+		TC4T A 0     
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		TC4T A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32)
+		TC4T A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("FlameWallDecay")
+		TNT1 A 4
+		stop
+	}
+}
+
+actor Utility_ChemTurretBlue : Utility_TurretBase {
+	obituary "%o died to a \chBlue \c-chemical turret."
+	health 300
+	painchance 50
+	//seesound "turret/sight"
+	attacksound "Chem/fire"
+	activesound "turret/sight"
+	DamageFactor "Chemical", 0.0
+	DamageFactor "Fire", 2.0
+	states {
+	Spawn:
+		CHTU AA 0 A_CheckSight("Death.Deconstruction")
+		CHTU A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
+	Idle:
+		CHTU A 0 A_TakeInventory ("GunTurretClip", 23)
+		CHTU A 0 A_StopSound (6)
+		CHTU A 2 A_Look
+		goto Idle+2
+	See:
+		CHTU A 2
+		CHTU A 0 A_GiveInventory("IsBlue",1)
+		CHTU A 0 A_ChangeFlag("FRIENDLY",0)
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		CHTU A 0 A_JumpIfTargetInLOS("Missile")
+		CHTU A 0 A_TakeInventory("GunTurretClip",12)
+		CHTU A 0 A_ClearTarget
+		goto Spawn+3
+	See3:
+		CHTU A 1 A_JumpIfInTargetInventory ("IsRed", 1, 1)
+		goto Clear
+		CHTU A 0 A_Jump(16,"MissileGo")
+		CHTU A 0 A_JumpIfCloser(128,"MissileGo")
+		goto See
+	Clear:
+		CHTU A 2 A_ClearTarget
+		goto See
+	MissileCheck:
+		CHTU A 0 A_JumpIfInTargetInventory ("IsRed", 1, 1)
+		goto Clear
+		CHTU A 0 A_Chase("","",CHF_DONTMOVE)
+		CHTU A 0 
+		goto MissileGo+4
+	Missile:
+		CHTU A 0 
+		CHTU A 1 A_JumpIfInTargetInventory ("IsRed", 1, 1)
+		goto Clear
+		CHTU A 0 A_JumpIfInTargetInventory("StealthMode",1,"Clear")
+		CHTU A 1 A_JumpIfCloser(1024,"MissileGo")
+		CHTU A 0 
+		goto Clear
+	MissileGo:
+		CHTU B 8 A_FaceTarget
+		TNT1 A 0 A_JumpIfCloser(1024, 1)
+		Goto Clear
+		CHTU F 0 A_CPosRefire
+		CHTU B 2 A_PlaySoundEx("Chem/fire","SoundSlot6",1)
+		CHTU B 0 A_JumpIfInventory("GunTurretClip",23,"Pain")
+		CHTU B 0 A_CustomMissile("ChemicalShot", 46)
+		CHTU B 0 A_FaceTarget
+		CHTU B 2 BRIGHT
+		CHTU B 1 BRIGHT 
+		CHTU B 0 A_CustomMissile("ChemicalShot", 46)
+		CHTU B 0 A_PlaySoundEx("Chem/fire","Weapon")
+		CHTU B 0 A_FaceTarget
+		CHTU B 2 BRIGHT
+		CHTU B 1 BRIGHT A_ChangeFlag("FRIENDLY",0)
+		TNT1 A 0 A_JumpIfCloser(1024, 1)
+		Goto Clear
+		CHTU F 0 A_CPosRefire
+		CHTU F 0 A_GiveInventory("GunTurretClip",1)
+		goto MissileCheck
+	Pain:
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		CHTU A 0 A_ClearTarget
+		CHTU A 9 A_TakeInventory("GunTurretClip",23)
+		goto See
+	Death:  
+		TC4T A 0     
+		CHTU A 0 A_StopSoundEx("SoundSlot6")
+		TC4T A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("ExplosionMain", 0, 0, 32)
+		TC4T A 0 A_PlaySound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("FlameWallDecay")
+		TNT1 A 4
+		stop
+	}
+}

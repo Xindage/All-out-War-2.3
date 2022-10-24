@@ -1,0 +1,103 @@
+Actor "AdvancedSniperRifle" : AOWWeapon
+{
+  radius 20
+  height 16
+  Weapon.SelectionOrder 2
+  weapon.kickback 150
+  scale 0.6
+  obituary "%o was quick-scoped by %k's Advanced Sniper Rifle."
+  DropItem "SniperRifleWeak"
+  inventory.pickupmessage "You got the Advanced Sniper Rifle!"
+  weapon.ammotype "RifleAmmo"
+  weapon.ammouse 1
+  weapon.ammogive 50
+  Weapon.UpSound "awpreld"
+  states
+  {
+  Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItem("SniperRifleWeak")
+    stop
+  Ready:
+		SNP2 AA 0 A_JumpIfInventory ("IsZoomed", 1, "ReadyZoomed")
+    SNP2 A 1 A_WeaponReady
+    wait
+	ReadyZoomed:
+		TNT1 A 1 A_WeaponReady
+		loop
+  Deselect: 
+	SNP2 AA 0 A_JumpIfInventory ("IsZoomed", 1, "AltFireOff")
+    SNP2 A 1 A_Lower
+    loop
+  Select:
+    SNP2 A 1 A_Raise
+    loop
+  Fire:
+	  TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+	  TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+	  TNT1 A 0 A_JumpIfInventory ("IsZoomed", 1, "FireZoomed")
+      SNP2 B 1 A_GunFlash
+	  SNP2 B 0 a_playsoundex("AWPFIRE", chan_auto, 0, 0)
+	  SNP2 B 0 a_railattack(75, 0, 1, "none", "none", RGF_SILENT, 0, "RiflePuff")
+	  SNP2 B 0 A_FireBullets (0.0, 0.0, -1, 0, "RiflePuff")
+	  SHT2 C 0 a_quake(6, 6, 0, 1)
+	  SNP2 CDE 1 bright a_setpitch(pitch - 0.75)
+	  SNP2 F 1 bright a_setpitch(pitch - 0.75)
+	  SNP2 GHIJ 1 a_setpitch(pitch + 0.75)
+	  SNP2 KLMNOPQRST 1
+	  SNP2 T 0 a_playsoundex("AWPBACK", chan_auto, 0, 0)
+	  SNP2 UVWXY 1
+	  SNP2 G 0 a_playsoundex("AWPFORD", chan_auto, 0, 0)
+	  SNP2 YXWVUTQPON 1
+	  SNP2 L 0 A_SpawnItemEx ("RifleShellCasing", (cos(-pitch)*36), 12, 29+(sin(-pitch)*36),cos(-pitch)*0,random(5, 8), 0,0,0,0)
+	  SNP2 MNOONMLKJIHGF 1
+	  SNP3 DCB 1
+	  SNP2 A 1
+      SNP2 A 1 A_ReFire
+      Goto Ready
+	FireZoomed:
+		TNT1 A 0 A_ZoomFactor (5.8)
+		TNT1 A 1 A_GunFlash
+		TNT1 A 0 a_playsoundex("AWPFIRE", chan_auto, 0, 0)
+		TNT1 A 0 a_railattack(75, 0, 1, "none", "none", RGF_SILENT, 0, "RiflePuff")
+		TNT1 A 0 A_FireBullets (0.0, 0.0, -1, 0, "RiflePuff")
+		TNT1 A 0 a_quake(6, 6, 0, 1)
+		TNT1 AAAA 1 
+		TNT1 A 1 bright 
+		TNT1 AAAA 1 
+		goto ReloadZoomed
+	ReloadZoomed:
+		TNT1 A 0 A_ZoomFactor (6.00)
+		TNT1 A 9
+		TNT1 A 0 a_playsoundex("AWPBACK", chan_auto, 0, 0)
+		TNT1 A 5
+		TNT1 A 0 a_playsoundex("AWPFORD", chan_auto, 0, 0)
+		TNT1 A 10
+		TNT1 L 0 A_SpawnItemEx ("RifleShellCasing", (cos(-pitch)*36), 12, 29+(sin(-pitch)*36),cos(-pitch)*0,random(5, 8), 0,0,0,0)
+		TNT1 A 17
+		TNT1 A 1 A_ReFire
+	goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		SNP2 A 1 A_JumpIfInventory ("IsZoomed", 1, "AltFireOff")
+		SNP2 A 0 ACS_ExecuteAlways (916, 0, 0)
+		SNP2 A 0 A_GiveInventory ("IsZoomed", 1)
+		SNP2 A 0 A_PlaySound ("rc50/zoomin")
+		SNP2 A 7
+		TNT1 A 10 A_ZoomFactor (6.0)
+		goto Ready
+	AltFireOff:
+		TNT1 A 0 A_TakeInventory ("IsZoomed", 1)
+		TNT1 A 0 A_PlaySound ("rc50/zoomout")
+		TNT1 A 3 A_ZoomFactor (1.0)
+		TNT1 A 7 ACS_ExecuteAlways (916, 0, 0)
+		SNP2 A 10
+		goto Ready
+	Flash:
+	  NULL A 3 bright A_Light1
+	  NULL A 3 bright A_Light2
+	  NULL A 0 bright A_Light0
+	  stop
+    }
+}

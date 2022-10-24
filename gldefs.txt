@@ -1,0 +1,1221 @@
+Pointlight FLASH1
+{
+Color 0.8 0.8 0.0
+Size 32
+}
+
+Object Flash
+{
+    frame TNT1 { light FLASH1 }
+}
+
+Pointlight FLASH1
+{
+Color 0.8 0.8 0.0
+Size 32
+}
+
+Object Flash
+{
+    frame TNT1 { light FLASH1 }
+}
+
+Flickerlight FLASHBANG
+{
+Color 1.0 1.0 1.0
+Size 3024
+secondarySize 2024
+	chance 0.25
+}
+
+/* [TT] Uncomment this once flash bangs are added back
+Object Flashbang-Flare
+{
+    frame PPCX { light FLASHBANG }
+}
+*/
+
+flickerlight VPUFF
+{
+	color 0.3 0.3 1.0
+	size 10
+	secondarySize 16
+	chance 0.25
+}
+
+Object VoltagePuff
+{
+    frame VOLX { light VPUFF }
+}
+
+Object VoltagePuff2
+{
+    frame VOLX { light VPUFF }
+}
+
+/* // [TT] Deprecated
+Object VoltagePuffBlue
+{
+    frame VOLX { light VPUFF }
+}
+*/
+
+//Object VoltageDecay
+//{
+//   frame VOLX { light VPUFF }
+//}
+
+flickerlight VSPARK
+{
+	color 0.3 0.3 1.0
+	size 5
+	secondarySize 7
+	chance 0.25
+}
+
+//Object VoltageSpark
+//{
+//    frame VOLX { light VSPARK }
+//}
+
+Object HHBulletPuff
+{
+    frame PUFFA { light BPUFF1 }
+    frame PUFFB { light BPUFF2 }
+}
+
+Object HandgunPuff
+{
+    frame PUFFA { light BPUFF1 }
+    frame PUFFB { light BPUFF2 }
+}
+
+/* // [TT] Deprecated
+Object HandgunPuffBlue
+{
+    frame PUFFA { light BPUFF1 }
+    frame PUFFB { light BPUFF2 }
+}
+*/
+
+Object RiflePuff
+{
+    frame PUFFA { light BPUFF1 }
+    frame PUFFB { light BPUFF2 }
+}
+
+/* // [TT] Deprecated
+Object RiflePuffBlue
+{
+    frame PUFFA { light BPUFF1 }
+    frame PUFFB { light BPUFF2 }
+}
+*/
+
+flickerlight LPUFF1
+{
+    color 1.0 0.0 0.0
+    size 6
+    secondarySize 8
+    chance 0.8
+}
+
+flickerlight LPUFF2
+{
+    color 1.0 0.0 0.0
+    size 3
+    secondarySize 4
+    chance 0.8
+}
+
+flickerlight LPUFF1B
+{
+    color 0.0 0.0 1.0
+    size 6
+    secondarySize 8
+    chance 0.8
+}
+
+flickerlight LPUFF2B
+{
+    color 0.0 0.0 1.0
+    size 3
+    secondarySize 4
+    chance 0.8
+}
+
+Object LaserPuff
+{
+    frame VOLX { light LPUFF1 }
+}
+
+Object LaserPuffBlue
+{
+    frame VOLX { light LPUFF1B }
+}
+
+flickerlight GPUFF1
+{
+    color 1.0 0.0 0.0
+    size 12
+    secondarySize 16
+    chance 0.8
+}
+
+Object GaussPuff
+{
+    frame VOLX { light GPUFF1 }
+}
+
+flickerlight GPUFF1B
+{
+    color 0.0 0.0 1.0
+    size 12
+    secondarySize 16
+    chance 0.8
+}
+
+Object GaussPuffBlue
+{
+    frame VOLX { light GPUFF1B }
+}
+
+Flickerlight ExplosivePuffS
+{
+	Color 1.0 0.7 0.0
+	Size 20
+	SecondarySize 24
+	Chance 0.45
+}
+
+object ExplosionSmaller
+{
+	frame TNT1 { light ExplosivePuffS }
+}
+
+Flickerlight ExplosivePuff
+{
+	Color 1.0 0.7 0.0
+	Size 28
+	SecondarySize 32
+	Chance 0.45
+}
+
+object ExplosionSmall
+{
+	frame TNT1 { light ExplosivePuff }
+}
+
+Flickerlight ExplosiveSpawn
+{
+	Color 1.0 0.7 0.0
+	Size 60
+	SecondarySize 68
+	Chance 0.45
+}
+
+object ExplosionMain
+{
+	frame TNT1 { light ExplosiveSpawn }
+}
+
+Flickerlight ExplosiveSpawnB
+{
+	Color 1.0 0.7 0.0
+	Size 104
+	SecondarySize 112
+	Chance 0.45
+}
+
+object ExplosionMainLarge
+{
+	frame TNT1 { light ExplosiveSpawnB }
+}
+
+///////Chemical stuff
+/////////////////////
+
+flickerlight TiberiumShot
+{
+	color 0.1 1.0 0.0
+	size 42
+	secondarySize 50
+	chance 0.30
+}
+
+Object TiberiumDart
+{
+	frame E21X { light TiberiumShot }
+	frame TNT1 { light Chemical }
+}
+
+/* [TT] Deprecated
+Object TiberiumDartBlue
+{
+	frame E21X { light TiberiumShot }
+	frame TNT1 { light Chemical }
+}
+*/
+
+flickerlight Tibcrystalnorm
+{
+	color 0.4 1.0 0.0
+	size 39
+	secondarySize 34
+	chance 0.04
+}
+
+Object TiberiumCrystal
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+Object TiberiumCrystalGiver
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+Object TiberiumCrystalThrown
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+Object TiberiumCrystalSitting
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+/* [TT] Deprecated
+Object TiberiumCrystalThrownBlue
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+Object TiberiumCrystalSittingBlue
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+*/
+
+Object TiberiumCrystalDropped
+{
+	frame TIBW { light Tibcrystalnorm }
+	frame TIBE { light Tibcrystalnorm }
+}
+
+//////It's Anthrax D:
+
+flickerlight Anthrax
+{
+	color 0.0 0.6 0.0
+	size 30
+	secondarySize 40
+	chance 0.30
+}
+
+flickerlight Chemical
+{
+	color 0.1 1.0 0.0
+	size 35
+	secondarySize 45
+	chance 0.30
+}
+
+object ChemicalCorpse
+{
+	frame CDT1 { light Chemical }
+	frame CURNA { light Chemical }
+	frame CURNB { light Chemical }
+	frame CURNC { light Chemical }
+	frame CURND { light Chemical }
+	frame CURNE { light Chemical }
+	frame CURNF { light Chemical }
+	frame CURNG { light Chemical }
+	frame CURNH { light Chemical }
+	frame CURNI { light Chemical }
+	frame CURNJ { light Chemical }
+	frame CURNK { light Chemical }
+	frame CURNL { light Chemical }
+	frame CURNM { light Chemical }
+	frame CURNN { light Chemical }
+	frame CURNO { light Chemical }
+	frame CURNP { light Chemical }
+	frame CURNQ { light Chemical }
+}
+
+object ChemicalCorpseFemale
+{
+	frame CDT1 { light Chemical }
+	frame CURNA { light Chemical }
+	frame CURNB { light Chemical }
+	frame CURNC { light Chemical }
+	frame CURND { light Chemical }
+	frame CURNE { light Chemical }
+	frame CURNF { light Chemical }
+	frame CURNG { light Chemical }
+	frame CURNH { light Chemical }
+	frame CURNI { light Chemical }
+	frame CURNJ { light Chemical }
+	frame CURNK { light Chemical }
+	frame CURNL { light Chemical }
+	frame CURNM { light Chemical }
+	frame CURNN { light Chemical }
+	frame CURNO { light Chemical }
+	frame CURNP { light Chemical }
+	frame CURNQ { light Chemical }
+}
+
+/* [TT] Deprecated
+object ChemFireRemains
+{
+	frame TIBX { light Chemical }
+}
+*/
+
+object ChemicalShot
+{
+	frame TIBX { light Chemical }
+}
+
+/* [TT] Deprecated
+object ChemicalShotBlue
+{
+	frame TIBX { light Chemical }
+}
+*/
+
+object AnthraxDecay
+{
+	frame TNT1 { light Anthrax }
+}
+
+/* [TT] Deprecated
+object AnthraxDecayBlue
+{
+	frame TNT1 { light Anthrax }
+}
+*/
+
+object AnthraxDecaySpecial
+{
+	frame TNT1 { light Anthrax }
+}
+
+object ChemicalShotSmall
+{
+	frame TIBX { light Anthrax }
+}
+
+///////Fire stuff
+/////////////////
+
+flickerlight Flame
+{
+	color 1.0 0.6 0.0
+	size 35
+	secondarySize 45
+	chance 0.30
+}
+
+object FlameThrowerFire
+{
+	frame FLMX { light Flame }
+}
+
+/* [TT] Deprecated
+object FlameThrowerFireBlue
+{
+	frame FLMX { light Flame }
+}
+*/
+
+flickerlight Burn
+{
+	color 1.0 0.6 0.0
+	size 45
+	secondarySize 55
+	chance 0.30
+}
+
+object BurningCorpse
+{
+	frame BDT1 { light Burn }
+	frame BURNA { light Burn }
+	frame BURNB { light Burn }
+	frame BURNC { light Burn }
+	frame BURND { light Burn }
+	frame BURNE { light Burn }
+	frame BURNF { light Burn }
+	frame BURNG { light Burn }
+	frame BURNH { light Burn }
+	frame BURNI { light Burn }
+	frame BURNJ { light Burn }
+	frame BURNK { light Burn }
+	frame BURNL { light Burn }
+	frame BURNM { light Burn }
+	frame BURNN { light Burn }
+	frame BURNO { light Burn }
+	frame BURNP { light Burn }
+	frame BURNQ { light Burn }
+}
+
+object BurningCorpseFemale
+{
+	frame BDT1 { light Burn }
+	frame BURNA { light Burn }
+	frame BURNB { light Burn }
+	frame BURNC { light Burn }
+	frame BURND { light Burn }
+	frame BURNE { light Burn }
+	frame BURNF { light Burn }
+	frame BURNG { light Burn }
+	frame BURNH { light Burn }
+	frame BURNI { light Burn }
+	frame BURNJ { light Burn }
+	frame BURNK { light Burn }
+	frame BURNL { light Burn }
+	frame BURNM { light Burn }
+	frame BURNN { light Burn }
+	frame BURNO { light Burn }
+	frame BURNP { light Burn }
+	frame BURNQ { light Burn }
+}
+
+flickerlight FlameDecay
+{
+	color 1.0 0.6 0.0
+	size 45
+	secondarySize 55
+	chance 0.30
+}
+
+object FlameDecay
+{
+	frame TNT1 { light FlameDecay }
+}
+
+/* [TT] Deprecated
+object FlameDecayBlue
+{
+	frame TNT1 { light FlameDecay }
+}
+*/
+
+object FlameDecayStrong
+{
+	frame TNT1 { light FlameDecay }
+}
+
+/* [TT] Deprecated
+object FlameDecayStrongBlue
+{
+	frame TNT1 { light FlameDecay }
+}
+*/
+
+object FlameWallDecay
+{
+	frame TNT1 { light Burn }
+}
+
+/* [TT] Deprecated
+object FlameWallDecayBlue
+{
+	frame TNT1 { light Burn }
+}
+*/
+
+//object FlameThrowerFireRemains
+//{
+//	frame FLMB { light Burn }
+//}
+
+///////Awesome Explosions
+/////////////////////////
+
+object HeavyMissile
+{
+    frame MISR { light ROCKET }
+}
+
+/* [TT] Deprecated
+object HeavyMissileBlue
+{
+    frame MISB { light ROCKET }
+}
+*/
+
+object HeavyHomingMissile
+{
+    frame MISR { light ROCKET }
+}
+
+/* [TT] Deprecated
+object HeavyHomingMissileBlue
+{
+    frame MISB { light ROCKET }
+}
+*/
+
+///////Plasma Related stuff
+///////////////////////////
+
+flickerlight PlasmaReds
+{
+	color 1.0 0.1 0.1
+	size 45
+	secondarySize 55
+	chance 0.30
+}
+
+flickerlight Plasma
+{
+	color 0.1 0.1 1.0
+	size 45
+	secondarySize 55
+	chance 0.30
+}
+
+Object PlasmaFlame
+{
+    frame PLCX { light Plasma }
+}
+
+pointlight PlasmaDebris1
+{
+    color 0.1 0.1 1.0
+    size 80
+}
+
+pointlight PlasmaBall1
+{
+    color 0.0 0.0 1.0
+    size 90
+}
+
+pointlight PlasmaBall2
+{
+    color 0.0 0.0 1.0
+    size 100
+}
+
+pointlight PlasmaBall3
+{
+    color 0.0 0.0 1.0
+    size 110
+}
+
+pointlight PlasmaBall4
+{
+    color 0.0 0.0 1.0
+    size 90
+}
+
+pointlight PlasmaBall5
+{
+    color 0.0 0.0 1.0
+    size 75
+}
+
+pointlight PlasmaBall1R
+{
+    color 1.0 0.0 0.0
+    size 90
+}
+
+pointlight PlasmaBall2R
+{
+    color 1.0 0.0 0.0
+    size 100
+}
+
+pointlight PlasmaBall3R
+{
+    color 1.0 0.0 0.0
+    size 110
+}
+
+pointlight PlasmaBall4R
+{
+    color 1.0 0.0 0.0
+    size 90
+}
+
+pointlight PlasmaBall5R
+{
+    color 1.0 0.0 0.0
+    size 75
+}
+
+Object PlasmaFlameDecay
+{
+    frame TNT1A { light PlasmaReds }
+}
+
+Object PlasmaFlameDecayBlue
+{
+    frame TNT1A { light Plasma }
+}
+
+Object PlasmaCannonBall
+{
+    frame PLS1A { light PlasmaBall1R }
+    frame PLS1B { light PlasmaBall2R }
+    frame PLS1C { light PlasmaBall3R }
+    frame PLS1D { light PlasmaBall2R }
+    frame PLS1E { light PlasmaBall4R }
+    frame PLS1F { light PlasmaBall5R }
+	frame PLE1A { light PlasmaBall1R }
+    frame PLE1B { light PlasmaBall2R }
+    frame PLE1C { light PlasmaBall3R }
+    frame PLE1D { light PlasmaBall2R }
+    frame PLE1E { light PlasmaBall4R }
+    frame PLE1F { light PlasmaBall5R }
+}
+
+Object PlasmaCannonBallSmall
+{
+    frame PLS1A { light PlasmaBall1R }
+    frame PLS1B { light PlasmaBall2R }
+    frame PLS1C { light PlasmaBall3R }
+    frame PLS1D { light PlasmaBall2R }
+    frame PLS1E { light PlasmaBall4R }
+    frame PLS1F { light PlasmaBall5R }
+	frame PLE1A { light PlasmaBall1R }
+    frame PLE1B { light PlasmaBall2R }
+    frame PLE1C { light PlasmaBall3R }
+    frame PLE1D { light PlasmaBall2R }
+    frame PLE1E { light PlasmaBall4R }
+    frame PLE1F { light PlasmaBall5R }
+}
+
+Object PlasmaCannonBallBlue
+{
+    frame PLS1A { light PlasmaBall1 }
+    frame PLS1B { light PlasmaBall2 }
+    frame PLS1C { light PlasmaBall3 }
+    frame PLS1D { light PlasmaBall2 }
+    frame PLS1E { light PlasmaBall4 }
+    frame PLS1F { light PlasmaBall5 }
+	frame PLE1A { light PlasmaBall1 }
+    frame PLE1B { light PlasmaBall2 }
+    frame PLE1C { light PlasmaBall3 }
+    frame PLE1D { light PlasmaBall2 }
+    frame PLE1E { light PlasmaBall4 }
+    frame PLE1F { light PlasmaBall5 }
+}
+
+Object PlasmaCannonBallSmallBlue
+{
+    frame PLS1A { light PlasmaBall1 }
+    frame PLS1B { light PlasmaBall2 }
+    frame PLS1C { light PlasmaBall3 }
+    frame PLS1D { light PlasmaBall2 }
+    frame PLS1E { light PlasmaBall4 }
+    frame PLS1F { light PlasmaBall5 }
+	frame PLE1A { light PlasmaBall1 }
+    frame PLE1B { light PlasmaBall2 }
+    frame PLE1C { light PlasmaBall3 }
+    frame PLE1D { light PlasmaBall2 }
+    frame PLE1E { light PlasmaBall4 }
+    frame PLE1F { light PlasmaBall5 }
+}
+
+pointlight PLASMABALL
+{
+    color 0.0 0.0 1.0
+    size 56
+}
+
+flickerlight PLASMA_X1
+{
+    color 0.0 0.0 1.0
+    size 64
+    secondarySize 72
+    chance 0.5
+}
+
+flickerlight PLASMA_X2
+{
+    color 0.0 0.0 1.0
+    size 80
+    secondarySize 88
+    chance 0.5
+}
+
+flickerlight PLASMA_X3
+{
+    color 0.0 0.0 1.0
+    size 64
+    secondarySize 72
+    chance 0.5
+}
+
+flickerlight PLASMA_X4
+{
+    color 0.0 0.0 1.0
+    size 32
+    secondarySize 40
+    chance 0.5
+}
+
+pointlight PLASMABALLR
+{
+    color 1.0 0.0 0.0
+    size 56
+}
+
+flickerlight PLASMA_X1R
+{
+    color 1.0 0.0 0.0
+    size 64
+    secondarySize 72
+    chance 0.5
+}
+
+flickerlight PLASMA_X2R
+{
+    color 1.0 0.0 0.0
+    size 80
+    secondarySize 88
+    chance 0.5
+}
+
+flickerlight PLASMA_X3R
+{
+    color 1.0 0.0 0.0
+    size 64
+    secondarySize 72
+    chance 0.5
+}
+
+flickerlight PLASMA_X4R
+{
+    color 1.0 0.0 0.0
+    size 32
+    secondarySize 40
+    chance 0.5
+}
+
+object PlasmaShotBlue
+{
+    frame PLSSA { light PLASMABALL }
+    frame PLSSB { light PLASMABALL }
+
+    frame PLSEA { light PLASMA_X1 }
+    frame PLSEB { light PLASMA_X2 }
+    frame PLSEC { light PLASMA_X2 }
+    frame PLSED { light PLASMA_X3 }
+    frame PLSEE { light PLASMA_X4 }
+}
+
+object PlasmaShotRed
+{
+    frame PLSSA { light PLASMABALLR }
+    frame PLSSB { light PLASMABALLR }
+
+    frame PLSEA { light PLASMA_X1R }
+    frame PLSEB { light PLASMA_X2R }
+    frame PLSEC { light PLASMA_X2R }
+    frame PLSED { light PLASMA_X3R }
+    frame PLSEE { light PLASMA_X4R }
+}
+
+///////Miscellaneous
+////////////////////
+
+flickerlight RepBlue
+{
+	color 0.0 0.0 1.0
+	size 30
+	secondarySize 42
+	chance 0.25
+}
+
+flickerlight RepBlueT
+{
+	color 0.0 0.0 1.0
+	size 10
+	secondarySize 14
+	chance 0.25
+}
+
+flickerlight RepPurple
+{
+	color 0.75 0.0 0.75
+	size 30
+	secondarySize 42
+	chance 0.25
+}
+
+flickerlight RepPurpleT
+{
+	color 0.75 0.0 0.75
+	size 10
+	secondarySize 14
+	chance 0.25
+}
+
+flickerlight RepRed
+{
+	color 1.0 0.0 0.0
+	size 30
+	secondarySize 42
+	chance 0.25
+}
+
+flickerlight RepRedT
+{
+	color 1.0 0.0 0.0
+	size 10
+	secondarySize 14
+	chance 0.25
+}
+
+flickerlight RepYellow
+{
+	color 1.0 1.0 0.0
+	size 30
+	secondarySize 42
+	chance 0.25
+}
+
+flickerlight RepYellowT
+{
+	color 1.0 1.0 0.0
+	size 10
+	secondarySize 14
+	chance 0.25
+}
+
+object RepairDisarmPuff
+{
+	frame PLCX { light RepBlue }
+}
+
+object RepairTrail
+{
+	frame PLCX { light RepBlueT }
+}
+
+object EnhancedRepairDisarmPuff
+{
+	frame CHMX { light RepPurple }
+}
+
+object UpgradedRepairTrail
+{
+	frame CHMX { light RepPurpleT }
+}
+
+object MedicPuff
+{
+	frame CHMX { light RepRed }
+}
+
+object HealTrail
+{
+	frame CHMX { light RepRedT }
+}
+
+object DisarmPuff
+{
+	frame CHMX { light RepYellow }
+}
+
+object DisarmTrail
+{
+	frame CHMX { light RepYellowT }
+}
+
+pointlight GOLDBALL
+{
+    color 1.0 1.0 0.0
+    size 56
+}
+
+flickerlight GOLD_X1
+{
+    color 1.0 1.0 0.0
+    size 64
+    secondarySize 72
+    chance 0.4
+}
+
+flickerlight GOLD_X2
+{
+    color 1.0 1.0 0.0
+    size 80
+    secondarySize 88
+    chance 0.4
+}
+
+flickerlight GOLD_X3
+{
+    color 1.0 1.0 0.0
+    size 64
+    secondarySize 72
+    chance 0.4
+}
+
+flickerlight GOLD_X4
+{
+    color 1.0 1.0 0.0
+    size 8
+    secondarySize 16
+    chance 0.4
+}
+
+/* [TT] Deprecated
+object GoldenBall1
+{
+    frame PLSSA { light GOLDBALL }
+    frame PLSSB { light GOLDBALL }
+
+    frame PLSEA { light GOLD_X1 }
+    frame PLSEB { light GOLD_X2 }
+    frame PLSEC { light GOLD_X2 }
+    frame PLSED { light GOLD_X3 }
+    frame PLSEE { light GOLD_X4 }
+}
+
+
+object GoldenBall1Blue
+{
+    frame PLSSA { light GOLDBALL }
+    frame PLSSB { light GOLDBALL }
+
+    frame PLSEA { light GOLD_X1 }
+    frame PLSEB { light GOLD_X2 }
+    frame PLSEC { light GOLD_X2 }
+    frame PLSED { light GOLD_X3 }
+    frame PLSEE { light GOLD_X4 }
+}
+*/
+
+pointlight GOLDIMPBALL
+{
+    color 1.0 1.0 0.0
+    size 64
+}
+
+flickerlight GOLDIMPBALL_X1
+{
+    color 1.0 1.0 0.0
+    size 80
+    secondarySize 88
+    chance 0.25
+}
+
+flickerlight GOLDIMPBALL_X2
+{
+    color 1.0 1.0 0.0
+    size 96
+    secondarySize 104
+    chance 0.25
+}
+
+flickerlight GOLDIMPBALL_X3
+{
+    color 1.0 1.0 0.0
+    size 112
+    secondarySize 120
+    chance 0.25
+}
+
+flickerlight GOLDPUFF1
+{
+    color 1.0 1.0 0.4
+    size 12
+    secondarySize 16
+    chance 0.8
+}
+
+Object BoostPuffRed
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+Object BoostPuffBlue
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+Object FloatPuffRed
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+Object FloatPuffBlue
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+/* [TT] Deprecated
+Object SlowPuffRed
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+Object SlowPuffBlue
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+
+Object WeakenPuffRed
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+Object WeakenPuffBlue
+{
+    frame VOLX { light GOLDPUFF1 }
+}
+
+object GoldenBall2
+{
+    frame BAL1A { light GOLDIMPBALL    }
+    frame BAL1B { light GOLDIMPBALL    }
+
+    frame BAL1C { light GOLDIMPBALL_X1 }
+    frame BAL1D { light GOLDIMPBALL_X2 }
+    frame BAL1E { light GOLDIMPBALL_X3 }
+}
+
+object GoldenBall2Blue
+{
+    frame BAL1A { light GOLDIMPBALL    }
+    frame BAL1B { light GOLDIMPBALL    }
+
+    frame BAL1C { light GOLDIMPBALL_X1 }
+    frame BAL1D { light GOLDIMPBALL_X2 }
+    frame BAL1E { light GOLDIMPBALL_X3 }
+}
+*/
+
+//Mech Lights
+flickerlight PulseBall
+{
+	color 0.6 1.0 0.0
+	size 30
+	secondarySize 40
+	chance 0.30
+}
+
+object PulseBall
+{
+	Frame PLGX { light PulseBall }
+}
+
+/* [TT] Deprecated
+object PulseBallBlue
+{
+	Frame PLGX { light PulseBall }
+}
+
+object PulseBallImpact
+{
+	Frame PLGX { light PulseBall }
+}
+*/
+
+Pointlight PPCBALL
+{
+Color 1.0 1.0 1.0
+Size 100
+}
+
+Pointlight PPCBALLBOOM
+{
+Color 1.0 1.0 1.0
+Size 150
+}
+
+/* [TT] Deprecated
+object ShockCannonBallRed
+{
+	frame PPCX { light PPCBALL }
+}
+
+object ShockCannonBallBlue
+{
+	frame PPCX { light PPCBALL }
+}
+*/
+
+object ShockCannonBallImpact
+{
+	frame PPCX { light PPCBALL }
+}
+
+flickerlight GizmoBlue
+{
+    color 0.4 0.4 1.0
+    size 70
+	SecondarySize 80
+	Chance 0.5
+}
+
+/* [TT] Deprecated
+object Utility_PortalBlue
+{
+	Frame TNT1 { light GizmoBlue }
+}
+*/
+
+flickerlight GizmoRed
+{
+    color 1.0 0.0 0.0
+    size 70
+	SecondarySize 80
+	Chance 0.5
+}
+
+/* [TT] Deprecated
+object Utility_PortalRed
+{
+	Frame TNT1 { light GizmoRed }
+}
+*/
+
+flickerlight HealRadiusRed
+{
+    color 1.0 0.3 0.3
+    size 45
+	SecondarySize 48
+	Chance 0.2
+}
+
+object MedicationFieldBall
+{
+	Frame GIZR { light HealRadiusRed }
+}
+
+pointlight MarineBeaconBlinkRed
+{
+    color 1.0 0.3 0.3
+    size 45
+}
+
+object MarineBeacon
+{
+	Frame MBCNA { light MarineBeaconBlinkRed }
+}
+
+pointlight MarineBeaconBlinkBlue
+{
+    color 0.3 0.8 1.0
+    size 45
+}
+
+object MarineBeaconBlue
+{
+	Frame MBCNA { light MarineBeaconBlinkBlue }
+}

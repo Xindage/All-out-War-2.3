@@ -1,0 +1,202 @@
+// Tiberium Crystal
+actor TiberiumCrystalGiver : CustomInventory 21407 {	
+	+AUTOACTIVATE
+	+BLOODLESSIMPACT
+	+NODAMAGETHRUST
+	//$Category Pickups
+	Tag "Tiberium Crystal"
+	Inventory.RespawnTics 175 // 5*35
+	Inventory.PickupMessage "Picked up a Tiberium Crystal!"
+	DamageType "ChemicalSpecial"
+	
+	States {
+	Spawn:
+		TNT1 AA 0 Thing_ChangeTID (0, 402)
+		goto Idle
+	Idle:
+		TIBE A 0 A_SpawnItemEx ("TiberiumChemSmoke")
+		TIBE A 35 bright A_Explode (24, 112)
+		loop
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult (357)
+		stop
+	Use:
+		TNT1 A 0 A_GiveInventory ("TiberiumCrystal", 1)
+		stop
+	HideDoomish:
+		TNT1 A 1050 Thing_ChangeTID (0, 0)
+		TNT1 A 0 A_RestoreSpecialPosition
+		TNT1 A 1 A_RestoreSpecialDoomThing
+		Stop
+	}
+}
+
+actor TiberiumCrystalDropped : TiberiumCrystalGiver {
+	States {
+	Spawn:
+		TIBE AA 0 Thing_ChangeTID (0, 402)
+		TIBE A 0 ThrustThing (random(0, 256), random (1, 5), 0, 0)
+		TIBE A 0 ThrustThingZ (0, 20, 0, 0)
+	Idle:
+		TIBE A 0 A_SpawnItemEx ("TiberiumChemSmoke")
+		TIBE A 0 A_GiveInventory ("TiberiumCrystalTick", 1)
+		TIBE A 35 bright A_Explode (8, 112)
+		TIBE A 0 A_JumpIfInventory ("TiberiumCrystalTick", 30, "GoAway")
+		loop
+	GoAway:
+		TIBE A 0 bright A_SetTranslucent (0.8, 1)
+		TIBE A 1 bright A_FadeOut
+		wait
+	}
+}
+
+actor TiberiumCrystalTick : Inventory {inventory.maxamount 30}
+
+actor TiberiumCrystal : CustomInventory {
+	+INVBAR
+	Inventory.PickupMessage "You aquired yourself some Tiberium."
+	Inventory.MaxAmount 1
+	Inventory.Icon "tibeicon"
+	Tag "Tiberium Crystal - bring this to the Refinery!"
+	states {
+	Spawn:
+		TNT1 A 0
+		stop
+	Use:
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "UseMech")
+		TNT1 A 0 A_SpawnItemEx ("TiberiumCrystalThrown", 16, 0, 32, 6, 0, 5)
+		stop
+	UseMech:
+		TNT1 A 0 ACS_ExecuteAlways (697, 0, 255)
+		fail
+	}
+}
+
+actor TiberiumCrystalThrown {
+	PROJECTILE
+	-NOGRAVITY
+	+GHOST
+	+THRUGHOST
+	+BLOODLESSIMPACT
+	+NODAMAGETHRUST
+	Obituary "%o was \cDturned green\c- by %k's Tiberium crystal!"
+	Radius 16
+	Height 32
+	Speed 10
+	Gravity 0.75
+	DamageType "Chemical"
+	States {
+	Spawn:
+		TIBE A 0
+		TIBE A 0 bright A_Explode (8, 128)
+		TIBE A 0 bright A_SpawnItemEx("ChemicalDeathShot", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5), 0, 128, 32)
+		TIBE AA 2 bright A_JumpIf(waterlevel > 1, "Water")
+		loop
+	Death:
+		TIBE A 0 bright
+		TIBE A 0 bright A_SpawnItemEx ("TiberiumCrystalSitting", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 4
+		stop
+	Water:
+		TIBE A 15 bright A_SetTranslucent (1.0, 0)
+	WaterLoop:
+		TIBE A 0 bright A_SpawnItemEx("ChemicalDeathShot", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5), 0, 128, 32)
+		TIBE AAA 1 bright A_FadeOut (0.05)
+		loop
+	}
+}
+
+actor TiberiumCrystalSitting {
+	+BLOODLESSIMPACT
+	+NODAMAGETHRUST
+	Obituary "%o was \cDturned green\c- by %k's Tiberium crystal!"
+	Radius 16
+	Height 32
+	DamageType "Chemical"
+	ReactionTime 15
+	States {
+	Spawn:
+		TIBE AA 0 A_SpawnItemEx ("TiberiumCrystalFX")
+		TIBE AAAAAAAAAAAAAAA 18 bright A_Explode (8, 128)
+		TIBE AAAAAAAAAAAAAAA 17 bright A_Explode (8, 128)
+	Death:
+		TIBE A 0 bright A_SetTranslucent (1, 1)
+		TIBE A 1 bright A_FadeOut (0.05)
+		wait
+	}
+}
+
+actor TiberiumCrystalFX {
+	+CLIENTSIDEONLY
+	ReactionTime 16
+	States {
+	Spawn:
+		TIBE A 0
+		TIBE AAAAAAA 5 BRIGHT A_SpawnItemEx("ChemicalDeathShot", random(-16,16), random(-16,16), random(8,24), 0, 0, 0.5*random(2,5), 0, 128, 32)
+		TIBE A 0 A_Countdown
+		loop
+	Death:
+		TIBE AAAAAAAAAAAAAAAAAAAA 1 BRIGHT A_SpawnItemEx ("ChemicalDeathShot", random(-16,16), random(-16,16), random(8,24), 0, 0, 0.5*random(2,5), 0, 128, 32)
+		stop
+	}
+}
+
+actor TiberiumChemSmoke {
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAA 4 bright A_SpawnItemEx ("ChemicalDeathShot", random(-16,16), random(-16,16), random(0,16), 0, 0, 0.5*random(2,5), 0, 128, 128)
+		stop
+	}
+}
+
+actor TiberiumChemSmokePlayer {
+	+NOSECTOR
+	+NOCLIP
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("ChemicalDeathShot", random(-16,-1), random(-16,16), random(32, 56), 0, 0, 0.5*random(2,5), 0, 128)
+		stop
+	}
+}
+
+// AOW21-specific Tiberium - these spawn map markers on their own
+actor FactoryTiberium : TiberiumCrystalGiver {
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("TiberiumMapMarker")
+		goto Super::Spawn+2
+	}
+}
+
+// Map marker for Tiberium.
+actor TiberiumMapMarker : MapMarker 17000 {
+	//$Category Markers
+	Tag "Tiberium Crystal Map-Marker"
+	+CLIENTSIDEONLY
+	scale 0.175
+	states {
+	Spawn:
+		AMRK B -1
+		stop
+	}
+}
+
+actor TiberiumCrystalSound 21408 {
+	//$Category Effects
+	Tag "Tiberium Crystal Sound"
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	states {
+	Spawn:
+		TNT1 AA 0 A_PlaySound ("tiberium/loop1", 0, 1.0, 1)
+		TNT1 A -1
+		stop
+	}
+}

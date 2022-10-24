@@ -1,0 +1,151 @@
+// TELEPORT BACK TO FIELD
+script 94 (int Team) {
+	if (!CheckInventory("HasClass")) {
+		DisplayCross();
+		SETFONT("BigFont");
+		HudMessage(s:"You can't leave without choosing a class!";
+			HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
+		terminate;
+	}
+	
+	TakeInventory("IsInSpawnRoom",1);
+
+	ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, Team);
+}
+
+// RESIGN
+script 95 (int unused, int rflags) {
+	if (MitigateDoublePress() && !(rflags & RF_FORCE))
+		terminate;
+	
+	if (!CheckInventory("HasClass") && !(rflags & RF_FORCE)) {
+		MenuResponse (MSGTYPE_ERROR, "You don't have a class to resign from!");
+		terminate;
+	}
+	
+	ACS_ExecuteAlways (SC_STEALTH, 0, 3);
+	
+	// [JD] If we have the jetpack on then we need to turn it off.
+	if (CheckInventory("JetpackActive"))
+		ACS_ExecuteAlways(SC_JetpackToggle, 0, 0, 0, 0);
+
+	delay (5);
+	SetWeapon ("Unarmed");
+	TakeInventory ("HasClass",1);
+	delay (10);
+	
+	SetClass (CLASS_None, 0);
+	
+	TakeInventory("ClassID", 999);
+	
+	if (CheckInventory("CRATE_SoulsphereDummyItem"))
+		TakeInventory("CRATE_SoulsphereDummyItem", 999);
+	
+	SetHealth(GetSpawnHealth());
+}
+
+// PURCHASE TERMINAL / RESEARCH TERMINAL / MECH PURCHASE TERMINAL
+script 96 (int type) {
+	if (MitigateDoublePress())
+		terminate;
+	
+	int dest;
+	
+	if (PlayerTeam() == type%2) {
+		GenericError ("This is not your terminal!");
+		terminate;
+	}
+	
+	if (CheckInventory ("IsMech")) {
+		GenericError ("You can't use that in a mech!");
+		terminate;
+	}
+	
+	if (CheckInventory("preventBomberMenuAccess") || CheckInventory("timeGunSafety"))
+	{
+		GenericError("There's no going back!");
+		terminate;
+	}
+	
+	if (type <= 1) {
+		// PURCHASE TERMINAL
+		dest = 70 + !type;
+		GiveInventory ("IsInSpawnRoom", 1);
+		
+		if (!Teleport (dest)) {
+			SpawnSpotForced ("AntiUtilityExplosion", dest, 0, 0);
+			delay (10);
+			Teleport (dest);
+		}
+		
+		// [Dusk] Refill him now.
+		GiveFullRefill (false);
+	}
+	else if (type <= 3) {
+		// FACTORY TERMINAL
+		if (!GetConfig (CONFIG_MECHS)) {
+			GenericError ("Mechs have been disabled!");
+			terminate;
+		}
+		
+		// [JD] I went ahead and left the option for server hosts to add a delay time for mechs
+		if (!CheckMinutes(GetCVAR("zeta_mechdelay"))) {
+			GenericError("It's to early to buy a mech!");
+			terminate;
+			}
+		
+		if (!CheckFactory (PlayerTeam ()))
+			terminate;
+		
+		if (CheckInventory ("PowerBerserk")) {
+			GenericError ("You can't pilot a mech while berserk!\nYou'll just tear the thing into pieces...");
+			terminate;
+		}
+		
+		if (CheckInventory ("CantMech")) {
+			GenericError ("You have upgraded yourself in a\nway where you must resign!");
+			terminate;
+		}
+		
+		ActivateMenu (MENU_FACTORY);
+	} else if (type <= 5) {
+		// RESEARCH TERMINAL
+		if (!CheckPlant (PlayerTeam ()))
+			terminate;
+		
+		ActivateMenu (MENU_RESEARCH);
+	}
+}
+
+script 90 (void) {
+	TakeInventory ("PurchaseToken", 1);
+}
+
+// Teleport the player to base.
+script SC_DOTELEPORTTOFIELD (int team) 
+{
+	int i;
+	bool failed = true;
+	
+	// [Dusk] Try to teleport 10 times. This way, if one teleport destination is blocked,
+	// we'll still be able to teleport onto another.
+	for (i = 0; i < 10; i++) 
+	{
+		if (Teleport (1+(1-team))) 
+		{
+			failed = false;
+			break;
+		}
+	}
+
+	
+	if (failed)
+	{
+		IntelMessage ("In-field teleportation \cAfailed\cJ", false);
+		GiveInventory ("IsInSpawnRoom", 1);
+	}
+	else
+	{
+		TakeInventory ("IsInSpawnRoom", 1);
+	}
+}

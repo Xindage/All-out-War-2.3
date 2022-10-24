@@ -1,0 +1,305 @@
+Height 32;
+InterpolateHealth True, 100;
+InterpolateArmor True, 100;
+
+// Fullscreen HUD
+
+statusbar fullscreen, forcescaled, fullscreenoffsets {
+	// Blue HUD
+	InInventory Not IsRed {
+		drawimage "IS2_AMMO", -110, -20;
+		drawimage "IS2_HPI",  5, -17;
+		drawimage "IS2_RANK", -115, -46;
+		//drawimage "IS2-INTF", 100, 0;
+	}
+	
+	// Red HUD
+	InInventory IsRed {
+		drawimage "IS2RAMMO", -110, -20;
+		drawimage "IS2RHPI",  5, -17;
+		drawimage "IS2RRANK", -115, -46;
+		//drawimage "IS2RINTF", 100, 0;
+	}
+	
+	// Health. For admin morph health is not relevant.
+	InInventory Not PowerAdministrator {
+		InInventory IsConsolePlayer {
+			// Draw in colors based on health. A client-side ACS script sets
+			// the amount of HUD_HealthType based on health.
+			
+			// > 100% health, use white color
+			InInventory HUD_HealthType, 3 {
+				drawnumber 4, INDEXFONT, White, health, 52, -13, 0;
+			}
+			
+			// Exactly 100% health, use dark green
+			InInventory Not HUD_HealthType, 3 {
+				InInventory HUD_HealthType, 2 {
+					drawnumber 4, INDEXFONT, DarkGreen, health, 52, -13, 0;
+				}
+			}
+			
+			// Green if >50% or yellow if 25-49%
+			InInventory Not HUD_HealthType, 2 {
+				InInventory HUD_HealthType, 1 {
+					drawnumber 4, INDEXFONT, Green, health, 52, -13, 0, Yellow, 50;
+				}
+			}
+			
+			// Critical health, use blinking red if still alive. HUD_HealthBlink
+			// is given if the player is still alive, black if dead.
+			InInventory Not HUD_HealthType {
+				InInventory HUD_HealthBlink {
+					drawnumber 4, INDEXFONT, Red, health, 52, -13, 0, Black, 0;
+				}
+				
+				InInventory Not HUD_HealthBlink {
+					drawnumber 4, INDEXFONT, Black, health, 52, -13, 0;
+				}
+			}
+		}
+		
+		InInventory Not IsConsolePlayer {
+			// The health we're looking for is not the consoleplayer's.
+			// We're coop-spying someone.
+			drawnumber 4, INDEXFONT, White, health, 52, -13, 0;
+		}
+	}
+	
+	// Ammo numbers. Some weapons don't show ammo2 to cut redundancy.
+	IsSelected Not "JuggernautWeapons" { IsSelected Not "WolverineWeapons", "TitanWeapons" {
+	IsSelected Not "MadCatWeapons" { IsSelected Not "GatlingGun", "SubMachineGun" {
+	IsSelected Not "Handgun" { IsSelected Not "MachineGun", "GaussRifle" {
+	IsSelected Not "GrenadeLauncher" {
+		drawnumber 3, INDEXFONT, White, ammo2, -17, -13, 0;
+	}}}}}
+		drawnumber 3, INDEXFONT, White, ammo1, -45, -13, 0;
+	}}
+	
+	// Harvester's tiberium symbol. I guess this should use the new design?
+	InInventory IsHarvester {
+		InInventory TiberiumCrystal {
+			drawimage "TIBE-YES", -26, -75;
+		}
+		InInventory Not TiberiumCrystal {
+			drawimage "TIBE-NO", -26, -75;
+		}
+	}
+	
+	// Armor modifiers
+	InInventory Not PowerExplosiveResistance || PowerEnergyResistance {
+	InInventory Not PowerBulletProof {
+	InInventory Not PowerFireProof || PowerChemicalProof {
+		drawimage "a_nomod", 60, -15;
+	}}}
+	
+	InInventory PowerFireProof {drawimage "a_fire", 60, -15;}
+	InInventory PowerChemicalProof {drawimage "a_chem", 60, -15;}
+	InInventory PowerExplosiveResistance {drawimage "a_explo", 60, -15;}
+	InInventory PowerEnergyResistance {drawimage "a_energy", 60, -15;}
+	InInventory PowerBulletProof {drawimage "a_bproof", 60, -15;}
+	
+	// Armor grades
+	InInventory PowerGradeNeg1Armor {drawimage "a_graden", 60, -15;}
+	InInventory PowerGrade1Armor {drawimage "a_grade1", 60, -15;}
+	InInventory PowerGrade2Armor {drawimage "a_grade2", 60, -15;}
+	InInventory PowerGrade3Armor {drawimage "a_grade3", 60, -15;}
+	InInventory PowerGrade4Armor {drawimage "a_grade4", 60, -15;}
+	InInventory PowerGrade5Armor {drawimage "a_grade5", 60, -15;}
+	
+	// Progress bar for armor changing
+	InInventory IsChangingArmor { InInventory Not CancelChangingArmor {
+		DrawBar "progbar1", "progbar2", ArmorChangeProgress, horizontal, 18, -30;
+	} }
+	
+	// Jetpack fuel bar
+	InInventory Jetpack {
+		DrawImage "fuelicon", -65, -57;
+		DrawBar "progbr1o", "progbar2", JetpackFuel, horizontal, -50, -60;
+	}
+
+	// Frag Grenades
+	InInventory FragGrenadeAmmo 
+	{	
+		InInventory IsRed 
+		{
+			drawimage "ICONADER", -58, -29;
+		}	
+		
+		InInventory Not IsRed 
+		{
+			drawimage "ICONADEB", -58, -29;	
+		}
+	    drawnumber 1, INDEXFONT, White, ammo FragGrenadeAmmo, -45,  -27;			
+	}	
+		
+	// Flashbangs
+	InInventory FlashbangAmmo {	
+		InInventory IsRed {
+			drawimage "ICOBANGR", -30, -29;
+		}	
+	InInventory Not IsRed {
+			drawimage "ICOBANGB", -30, -29;
+		}
+		drawnumber 1, INDEXFONT, White, ammo FlashbangAmmo, -17,  -27;					
+	}	
+				
+	// Kamikaze
+	InInventory IsKamikaze {	
+		InInventory IsRed {
+			drawimage "ICOKAMIR", -114, -29;
+		}	
+	InInventory Not IsRed {
+			drawimage "ICOKAMIB", -114, -29;
+		}
+	}	
+		
+	// Firepower Upgrade
+	InInventory PowerFirepowerUpgrade {	
+		InInventory IsRed {
+			drawimage "ICOFIRER", -86, -29;
+		}	
+	InInventory Not IsRed {
+			drawimage "ICOFIREB", -86, -29;
+		}
+	}
+	
+	// Powerup display
+	// Berserk (300)
+	// Blursphere (60?)
+	// Speed upgrade (60)
+	// Fatigue (60)
+	// Thermal cloak (90)
+	// Iron Curtain (30)
+	// Time gun effects
+	InInventory PowerBerserk {
+		DrawImage "prh_back", -45, -80;
+		DrawImage "prh_pstr", -45, -80;
+		DrawBar "prh_barr", "prh_barx", PowerupTime BerserkSwitch, vertical, -43, -78;
+	}
+	
+	InInventory PowerInvisibility {
+		InInventory Not PowerBerserk {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_blur", -45, -80;
+			DrawBar "prh_barg", "prh_barx", PowerupTime Blursphere, vertical, -43, -78;
+		}
+	}
+	
+	InInventory PowerSpeedUpgrade {
+		InInventory Not PowerInvisibility || PowerBerserk {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_sped", -45, -80;
+			DrawBar "prh_barg", "prh_barx", PowerupTime SpeedUpgrade, vertical, -43, -78;
+		}
+	}
+	
+	InInventory PowerFatigue {
+		InInventory Not PowerInvisibility || PowerBerserk {
+		InInventory Not PowerSpeedUpgrade {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_fati", -45, -80;
+			DrawBar "prh_barr", "prh_barx", PowerupTime SpeedDowngrade, vertical, -43, -78;
+		}}
+	}
+	
+	InInventory PowerThermalCloak {
+		InInventory Not PowerInvisibility || PowerBerserk {
+		InInventory Not PowerSpeedUpgrade || PowerFatigue {
+			DrawImage "prh_back", -45, -80;
+			
+			// Draw the enemy team's obelisk as the icon, since that's what is
+			// getting silenced out.
+			InInventory IsBlue {
+				DrawImage "prh_thrr", -45, -80;
+			}
+			
+			InInventory Not IsBlue {
+				DrawImage "prh_thrb", -45, -80;
+			}
+			
+			DrawBar "prh_barg", "prh_barx", PowerupTime ThermalCloak, vertical, -43, -78;
+		}}
+	}
+	
+	InInventory PowerIronCurtain {	// [SG] Iron Curtain already has a colormap, leave it lower priority
+		InInventory Not PowerInvisibility || PowerBerserk {
+		InInventory Not PowerSpeedUpgrade || PowerFatigue {
+		InInventory Not PowerThermalCloak {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_invu", -45, -80;
+			DrawBar "prh_barw", "prh_barx", PowerupTime IronCurtain, vertical, -43, -78;
+		}}}
+	}
+	
+	InInventory PowerTimeGunFloat {
+		InInventory Not PowerInvisibility || PowerBerserk {
+		InInventory Not PowerSpeedUpgrade || PowerFatigue {
+		InInventory Not PowerThermalCloak || PowerIronCurtain {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_timf", -45, -80;
+			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunFloat, vertical, -43, -78;
+		}}}
+	}
+	
+	InInventory PowerTimeGunBoost {
+		InInventory Not PowerInvisibility || PowerBerserk {
+		InInventory Not PowerSpeedUpgrade || PowerFatigue {
+		InInventory Not PowerThermalCloak || PowerTimeGunFloat {
+		InInventory Not PowerIronCurtain {
+			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_tims", -45, -80;
+			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunBoost, vertical, -43, -78;
+		}}}}
+	}
+	
+	DrawSelectedInventory alwaysshowcounter, INDEXFONT, -85, -25, -87, -13, White, 0;
+}
+
+statusbar normal
+{
+	drawimage "STBAR", 0, 168;
+	drawimage "STTPRCNT", 90, 171;
+	drawimage "STTPRCNT", 221, 171;
+	drawnumber 3, STATUSFONT, untranslated, ammo1, 44, 171;
+	drawnumber 3, STATUSFONT, untranslated, health, 90, 171;
+	drawnumber 3, STATUSFONT, untranslated, ammo2, 221, 171;
+
+	//keys
+	drawswitchableimage BlueCard && BlueSkull, "nullimage", "STKEYS0", "STKEYS3", "STKEYS6", 239, 171;
+	drawswitchableimage YellowCard && YellowSkull, "nullimage", "STKEYS1", "STKEYS4", "STKEYS7", 239, 181;
+	drawswitchableimage RedCard && RedSkull, "nullimage", "STKEYS2", "STKEYS5", "STKEYS8", 239, 191;
+
+	drawnumber 3, INDEXFONT, untranslated, ammo NewClipAmmo, 288, 173;
+	drawnumber 3, INDEXFONT, untranslated, ammo RifleAmmo, 288, 179;
+	drawnumber 3, INDEXFONT, untranslated, ammo MissileAmmo, 288, 185;
+	drawnumber 3, INDEXFONT, untranslated, ammo LaserRifleAmmo, 288, 191;
+
+	drawnumber 3, INDEXFONT, untranslated, ammo MachineGunAmmo, 314, 173;
+	drawnumber 3, INDEXFONT, untranslated, ammo RifleGrenadeAmmo, 314, 179;
+	drawnumber 3, INDEXFONT, untranslated, ammo GrenadeAmmo, 314, 185;
+	drawnumber 3, INDEXFONT, untranslated, ammo GaussRifleAmmo, 314, 191;
+	gamemode deathmatch, teamgame
+	{
+		drawnumber 2, STATUSFONT, untranslated, frags, 138, 171;
+	}
+	gamemode cooperative, singleplayer
+	{
+		drawimage "STARMS", 104, 168;
+		drawswitchableimage weaponslot 2, "STGNUM2", "STYSNUM2", 111, 172; 
+		drawswitchableimage weaponslot 3, "STGNUM3", "STYSNUM3", 123, 172;
+		drawswitchableimage weaponslot 4, "STGNUM4", "STYSNUM4", 135, 172;
+		drawswitchableimage weaponslot 5, "STGNUM5", "STYSNUM5", 111, 182;
+		drawswitchableimage weaponslot 6, "STGNUM6", "STYSNUM6", 123, 182;
+		drawswitchableimage weaponslot 7, "STGNUM7", "STYSNUM7", 135, 182;
+	}
+	gamemode cooperative, deathmatch, teamgame
+	{
+		drawimage translatable "STFBANY", 144, 169;
+	}
+	drawselectedinventory INDEXFONT, 143, 168;
+}
+
+statusbar inventoryfullscreen, fullscreenoffsets {
+	drawinventorybar Doom, translucent|alwaysshow|alwaysshowcounter, 5, INDEXFONT, 18, -44, 38, -29, White;
+}
