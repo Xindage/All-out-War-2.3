@@ -1,5 +1,9 @@
 // PLASMA CANNON
 actor PlasmaCannon : AOWWeapon {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+WEAPON.NOAUTOFIRE
 	DropItem "NewBackPack"
 	Weapon.SelectionOrder 1
@@ -7,80 +11,114 @@ actor PlasmaCannon : AOWWeapon {
 	Weapon.AmmoType "PlasmaCannonAmmo"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 4
-	//Weapon.AmmoType2 "PlasmaCannonAmmo"
-	//Weapon.AmmoUse2 1
+	Weapon.AmmoType2 "PlasmaCannonAmmo"
+	Weapon.AmmoUse2 1
 	Weapon.UpSound "weapons/up/plasmacannon"
 	Weapon.PreferredSkin "MarineBFG"
 	States {
-	Ready:
-		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "ReadyRed")
-		PLCG ABCD 3 A_WeaponReady
-		goto Ready+2
-	ReadyRed:
-		PC2G ABCD 3 A_WeaponReady
-		loop
+    Select:
+		TNT1 A 0 A_JumpIfInventory("IsRed",1,"Select.Red")
+		PLCG A 1 offset (90,100)
+		PLCG A 1 offset (80,89)
+		PLCG A 1 offset (70,79)
+		PLCG A 1 offset (60,70)
+		PLCG A 1 offset (50,62)
+		PLCG A 1 offset (40,55)
+		PLCG A 1 offset (30,49)
+		PLCG A 1 offset (20,44)
+		PLCG A 1 offset (15,40)
+		PLCG A 1 offset (10,37)
+		PLCG A 1 offset (5,34)
+		PLCG A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
+	Select.Red:
+	    PC2G A 1 offset (90,100)
+		PC2G A 1 offset (80,89)
+		PC2G A 1 offset (70,79)
+		PC2G A 1 offset (60,70)
+		PC2G A 1 offset (50,62)
+		PC2G A 1 offset (40,55)
+		PC2G A 1 offset (30,49)
+		PC2G A 1 offset (20,44)
+		PC2G A 1 offset (15,40)
+		PC2G A 1 offset (10,37)
+		PC2G A 1 offset (5,34)
+		PC2G A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
 	Deselect:
-		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "DeselectRed")
-		PLCG A 1 offset (-5, 34)
-		PLCG A 1 offset (-16, 38)
-		PLCG A 1 offset (-23, 45)
-		PLCG A 1 offset (-32, 56)
-		PLCG A 1 offset (-42, 66)
-		PLCG A 1 offset (-51, 73)
-		PLCG A 1 offset (-63, 87)
-		PLCG A 1 offset (-78, 97)
-		PLCG A 1 offset (-88, 111)
-		PLCG A 1 offset (-99, 121)
-		PLCG A 1 offset (-112, 133)
-		PLCG A 1 offset (-125, 154)
-		PLCG A 0 offset (-1, 33)
-		PLCG A 0 A_Lower
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		TNT1 A 0 A_JumpIfInventory("IsRed",1,"Deselect.Red")
+		PLCG A 1 offset (4,34)
+		PLCG A 1 offset (8,40)
+		PLCG A 1 offset (16,49)
+		PLCG A 1 offset (24,62)
+		PLCG A 1 offset (32,79)
+		PLCG A 1 offset (40,100)
+		TNT1 A 0 offset (1, 33)
+		TNT1 A 0 A_Lower
 		wait
-	DeselectRed:
-		PC2G A 1 offset (-5, 34)
-		PC2G A 1 offset (-16, 38)
-		PC2G A 1 offset (-23, 45)
-		PC2G A 1 offset (-32, 56)
-		PC2G A 1 offset (-42, 66)
-		PC2G A 1 offset (-51, 73)
-		PC2G A 1 offset (-63, 87)
-		PC2G A 1 offset (-78, 97)
-		PC2G A 1 offset (-88, 111)
-		PC2G A 1 offset (-99, 121)
-		PC2G A 1 offset (-112, 133)
-		PC2G A 1 offset (-125, 154)
-		PC2G A 0 offset (-1, 33)
-		PC2G A 0 A_Lower
+	Deselect.Red:
+		PC2G A 1 offset (4,34)
+		PC2G A 1 offset (8,40)
+		PC2G A 1 offset (16,49)
+		PC2G A 1 offset (24,62)
+		PC2G A 1 offset (32,79)
+		PC2G A 1 offset (40,100)
+		TNT1 A 0 offset (1, 33)
+		TNT1 A 0 A_Lower
 		wait
-	Select:
-		PLCG AA 0 A_JumpIfInventory ("IsRed", 1, "SelectRed")
-		PLCG A 1 offset (-125, 154)
-		PLCG A 1 offset (-112, 133)
-		PLCG A 1 offset (-99, 121)
-		PLCG A 1 offset (-88, 111)
-		PLCG A 1 offset (-78, 97)
-		PLCG A 1 offset (-63, 87)
-		PLCG A 1 offset (-51, 73)
-		PLCG A 1 offset (-42, 66)
-		PLCG A 1 offset (-32, 56)
-		PLCG A 1 offset (-23, 45)
-		PLCG A 1 offset (-16, 38)
-		PLCG A 1 offset (-5, 34)
-		goto ready
-	SelectRed:
-		PC2G A 1 offset (-125, 154)
-		PC2G A 1 offset (-112, 133)
-		PC2G A 1 offset (-99, 121)
-		PC2G A 1 offset (-88, 111)
-		PC2G A 1 offset (-78, 97)
-		PC2G A 1 offset (-63, 87)
-		PC2G A 1 offset (-51, 73)
-		PC2G A 1 offset (-42, 66)
-		PC2G A 1 offset (-32, 56)
-		PC2G A 1 offset (-23, 45)
-		PC2G A 1 offset (-16, 38)
-		PC2G A 1 offset (-5, 34)
-		goto ready
+	Ready:
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+		PLCG A 0 A_JumpIfInventory ("IsRed", 1, "Ready.Red")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PLCG A 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PLCG B 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PLCG C 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PLCG D 3 A_WeaponReady
+		loop
+	Ready.Red:
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PC2G A 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PC2G B 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PC2G C 3 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		PC2G D 3 A_WeaponReady
+		loop
 	Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
@@ -99,7 +137,7 @@ actor PlasmaCannon : AOWWeapon {
 		PC2G EF 3
 		PC2G G 5 A_Refire
 		goto Ready
-	/*AltFire:
+	AltFire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		PC2G A 0 A_JumpIfInventory("IsBlue",1,"AltFireBlue")
@@ -116,7 +154,7 @@ actor PlasmaCannon : AOWWeapon {
 		PC2G JKL 4 bright
 		PC2G EF 3
 		PC2G G 5 A_Refire
-		goto Ready*/
+		goto Ready
 	FireBlue:
 		PLCG A 8 A_PlayWeaponSound("plasmacannon/fire")
 		PLCG EFG 6 bright
@@ -132,7 +170,7 @@ actor PlasmaCannon : AOWWeapon {
 		PLCG EF 3
 		PLCG G 5 A_Refire
 		goto Ready
-	/*AltFireBlue:
+	AltFireBlue:
 		PLCG A 5 A_PlayWeaponSound("plasmacannon/altfire")
 		PLCG EFG 5 bright
 		PLCG H 0 bright A_GunFlash
@@ -146,7 +184,7 @@ actor PlasmaCannon : AOWWeapon {
 		PLCG JKL 4 bright
 		PLCG EF 3
 		PLCG G 5 A_Refire
-		goto Ready*/
+		goto Ready
 	Spawn:
 		TNT1 A 0
 		stop
@@ -162,7 +200,7 @@ actor PlasmaCannonBall {
 	Radius 13
 	Height 8
 	Speed 40
-	Damage (400)
+	Damage (220)
 	Obituary "$OB_PLASMACANNON_RED" // "%o was annihilated by %k's \caPlasma Cannon."
 	RenderStyle Add
 	Alpha 0.75
@@ -177,7 +215,7 @@ actor PlasmaCannonBall {
 		loop
 	Death:
 		PLE1 A 4
-		PLE1 A 4 bright A_Explode (500, 192)
+		PLE1 A 4 bright A_Explode (530, 192)
 		PLE1 BBBB 2 bright A_SpawnItemEx("PlasmaFlameDecay", random(-32,32), random(-32,32), random(-32,32),0,0,0,0, SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		PLE1 C 0 A_SpawnItemEx ("PlasmaFlameCluster", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
 		PLE1 C 4 bright

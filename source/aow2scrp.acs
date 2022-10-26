@@ -338,7 +338,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine CF_IsMedic			1 << 6
 #libdefine CF_IsTimeCop			1 << 7
 #libdefine CF_Support			1 << 8
-#libdefine CF_IsKarasawa		1 << 9
+#libdefine CF_DamageDebuff		1 << 9
 
 // Dependency status
 #define DEP_NONE 0

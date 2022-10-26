@@ -38,10 +38,10 @@ server	int		zeta_teamstaytime			=		2;
 
 // [Dusk] How many minutes until +1 Timed C4 can be purchased. (-1 to disable)
 // [SG] This is also used as the delay for allowing the use of Timed C4s
-server	int		zeta_c4delay				=		-1;
+server	int		zeta_c4delay				=		5;
 
 // [Dusk] {10/27/12} If true, players do not get spawn invulnerability upon respawn
-server	int		zeta_nospawninvul			=		1;
+server	int		zeta_nospawninvul			=		0;
 	
 // [Dusk] {11/2/12} Toggle disconnect donate (donation of all money upon disconnect)
 server	int		zeta_nodisconnectdonate		=		0;
@@ -115,13 +115,13 @@ server	int		zeta_creditcap				=		30000;
 server	int		zeta_juggernautlimit		=		2;
 
 // Plasma Cannon initial delay
-server	int		zeta_plasmapurchasedelay	=		-1;
+server	int		zeta_plasmapurchasedelay	=		5;
 
 // [SP] Maximum number of plasma cannons per team. (Set to -1 for unlimited)
 server	int		zeta_maxcannonsperteam		=		4;
 
 // [Dusk] Time (in minutes) to determine plasma cannon cooldown. Use -1 to disable
-server	int		zeta_plasmacooldown			=		-1;
+server	int		zeta_plasmacooldown			=		3;
 
 // [SP] How long you have to wait to buy a new superweapon beacon. (Minutes) (Set to -1 to disable wait)
 server	int		zeta_nukepurchasedelay		=		5;
@@ -129,10 +129,7 @@ server	int		zeta_nukepurchasedelay		=		5;
 // [SP]Maximum number of time cops per team. (Set to -1 for unlimited)
 server	int		zeta_maxtimecopsperteam		=		2;
 
-// [JD] Maximum number of Karasawa's per team.
-server	int		zeta_maxkarasawasperteam	=		1;
-
-server	int		zeta_maxutilityguy			=		2;
+server	int		zeta_maxutilityguy			=		3;
 
 
 

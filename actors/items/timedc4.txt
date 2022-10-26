@@ -108,6 +108,7 @@ actor TimedC4Armed
 	DamageFactor "Monster", 0.0
 	DamageFactor "Deconstruction", 0.0
 	DamageFactor "Flash", 0.0
+	DamageFactor "StealthKnife", 0.5
 	obituary "%o was too close %k Timed C4."
 	
 	states {
@@ -149,6 +150,7 @@ actor TimedC4Armed
 		TNT1 A 0 a_stopsound(6)
 		TNT1 A 0 a_stopsound(7)*/
 		stop
+	Death.StealthKnife:
 	Death.Disarm:
 		TC4T R 35 A_PlaySound ("c4/disarm")
 		TC4T R 1 A_Fadeout (0.1) 

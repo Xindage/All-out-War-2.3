@@ -26,6 +26,13 @@ actor CrispyPlayer2 : Inventory {Inventory.MaxAmount 4}
 actor IsInSpawnRoom : Inventory {}
 actor IsMCT : Inventory {}
 actor IsArtillerySoldier : Inventory {}
+actor IsStealth : Inventory {}
+actor IsGunman : Inventory {}
+actor IsMachinegunner : Inventory {}
+actor IsMinigunner : Inventory {}
+actor IsDemoExpert : Inventory {}
+actor IsShockTrooper : Inventory {}
+actor IsKarasawaSoldier : Inventory {}
 
 // [SP] This item is used to determine whether a util can build turrets in his base.
 // He must be close enough to one of his own (standing) structures to do this.

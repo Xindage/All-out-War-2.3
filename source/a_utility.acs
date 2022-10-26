@@ -148,7 +148,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		// [SP] Can only build on repair pad if built w/ util gun
-		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && ThingCountSector(T_NONE,902,15) == 0 &&  ThingCount(T_NONE,902) == 1) {
+		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,902,15) == 1 || ThingCountSector(T_NONE,902,240) == 1) &&  ThingCount(T_NONE,902) == 1) {
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (902, "Disapproved");
@@ -157,7 +157,7 @@ script 344 (int Type, int DoneByUtilGun)
 			terminate;
 		}
 		
-		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && ThingCountSector(T_NONE,903,13) == 0 &&  ThingCount(T_NONE,903) == 1) {
+		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,903,13) == 1 || ThingCountSector(T_NONE,903,140) == 1) &&  ThingCount(T_NONE,903) == 1) {
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (903, "Disapproved");
@@ -231,7 +231,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		// [SP] Can only build on repair pad if built w/ util gun
-		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && ThingCountSector(T_NONE,904,15) == 0 &&  ThingCount(T_NONE,904) == 1) {
+		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,904,15) == 1 || ThingCountSector(T_NONE,904,240) == 1) &&  ThingCount(T_NONE,904) == 1) {
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (904, "Disapproved");
@@ -239,7 +239,7 @@ script 344 (int Type, int DoneByUtilGun)
 			RefundCredits (-1, 1500);		
 			terminate;
 		}
-		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && ThingCountSector(T_NONE,905,13) == 0 &&  ThingCount(T_NONE,905) == 1) {
+		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,905,13) == 1 || ThingCountSector(T_NONE,905,140) == 1) &&  ThingCount(T_NONE,905) == 1) {
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (905, "Disapproved");

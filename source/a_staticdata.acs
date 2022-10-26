@@ -152,7 +152,9 @@ int Repairing_int[MAX_BUILDINGS * 2][MAXPLAYERS + 1];
 /*#define CONFIG_ENHANCEDC4_BLUE			18	// Does blue team have enhanced C4?
 #define CONFIG_ENHANCEDC4_RED			19	// -- red*/
 // ----
-#define MAX_CONFIG						21
+// 2022/10/11 Xindage - CONFIG_3DBUILDINGS should be temporary until all maps get it by default
+#define CONFIG_3DBUILDINGS				21	// Buildings uses 3d sectors?
+#define MAX_CONFIG						22
 int Config[MAX_CONFIG][2];
 
 // Snapshot stuff
@@ -178,7 +180,7 @@ int MenuMechs[NUM_MECH_WEIGHTS][MAX_MENU_ITEMS];
 // ============================================================================
 
 // Identifiers of weapons the random weapon crate can give.
-#define MAX_RANDOMWEAPONCRATEITEMS 23
+#define MAX_RANDOMWEAPONCRATEITEMS 24
 int RandomWeaponCrateItems[MAX_RANDOMWEAPONCRATEITEMS] = {
 	ITEM_ARTILLERY,
 	ITEM_CHEMSPRAY,
@@ -205,7 +207,8 @@ int RandomWeaponCrateItems[MAX_RANDOMWEAPONCRATEITEMS] = {
 	ITEM_TIBRIFLE,
 	ITEM_COMBUSTRIFLE,
 	ITEM_TIMEGUN,
-// -- 23
+	ITEM_Karasawa,
+// -- 24
 };
 
 // ============================================================================

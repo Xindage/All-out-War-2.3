@@ -1,5 +1,9 @@
 // BFG 2704
-actor BFG2704 : AOWWeapon replaces BFG9000 {
+actor "BFG 2704" : AOWWeapon replaces BFG9000 {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+WEAPON.NOAUTOFIRE
 	Inventory.PickupMessage "$GOTBFG2704"
 	Inventory.RespawnTics 10500
@@ -15,39 +19,44 @@ actor BFG2704 : AOWWeapon replaces BFG9000 {
 	Spawn:
 		BFUG A -1
 		stop
-	Ready:
-		BFGG A 1 A_WeaponReady
-		wait
-	Deselect:
-		BFGG A 1 offset (-5, 34)
-		BFGG A 1 offset (-16, 38)
-		BFGG A 1 offset (-23, 45)
-		BFGG A 1 offset (-32, 56)
-		BFGG A 1 offset (-42, 66)
-		BFGG A 1 offset (-51, 73)
-		BFGG A 1 offset (-63, 87)
-		BFGG A 1 offset (-78, 97)
-		BFGG A 1 offset (-88, 111)
-		BFGG A 1 offset (-99, 121)
-		BFGG A 1 offset (-112, 133)
-		BFGG A 1 offset (-125, 154)
-		BFGG A 0 offset (-1, 33)
-		BFGG A 0 A_Lower
-		wait
-	Select:
-		BFGG A 1 offset (-125, 154)
-		BFGG A 1 offset (-112, 133)
-		BFGG A 1 offset (-99, 121)
-		BFGG A 1 offset (-88, 111)
-		BFGG A 1 offset (-78, 97)
-		BFGG A 1 offset (-63, 87)
-		BFGG A 1 offset (-51, 73)
-		BFGG A 1 offset (-42, 66)
-		BFGG A 1 offset (-32, 56)
-		BFGG A 1 offset (-23, 45)
-		BFGG A 1 offset (-16, 38)
-		BFGG A 1 offset (-5, 34)
+    Select:
+		BFGG A 1 offset (90,100)
+		BFGG A 1 offset (80,89)
+		BFGG A 1 offset (70,79)
+		BFGG A 1 offset (60,70)
+		BFGG A 1 offset (50,62)
+		BFGG A 1 offset (40,55)
+		BFGG A 1 offset (30,49)
+		BFGG A 1 offset (20,44)
+		BFGG A 1 offset (15,40)
+		BFGG A 1 offset (10,37)
+		BFGG A 1 offset (5,34)
+		BFGG A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
+	Deselect:
+		TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		BFGG A 1 offset (4,34)
+		BFGG A 1 offset (8,40)
+		BFGG A 1 offset (16,49)
+		BFGG A 1 offset (24,62)
+		BFGG A 1 offset (32,79)
+		BFGG A 1 offset (40,100)
+		TNT1 A 0 offset (1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		BFGG A 1 A_WeaponReady
+		loop
 	Fire:
 		BFGG A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		BFGG A 0 A_JumpIfInventory ("InMenu", 1, "Ready")

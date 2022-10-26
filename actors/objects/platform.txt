@@ -9,7 +9,7 @@ actor FloatingPlatform : InvisibleBridge {
 	damagefactor "Flash", 0.0
 	damagefactor "Fist", 0.5
 	damagefactor "Mechstomp", 0.0
-	DamageFactor "StealthKnife", 2.5
+	DamageFactor "StealthKnife", 1.0
 	
 	states {
 	Spawn:

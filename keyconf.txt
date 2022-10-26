@@ -1,18 +1,18 @@
 // =============================================================================
+clearplayerclasses
+addplayerclass Player
+
 // AOW KEYCONF
 weaponsection AOW2
 setslot 0 RemoverGun RepairGun HealGun BombSquadGun
-setslot 1 Unarmed EagerBeaver FragGrenade Flashbang RemoteC4 Knife
+setslot 1 Unarmed EagerBeaver FragGrenade Flashbang RemoteC4 Knife "Lightsaber"
 setslot 2 Handgun Rifle SniperRifleWeak SniperRifle BloodRevolver advancedsniperrifle
 setslot 3 Boomstick DoubleShotgun AutoShotgun "Quad Shotgun"
 setslot 4 SubMachineGun MachineGun GatlingGun JumpjetGatlingGun "Nail-Machine Gun"
 setslot 5 GrenadeLauncher MissileLauncher ArtilleryCannon MortarLauncher
-setslot 6 Flamer CombustionAutorifleWeak CombustionAutorifle ChemicalSprayer TiberiumAutorifleWeak TiberiumAutorifle
-setslot 7 LaserRifle LaserChaingun GaussRifle ShockRifle PlasmaGun StealthLaserRifle Karasawa
-setslot 8 ChronoBow PlasmaCannon TimeGun UtilityGun BFG2704
-
-clearplayerclasses
-addplayerclass Player
+setslot 6 LaserChaingun GaussRifle ShockRifle PlasmaGun StealthLaserRifle Karasawa
+setslot 7 UtilityGun ChronoBow TimeGun PlasmaCannon "BFG 2704"
+setslot 8 Flamer CombustionAutorifleWeak CombustionAutorifle ChemicalSprayer TiberiumAutorifleWeak TiberiumAutorifle
 
 // =============================================================================
 // Key section
@@ -109,3 +109,16 @@ alias a_notarget "puke 945 15"
 alias a_exit "puke 945 16"
 alias a_health "puke 945 17 %1"
 alias a_fly "puke 945 18"
+
+// =============================================================================
+// Nasty dogs
+addkeysection "All Out War 2: Nasty Dogs" NastyDogsKeybinds
+addmenukey "Melee Attack" meleeattack
+addmenukey "Reload Weapon" reloadweapon
+addmenukey "Eject Mech" ejectmech
+defaultbind q meleeattack
+defaultbind r reloadweapon
+ALIAS meleeattack "puke 828 3"
+ALIAS reloadweapon "Pukename reloadweapon"
+ALIAS ejectmech "use MechEjectButton"
+

@@ -1,0 +1,415 @@
+ACTOR "Lightsaber" : AOWWeapon 17599
+{
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
+    Weapon.AmmoUse 0
+    Weapon.KickBack 600
+    Obituary "$OB_LIGHTSABRE" 
+    Inventory.PickupMessage "You got the Lightsaber! May the FORCE be with you, my young padawan!"
+    weapon.selectionorder 666
+    weapon.PreferredSkin "MarineKnife"	
+	Scale 0.25
+    States {
+	Select:
+	    TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
+		ZSSR A 1 offset (-90,100)
+		ZSSR A 1 offset (-80,89)
+		ZSSR A 1 offset (-70,79)
+		ZSSR A 1 offset (-60,70)
+		ZSSR A 1 offset (-50,62)
+		ZSSR A 1 offset (-40,55)
+		ZSSR A 1 offset (-30,49)
+		ZSSR A 1 offset (-20,44)
+		ZSSR A 1 offset (-15,40)
+		ZSSR A 1 offset (-10,37)
+		ZSSR A 1 offset (-5,34)
+		ZSSR A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
+	Select.Blue:
+	    ZSSB A 1 offset (-90,100)
+		ZSSB A 1 offset (-80,89)
+		ZSSB A 1 offset (-70,79)
+		ZSSB A 1 offset (-60,70)
+		ZSSB A 1 offset (-50,62)
+		ZSSB A 1 offset (-40,55)
+		ZSSB A 1 offset (-30,49)
+		ZSSB A 1 offset (-20,44)
+		ZSSB A 1 offset (-15,40)
+		ZSSB A 1 offset (-10,37)
+		ZSSB A 1 offset (-5,34)
+		ZSSB A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
+	Deselect:
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+	    TNT1 A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
+		ZSSR A 1 offset (-4,34)
+		ZSSR A 1 offset (-8,40)
+		ZSSR A 1 offset (-16,49)
+		ZSSR A 1 offset (-24,62)
+		ZSSR A 1 offset (-32,79)
+		ZSSR A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	DeselectBlue:
+		ZSSB A 1 offset (-4,34)
+		ZSSB A 1 offset (-8,40)
+		ZSSB A 1 offset (-16,49)
+		ZSSB A 1 offset (-24,62)
+		ZSSB A 1 offset (-32,79)
+		ZSSB A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+	    TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Ready.Blue")
+		ZSSR A 4
+	    TNT1 A 0 A_PlayWeaponSound ("weapons/son")		
+		ZSSR BCDEFG 2 Bright A_WeaponReady (WRF_NOBOB)
+    ReadyLoop:
+	    TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "ReadyLoopBlue")
+	    TNT1 A 0 A_Playsound("weapons/sidle")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Fire3")
+        ZSRR ABBC 1 Bright A_WeaponReady 
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Fire3")
+        ZSRR CBBA 1 Bright A_WeaponReady
+        Loop 
+	Ready.Blue:
+		ZSSB A 4
+	    TNT1 A 0 A_PlayWeaponSound ("weapons/son")		
+		ZSSB BCDEFG 2 Bright A_WeaponReady (WRF_NOBOB)
+    ReadyLoopBlue: 
+		TNT1 A 0 A_Playsound("weapons/sidle")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Fire3.Blue")
+        ZSRB ABBC 1 Bright A_WeaponReady 
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Fire3.Blue")
+        ZSRB CBBA 1 Bright A_WeaponReady
+        Loop
+	Fire: 
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Fire.Blue")
+		TNT1 A 0 A_JumpIfInventory("SwitchHands", 2, "Fire3")
+		TNT1 A 0 A_JumpIfInventory("SwitchHands", 1, "Fire2")
+		ZS1R ABC 1 Bright
+		TNT1 A 0 A_Giveinventory("SwitchHands",1)
+		TNT1 A 0 A_Playsound("weapons/sattack1", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)	
+		ZS1R DEF 1 Bright
+		TNT1 A 10 A_WeaponReady
+		Goto FinishAnimation
+	Fire.Blue:
+	    TNT1 A 0 A_JumpIfInventory("SwitchHands", 2, "Fire3.Blue")
+	    TNT1 A 0 A_JumpIfInventory("SwitchHands", 1, "Fire2.Blue")
+		ZS1B ABC 1
+		TNT1 A 0 A_Giveinventory("SwitchHands",1)
+		TNT1 A 0 A_Playsound("weapons/sattack1", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)	
+		ZS1B DEF 1 Bright
+		TNT1 A 10 A_WeaponReady
+		Goto FinishAnimation.Blue
+	Fire2:
+		ZS2R ABCD 1 BRIGHT
+		TNT1 A 0 A_Giveinventory("SwitchHands",1)
+		TNT1 A 0 A_Playsound("weapons/sattack2", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)	
+		ZS2R EFG 1 BRIGHT
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)	
+		ZS2R HIJ 1 BRIGHT
+		TNT1 A 10 A_WeaponReady
+	    Goto FinishAnimation
+	Fire2.Blue:
+		ZS2B ABCD 1 BRIGHT
+		TNT1 A 0 A_Giveinventory("SwitchHands",1)
+		TNT1 A 0 A_Playsound("weapons/sattack2", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)	
+		ZS2B EFG 1 BRIGHT
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)	
+		ZS2B HIJ 1 BRIGHT
+		TNT1 A 10 A_WeaponReady
+	    Goto FinishAnimation.Blue
+	Fire3: 
+		ZSRR A 1 Bright
+		ZSAR AB 1 Bright
+		TNT1 A 0 A_Playsound("weapons/sattack3", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)	
+		ZSAR CDE 1 Bright
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)	
+		ZSAR FGH 1 Bright
+		TNT1 A 0 A_FireCustomMissile("SaberSlashRed", 0, 0, 0, 0)
+		ZSAR IJ 1 Bright
+		TNT1 A 10 A_TakeInventory("ActionMeleeAttack",1)
+		Goto FinishAnimation
+	Fire3.Blue:
+		ZSRB A 1 Bright
+		ZSAB AB 1 Bright
+		TNT1 A 0 A_Playsound("weapons/sattack3", CHAN_WEAPON, 1) 
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)	
+		ZSAB CDE 1 Bright
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)	
+		ZSAB FGH 1 Bright
+		TNT1 A 0 A_FireCustomMissile("SaberSlashBlue", 0, 0, 0, 0)
+		ZSAB IJ 1 Bright
+		TNT1 A 10 A_TakeInventory("ActionMeleeAttack",1)
+		Goto FinishAnimation.Blue
+	FinishAnimation:
+		ZSRR D 1 BRIGHT
+		ZSRR E 1 BRIGHT
+		ZSRR F 1 BRIGHT
+		ZSRR G 1 BRIGHT
+		ZSRR H 1 BRIGHT
+		ZSRR I 1 BRIGHT A_TakeInventory("SwitchHands", 2)
+		Goto ReadyLoop
+	FinishAnimation.Blue:
+		ZSRB D 1 BRIGHT
+		ZSRB E 1 BRIGHT
+		ZSRB F 1 BRIGHT
+		ZSRB G 1 BRIGHT
+		ZSRB H 1 BRIGHT
+		ZSRB I 1 BRIGHT A_TakeInventory("SwitchHands", 2)
+		Goto ReadyLoop
+    AltFire: 
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "AltFire.Blue")
+		TNT1 A 0 A_Playsound("weapons/sidle")	
+		ZSDR AB 1 BRIGHT
+		TNT1 A 0 A_TakeInventory("SwitchHands", 2)
+		goto AltHold	
+    AltFire.Blue: 
+		TNT1 A 0 A_Playsound("weapons/sidle")	
+		ZSDB AB 1 BRIGHT
+		TNT1 A 0 A_TakeInventory("SwitchHands", 2)
+		goto AltHold			
+    AltHold:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "ReadyLoop")
+	    TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "AltHold.Blue")
+		TNT1 A 0 A_Playsound("weapons/sidle", CHAN_WEAPON, 1)
+        ZSDR CDDE 1 BRIGHT A_FireCustomMissile("FakedeflectRed", 0, 0, 0, 0)
+        ZSDR EDDC 1 BRIGHT A_FireCustomMissile("FakedeflectRed", 0, 0, 0, 0)
+		TNT1 A 0 A_ReFire		
+		ZSDR BA 1 BRIGHT
+		goto ReadyLoop	
+    AltHold.Blue: 	
+		TNT1 A 0 A_Playsound("weapons/sidle", CHAN_WEAPON, 1)
+        ZSDB CDDE 1 BRIGHT A_FireCustomMissile("FakedeflectBlue", 0, 0, 0, 0)
+        ZSDB EDDC 1 BRIGHT A_FireCustomMissile("FakedeflectBlue", 0, 0, 0, 0)
+		TNT1 A 0 A_ReFire		
+		ZSDB BA 1 BRIGHT
+		goto ReadyLoop
+	Spawn:
+		TNT1 A 0
+		stop
+     } 
+}
+
+/*
+ACTOR Fakedeflect
+{
+   Health 5
+   Height 35
+   Radius 12
+   Speed  8
+   RENDERSTYLE NONE
+   +NOBLOOD
+   +SHOOTABLE
+   +NOGRAVITY
+   +REFLECTIVE
+   +NOCLIP
+   States
+   {
+   Spawn: 
+      SARG AA 2 
+      Stop
+   Death: 
+      SARG A 0
+      Stop
+   }
+}
+*/
+
+ACTOR FakedeflectRed
+{
+   Health 5
+   Height 35
+   Radius 12
+   Speed  8
+   RENDERSTYLE NONE
+   Bloodtype "ShieldHitRed"
+   +SHOOTABLE
+   +NOGRAVITY
+   +REFLECTIVE
+   +NOCLIP
+   States
+   {
+   Spawn: 
+      SARG AA 2 
+      Stop
+   Death: 
+      SARG A 0
+      Stop
+   }
+}
+
+ACTOR FakedeflectBlue : FakedeflectRed
+{
+   Bloodtype "ShieldHitBlue"
+}
+
+actor ShieldHitRed
+{
+  Radius 1
+  Height 1
+  Scale 0.5
+  Renderstyle Add
+  +NOGRAVITY
+  +NOINTERACTION
+  States
+  {
+  Spawn:
+    LH1T A 0 bright
+    LH1T A 1 bright A_Stop
+    LH1T A 0 bright A_PlaySound ("weapons/sshield")
+    LH1T BCDEFGH 1 bright
+    stop
+  }
+}
+
+actor ShieldHitBlue : ShieldHitRed
+{
+  States
+  {
+  Spawn:
+    LH2T A 0 bright
+    LH2T A 1 bright A_Stop
+    LH2T A 0 bright A_PlaySound ("weapons/sshield")
+    LH2T BCDEFGH 1 bright
+    stop
+  }
+}
+
+ACTOR SaberSlashRed : FastProjectile {
+	PROJECTILE
+	-RANDOMIZE
+	+NODAMAGETHRUST
+	Radius 18
+	Height 18
+	Speed 120
+	Damage (111)	
+	DamageType "Energy"
+    Obituary "$OB_LIGHTSABRE" 	
+	States {
+	Spawn:
+		TNT1 A 1 BRIGHT
+        Stop
+	Death:
+		TNT1 A 1 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+	    Stop	
+	XDeath:
+		TNT1 A 1 A_PlaySound("weapons/sclash")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+	    Stop	
+	Crash:
+		TNT1 A 1 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+	    Stop			
+	}  
+}
+
+ACTOR SaberFlareRed : RedPlasmaFlare {Scale 0.8}
+ACTOR SaberFlareBlue : BluePlasmaFlare {Scale 0.8}
+
+ACTOR SlashHitRed: BulletPuff {
+  renderstyle Add
+  Alpha 0.85
+  +NOBLOCKMAP
+  +NOGRAVITY
+  +CLIENTSIDEONLY
+  +BLOODLESSIMPACT 
+  +FORCEXYBILLBOARD
+  Scale 0.5
+  Speed 0
+  States
+  {
+  Spawn:
+        TNT1 A 0 A_SpawnItem ("SaberFlareRed", 0)	
+	    TNT1 A 0 A_Jump(255, "Slash1", "Slash2", "Slash3", "Slash4")    
+	Slash1:
+	    SLH1 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareRed", 0)
+        Stop	
+	Slash2:
+	    SLH2 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareRed", 0)
+        Stop	
+	Slash3:
+	    SLH3 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareRed", 0)
+        Stop	
+	Slash4:
+	    SLH4 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareRed", 0)
+        Stop   
+    stop
+  }
+}
+
+ACTOR SlashHitBlue: SlashHitRed {
+  States
+  {
+  Spawn:
+        TNT1 A 0 A_SpawnItem ("SaberFlareBlue", 0)	
+	    TNT1 A 0 A_Jump(255, "Slash1", "Slash2", "Slash3", "Slash4")    
+	Slash1:
+	    SLH1 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareBlue", 0)
+        Stop	
+	Slash2:
+	    SLH2 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareBlue", 0)
+        Stop	
+	Slash3:
+	    SLH3 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareBlue", 0)
+        Stop	
+	Slash4:
+	    SLH4 ABCDEFGH 1 bright A_SpawnItem ("SaberFlareBlue", 0)
+        Stop   
+    stop
+  }
+}
+
+ACTOR SaberSlashBlue : SaberSlashRed {
+	States {
+	Death:
+		TNT1 A 1 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitBlue", 0)		
+	    Stop
+	XDeath:
+		TNT1 A 1 A_PlaySound("weapons/sclash")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitblue", 0)		
+	    Stop	
+	Crash:
+		TNT1 A 1 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 0 A_SpawnItem ("SlashHitblue", 0)		
+	    Stop			
+	}  
+}
+
+ACTOR SwitchHands : Inventory {Inventory.MaxAmount 2}

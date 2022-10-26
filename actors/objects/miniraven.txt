@@ -13,20 +13,22 @@ actor Utility_MiniRavenRed {
 	Mass 200
 	Speed 4
 	PainChance 0
-	DamageFactor "Fist", 0.75
-	DamageFactor "Bullet", 1.0
-	DamageFactor "Rifle", 1.0
-	DamageFactor "Explosion", 1.0
-	DamageFactor "Fire", 1.0
-	DamageFactor "Chemical", 2.0
-	DamageFactor "Energy", 1.0
-	DamageFactor "AntiArmor", 2.0
-	DamageFactor "Time", 1.0
-	DamageFactor "Disarm", 0.0
-	DamageFactor "Flash", 1.0
-	DamageFactor "MassDriver", 2.0
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Monster", 0.0
+	damagefactor "Fist", 0.75
+	damagefactor "Bullet", 1.0
+	damagefactor "Rifle", 1.0
+	damagefactor "Explosion", 1.0
+	damagefactor "Terrorist", 2.0
+	damagefactor "Suicide", 1.0
+	damagefactor "Fire", 1.0
+	damagefactor "Chemical", 2.0
+	damagefactor "Energy", 1.0
+	damagefactor "AntiArmor", 2.0
+	damagefactor "Time", 1.0
+	damagefactor "Disarm", 0.0
+	damagefactor "MassDriver", 2.0
+	damagefactor "Mechstomp", 0.0
+	damagefactor "Monster", 0.0
+	DamageFactor "StealthKnife", 1.0
 	BloodType "HHMetalHit"
 	BloodColor "White"
 	Scale 0.2
@@ -174,19 +176,19 @@ actor Utility_MiniRavenRed {
 }
 
 actor Utility_MiniRavenBlue {
+	MONSTER
 	-SOLID
 	+FLOORCLIP
 	+QUICKTORETALIATE
 	+NEVERRESPAWN
 	+LOOKALLAROUND
 	obituary "$OB_MINIRAVEN_BLUE" // "%o was pecked by a \chBlue \c-Mini-Raven."
-	health 750
-	radius 32
-	height 48
-	mass 200
-	speed 4
-	painchance 0
-	MONSTER
+	Health 750
+	Radius 32
+	Height 48
+	Mass 200
+	Speed 4
+	PainChance 0
 	damagefactor "Fist", 0.75
 	damagefactor "Bullet", 1.0
 	damagefactor "Rifle", 1.0
@@ -202,10 +204,10 @@ actor Utility_MiniRavenBlue {
 	damagefactor "MassDriver", 2.0
 	damagefactor "Mechstomp", 0.0
 	damagefactor "Monster", 0.0
-	DamageFactor "StealthKnife", 1.5
-	bloodtype "HHMetalHit"
-	bloodcolor "White"
-	scale 0.2
+	DamageFactor "StealthKnife", 1.0
+	BloodType "HHMetalHit"
+	BloodColor "White"
+	Scale 0.2
 	MaxTargetRange 10000
 	MinMissileChance 32
 	Translation "112:127=194:207"

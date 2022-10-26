@@ -1,5 +1,9 @@
 // TIBERIUM AUTORIFLE
 actor TiberiumAutorifleWeak : AOWWeapon 21084 {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+AMMO_OPTIONAL
 	+ALT_AMMO_OPTIONAL
 	inventory.pickupmessage "You got the Tiberium Autorifle!"
@@ -13,10 +17,51 @@ actor TiberiumAutorifleWeak : AOWWeapon 21084 {
 	weapon.ammogive2 20
 	Weapon.PreferredSkin "MarineMachineGun"
 	Weapon.UpSound "weapons/up/tibrifle"
+	Tag "Tiberium Autorifle Weak"
 	states
 	{
+    Select:
+		E21C A 1 offset (-90,100)
+		E21C A 1 offset (-80,89)
+		E21C A 1 offset (-70,79)
+		E21C A 1 offset (-60,70)
+		E21C A 1 offset (-50,62)
+		E21C A 1 offset (-40,55)
+		E21C A 1 offset (-30,49)
+		E21C A 1 offset (-20,44)
+		E21C A 1 offset (-15,40)
+		E21C A 1 offset (-10,37)
+		E21C A 1 offset (-5,34)
+		E21C A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
+	Deselect:
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		E21C A 1 offset (-4,34)
+		E21C A 1 offset (-8,40)
+		E21C A 1 offset (-16,49)
+		E21C A 1 offset (-24,62)
+		E21C A 1 offset (-32,79)
+		E21C A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
 	Ready:
-		E21C A 8 A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		E21C A 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		E21C A 4 A_WeaponReady
 		E21C A 0 A_JumpIfInventory("TE21Burst",4,2) //Full ammo? Don't take clip plz thx
 		E21C A 0 A_JumpIfInventory("TE21CalAmmo",1,2) //Otherwise, do we have ammo? Yes? Good, go give us a shot.
 		E21C A 0
@@ -24,36 +69,6 @@ actor TiberiumAutorifleWeak : AOWWeapon 21084 {
 		E21C A 0 A_TakeInventory("TE21CalAmmo",1) //D:
 		E21C A 0 A_GiveInventory("TE21Burst",1) //Fu.. Er, SHOT given
 		loop //lets go back shall we nao
-	Deselect:
-		E21C A 1 offset (-5, 34)
-		E21C A 1 offset (-16, 38)
-		E21C A 1 offset (-23, 45)
-		E21C A 1 offset (-32, 56)
-		E21C A 1 offset (-42, 66)
-		E21C A 1 offset (-51, 73)
-		E21C A 1 offset (-63, 87)
-		E21C A 1 offset (-78, 97)
-		E21C A 1 offset (-88, 111)
-		E21C A 1 offset (-99, 121)
-		E21C A 1 offset (-112, 133)
-		E21C A 1 offset (-125, 154)
-		E21C A 0 offset (-1, 33)
-		E21C A 0 A_Lower
-		wait
-	Select:
-		E21C A 1 offset (-125, 154)
-		E21C A 1 offset (-112, 133)
-		E21C A 1 offset (-99, 121)
-		E21C A 1 offset (-88, 111)
-		E21C A 1 offset (-78, 97)
-		E21C A 1 offset (-63, 87)
-		E21C A 1 offset (-51, 73)
-		E21C A 1 offset (-42, 66)
-		E21C A 1 offset (-32, 56)
-		E21C A 1 offset (-23, 45)
-		E21C A 1 offset (-16, 38)
-		E21C A 1 offset (-5, 34)
-		goto ready
 	Fire:
 		E21C A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		E21C A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
@@ -80,12 +95,18 @@ actor TiberiumAutorifleWeak : AOWWeapon 21084 {
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		E21C A 1 A_JumpIfInventory("TE21Cooldown",1,"Ready")
-		E21C A 0 A_JumpIfInventory("TE21Burst",1,1)
+		E21C A 0 A_JumpIfInventory("TE21Burst",2,1)
 		Goto Ready
 		E21C A 0 A_PlaySound("toxin/fire",CHAN_AUTO)
 		E21C A 1 A_GunFlash
-		E21C A 0 A_TakeInventory("TE21Burst",1)
-		E21C A 3 A_FireCustomMissile("TiberiumDartWeak",0,0,10)
+		E21C A 0 A_TakeInventory("TE21Burst",2)
+		E21C A 0 A_SetAngle(Angle+0.5)
+		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,10)
+		E21C A 0 A_SetAngle(Angle-0.5)
+		E21C A 0 A_SetAngle(Angle-0.5)
+		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,10)
+		E21C A 0 A_SetAngle(Angle+0.5)
+		E21C A 3
 		E21C A 0 A_JumpIfInventory ("TE21Burst", 1, "AltFireSound")
 		goto Ready
 	AltFireSound:
@@ -94,31 +115,32 @@ actor TiberiumAutorifleWeak : AOWWeapon 21084 {
 		E21C A 1 A_PlaySound("toxin/fire",CHAN_AUTO)
 		E21C A 0 A_GunFlash
 	AltFireLoop:
+	    E21C A 0 A_SetAngle(Angle+3)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
+		E21C A 0 A_SetAngle(Angle-3)
 		E21C A 0 A_TakeInventory ("TE21Burst", 1)
 		E21C A 0 A_JumpIfInventory ("TE21Burst", 1, 1)
-		goto AltFireLoop+12
-		E21C A 0 A_SetAngle(Angle+4)
+		goto AltFireLoop+9
+		E21C A 0 A_SetAngle(Angle-3)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
-		E21C A 0 A_SetAngle(Angle-4)
-		E21C A 0 A_TakeInventory ("TE21Burst", 1)
-		E21C A 0 A_JumpIfInventory ("TE21Burst", 1, 1)
-		goto AltFireLoop+12
-		E21C A 0 A_SetAngle(Angle-4)
-		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
-		E21C A 0 A_SetAngle(Angle+4)
+		E21C A 0 A_SetAngle(Angle+3)
 		E21C A 0 A_TakeInventory ("TE21Burst", 1)
 		E21C A 1 bright offset(2,33)
 		E21C A 1 bright offset(3,36)
 		E21C A 1 bright offset(2,34)
 		E21C A 1 bright offset(1,32)
-		E21C A 30
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		goto Reload
 	Reload:
 		E21C A 0 A_JumpIfInventory ("TE21CalAmmo", 4, 2)
 		E21C A 5 A_CheckReload
 		goto Ready
-		E21C A 10
+		E21C A 10 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		E21C A 0 A_TakeInventory ("TE21CalAmmo", 4)
 		E21C A 0 A_GiveInventory ("TE21Burst", 4)
 		goto Ready
@@ -139,13 +161,34 @@ actor TiberiumAutorifle : TiberiumAutorifleWeak {
 	weapon.ammouse 1
 	Dropitem "TiberiumAutorifleWeak"
 	weapon.ammogive 3
+	Tag "Tiberium Autorifle"
 	states {
+    Select:
+		E21C A 1 offset (-90,100)
+		E21C A 1 offset (-80,89)
+		E21C A 1 offset (-70,79)
+		E21C A 1 offset (-60,70)
+		E21C A 1 offset (-50,62)
+		E21C A 1 offset (-40,55)
+		E21C A 1 offset (-30,49)
+		E21C A 1 offset (-20,44)
+		E21C A 1 offset (-15,40)
+		E21C A 1 offset (-10,37)
+		E21C A 1 offset (-5,34)
+		E21C A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
 	Ready:
 		E21C A 0
 		goto Ready2
 	Ready2:
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		E21C A 4 A_WeaponReady
-		E21C A 0 A_JumpIfInventory("TE21Burst6",0,2)
+		E21C A 0 A_JumpIfInventory("TE21Burst6",6,2)
 		E21C A 0 A_JumpIfInventory("TE21CalAmmo",1,2)
 		E21C A 0
 		loop
@@ -156,7 +199,7 @@ actor TiberiumAutorifle : TiberiumAutorifleWeak {
 		E21C A 0 A_JumpIfInventory ("TE21CalAmmo", 6, 2)
 		E21C A 5 A_CheckReload
 		goto Ready
-		E21C A 11
+		E21C A 11 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		E21C A 0 A_TakeInventory ("TE21CalAmmo", 6)
 		E21C A 0 A_GiveInventory ("TE21Burst6", 6)
 		goto Ready
@@ -185,49 +228,59 @@ actor TiberiumAutorifle : TiberiumAutorifleWeak {
 	AltFire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
-		E21C A 0 A_JumpIfInventory("TE21Cooldown",1,"Ready")
+		E21C A 1 A_JumpIfInventory("TE21Cooldown",1,"Ready")
 		E21C A 0 A_JumpIfInventory("TE21Burst6",1,1)
 		Goto Ready
-		E21C A 0 A_GunFlash
+		E21C A 0 A_PlaySound("toxin/fire",CHAN_AUTO)
+		E21C A 1 A_GunFlash
 		E21C A 0 A_TakeInventory("TE21Burst6",2)
-		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,16)
-		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,8)
+		E21C A 0 A_SetAngle(Angle+0.5)
+		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,10)
+		E21C A 0 A_SetAngle(Angle-0.5)
+		E21C A 0 A_SetAngle(Angle-0.5)
+		E21C A 0 A_FireCustomMissile("TiberiumDartWeak",0,0,10)
+		E21C A 0 A_SetAngle(Angle+0.5)
+		E21C A 3
 		E21C A 0 A_JumpIfInventory ("TE21Burst6", 1, "AltFireSound")
 		goto Ready
 	AltFireSound:
 		E21C A 0 A_GiveInventory("TE21Cooldown",1)
 		E21C A 0 A_PlaySound("toxin/fire",CHAN_AUTO)
-		E21C A 0 A_PlaySound("toxin/fire",CHAN_AUTO)
+		E21C A 1 A_PlaySound("toxin/fire",CHAN_AUTO)
 		E21C A 0 A_GunFlash
 	AltFireLoop:
-		E21C A 0 A_SetAngle(Angle+2.5)
+		E21C A 0 A_SetAngle(Angle+3)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
-		E21C A 0 A_SetAngle(Angle-2.5)
+		E21C A 0 A_SetAngle(Angle-3)
 		E21C A 0 A_TakeInventory ("TE21Burst6", 1)
 		E21C A 0 A_JumpIfInventory ("TE21Burst6", 1, 1)
-		goto AltFireLoop+22
+		goto AltFireLoop+19
 		E21C A 0 A_SetAngle(Angle+5)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
 		E21C A 0 A_SetAngle(Angle-5)
 		E21C A 0 A_TakeInventory ("TE21Burst6", 1)
 		E21C A 0 A_JumpIfInventory ("TE21Burst6", 1, 1)
-		goto AltFireLoop+22
-		E21C A 0 A_SetAngle(Angle-2.5)
+		goto AltFireLoop+19
+		E21C A 0 A_SetAngle(Angle-3)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
-		E21C A 0 A_SetAngle(Angle+2.5)
+		E21C A 0 A_SetAngle(Angle+3)
 		E21C A 0 A_TakeInventory ("TE21Burst6", 1)
 		E21C A 0 A_JumpIfInventory ("TE21Burst6", 1, 1)
-		goto AltFireLoop+22
+		goto AltFireLoop+19
 		E21C A 0 A_SetAngle(Angle-5)
 		E21C A 0 A_FireCustomMissile ("TiberiumDartWeak", 0, 0, 10)
 		E21C A 0 A_SetAngle(Angle+5)
 		E21C A 0 A_TakeInventory ("TE21Burst6", 1)
-		E21C A 0 A_JumpIfInventory ("TE21Burst6", 1, 1)
 		E21C A 1 bright offset(2,33)
 		E21C A 1 bright offset(3,36)
 		E21C A 1 bright offset(2,34)
 		E21C A 1 bright offset(1,32)
-		E21C A 30
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		E21C AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		goto Reload
 	Spawn:
 		TNT1 A 0
@@ -258,8 +311,8 @@ actor TiberiumDart : FastProjectile {
 	radius 13
 	height 6
 	speed 80
-	damage (Random(1, 4) * 2)
-	damagetype "Chemical" // [JD] Why the fuck was this "Rifle" damage...
+	damage (6)
+	damagetype "Rifle"
 	renderstyle add
 	alpha 0.85
 	scale 0.15
@@ -279,7 +332,7 @@ actor TiberiumDart : FastProjectile {
 	}
 }
 
-actor TiberiumDartWeak : TiberiumDart { speed 40 }
+actor TiberiumDartWeak : TiberiumDart { speed 72 damage (4) }
 
 actor TiberiumDartExplosion {
 	PROJECTILE
@@ -289,7 +342,7 @@ actor TiberiumDartExplosion {
 	states {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 5 A_Explode(2, 96)
+		TNT1 A 5 A_Explode(6, 64)
 		stop
 	}
 }

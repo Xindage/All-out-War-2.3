@@ -110,16 +110,6 @@ function bool PurchaseClass (int id) {
 		}
 	}
 	
-	// [JD] If the class we're trying to purchase is a Karasawa then we need to check for the limit (just like TimeCop).
-	if (Classes_int[id][CK_FLAGS] & CF_IsKarasawa && GetConfig(CONFIG_MAXKARASAWAS) > 0)
-	{
-		if (TeamInvCount("Karasawa", PlayerTeam() >= GetConfig(CONFIG_MAXKARASAWAS)))
-		{
-			g_Error = "Karasawa's at limit!";
-			return false;
-		}
-	}
-	
 	if (id == CLASS_UtilityGuy &&
 		TeamInvCount("UtilityGun", PlayerTeam()) >= GetConfig(CONFIG_MAXUTILITYGUY))
 		{
@@ -191,6 +181,10 @@ function int SetClass (int id, int scflags) {
 			bool HasTimeGunPositiveEffect = true;
 		if (CheckInventory ("PowerTimeGunWeaken") || CheckInventory ("PowerTimeGunSlow"))
 			bool HasTimeGunNegativeEffect = true;
+		if (CheckInventory ("Lightsaber"))
+			bool HasLightsaber = True;
+		if (CheckInventory ("BFG 2704"))
+			bool HasBFG2704 = True;
 		if (CheckInventory ("IsInSpawnRoom"))
 			bool InSpawn = true;
 		if (CheckInventory ("InMenu"))
@@ -214,6 +208,12 @@ function int SetClass (int id, int scflags) {
 			GiveInventory ("IsBlue", 1);
 		
 		GiveInventory ("Unarmed", 1);
+		GiveInventory ("ArtilleryCharge", 1);
+		GiveInventory ("MachinegunMag", 45);
+		GiveInventory ("MissileMag", 1);
+		GiveInventory ("PistolMagazine", 60);
+		GiveInventory ("SMGMag", 60);
+		GiveInventory ("SniperBolt", 1);
 		SetWeapon ("Unarmed");
 		SetAmmoCapacity ("TimedC4Ammo", 1);
 		SetAmmoCapacity ("FragGrenadeAmmo", 1);
@@ -240,6 +240,8 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("RedHueRemover", HasBerserk);
 		GiveInventory ("BeaconItem", HasSuperWeapon);
 		GiveInventory ("EagerBeaver", HasChainsaw);
+		GiveInventory ("Lightsaber", HasLightsaber);
+		GiveInventory ("BFG 2704", HasBFG2704);
 		GiveInventory ("NoMoreTerrorism", HasKamikaze);
 		GiveInventory ("DimGoldHueRemover", HasTimeGunPositiveEffect);
 		GiveInventory ("DimRedHueRemover", HasTimeGunNegativeEffect);
@@ -306,8 +308,8 @@ function int SetClass (int id, int scflags) {
 	SetArmorGrade (Classes_int[id][CK_ARMOR], Classes_int[id][CK_ARMOD]);
 	
 	// Give a handgun unless undesired
-	/*if (!(cflags & CF_NoPistol))
-		GiveItem (ITEM_HANDGUN, false);*/
+	if (!(cflags & CF_NoPistol))
+		GiveItem (ITEM_HANDGUN, false);
 	
 	// C4
 	int c4 = Classes_int[id][CK_C4] + checkInventory("TimedC4Count");
@@ -360,9 +362,6 @@ function int SetClass (int id, int scflags) {
 	// If the class is a sniper, flag as such
 	if (cflags & CF_IsSniper)
 		GiveInventory ("IsSniper", 1);
-	
-	if (id == CLASS_ShockTrooper)
-		ActivatorSound("misc/volt", 255);
 		
 	if (id == CLASS_NailMachineGunner)
 		GiveInventory("IsNailMachineGunner", 1);
@@ -382,9 +381,6 @@ function int SetClass (int id, int scflags) {
 	if (cflags & CF_IsTimeCop)
 		RecountTimeCops ();
 	
-	if (cflags & CF_IsKarasawa)
-		RecountKarasawas();
-	
 	// If the class is flagged as a harvester, they should be able
 	// to collect Tiberium
 	if (cflags & CF_IsHarvester) {
@@ -403,17 +399,47 @@ function int SetClass (int id, int scflags) {
 	
 	if (id == CLASS_ChemWarrior || id == CLASS_AdvHarvester || id == CLASS_Harvester)
 		ActivatorSound("misc/chem",255);
-	
+
+	// Certain classes do less damage than others.
+	if (cflags & CF_DamageDebuff)
+		GiveInventory ("Grade0Damage", 1);
+
 	// Stealth troopers have a specific death sound
 	if (cflags & CF_IsStealth) {
 		SetActorProperty (0, APROP_DeathSound, "stealth/death");
 		ActivatorSound("misc/stealth",255);
+		GiveInventory ("IsStealth", 1);
 		}
-	
+
+	// Tag the demolitoin expert so it can disarm remote c4
+	if (id == CLASS_DemoExpert)
+		GiveInventory ("IsDemoExpert", 1);
+
+	// Tag the minigunner so it has better fire rate anda accuracy
+	if (id == CLASS_Gunman)
+		GiveInventory ("IsGunman", 1);
+
+	// Tag the minigunner so it has altfire
+	if (id == CLASS_MachineGunner)
+		GiveInventory ("IsMachinegunner", 1);
+
+	// Tag the minigunner so it deals more damage
+	if (id == CLASS_Minigunner || id == CLASS_Commando)
+		GiveInventory ("IsMinigunner", 1);
+
 	// Tag the artillery soldier so it can have its fast reloading
 	if (id == CLASS_ARTILLERY)
 		GiveInventory ("IsArtillerySoldier", 1);
-	
+
+	if (id == CLASS_ShockTrooper) {
+		ActivatorSound("misc/volt", 255);
+		GiveInventory ("IsShockTrooper", 1);
+		}
+
+	// Tag the minigunner so it deals more damage
+	if (id == CLASS_KarasawaSoldier)
+		GiveInventory ("IsKarasawaSoldier", 1);
+
 	// Give the player the weapons and items.
 	for (int i = 0; i < 6; i++)
 		GiveItem (Classes_int[id][CK_ITEM0 + i], false);
@@ -573,13 +599,6 @@ function int CheckClassAvailability (int id) {
 	if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop && TimeCopMax > 0)
 		if (TeamInvCount ("TimeGun", PlayerTeam()) >= TimeCopMax)
 			return false;
-	
-	int KarasawaMax = GetConfig(CONFIG_MAXKARASAWAS);
-	if (Classes_int[id][CK_FLAGS] & CF_IsKarasawa && KarasawaMax > 0)
-	{
-		if (TeamInvCount("Karasawa", PlayerTeam()) >= KarasawaMax)
-			return false;
-	}
 	
 	return true;
 }

@@ -28,78 +28,82 @@
 
 // =============================================================================
 actor PowerGrade1Armor : PowerProtection {
-	DamageFactor "Fist",			0.92
-	DamageFactor "Bullet",			0.92
-	DamageFactor "Rifle",			0.92
-	DamageFactor "Explosion",		0.92
-	DamageFactor "Fire",			0.92
-	DamageFactor "Chemical",		0.92
-	DamageFactor "Energy",			0.92
+	DamageFactor "Fist",			0.9
+	DamageFactor "Bullet",			0.9
+	DamageFactor "Rifle",			0.9
+	DamageFactor "Explosion",		0.9
+	DamageFactor "Fire",			0.9
+	DamageFactor "Chemical",		0.9
+	DamageFactor "Energy",			0.9
 	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		0.92
-	DamageFactor "AntiArmor",		0.92
-	DamageFactor "FireSpecial",		0.92
-	DamageFactor "ChemicalSpecial",	0.92
-	DamageFactor "Mechstomp",		0.92
-	DamageFactor "Monster",			0.92
-	DamageFactor "Ice",				0.92
+	DamageFactor "MassDriver",		0.9
+	DamageFactor "AntiArmor",		0.9
+	DamageFactor "FireSpecial",		0.9
+	DamageFactor "ChemicalSpecial",	0.9
+	DamageFactor "Mechstomp",		0.9
+	DamageFactor "Monster",			0.9
+	DamageFactor "Ice",				0.9
+	DamageFactor "StealthKnife",	0.9
 }
 
 // =============================================================================
 actor PowerGrade2Armor : PowerProtection {
-	DamageFactor "Fist",			0.83
-	DamageFactor "Bullet",			0.83
-	DamageFactor "Rifle",			0.83
-	DamageFactor "Explosion",		0.83
-	DamageFactor "Fire",			0.83
-	DamageFactor "Chemical",		0.83
-	DamageFactor "Energy",			0.83
+	DamageFactor "Fist",			0.8
+	DamageFactor "Bullet",			0.8
+	DamageFactor "Rifle",			0.8
+	DamageFactor "Explosion",		0.8
+	DamageFactor "Fire",			0.8
+	DamageFactor "Chemical",		0.8
+	DamageFactor "Energy",			0.8
 	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		0.83
-	DamageFactor "AntiArmor",		0.83
-	DamageFactor "FireSpecial",		0.83
-	DamageFactor "ChemicalSpecial",	0.83
-	DamageFactor "Mechstomp",		0.83
-	DamageFactor "Monster",			0.83
-	DamageFactor "Ice",				0.83
+	DamageFactor "MassDriver",		0.8
+	DamageFactor "AntiArmor",		0.8
+	DamageFactor "FireSpecial",		0.8
+	DamageFactor "ChemicalSpecial",	0.8
+	DamageFactor "Mechstomp",		0.8
+	DamageFactor "Monster",			0.8
+	DamageFactor "Ice",				0.8
+	DamageFactor "StealthKnife",	0.8
 }
 
 // =============================================================================
 actor PowerGrade3Armor : PowerProtection {
-	DamageFactor "Fist",			0.73
-	DamageFactor "Bullet",			0.73
-	DamageFactor "Rifle",			0.73
-	DamageFactor "Explosion",		0.73
-	DamageFactor "Fire",			0.73
-	DamageFactor "Chemical",		0.73
-	DamageFactor "Energy",			0.73
+	DamageFactor "Fist",			0.7
+	DamageFactor "Bullet",			0.7
+	DamageFactor "Rifle",			0.7
+	DamageFactor "Explosion",		0.7
+	DamageFactor "Fire",			0.7
+	DamageFactor "Chemical",		0.7
+	DamageFactor "Energy",			0.7
 	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		0.73
-	DamageFactor "AntiArmor",		0.73
-	DamageFactor "FireSpecial",		0.73
-	DamageFactor "ChemicalSpecial",	0.73
-	DamageFactor "Mechstomp",		0.73
-	DamageFactor "Monster",			0.73
-	DamageFactor "Ice",				0.73
+	DamageFactor "MassDriver",		0.7
+	DamageFactor "AntiArmor",		0.7
+	DamageFactor "FireSpecial",		0.7
+	DamageFactor "ChemicalSpecial",	0.7
+	DamageFactor "Mechstomp",		0.7
+	DamageFactor "Monster",			0.7
+	DamageFactor "Ice",				0.7
+	DamageFactor "StealthKnife",	0.7
 }
 
 // =============================================================================
 actor PowerGrade4Armor : PowerProtection {
-	DamageFactor "Fist",			0.62
-	DamageFactor "Bullet",			0.62
-	DamageFactor "Rifle",			0.62
-	DamageFactor "Explosion",		0.62
-	DamageFactor "Fire",			0.62
-	DamageFactor "Chemical",		0.62
-	DamageFactor "Energy",			0.62
+	DamageFactor "Fist",			0.6
+	DamageFactor "Bullet",			0.6
+	DamageFactor "Rifle",			0.6
+	DamageFactor "Explosion",		0.6
+	DamageFactor "Fire",			0.6
+	DamageFactor "Chemical",		0.6
+	DamageFactor "Energy",			0.6
 	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		0.62
-	DamageFactor "AntiArmor",		0.62
-	DamageFactor "FireSpecial",		0.62
-	DamageFactor "ChemicalSpecial",	0.62
-	DamageFactor "Mechstomp",		0.62
-	DamageFactor "Monster",			0.62
-	DamageFactor "Ice",				0.62
+	DamageFactor "MassDriver",		0.6
+	DamageFactor "AntiArmor",		0.6
+	DamageFactor "FireSpecial",		0.6
+	DamageFactor "ChemicalSpecial",	0.6
+	DamageFactor "Mechstomp",		0.6
+	DamageFactor "Monster",			0.6
+	DamageFactor "Ice",				0.6
+	DamageFactor "StealthKnife",	0.6
 }
 
 // =============================================================================
@@ -120,47 +124,56 @@ actor PowerGrade5Armor : PowerProtection {
 	DamageFactor "Mechstomp",		0.5
 	DamageFactor "Monster",			0.5
 	DamageFactor "Ice",				0.5
+	DamageFactor "StealthKnife",	0.5
 }
 
 // =============================================================================
 // Stealth trooper armor	[SG] equivalent to two negative grades
 actor PowerGradeNeg1Armor : PowerProtection {
-	DamageFactor "Fist",			1.17
-	DamageFactor "Bullet",			1.17
-	DamageFactor "Rifle",			1.17
-	DamageFactor "Explosion",		1.17
-	DamageFactor "Fire",			1.17
-	DamageFactor "Chemical",		1.17
-	DamageFactor "Energy",			1.17
-	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		1.17
-	DamageFactor "AntiArmor",		1.17
-	DamageFactor "FireSpecial",		1.17
-	DamageFactor "ChemicalSpecial",	1.17
-	DamageFactor "Mechstomp",		1.17
-	DamageFactor "Monster",			1.17
-	DamageFactor "Ice",				1.17
+	DamageFactor "Fist",			1.2
+	DamageFactor "Bullet",			1.2
+	DamageFactor "Rifle",			1.2
+	DamageFactor "Explosion",		1.2
+	DamageFactor "Fire",			1.2
+	DamageFactor "Chemical",		1.2
+	DamageFactor "Energy",			1.2
+	DamageFactor "Time",			1.2
+	DamageFactor "MassDriver",		1.2
+	DamageFactor "AntiArmor",		1.2
+	DamageFactor "FireSpecial",		1.2
+	DamageFactor "ChemicalSpecial",	1.2
+	DamageFactor "Mechstomp",		1.2
+	DamageFactor "Monster",			1.2
+	DamageFactor "Ice",				1.2
+	DamageFactor "StealthKnife",	1.2
 }
 
 // =============================================================================
 actor PowerFireProof : PowerProtection {
 	DamageFactor "Fire",			0.0
 	DamageFactor "FireSpecial",		0.0
+	
 	DamageFactor "Chemical",		2.0
 	DamageFactor "ChemicalSpecial",	2.0
 }
 
 // =============================================================================
 actor PowerChemicalProof : PowerProtection {
-	DamageFactor "Fire",			2.0
-	DamageFactor "FireSpecial",		2.0
 	DamageFactor "Chemical",		0.0
 	DamageFactor "ChemicalSpecial",	0.0
+
+	DamageFactor "Fire",			2.0
+	DamageFactor "FireSpecial",		2.0
 }
 
 // =============================================================================
 actor PowerEnergyResistance : PowerProtection {
-	DamageFactor "Energy",			0.6
+	DamageFactor "Energy",			0.5
+
+	DamageFactor "Explosion",		1.25
+	DamageFactor "Mine",			1.25
+	DamageFactor "AntiArmor",		1.25
+	DamageFactor "MassDriver",		1.25
 }
 
 // =============================================================================
@@ -168,14 +181,22 @@ actor PowerEnergyResistance : PowerProtection {
 actor PowerBulletProof : PowerProtection {
 	DamageFactor "Bullet",			0.4
 	DamageFactor "Rifle",			0.4
+	
+	DamageFactor "Energy",			1.15
+	DamageFactor "Explosion",		1.15
+	DamageFactor "Mine",			1.15
+	DamageFactor "AntiArmor",		1.15
+	DamageFactor "MassDriver",		1.15
 }
 
 // =============================================================================
 actor PowerExplosiveResistance : PowerProtection {
-	DamageFactor "Explosion",		0.6
-	DamageFactor "Mine",			0.6
-	DamageFactor "AntiArmor",		0.6
-	DamageFactor "MassDriver",		0.6
+	DamageFactor "Explosion",		0.5
+	DamageFactor "Mine",			0.5
+	DamageFactor "AntiArmor",		0.5
+	DamageFactor "MassDriver",		0.5
+
+	DamageFactor "Energy",			1.25
 }
 
 // =============================================================================
@@ -236,7 +257,31 @@ actor PowerSuddenDeathVulnerability : PowerProtection {
 	DamageFactor "FireSpecial",		4.0
 	DamageFactor "ChemicalSpecial",	4.0
 	DamageFactor "Monster",			4.0
+	DamageFactor "StealthKnife",	4.0
 }
+// =============================================================================
+actor PowerGrade0DamagePower : PowerDamage {
+	DamageFactor "Fist",			0.8
+	DamageFactor "Bullet",			0.8
+	DamageFactor "Rifle",			0.8
+	DamageFactor "Explosion",		0.8
+	DamageFactor "Fire",			0.8
+	DamageFactor "Chemical",		0.8
+	DamageFactor "Energy",			0.8
+	DamageFactor "AntiArmor",		0.8
+	DamageFactor "Time",			0.8
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Superweapon",		1.0
+	DamageFactor "MassDriver",		0.8
+	DamageFactor "Mechstomp",		0.8
+	DamageFactor "Monster",			0.8
+	DamageFactor "StealthKnife",	0.8
+}
+
+actor Grade0Damage : PermanentPowerup {
+	Powerup.Type "Grade0DamagePower"
+}
+
 // =============================================================================
 actor PowerFirepowerUpgrade : PowerDamage {
 	DamageFactor "Fist",			1.3
@@ -250,6 +295,7 @@ actor PowerFirepowerUpgrade : PowerDamage {
 	DamageFactor "Time",			1.3
 	DamageFactor "MassDriver",		1.3
 	DamageFactor "Mechstomp",		1.3
+	DamageFactor "StealthKnife",	1.3
 }
 
 actor FirepowerUpgrade : PermanentPowerup {
@@ -262,18 +308,19 @@ actor FirepowerUpgrade : PermanentPowerup {
 
 // =============================================================================
 actor PowerGrade2ArmorFactoryPower : PowerProtection {
-	DamageFactor "Fist",			0.86
-	DamageFactor "Bullet",			0.86
-	DamageFactor "Rifle",			0.86
-	DamageFactor "Explosion",		0.86
-	DamageFactor "Fire",			0.86
-	DamageFactor "Chemical",		0.86
-	DamageFactor "Energy",			0.86
-	DamageFactor "AntiArmor",		0.86
+	DamageFactor "Fist",			0.9
+	DamageFactor "Bullet",			0.9
+	DamageFactor "Rifle",			0.9
+	DamageFactor "Explosion",		0.9
+	DamageFactor "Fire",			0.9
+	DamageFactor "Chemical",		0.9
+	DamageFactor "Energy",			0.9
+	DamageFactor "AntiArmor",		0.9
 	DamageFactor "Time",			1.0
-	DamageFactor "MassDriver",		0.86
-	DamageFactor "Mechstomp",		0.86
-	DamageFactor "Monster",			0.86
+	DamageFactor "MassDriver",		0.9
+	DamageFactor "Mechstomp",		0.9
+	DamageFactor "Monster",			0.9
+	DamageFactor "StealthKnife",	0.9
 }
 actor Grade2ArmorFactory : PermanentPowerup {
 	Powerup.Type "Grade2ArmorFactoryPower"

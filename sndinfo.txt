@@ -278,7 +278,7 @@ $limit				c4/beep3	0
 plasma/fire			plasshot
 plasma/explo			plasimp
 $limit 				plasma/fire	0
-$limit 				plasma/explo	0	
+$limit 				plasma/explo	0
 lrm/fire			mechrock
 lrm/reload			mechrld
 minigun/fire			regf1
@@ -455,18 +455,18 @@ bullet/flesh1			ricofls1
 bullet/flesh2			ricofls2
 bullet/flesh3			ricofls3
 bullet/flesh4			ricofls4
-$limit 				bullet/flesh1	0	
-$limit 				bullet/flesh2	0	
-$limit 				bullet/flesh3	0	
-$limit 				bullet/flesh4	0	
+$limit 				bullet/flesh1	0
+$limit 				bullet/flesh2	0
+$limit 				bullet/flesh3	0
+$limit 				bullet/flesh4	0
 
 $random				bullet/metal { bullet/metal1 bullet/metal2 bullet/metal3 }
 bullet/metal1			ricohm1
 bullet/metal2			ricohm2
 bullet/metal3			ricohm3
-$limit 				bullet/metal1	0	
-$limit 				bullet/metal2	0	
-$limit 				bullet/metal3	0	
+$limit 				bullet/metal1	0
+$limit 				bullet/metal2	0
+$limit 				bullet/metal3	0
 
 $random				bullet/ricochet { bullet/ricochets1 bullet/ricochets2 bullet/ricochets3 }
 $random				bullet/ricochets1 { bullet/ricochet1 bullet/ricochet2 bullet/ricochet3 bullet/ricochet4 }
@@ -480,14 +480,14 @@ bullet/ricochet5		ricocon1
 bullet/ricochet6		ricocon2
 bullet/ricochet7		ricocon3
 bullet/ricochet8		ricocon4
-$limit 				bullet/ricochet1	0	
-$limit 				bullet/ricochet2	0	
-$limit 				bullet/ricochet3	0	
-$limit 				bullet/ricochet4	0	
-$limit 				bullet/ricochet5	0	
-$limit 				bullet/ricochet6	0	
-$limit 				bullet/ricochet7	0	
-$limit 				bullet/ricochet8	0	
+$limit 				bullet/ricochet1	0
+$limit 				bullet/ricochet2	0
+$limit 				bullet/ricochet3	0
+$limit 				bullet/ricochet4	0
+$limit 				bullet/ricochet5	0
+$limit 				bullet/ricochet6	0
+$limit 				bullet/ricochet7	0
+$limit 				bullet/ricochet8	0
 
 $random 			misc/footstep {
 	step/step1
@@ -605,10 +605,10 @@ $rolloff menu/clear 200 1200
 
 $limit misc/w_pkup 		0
 $limit misc/p_pkup 		0
-$limit misc/i_pkup 		0		
+$limit misc/i_pkup 		0
 $limit misc/k_pkup 		0
 $limit misc/health_pkup 	0
-$limit misc/armor_pkup 		0	
+$limit misc/armor_pkup 		0
 $limit misc/ammo_pkup 		0
 $limit misc/credit_pkup 	0
 $limit misc/spawn 		0
@@ -674,9 +674,9 @@ $rolloff			misc/suicide 500 3000
 $rolloff 			misc/stealth	100 2000
 $rolloff 			misc/chem	100 2000
 
-$random				player/burn 	{player/burnr1 player/burnr2} 
-$random				player/burnr1 	{player/burn1 player/burn2 player/burn3 player/burn4 player/burn5} 
-$random				player/burnr2 	{player/burn6 player/burn7 player/burn8 player/burn9} 
+$random				player/burn 	{player/burnr1 player/burnr2}
+$random				player/burnr1 	{player/burn1 player/burn2 player/burn3 player/burn4 player/burn5}
+$random				player/burnr2 	{player/burn6 player/burn7 player/burn8 player/burn9}
 player/burn1			dsburn1
 player/burn2			dsburn2
 player/burn3			dsburn3
@@ -1171,3 +1171,84 @@ $musicvolume d_aow15 0.4
 
 // [JD] AOW16
 Ambient/Rain	AMBRAIN
+
+
+//Nasty Dogs - MeleeAttacks
+weapons/gswing      dsswing
+
+
+//Nasty Dogs - SubMachinegun
+weapons/SMGIN         SMGMAGIN
+weapons/SMGOut        SMGMAGOU
+weapons/SMGSafty      SMGSAFTY
+weapons/SMGEmpty	  DSCLIP
+
+weapons/empty1			DSCLICK1
+weapons/empty5			DSCLICK5
+
+//Nasty Dogs - Machinegun
+weapons/m16clipou		CLPM16OU
+weapons/m16clipin		CLPM16IN
+weapons/m16draw			CLPM6LAD
+weapons/m16fire         DSOICW
+
+//Nasty Dogs - Shock rifle/Tesla cannon
+TSLAEND TSLAEND
+TSLAFIR TSLAFIR
+TSLSTRT TSLSTRT
+TSLPRJC2 TSLPRJC2
+TSLPRJC1 TSLPRJC1
+
+//Nasty Dogs - Karasawa
+plasmacaster/fire    PLCASFIR
+plasmacaster/fly     PLCASFLY
+plasmacaster/explode PLCASEXP
+PlasmaCaster/Charge PLCCHR
+PlasmaCaster/Full   PLCFULL
+PlasmaCaster/Reload PLCREL
+PlasmaCaster/Shot   PLCFIRE
+PlasmaCaster/Hit    PLCHIT
+
+Weapons/KsawHit	    KSAWHIT
+Weapons/KsawFire	KSAWFIRE
+Weapons/KsawIdle	KSAWIDLE
+Weapons/KsawCharge	KSAWCHRG
+Weapons/KsawShock	KSAWSHCK
+
+$Limit Weapons/KsawHit	    0
+$Limit Weapons/KsawFire    	0
+
+//Nasty Dogs - Lightsaber
+ZSaber/key         ZSABKEY
+weapons/son        dssabreu
+weapons/sidle      dssabrei
+weapons/sshield    dssabshl
+weapons/sattack1   dssabfl1
+weapons/sattack2   dssabfl2
+weapons/sclashwall dssabhwl
+
+saberswing1 dssabf31
+saberswing2 dssabf32
+saberswing3 dssabf33
+saberswing4 dssabf34
+saberswing5 dssabf35
+$random weapons/sattack3 { saberswing1 saberswing2 saberswing3 saberswing4 saberswing5 }
+
+saberhtw1 dssabht1
+saberhtw2 dssabht2
+saberhtw3 dssabht3
+$random weapons/sclash { saberhtw1 saberhtw2 saberhtw3 }
+
+//Nasty Dogs - Handgun
+weapons/pistolf1 DSPISTO1
+weapons/pistolf2 DSPISTO2
+weapons/pistolf3 DSPISTO3
+weapons/pistolf4 DSPISTO4
+weapons/pistolr1 DSPSREL1
+weapons/pistolr2 DSPSREL2
+
+
+$random weapons/pistolfire { weapons/pistolf1 weapons/pistolf2 weapons/pistolf3 weapons/pistolf4 }
+
+
+

@@ -342,7 +342,10 @@ script SC_SERVERSETTINGS OPEN
 	SetConfig(CONFIG_LIGHTMECHS, ThingCountName("CONFIG_LightMechsOnly", 0));
 	SetConfig(CONFIG_MAXUTILITYGUY, GetCvar("zeta_maxutilityguy"));
 	SetConfig(CONFIG_MAXKARASAWAS, GetCvar("zeta_maxkarasawasperteam"));
-	
+
+	// 2022/10/11 Xindage - Check if the map uses 3d buildings.
+	SetConfig(CONFIG_3DBUILDINGS, ThingCountName("CONFIG_buildingsIs3D", 0));
+
 	delay (35);
 	restart;
 }
@@ -489,7 +492,7 @@ script SC_CL_PLAYERENTER ENTER CLIENTSIDE {
 		// This is running a beta version
 		HudMessage (s:"This is a beta release, bear in mind that\n",
 			s:"everything might not be working properly!\n\n",
-			s:"If you do experience bugs/glitches be sure to contact jdagenet";
+			s:"If you do experience bugs/glitches be sure to contact Gaturra";
 			HUDMSG_FADEINOUT|HUDMSG_LOG, IntroMsgID+1, CR_GOLD, 0.5, y, 7.0, 0.5, 1.0);
 		y += 0.25;
 	}

@@ -68,11 +68,11 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 	
 	// Ammo numbers. Some weapons don't show ammo2 to cut redundancy.
 	IsSelected Not "JuggernautWeapons" { IsSelected Not "WolverineWeapons", "TitanWeapons" {
-	IsSelected Not "MadCatWeapons" { IsSelected Not "GatlingGun", "SubMachineGun" {
-	IsSelected Not "Handgun" { IsSelected Not "MachineGun", "GaussRifle" {
+	IsSelected Not "MadCatWeapons" { IsSelected Not "GatlingGun" {
+	IsSelected Not "GaussRifle" {
 	IsSelected Not "GrenadeLauncher" {
 		drawnumber 3, INDEXFONT, White, ammo2, -17, -13, 0;
-	}}}}}
+	}}}}
 		drawnumber 3, INDEXFONT, White, ammo1, -45, -13, 0;
 	}}
 	

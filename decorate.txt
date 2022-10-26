@@ -54,8 +54,8 @@
 #include "actors/weapons/chemsprayer.txt"
 #include "actors/weapons/cryobow.txt"
 #include "actors/weapons/doubleshotgun.txt"
-#include "actors/weapons/quadshotgun"
-#include "actors/weapons/NailMG"
+#include "actors/weapons/quadshotgun.txt"
+#include "actors/weapons/nailmg.txt"
 #include "actors/weapons/fists.txt"
 #include "actors/crucial/berserk.txt"
 #include "actors/weapons/flamer.txt"
@@ -100,7 +100,7 @@
 #include "actors/mechs/titan.txt"
 #include "actors/mechs/tortoise.txt"
 #include "actors/mechs/lancer.txt"
-#include "actors/mechs/Mastodon.txt"
+#include "actors/mechs/mastodon.txt"
 #include "actors/objects/caches.txt"
 #include "actors/objects/items.txt"
 #include "actors/objects/gunturret.txt"
@@ -138,3 +138,9 @@
 #include "actors/misc/cactus.txt"
 #include "actors/misc/admin.txt"
 #include "actors/misc/skulltag.txt"
+
+//Nasty Dogs - Effects
+#include "actors/effects/flares.txt"
+
+//Nasty Dogs - Weapons
+#include "actors/weapons/Lightsaber.txt"

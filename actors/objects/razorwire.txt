@@ -14,7 +14,7 @@ actor RazorWire {
 	Obituary "%o walked into razor wire."
 	DamageFactor "Disarm", 0.0
 	DamageFactor "Mechstomp", 0.0
-	DamageFactor "StealthKnife", 1.5
+	DamageFactor "StealthKnife", 1.0
 	Tag "Razor wire (red)"
 	states {
 	Spawn:

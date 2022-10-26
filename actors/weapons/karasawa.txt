@@ -1,110 +1,250 @@
 ACTOR Karasawa : AOWWeapon 
 {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
     Inventory.PickupMessage "You got the 'Karasawa' High-Density Plasma Rifle!"
     Obituary "$OB_KARASAWA"
     Weapon.AmmoType "KarasawaAmmo"
-    //Weapon.AmmoType2 "KarasawaAmmo"
-    Weapon.AmmoGive 10
+    Weapon.AmmoType2 "KarasawaAmmo"
+    Weapon.AmmoGive 4
     Weapon.AmmoUse 1
-    //Weapon.AmmoUse2 1
+    Weapon.AmmoUse2 1
     Weapon.KickBack 1000
     Weapon.SelectionOrder 5
-    //Weapon.UpSound "weapons/up/karasawa"	
+    Weapon.UpSound "weapons/up/plasmagun"	
 	Weapon.PreferredSkin "MarineKarasawa"
-	DropItem "AmmoPack"
-    States  
+	States  
     {
     Spawn:
         KSWP A -1
         loop
-    Ready:
-		TNT1 A 0
-		TNT1 A 0 A_GiveInventory("karasawa_PowerOn", 1)
-		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"ReadyBlue")
-        KSWR ABCCB 3 A_WeaponReady(WRF_NOFIRE)
-		KSWR A 0 A_GiveInventory("karasawa_IdleSoundOn", 1)
-		//KSWR A 3 A_WeaponReady(WRF_NOFIRE)
-	ReadyRedLoop:
-		KSWR A 1 A_WeaponReady
-		Loop
-    ReadyBlue:  
-        KSWB ABCCB 3 A_WeaponReady(WRF_NOFIRE)
-		KSWR A 0 A_GiveInventory("karasawa_IdleSoundOn", 1)
-		KSWB A 3 A_WeaponReady(WRF_NOFIRE)
-	ReadyBlueLoop:
-		KSWB A 1 A_WeaponReady
-		Loop
-    Deselect:
-		TNT1 A 0
-		TNT1 A 0 A_GiveInventory("karasawa_PowerOff", 1)
-		KSWR A 0 A_GiveInventory("karasawa_IdleSoundOff", 1)
-        TNT1 C 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
-	    KSWR A 1 offset (5, 34)
-		KSWR A 1 offset (16, 38)
-		KSWR A 1 offset (23, 45)
-		KSWR A 1 offset (32, 56)
-		KSWR A 1 offset (42, 66)
-		KSWR A 1 offset (51, 73)
-		KSWR A 1 offset (63, 87)
-		KSWR A 1 offset (78, 97)
-		KSWR A 1 offset (88, 111)
-		KSWR A 1 offset (99, 121)
-		KSWR A 1 offset (112, 133)
-		KSWR A 1 offset (125, 154)
-		KSWR A 0 offset (1, 33)
-		KSWR A 0 A_Lower
-		wait
-    DeselectBlue:
-        KSWB A 1 offset (5, 34)
-		KSWB A 1 offset (16, 38)
-		KSWB A 1 offset (23, 45)
-		KSWB A 1 offset (32, 56)
-		KSWB A 1 offset (42, 66)
-		KSWB A 1 offset (51, 73)
-		KSWB A 1 offset (63, 87)
-		KSWB A 1 offset (78, 97)
-		KSWB A 1 offset (88, 111)
-		KSWB A 1 offset (99, 121)
-		KSWB A 1 offset (112, 133)
-		KSWB A 1 offset (125, 154)
-		KSWB A 0 offset (1, 33)
-		KSWB A 0 A_Lower
-		wait
     Select:
-		TNT1 A 0
-        TNT1 C 0 A_JumpIfInventory("IsBlue",1,"SelectBlue")
-	    KSWR A 1 offset (125, 154)
-		KSWR A 1 offset (112, 133)
-		KSWR A 1 offset (99, 121)
-		KSWR A 1 offset (88, 111)
-		KSWR A 1 offset (78, 97)
-		KSWR A 1 offset (63, 87)
-		KSWR A 1 offset (51, 73)
-		KSWR A 1 offset (42, 66)
-		KSWR A 1 offset (32, 56)
-		KSWR A 1 offset (23, 45)
-		KSWR A 1 offset (16, 38)
-		KSWR A 1 offset (5, 34)
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
+		KSWR A 1 offset (90,100)
+		KSWR A 1 offset (80,89)
+		KSWR A 1 offset (70,79)
+		KSWR A 1 offset (60,70)
+		KSWR A 1 offset (50,62)
+		KSWR A 1 offset (40,55)
+		KSWR A 1 offset (30,49)
+		KSWR A 1 offset (20,44)
+		KSWR A 1 offset (15,40)
+		KSWR A 1 offset (10,37)
+		KSWR A 1 offset (5,34)
+		KSWR A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
-    SelectBlue:
-        KSWB A 1 offset (125, 154)
-		KSWB A 1 offset (112, 133)
-		KSWB A 1 offset (99, 121)
-		KSWB A 1 offset (88, 111)
-		KSWB A 1 offset (78, 97)
-		KSWB A 1 offset (63, 87)
-		KSWB A 1 offset (51, 73)
-		KSWB A 1 offset (42, 66)
-		KSWB A 1 offset (32, 56)
-		KSWB A 1 offset (23, 45)
-		KSWB A 1 offset (16, 38)
-		KSWB A 1 offset (5, 34)
+    Select.Blue:  
+		KSWB A 1 offset (90,100)
+		KSWB A 1 offset (80,89)
+		KSWB A 1 offset (70,79)
+		KSWB A 1 offset (60,70)
+		KSWB A 1 offset (50,62)
+		KSWB A 1 offset (40,55)
+		KSWB A 1 offset (30,49)
+		KSWB A 1 offset (20,44)
+		KSWB A 1 offset (15,40)
+		KSWB A 1 offset (10,37)
+		KSWB A 1 offset (5,34)
+		KSWB A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
+	Deselect:
+		TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
+		KSWR A 1 offset (-4,34)
+		KSWR A 1 offset (-8,40)
+		KSWR A 1 offset (-16,49)
+		KSWR A 1 offset (-24,62)
+		KSWR A 1 offset (-32,79)
+		KSWR A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	DeselectBlue:
+		KSWB A 1 offset (-4,34)
+		KSWB A 1 offset (-8,40)
+		KSWB A 1 offset (-16,49)
+		KSWB A 1 offset (-24,62)
+		KSWB A 1 offset (-32,79)
+		KSWB A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+	    TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Ready.Blue")
+		TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"Ready2")
+        KSAW A 0 A_PlaySound("Weapons/KsawIdle",0,1.0,0)
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+        KSWR A 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR B 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR C 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR B 4 A_WeaponReady
+		Loop
+	Ready.Blue:
+	    TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"Ready2.Blue")
+        TNT1 A 0 A_PlaySound("Weapons/KsawIdle",0,1.0,0)
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+        KSWB A 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB B 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB C 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB B 4 A_WeaponReady
+		Loop
+	Ready2:
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Ready2.Blue")
+	    KSAW A 0 A_PlaySound("Weapons/KsawIdle",0,1.0,0)
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+        KSWR A 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR BC 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR CB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWR A 4 A_WeaponReady
+		Loop
+	Ready2.Blue:
+        TNT1 A 0 A_PlaySound("Weapons/KsawIdle",0,1.0,0)
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+        KSWB A 4 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB BC 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB CB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		KSWB A 4 A_WeaponReady
+		Loop
     Fire:
  	    TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 	    TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")	
-        TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Fire.Blue")	
-        KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+        TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Fire.Blue")
+		TNT1 A 0 A_JumpIfInventory("IsKarasawaSoldier",1,"FireSkill")
+        KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWR A 0 Radius_Quake(3,random(8,12),0,1,0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBoltWeak", 0, 1, 0, 0)
+        KSWR E 1 Bright A_ZoomFactor(0.990)
+		KSWR F 1 Bright A_ZoomFactor(0.980) 
+		KSWR F 1 Bright A_ZoomFactor(0.975)  
+		KSWR G 1 Bright A_ZoomFactor(0.980) 
+		KSWR G 1 Bright A_ZoomFactor(0.985) 
+		KSWR H 1 Bright A_ZoomFactor(0.990) 
+		KSWR H 1 Bright A_ZoomFactor(1)
+        KSWR I 0 Bright A_Light2
+        KSWR I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
+        KSWR IA 4 A_Light1
+        KSWR JKLMN 4
+        KSWR A 0 A_Light0
+        KSWR N 6
+        goto Ready
+    Fire.Blue: 
+	    TNT1 A 0 A_JumpIfInventory("IsKarasawaSoldier",1,"FireSkill.Blue")
+        KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWB A 0 Radius_Quake(3,random(8,12),0,1,0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBoltBlueWeak", 0, 1, 0, 0)
+        KSWB E 1 Bright A_ZoomFactor(0.990)
+		KSWB F 1 Bright A_ZoomFactor(0.980) 
+		KSWB F 1 Bright A_ZoomFactor(0.975)  
+		KSWB G 1 Bright A_ZoomFactor(0.980) 
+		KSWB G 1 Bright A_ZoomFactor(0.985) 
+		KSWB H 1 Bright A_ZoomFactor(0.990) 
+		KSWB H 1 Bright A_ZoomFactor(1)
+        KSWB I 0 Bright A_Light2
+        KSWB I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
+        KSWB IA 4 A_Light1
+        KSWB JKLMN 4
+        KSWB A 0 A_Light0
+        KSWB N 6
+        goto Ready
+    FireSkill:
+ 	    KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(3,random(8,12),0,1,0)
 	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt", 0, 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.990)
@@ -115,14 +255,14 @@ ACTOR Karasawa : AOWWeapon
 		KSWR H 1 Bright A_ZoomFactor(0.990) 
 		KSWR H 1 Bright A_ZoomFactor(1)
         KSWR I 0 Bright A_Light2
-        KSWR I 0 A_PlaySoundEx("Weapons/KarasawaCharge", "SoundSlot7", 0)
+        KSWR I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
         KSWR IA 4 A_Light1
         KSWR JKLMN 4
         KSWR A 0 A_Light0
         KSWR N 6
-        goto ReadyRedLoop
-    Fire.Blue:  
-        KSWB A 0 A_PlaySound("Weapons/KarasawaFire",5)
+        goto Ready
+    FireSkill.Blue:  
+        KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWB A 0 Radius_Quake(3,random(8,12),0,1,0)
 	    KSWB D 1 Bright A_FireCustomMissile("KsawBoltBlue", 0, 1, 0, 0)
         KSWB E 1 Bright A_ZoomFactor(0.990)
@@ -133,17 +273,20 @@ ACTOR Karasawa : AOWWeapon
 		KSWB H 1 Bright A_ZoomFactor(0.990) 
 		KSWB H 1 Bright A_ZoomFactor(1)
         KSWB I 0 Bright A_Light2
-        KSWB I 0 A_PlaySoundEx("Weapons/KarasawaCharge", "SoundSlot7", 0)
+        KSWB I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
         KSWB IA 4 A_Light1
         KSWB JKLMN 4
         KSWB A 0 A_Light0
         KSWB N 6
-        goto ReadyBlueLoop
-    /*AltFire: 
+        goto Ready
+    AltFire:
 	    TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 	    TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")   	
-        TNT1 A 0 A_JumpIfInventory("IsBlue",1,"AltFire.Blue") 	
-	    KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+        TNT1 A 0 A_JumpIfInventory("IsBlue",1,"AltFire.Blue")
+		TNT1 A 0 A_JumpIfInventory("KarasawaAmmo",5,1)
+	    Goto Empty
+		TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"AltfireSkill")
+	    KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(2,random(4,6),0,1,0)
 	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", 0, 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.995)
@@ -151,46 +294,49 @@ ACTOR Karasawa : AOWWeapon
 		KSWR G 1 Bright A_ZoomFactor(0.995)  
 		KSWR H 1 Bright A_ZoomFactor(1) 
         KSWR H 0 A_Light2
-		KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", 0, 1, 0, 0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", random(-4,4), 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.995)
 		KSWR F 1 Bright A_ZoomFactor(0.990) 
 		KSWR G 1 Bright A_ZoomFactor(0.995)  
 		KSWR H 1 Bright A_ZoomFactor(1) 
         KSWR H 0 A_Light2
-		KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", 0, 1, 0, 0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", random(-4,4), 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.995)
 		KSWR F 1 Bright A_ZoomFactor(0.990) 
 		KSWR G 1 Bright A_ZoomFactor(0.995)  
 		KSWR H 1 Bright A_ZoomFactor(1) 
         KSWR H 0 A_Light2		
-		KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", 0, 1, 0, 0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", random(-4,4), 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.995)
 		KSWR F 1 Bright A_ZoomFactor(0.990) 
 		KSWR G 1 Bright A_ZoomFactor(0.995)  
 		KSWR H 1 Bright A_ZoomFactor(1) 
-        KSWR H 0 A_Light2	
-	    KSWR A 0 A_PlaySound("Weapons/KarasawaFire",5)
+        KSWR H 0 A_Light2
+	    KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", 0, 1, 0, 0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", random(-4,4), 1, 0, 0)
         KSWR E 1 Bright A_ZoomFactor(0.995)
 		KSWR F 1 Bright A_ZoomFactor(0.990) 
 		KSWR G 1 Bright A_ZoomFactor(0.995)  
 		KSWR H 1 Bright A_ZoomFactor(1)
 		KSWR H 0 A_Light2
-        KSWR I 0 A_PlaySoundEx("Weapons/KarasawaCharge", "SoundSlot7", 0)
+        KSWR I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
         KSWR IA 8 A_Light1
         KSWR JKLMN 8
         KSWR A 0 A_Light0
         KSWR N 12
         Goto Ready
     AltFire.Blue:
-	    KSWB A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		TNT1 A 0 A_JumpIfInventory("KarasawaAmmo",5,1)
+	    Goto Empty.Blue
+	    TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"AltfireSkill.Blue")
+	    KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
 	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", 0, 1, 0, 0)
         KSWB E 1 Bright A_ZoomFactor(0.995)
@@ -198,155 +344,249 @@ ACTOR Karasawa : AOWWeapon
 		KSWB G 1 Bright A_ZoomFactor(0.995)  
 		KSWB H 1 Bright A_ZoomFactor(1) 
         KSWB H 0 Bright A_Light2
-		KSWB A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", 0, 1, 0, 0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", random(-4,4), 1, 0, 0)
         KSWB E 1 Bright A_ZoomFactor(0.995)
 		KSWB F 1 Bright A_ZoomFactor(0.990) 
 		KSWB G 1 Bright A_ZoomFactor(0.995)  
 		KSWB H 1 Bright A_ZoomFactor(1) 
         KSWB H 0 Bright A_Light2
-		KSWB A 0 A_PlaySound("Weapons/KarasawaFire",5)
+		KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", 0, 1, 0, 0)
-        KSWB E 1 Bright A_ZoomFactor(0.995)
-		KSWB F 1 Bright A_ZoomFactor(0.990) 
-		KSWB G 1 Bright A_ZoomFactor(0.995)  
-		KSWB H 1 Bright A_ZoomFactor(1) 
-        KSWB H 0 Bright A_Light2		
-		KSWB A 0 A_PlaySound("Weapons/KarasawaFire",5)
-	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
-	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", 0, 1, 0, 0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", random(-4,4), 1, 0, 0)
         KSWB E 1 Bright A_ZoomFactor(0.995)
 		KSWB F 1 Bright A_ZoomFactor(0.990) 
 		KSWB G 1 Bright A_ZoomFactor(0.995)  
 		KSWB H 1 Bright A_ZoomFactor(1) 
         KSWB H 0 Bright A_Light2
-        KSWB I 0 A_PlaySoundEx("Weapons/KarasawaCharge", "SoundSlot7", 0)
+		KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", random(-4,4), 1, 0, 0)
+        KSWB E 1 Bright A_ZoomFactor(0.995)
+		KSWB F 1 Bright A_ZoomFactor(0.990) 
+		KSWB G 1 Bright A_ZoomFactor(0.995)  
+		KSWB H 1 Bright A_ZoomFactor(1) 
+        KSWB H 0 Bright A_Light2
+		KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWB A 0 Radius_Quake(2,random(4,6),0,1,0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", random(-4,4), 1, 0, 0)
+        KSWB E 1 Bright A_ZoomFactor(0.995)
+		KSWB F 1 Bright A_ZoomFactor(0.990) 
+		KSWB G 1 Bright A_ZoomFactor(0.995)  
+		KSWB H 1 Bright A_ZoomFactor(1) 
+        KSWB H 0 Bright A_Light2
+        KSWB I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
         KSWB IA 8 A_Light1
         KSWB JKLMN 8
         KSWB A 0 A_Light0
         KSWB N 12
-        Goto Ready*/
+        Goto Ready
+    Empty:
+        KSWR A 10 A_PlaySound ("Plasma/FailFire", 6)
+		Goto Ready
+    Empty.Blue:
+        KSWB A 10 A_PlaySound ("Plasma/FailFire", 6)
+		Goto Ready
+    Reload:
+        TNT1 A 0
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+	    TNT1 A 0 A_JumpIfInventory("IsKarasawaSoldier",1,2)
+	    Goto Ready
+    ChangeMode:
+        TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"ChangeMode.Blue") 
+	    TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"ChangeMode2")
+	    TNT1 A 0 A_Print("Spread",1)
+	    TNT1 A 0 A_GiveInventory("KarasawaMode1",1)
+	    KSWR A 4 A_PlayWeaponSound("PlasmaCaster/Reload")
+	    KSWR A 2 Offset(0,34)
+	    KSWR A 2 Offset(0,37)
+	    KSWR A 2 Offset(0,40)
+        KSWR A 2 Offset(0,37)
+	    KSWR A 2 Offset(0,34)
+	    KSWR A 1
+	    Goto Ready
+    ChangeMode2:
+	    TNT1 A 0 A_Print("Burst",1)
+	    TNT1 A 0 A_TakeInventory("KarasawaMode1",1)
+	    KSWR A 4 A_PlayWeaponSound("PlasmaCaster/Reload")
+	    KSWR A 2 Offset(0,34)
+	    KSWR A 2 Offset(0,37)
+	    KSWR A 2 Offset(0,34)
+        KSWR A 1
+	    Goto Ready
+    ChangeMode.Blue:
+        TNT1 A 0
+	    TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"ChangeMode2.Blue")
+	    TNT1 A 0 A_Print("Spread",1)
+	    TNT1 A 0 A_GiveInventory("KarasawaMode1",1)
+	    KSWB A 4 A_PlayWeaponSound("PlasmaCaster/Reload")
+	    KSWB A 2 Offset(0,34)
+	    KSWB A 2 Offset(0,37)
+	    KSWB A 2 Offset(0,40)
+        KSWB A 2 Offset(0,37)
+	    KSWB A 2 Offset(0,34)
+	    KSWB A 1
+	    Goto Ready
+    ChangeMode2.Blue:
+	    TNT1 A 0 A_Print("Burst",1)
+	    TNT1 A 0 A_TakeInventory("KarasawaMode1",1)
+	    KSWB A 4 A_PlayWeaponSound("PlasmaCaster/Reload")
+	    KSWB A 2 Offset(0,34)
+	    KSWB A 2 Offset(0,37)
+	    KSWB A 2 Offset(0,34)
+        KSWB A 1
+	    Goto Ready
+    AltfireSkill:
+        TNT1 A 0 A_PlaySound("PlasmaCaster/Full")
+	    TNT1 A 0 A_PlaySound("Weapons/KsawCharge",5)
+        KSWR DE 3 Bright A_Light1
+        KSWR F 3 Bright A_Light2
+	    TNT1 A 0 A_PlayWeaponSound("Weapons/KsawFire")
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2",-8 ,0, -1, 0, 0, 0)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2",-2, 0, -1, 0, 0, -2)
+		TNT1 A 0 A_FireCustomMissile("KsawBolt2",-2, 0, -1, 0, 0, +2)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2",+8, 0, -1, 0, 0, 0)
+		TNT1 A 0 A_FireCustomMissile("KsawBolt2",+2, 0, -1, 0, 0, -2)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2",+2, 0, -1, 0, 0, +2)
+	    TNT1 A 0 A_Takeinventory("KarasawaAmmo",5)
+        KSWR GH 3 Bright A_Light2
+        KSWR IA 8 A_Light1
+        TNT1 A 0 A_PlaySound("PlasmaCaster/Reload",5)
+        KSWR JKLMN 8
+        TNT1 A 0 A_Light0
+        KSWR N 12
+	    Goto Ready
+    AltfireSkill.Blue:
+        TNT1 A 0 A_PlaySound("PlasmaCaster/Full")
+	    TNT1 A 0 A_PlaySound("Weapons/KsawCharge",5)
+        KSWB DE 3 Bright A_Light1
+        KSWB F 3 Bright A_Light2
+	    TNT1 A 0 A_PlayWeaponSound("Weapons/KsawFire")
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",-8 ,0, -1, 0, 0, 0)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",-2, 0, -1, 0, 0, -2)
+		TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",-2, 0, -1, 0, 0, +2)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",+8, 0, -1, 0, 0, 0)
+		TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",+2, 0, -1, 0, 0, -2)
+	    TNT1 A 0 A_FireCustomMissile("KsawBolt2Blue",+2, 0, -1, 0, 0, +2)
+	    TNT1 A 0 A_Takeinventory("KarasawaAmmo",5)
+        KSWB GH 3 Bright A_Light2
+        KSWB IA 8 A_Light1
+        TNT1 A 0 A_PlaySound("PlasmaCaster/Reload",5)
+        KSWB JKLMN 8
+        TNT1 A 0 A_Light0
+        KSWB N 12
+	    Goto Ready
   }
-}
-
-Actor karasawa_IdleSoundOn : CustomInventory
-{
-	Inventory.MaxAmount 1
-	+INVENTORY.AUTOACTIVATE
-	
-	States
-	{
-		Use:
-		Pickup:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("Weapons/KarasawaIdle", CHAN_WEAPON, 1.0, 1)
-			Stop
-	}
-}
-
-Actor karasawa_IdleSoundOff : karasawa_IdleSoundOn
-{
-	States
-	{
-		Use:
-		Pickup:
-			TNT1 A 0
-			TNT1 A 0 A_StopSound(CHAN_WEAPON)
-			Stop
-	}
-}
-
-Actor karasawa_PowerOn : karasawa_IdleSoundOn
-{
-	States
-	{
-		Use:
-		Pickup:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("Weapons/KarasawaSwitchOn", CHAN_6)
-			Stop
-	}
-}
-
-Actor karasawa_PowerOff : karasawa_IdleSoundOn
-{
-	States
-	{
-		Use:
-		Pickup:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("Weapons/KarasawaSwitchOff", CHAN_6)
-			Stop
-	}
 }
 
 //==============================================================================
 
-Actor KsawBolt : FastProjectile
+Actor KsawBolt
 {
-	PROJECTILE
-	+BLOODSPLATTER
-	+SKYEXPLODE
-	+HITTRACER
-	DamageType "Energy"
-	MissileType "BoltBlur"
-	MissileHeight 8
-	Radius 8
-	Height 4
-	Speed 256
-	Damage (0)
-	XScale 1.5
-	YScale 0.4
-	RenderStyle Add
-	//SeeSound "Weapons/KarasawaShock"
-	DeathSound "Weapons/KarasawaHit"
+    Projectile
+    +Ripper
+    +BloodSplatter
+    +StrifeDamage
+    +HexenBounce
+    +CanBounceWater
+    +SkyExplode
+    DamageType "Energy"
+    BounceFactor 1.2
+    Radius 6
+    Height 4
+    Speed 80
+    Damage (40)
+	ReactionTime 25
+    bouncecount 5
+    Alpha 1.0
+    XScale 1.5
+    YScale 0.4
+    RenderStyle Add
+    SeeSound "Weapons/KsawShock"
+    DeathSound "Weapons/KsawHit"
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_PlaySound("Weapons/KarasawaShock", CHAN_6, 1.0, 1)
-		//"####" ABCD 1 Bright A_SpawnItemEx("BoltBlur", 0, 0, 0, 1, 0, 0, 180, SXF_CLIENTSIDE)
-		KSBR AB 2 Bright
-		loop
+      KSPR ABCD 1 Bright A_SpawnItemEx("BoltBlur", 0, 0, 0, 1, 0, 0, 180, 128)
+	  TNT1 A 0 A_Countdown
+	  loop
 	Death:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("KsawBoltDecayFXRed")
-		KSDR ABCDEF 2 Bright
-		Stop
-	XDeath:
-		TNT1 A 0
-		TNT1 A 0 ACS_NamedExecuteAlways("SC_KARASAWA_TARGETSELECTION", 0, 0, true, 0)
-		Goto Death
+      TNT1 A 0
+	  TNT1 A 0 A_SpawnItemEx("KsawBoltFX")
+	  KSDR ABCDEF 2 Bright
+	  Stop
 	}
 }
 
 Actor KsawBoltBlue : KsawBolt
 {
-	MissileType "BoltBlurBlue"
-
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_PlaySound("Weapons/KarasawaShock", CHAN_6, 1.0, 1)
-		//"####" ABCD 1 Bright A_SpawnItemEx("BoltBlurBlue", 0, 0, 0, 1, 0, 0, 180, SXF_CLIENTSIDE)
-		KSBB AB 2 Bright
-		loop
+      KSPB ABCD 1 Bright A_SpawnItemEx("BoltBlurBlue", 0, 0, 0, 1, 0, 0, 180, 128)
+	  TNT1 A 0 A_Countdown
+	  loop
 	Death:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("KsawBoltDecayFXBlue")
-		KSDB ABCDEF 2 Bright
-		Stop
-	XDeath:
-		TNT1 A 0
-		TNT1 A 0 ACS_NamedExecuteAlways("SC_KARASAWA_TARGETSELECTION", 0, 0, true, 0)
-		Goto Death
+      TNT1 A 0
+	  TNT1 A 0 A_SpawnItemEx("KsawBoltFXBlue")
+	  KSDB ABCDEF 2 Bright
+	  Stop
 	}
 }
 
-Actor KsawBoltDecayFXBlue
+Actor KsawBoltWeak : KsawBolt {bouncecount 3}
+Actor KsawBoltBlueWeak : KsawBoltBlue {bouncecount 3}
+
+Actor KsawBolt2
+{
+   Projectile
+   +Ripper
+   +BloodSplatter
+   +StrifeDamage
+   +SkyExplode
+   DamageType "Energy"
+   Radius 6
+   Height 4
+   Speed 80
+   Damage (20)
+   ReactionTime 25
+   Alpha 1.0
+   XScale 1.5
+   YScale 0.4
+   RenderStyle Add
+   SeeSound ""
+   DeathSound "Weapons/KsawHit"
+   States {
+   Spawn:
+      KSPR ABCD 1 Bright A_SpawnItemEx("BoltBlur", 0, 0, 0, 1, 0, 0, 180, 128)
+	  TNT1 A 0 A_Countdown
+	  loop
+   Death:
+      TNT1 A 0
+	  TNT1 A 0 A_SpawnItemEx("KsawBoltFX")
+	  KSDR ABCDEF 2 Bright
+	  Stop
+  }
+}
+
+Actor KsawBolt2Blue : KsawBolt2
+{
+   States {
+   Spawn:
+      KSPB ABCD 1 Bright A_SpawnItemEx("BoltBlurBlue", 0, 0, 0, 1, 0, 0, 180, 128)
+	  TNT1 A 0 A_Countdown
+	  loop
+   Death:
+      TNT1 A 0
+	  TNT1 A 0 A_SpawnItemEx("KsawBoltFXBlue")
+	  KSDB ABCDEF 2 Bright
+	  Stop
+  }
+}
+
+Actor KsawBoltFX
 {
 	+CLIENTSIDEONLY
 	+NOINTERACTION
@@ -357,52 +597,34 @@ Actor KsawBoltDecayFXBlue
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 A_SpawnItemEx("KsawBoltDecayBlue")
-			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("KsawFlareBlue", 0, 0, Random(-360, 360), 2, Random(16, 88))
-			Goto SmokeSpawn
-			
-		SmokeSpawn:
-			TNT1 AAAAAAAA 0 A_SpawnItemEx("KsawBoltSmokeDecay", 0, 0, 0, Random(-16, 16) * 0.1, Random(-16, 16) * 0.1, Random(-16, 16) * 0.1, Random(-360, 360))
-			TNT1 AAAAAAAA 0 A_SpawnItemEx("KsawBoltSmokeDecay2", 0, 0, 0, Random(-8, 8) * 0.1, Random(-8, 8) * 0.1, Random(-8, 8) * 0.1, Random(-360, 360))
-			Goto FlareSpawn
+			TNT1 A 0 A_SpawnItemEx("KsawFlare")
+			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("KsawParticle", 0, 0, Random(-360, 360), 2, Random(16, 88))
+			Stop
 	}
 }
 
-Actor KsawBoltDecayFXRed : KsawBoltDecayFXBlue
+Actor KsawBoltFXBlue : KsawBoltFX
 {
 	States
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 A_SpawnItemEx("KsawBoltDecayRed")
-			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("KsawFlareRed", 0, 0, Random(-360, 360), 2, Random(16, 88))
-			Goto SmokeSpawn
+			TNT1 A 0 A_SpawnItemEx("KsawFlareBlue")
+			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("KsawParticleBlue", 0, 0, Random(-360, 360), 2, Random(16, 88))
+			Stop
 	}
 }
 
-Actor KsawBoltDecayBlue
+Actor KsawFlare
 {
 	+CLIENTSIDEONLY
 	+NOINTERACTION
 	+NOBLOCKMAP
 	+NOCLIP
 	+FORCEXYBILLBOARD
-	
 	RenderStyle Add
 	Alpha 1.0
-	Scale 0.25
-	
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			FBLU A 1 Bright A_FadeOut(0.05)
-			Wait
-	}
-}
-
-Actor KsawBoltDecayRed : KsawBoltDecayBlue
-{
+	Scale 0.1
 	States
 	{
 		Spawn:
@@ -412,97 +634,16 @@ Actor KsawBoltDecayRed : KsawBoltDecayBlue
 	}
 }
 
-Actor KsawBoltSmokeDecay
+Actor KsawFlareBlue : KsawFlare
 {
-	+CLIENTSIDEONLY
-	+NOINTERACTION
-	+NOBLOCKMAP
-	+NOCLIP
-	+FORCEXYBILLBOARD
-	
-	Renderstyle Shaded
-	Alpha 1.0
-	Scale 0.5
-	
 	States
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 A_Jump(256, "SmokeSpawn1", "SmokeSpawn2", "SmokeSpawn3", "SmokeSpawn4")
-			Stop
-		
-		SmokeSpawn1:
-			TNT1 A 0
-			SMOK A 1 A_FadeOut(0.01)
-			Wait
-		
-		SmokeSpawn2:
-			TNT1 A 0
-			SMOK B 1 A_FadeOut(0.01)
-			Wait
-		
-		SmokeSpawn3:
-			TNT1 A 0
-			SMOK C 1 A_FadeOut(0.01)
-			Wait
-			
-		SmokeSpawn4:
-			TNT1 A 0
-			SMOK D 1 A_FadeOut(0.01)
+			FBLU A 1 Bright A_FadeOut(0.05)
 			Wait
 	}
 }
-
-Actor KsawBoltSmokeDecay2 : KsawBoltSmokeDecay
-{
-	Alpha 0.5
-	Scale 1.0
-	
-	States
-	{
-		SmokeSpawn1:
-			TNT1 A 0
-			SMOK A 1 A_FadeOut(0.001)
-			Wait
-		
-		SmokeSpawn2:
-			TNT1 A 0
-			SMOK B 1 A_FadeOut(0.001)
-			Wait
-		
-		SmokeSpawn3:
-			TNT1 A 0
-			SMOK C 1 A_FadeOut(0.001)
-			Wait
-			
-		SmokeSpawn4:
-			TNT1 A 0
-			SMOK D 1 A_FadeOut(0.001)
-			Wait
-	}
-}
-
-Actor KsawChainFX
-{
-	+NOINTERACTION
-	+NOBLOCKMAP
-	+NOCLIP
-	+CLIENTSIDEONLY
-	+FORCEXYBILLBOARD
-	
-	Renderstyle Translucent
-	Alpha 1.0
-	Scale 0.5
-	
-	States
-	{
-		Spawn:
-			VOLX ABCB 1 Bright A_FadeOut(0.05)
-			Loop
-	}
-}
-
-Actor KsawChainFXRed : KsawChainFX {Translation "192:207=224:247"}
 
 Actor BoltBlur
 {
@@ -522,7 +663,17 @@ Actor BoltBlur
 	}
 }
 
-Actor KsawFlareBlue
+Actor BoltBlurBlue : BoltBlur
+{
+	states
+	{
+		Spawn:
+			KSBB AB 1 Bright A_FadeOut(0.05)
+			Loop
+	}
+}
+
+Actor KsawParticle
 {
 	+MISSILE
 	+CLIENTSIDEONLY
@@ -547,29 +698,19 @@ Actor KsawFlareBlue
 	States
 	{
 		Spawn:
-			LC_E A 1 Bright A_FadeOut(0.01)
-			Loop
-	}
-}
-
-Actor KsawFlareRed : KsawFlareBlue
-{
-	States
-	{
-		Spawn:
 			LR_E A 1 Bright A_FadeOut(0.01)
 			Loop
 	}
 }
 
-Actor BoltBlurBlue : BoltBlur
+Actor KsawParticleBlue : KsawParticle
 {
-	states
+	States
 	{
 		Spawn:
-			KSBB AB 1 Bright A_FadeOut(0.05)
+			LC_E A 1 Bright A_FadeOut(0.01)
 			Loop
 	}
 }
 
-Actor KsawTempLocation : MapSpot {}
+ACTOR KarasawaMode1 : Inventory {Inventory.MaxAmount 1}

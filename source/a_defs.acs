@@ -42,17 +42,17 @@
 // BEGIN ITEM DEFINITION TABLE
 str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"", "", "", ""}, // Mandatory empty entry for no item
-	{"Handgun", "Handgun", "NewClipAmmo", ""},
-	{"Sub-Machine Gun", "SubMachineGun", "NewClipAmmo", ""},
+	{"Handgun", "Handgun", "PistolMagazine", "NewClipAmmo"},
+	{"Sub-Machine Gun", "SubMachineGun", "SMGMag", "NewClipAmmo"},
 	{"Shotgun", "Boomstick", "ShotgunAmmo", ""},
 	{"Double Shotgun", "DoubleShotgun", "ShotgunAmmo", ""},
-	{"Machine Gun", "MachineGun", "MachineGunAmmo", ""},
+	{"Machine Gun", "MachineGun", "MachinegunMag", "MachineGunAmmo"},
 	{"Gatling Gun", "GatlingGun", "MachineGunAmmo", ""},
 	{"Rifle", "Rifle", "RifleAmmo", "RifleGrenadeAmmo"},
 	{"Gauss Rifle", "GaussRifle",  "GaussRifleAmmo", ""},
 	{"Grenade Launcher", "GrenadeLauncher", "GrenadeAmmo", ""},
 	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", "StealthCharge"},
-	{"Laser Rifle", "LaserRifle", "LaserRifleAmmo", ""},
+	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", "StealthCharge"},
 	{"Time Gun", "TimeGun", "TimeGunAmmo", ""},
 	{"Artillery Cannon", "ArtilleryCannon", "ArtilleryShellAmmo", ""},
 	{"Laser Chaingun", "LaserChaingun", "LaserChaingunAmmo", ""},
@@ -66,10 +66,10 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Deconstruction Gun", "RemoverGun", "", ""},
 	{"Bomb-Squad Gun", "BombSquadGun", "", ""},
 	{"Heal Gun", "HealGun", "", ""},
-	{"Missile Launcher", "MissileLauncher", "MissileAmmo", ""},
+	{"Missile Launcher", "MissileLauncher", "MissileMag", "MissileAmmo"},
 	{"Flamethrower", "Flamer", "FlamerAmmo", "PhosphorusGrenadeAmmo"},
 	{"Shock Rifle", "ShockRifle", "GeneporiumCharge", ""},
-	{"Sniper Rifle", "SniperRifle", "SniperAmmo", ""},
+	{"Sniper Rifle", "SniperRifle", "SniperBolt", "SniperAmmo"},
 	{"Plasma Rifle", "PlasmaGun", "PlasmaRifleAmmo", ""},
 	{"Stealth Knife", "Knife", "StealthCharge", ""},
 	{"Chainsaw", "EagerBeaver", "", ""},
@@ -85,7 +85,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	
 	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},
 	{"Combustion Autorifle (weak)", "CombustionAutorifleWeak", "FA21CalAmmo", ""},
-	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperAmmo", ""},
+	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperBolt", "SniperAmmo"},
 	{"Chrono Bow", "ChronoBow", "ChronoBolt", ""},
 	{"Karasawa", "Karasawa", "KarasawaAmmo", ""},
 	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},/*
@@ -99,17 +99,17 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 {
 	// num weps to give, ammo for main fire, ammo for alt fire, resell value
 	{0, 0, 0, 0}, // Mandatory empty entry for no item
-	{1, 400, 0, 5}, //handgun
-	{1, 400, 0, 25}, //smg
+	{1, 16, 400, 10}, //handgun
+	{1, 60, 400, 25}, //smg
 	{1, 50, 0, 25}, //shotgun
 	{1, 50, 0, 50}, //ssg
-	{1, 400, 0, 50}, //machine
+	{1, 45, 400, 50}, //machine
 	{1, 400, 0, 100}, //gattling
 	{1, 30, 4, 25}, //Rifle
 	{1, 50, 0, 125}, //guass
 	{1, 40, 0, 125}, //grenade rifle
-	{1, 200, 100, 0}, //stealth rifle
-	{1, 200, 0, 25}, //laser rifle
+	{1, 200, 100, 25}, //stealth rifle
+	{1, 200, 100, 25}, //laser rifle
 	{1, 175, 0, 0}, //time gun
 	{1, 40, 0, 125}, //artillery canon
 	{1, 400, 0, 150}, //laser chaingun
@@ -123,12 +123,12 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 0, 0, 0}, // deconstruction gun
 	{1, 0, 0, 0}, // bomb squad gun
 	{1, 0, 0, 0}, // heal gun
-	{1, 15, 0, 125}, // missile launcher
+	{1, 1, 20, 125}, // missile launcher
 	{1, 400, 4, 125}, // flamethrower
 	{1, 200, 0, 150}, //shock rifle
-	{1, 40, 0, 125}, //sniper rifle
+	{1, 1, 40, 125}, //sniper rifle
 	{1, 200, 0, 125}, //plasma rifle
-	{1, 100, 0, 0}, //stealth knife
+	{1, 100, 0, 10}, //stealth knife
 	{1, 0, 0, 125}, //chainsaw
 	{1, 0, 0, 0}, //bomb pack
 	{1, 4, 0, 75}, //remote c4
@@ -142,9 +142,9 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	
 	{1, 120, 0, 125}, //combustion autorifle
 	{1, 120, 0, 75}, //combustion autorifle (weak)
-	{1, 40, 0, 125}, //sniper rifle(weak)
+	{1, 1, 40, 125}, //sniper rifle(weak)
 	{1, 25, 0, 300}, //chrono bow
-	{1, 8, 0, 0}, // karasawa. Resell value was $125
+	{1, 40, 0, 125}, // karasawa. Resell value was $125
 	{1, 250, 4, 125}, // Nail MachineGun
 	/*{1, 40, 0, 0}, //adv sniper rifle
 	
@@ -193,7 +193,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
  *		- CF_IsMedic (gets medic regeneration)
  *		- CF_IsTimeCop (counts as a timecop for limit)
  *		- CF_Support (class is listed as a support class in the menu)
- *		- CF_IsKarasawa (counts as a karasawa for limit)
+ *		- CF_DamageDebuff (class does less damage than others)
  *
  *	row 4:
  *	- item 1 | primary weapon
@@ -218,14 +218,14 @@ function void InitClasses (void) {
 	AddClass (CLASS_Engineer, "Engineer", 0, 0.8, DEP_NONE,
 		0, ARMOD_NOCHANGE,
 		1, 1, CF_Support,
-		ITEM_REPAIR, ITEM_SMG, 0, 0, 0, 0);
+		ITEM_REPAIR, 0, 0, 0, 0, 0);
 	
-	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.8, DEP_NONE,
+	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.7, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_GATLING, 0, 0, 0, 0, 0);
 	
-	AddClass (CLASS_Technician, "Technician", 300, 0.8, DEP_NONE,
+	AddClass (CLASS_Technician, "Technician", 200, 0.8, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		2, 2, CF_Support,
 		ITEM_ADVREPAIR, ITEM_SMG, ITEM_MINE_X4, 0, 0, 0);
@@ -235,7 +235,7 @@ function void InitClasses (void) {
 		2, 1, 0,
 		ITEM_FLAMER, 0, 0, 0, 0, 0);
 	
-	AddClass (CLASS_Rifleman, "Rifleman", 200, 0.8, DEP_NONE,
+	AddClass (CLASS_Rifleman, "Rifleman", 200, 0.9, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_RIFLE, 0, 0, 0, 0, 0);
@@ -258,14 +258,14 @@ function void InitClasses (void) {
 	AddClass (CLASS_StealthTrooper, "Stealth Trooper", 600, 1.0, DEP_NONE,
 		-1, ARMOD_ENERGY,
 		2, 2, CF_IsStealth,
-		ITEM_STEALTH, ITEM_KNIFE, 0, 0, 0, 0);
+		ITEM_LaserRifle, ITEM_KNIFE, 0, 0, 0, 0);
 	
 	AddClass (CLASS_GaussGunner, "Gauss Gunner", 600, 0.8, DEP_BARRACKS,
 		2, ARMOD_ENERGY,
 		2, 1, 0,
 		ITEM_GAUSS, ITEM_RIFLE, 0, 0, 0, 0);
 	
-	AddClass (CLASS_ChemWarrior, "Chem Warrior", 450, 0.7, DEP_BARRACKS,
+	AddClass (CLASS_ChemWarrior, "Chem Warrior", 550, 0.7, DEP_BARRACKS,
 		2, ARMOD_CHEM,
 		2, 1, 0,
 		ITEM_CHEMSPRAY, 0, 0, 0, 0, 0);
@@ -281,7 +281,7 @@ function void InitClasses (void) {
 		ITEM_GAUSS, ITEM_MISSILE, ITEM_GATLING, ITEM_RIFLE, 0, 0);
 	
 	AddClass (CLASS_Shotgunner, "Shotgunner", 0, 0.9, DEP_NONE,
-		0, ARMOD_NOCHANGE,
+		1, ARMOD_NOCHANGE,
 		1, 1, 0,
 		ITEM_SHOTGUN, 0, 0, 0, 0, 0);
 	
@@ -307,7 +307,7 @@ function void InitClasses (void) {
 	
 	AddClass (CLASS_FieldMedic, "Field Medic", 300, 0.85, DEP_NONE,
 		2, ARMOD_CHEM,
-		2, 1, (CF_IsMedic | CF_Support),
+		2, 1, (CF_IsMedic | CF_Support | CF_DamageDebuff),
 		ITEM_HEALGUN, ITEM_TIBRIFLEWEAK, ITEM_MEDFIELD, 0, 0, 0);
 	
 	AddClass (CLASS_LaserChaingunner, "Laser Chaingunner", 650, 0.75, DEP_CENTRE,
@@ -330,7 +330,7 @@ function void InitClasses (void) {
 		1, 1, 0,
 		ITEM_SSG, 0, 0, 0, 0, 0);
 	
-	AddClass (CLASS_PlasmaGunner, "Plasma Gunner", 600, 0.75, DEP_CENTRE,
+	AddClass (CLASS_PlasmaGunner, "Plasma Gunner", 600, 0.8, DEP_CENTRE,
 		2, ARMOD_ENERGY,
 		2, 1, 0,
 		ITEM_PLASMA, 0, 0, 0, 0, 0);
@@ -345,14 +345,14 @@ function void InitClasses (void) {
 		4, 2, (CF_Warning | CF_CantPilot | CF_Support),
 		ITEM_TIMEGUN, ITEM_MACHINEGUN, 0, 0, 0, 0);
 	
-	AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.81, DEP_REFINERY,
+	AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.8, DEP_REFINERY,
 		1, ARMOD_CHEM,
 		2, 1, (CF_IsHarvester | CF_CantPilot | CF_Support),
 		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
 	
 	AddClass (CLASS_Harvester, "Tiberium Harvester", 0, 0.65, DEP_REFINERY,
 		0, ARMOD_CHEM,
-		1, 1, (CF_IsHarvester | CF_Support),
+		1, 1, (CF_IsHarvester | CF_Support | CF_DamageDebuff),
 		ITEM_SMG, 0, 0, 0, 0, 0);
 	
 	AddClass (CLASS_CombustionGunner, "Combustion Gunner", 400, 0.85, DEP_BARRACKS,
@@ -360,17 +360,17 @@ function void InitClasses (void) {
 		2, 1, 0,
 		ITEM_COMBUSTRIFLE, 0, 0, 0, 0, 0);
 		
-	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.86, DEP_CENTRE,
+	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.9, DEP_CENTRE,
 		2, ARMOD_NOCHANGE,
 		4, 2, CF_Warning|CF_CantPilot,
 		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
 		
-	AddClass (CLASS_KarasawaSoldier, "Karasawa Soldier", 2000, 0.81, DEP_CENTRE,
+	AddClass (CLASS_KarasawaSoldier, "Karasawa Soldier", 800, 0.8, DEP_CENTRE,
 		2, ARMOD_ENERGY,
-		2, 1, CF_IsKarasawa|CF_Warning|CF_CantPilot,
+		2, 1, 0,
 		ITEM_KARASAWA, ITEM_MACHINEGUN, 0, 0, 0, 0);
 		
-	AddClass (CLASS_NailMachineGunner, "Nail-MachineGunner", 650, 0.72, DEP_BARRACKS,
+	AddClass (CLASS_NailMachineGunner, "Nail-MachineGunner", 650, 0.75, DEP_BARRACKS,
 		2, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_NAILMG, ITEM_RIFLE, 0, 0, 0, 0);

@@ -64,9 +64,11 @@
 #define CRATE_GRENADES		40
 #define CRATE_QUADSHOTGUN	41
 #define CRATE_SOULSPHERE	42
+#define CRATE_LIGHTSABER	43
+#define CRATE_BFG2704   	44
 // ----
 // ----
-#define NUM_CRATES			43
+#define NUM_CRATES			45
 
 // --------------------------------------------------------------
 #define CRK_NAME		0 // Name of crate
@@ -152,6 +154,8 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_GRENADES,		"grenade pack",			"D", 10, CRT_Item,		(0));
 	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G", 5,	 CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
 	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0));
+	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
 
 	
 }
@@ -187,8 +191,7 @@ function int CheckCrate (int c) {
 		return	(!CheckInventory ("FireArmor") && // same logic here as in chemproof
 				!CheckInventory ("PowerFireProof"));
 	case CRATE_STEALTH:
-		return	!CheckInventory("StealthLaserRifle") && // not if the player is already stealth
-				!CheckInventory ("Knife") &&
+		return	!CheckInventory("IsStealth") && // not if the player is already stealth
 				!CheckInventory("PowerInvisibility"); // stealth and blursphere conflict
 	case CRATE_IRONCURTAIN:
 		return !GetConfig (CONFIG_TOURNAMENTMODE) && // don't give iron curtain in tournament mode
@@ -203,12 +206,10 @@ function int CheckCrate (int c) {
 		return false/*CheckInventory ("HasClass")*/; // not if the player doesn't have a class to swap
 	case CRATE_SPEEDUPGRADE:
 		return	!CheckInventory ("PowerSpeedUpgrade") && // not if the player already has this
-				!CheckInventory ("StealthLaserRifle") && // don't give this to stealths, the speed trail
-				!CheckInventory ("Knife") && // ruins the invisibility effect!
+				!CheckInventory ("IsStealth") && // don't give this to stealths, the speed trail
 				!CheckInventory ("PowerInvisibility");
 	case CRATE_TIMEGUN:
-		return !CheckInventory ("TimeGun") ||
-				!CheckInventory("Karasawa"); // not if the player already has the time gun
+		return !CheckInventory ("TimeGun"); // not if the player already has the time gun
 		break;
 	case CRATE_BOMB:
 		// [Dusk] High rankers get less of these.
@@ -271,8 +272,7 @@ function int CheckCrate (int c) {
 	case CRATE_REMOTEC4:
 		return !CheckInventory ("RemoteC4"); // not if the player already has remote C4
 	case CRATE_BLURSPHERE:
-		return	!CheckInventory ("StealthLaserRifle") && // stealth and blursphere conflict
-				!CheckInventory ("Knife") &&
+		return	!CheckInventory ("IsStealth") && // stealth and blursphere conflict
 				!CheckInventory ("PowerInvisibility"); // not if the player is already blurred
 	case CRATE_JETPACK:
 		return !CheckInventory ("Jetpack"); // not if the player already has the jetpack
@@ -296,6 +296,10 @@ function int CheckCrate (int c) {
 	case CRATE_SOULSPHERE:
 		return !CheckInventory("IsMech") &&
 				!CheckInventory("CRATE_SoulsphereDummyItem");
+	case CRATE_LIGHTSABER:
+		return !CheckInventory("Lightsaber");
+	case CRATE_BFG2704:
+		return !CheckInventory("BFG 2704");
 	}
 	
 	return true;
@@ -399,7 +403,9 @@ script 309 (int c) {
 		
 		AddArmor (-1);
 		GiveInventory ("StealthLaserRifle", 1);
+		GiveInventory ("IsStealth", 1);
 		GiveInventory ("LaserRifleAmmo", 100);
+		GiveInventory ("StealthCharge", 100);
 		SetActorProperty (0, APROP_DeathSound, "stealth/death");
 		
 		// Info message
@@ -619,8 +625,6 @@ script 309 (int c) {
 			SetWeapon ("EagerBeaver");
 		else
 			ActivatorSound ("weapons/sawup", 127);
-		
-		TakeInventory ("Unarmed", 1);
 		break;
 	case CRATE_MARINEBEACON:
 		GiveInventory("MarineBeaconItem",1);
@@ -684,6 +688,8 @@ script 309 (int c) {
 		CheckAndRemove ("ChronoBow");
 		CheckAndRemove ("Quad Shotgun");
 		CheckAndRemove ("Nail-Machine Gun");
+		CheckAndRemove ("Lightsaber");
+		CheckAndRemove ("BFG 2704");
 		
 		if (CheckInventory ("EagerBeaver")) {
 			TakeInventory ("EagerBeaver", 1);
@@ -827,6 +833,20 @@ script 309 (int c) {
 		ActivatorSound("misc/p_pkup", 127);
 		GiveInventory("CRATE_SoulsphereDummyItem", 1);
 		ACS_NamedExecuteAlways("CRATE_SoulsphereDegeneration", 0, 0, 0, 0);
+		break;
+	case CRATE_LIGHTSABER:
+	    ActivatorSound ("weapons/son", 127);
+		IntelMessage (strparam(n:0, s:"\cJ got the \cVLightsaber!"), true);
+		GiveInventory("Lightsaber", 1);
+		Delay(1);
+		SetWeapon("Lightsaber");
+		break;
+	case CRATE_BFG2704:
+	    ActivatorSound ("weapons/up/bfg", 127);
+		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
+		GiveInventory("BFG 2704", 1);
+		Delay(1);
+		SetWeapon("BFG 2704");
 		break;
 		
 	}

@@ -35,7 +35,7 @@ Object Flashbang-Flare
 }
 */
 
-flickerlight VPUFF
+flickerlight VPUFFBlue
 {
 	color 0.3 0.3 1.0
 	size 10
@@ -45,25 +45,31 @@ flickerlight VPUFF
 
 Object VoltagePuff
 {
-    frame VOLX { light VPUFF }
+    frame VOLX { light VPUFFBlue }
 }
 
 Object VoltagePuff2
 {
-    frame VOLX { light VPUFF }
+    frame VOLX { light VPUFFBlue }
 }
 
-/* // [TT] Deprecated
-Object VoltagePuffBlue
+flickerlight VPUFFRed
 {
-    frame VOLX { light VPUFF }
+	color 1.0 0.3 0.3
+	size 10
+	secondarySize 16
+	chance 0.25
 }
-*/
 
-//Object VoltageDecay
-//{
-//   frame VOLX { light VPUFF }
-//}
+Object VoltagePuffRed
+{
+    frame VOLX { light VPUFFRed }
+}
+
+Object VoltagePuff2Red
+{
+    frame VOLX { light VPUFFRed }
+}
 
 flickerlight VSPARK
 {

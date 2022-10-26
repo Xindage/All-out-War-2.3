@@ -70,6 +70,7 @@ OB_COMBAUTORIFLE = "%o was ignited by %k's combustion autorifle.";
 OB_COMBAUTORIFLEEXPLOSION = "%o was set ablaze by %k's combustion autorifle.";
 OB_QUAD_SHOTGUN = "%o was blown 4 new holes by %k's quad shotgun.";
 OB_NAILMACHINEGUN = "%o was nailed by %k.";
+OB_LIGHTSABRE = "%o was defeated by the FORCE of %k 's Lightsabre! %k is becoming a true JEDI!"; 
 
 // =============================================================================
 // Mech obits

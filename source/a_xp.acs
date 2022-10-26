@@ -147,7 +147,8 @@ function str GetRankPic (int p) {
 
 //Rank awards/checks
 script 91 (void) {
-	if (CheckInventory ("IsMech"))
+	if (CheckInventory("IsMech") ||
+	    CheckInventory("PowerBerserk"))
 		terminate;
 	
 	int rank = GetRank ();
@@ -210,8 +211,7 @@ script 91 (void) {
 		}
 		
 		if (rank >= RANK_CAPTAIN) {
-			GiveInventory ("EagerBeaver", 1);	
-			TakeInventory ("Unarmed", 1);
+			GiveInventory ("EagerBeaver", 1);
 		}
 		
 		if (rank >= RANK_MAJOR) {

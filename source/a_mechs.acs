@@ -67,11 +67,22 @@ script SC_MECHMORPH (int mech) {
 	str mechname = Mechs_str[mech][MK_NAME];
 	int dest = 108;
 	int mapspot = 6000;
-	int door = 10;
 	if (PlayerTeam() == TEAM_RED) {
 		dest = 208;
 		mapspot = 6001;
-		door = 12;
+	}
+
+	// 2022/10/11 Xindage - Doors are controled based if the map is legacy or 3D.
+	int door;
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		if (PlayerTeam() == TEAM_RED) door = 231;
+		else door = 131;
+	}
+	else
+	{
+		if (PlayerTeam() == TEAM_RED) door = 12;
+		else door = 10;
 	}
 	
 	// [Dusk] Check if a constraint prevents us from getting a mech.

@@ -1,5 +1,9 @@
 Actor "AdvancedSniperRifle" : AOWWeapon
 {
+  Weapon.BobSpeed 1.75
+  Weapon.BobRangeX 0.2
+  Weapon.BobRangeY 0.4
+  Weapon.BobStyle Alpha
   radius 20
   height 16
   Weapon.SelectionOrder 2

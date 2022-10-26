@@ -1,5 +1,9 @@
 // TIME GUN
 actor TimeGun : AOWWeapon {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+WEAPON.NOAUTOFIRE
 	+BLOODLESSIMPACT
 	DropItem "NewBackpack"
@@ -13,50 +17,59 @@ actor TimeGun : AOWWeapon {
 	Weapon.PreferredSkin "MarineTimegun"
 	Weapon.UpSound "weapons/up/timegun"
 	AttackSound "mech/gauss"
-
 	States {
 	Spawn:
 		TNT1 A 0
 		stop
-	Ready:
-		TNT1 A 0
-		TNT1 A 0 A_TakeInventory("timeGunSafety")
-		TMGN A 10 A_WeaponReady
-		TMGN A 0 A_GiveInventory ("TimeGunAmmo", 2)
-		Goto Ready+2
-	Deselect:
-		TMGN A 1 offset (-5, 34)
-		TMGN A 1 offset (-16, 38)
-		TMGN A 1 offset (-23, 45)
-		TMGN A 1 offset (-32, 56)
-		TMGN A 1 offset (-42, 66)
-		TMGN A 1 offset (-51, 73)
-		TMGN A 1 offset (-63, 87)
-		TMGN A 1 offset (-78, 97)
-		TMGN A 1 offset (-88, 111)
-		TMGN A 1 offset (-99, 121)
-		TMGN A 1 offset (-112, 133)
-		TMGN A 1 offset (-125, 154)
-		TMGN A 0 offset (-1, 33)
-		TMGN A 0 A_Lower
-		wait
 	Select:
 		TMGN A 0
 		TMGN A 0 ACS_ExecuteAlways (959, 0)
 	SelectLoop:
-		TMGN A 1 offset (-125, 154)
-		TMGN A 1 offset (-112, 133)
-		TMGN A 1 offset (-99, 121)
-		TMGN A 1 offset (-88, 111)
-		TMGN A 1 offset (-78, 97)
-		TMGN A 1 offset (-63, 87)
-		TMGN A 1 offset (-51, 73)
-		TMGN A 1 offset (-42, 66)
-		TMGN A 1 offset (-32, 56)
-		TMGN A 1 offset (-23, 45)
-		TMGN A 1 offset (-16, 38)
-		TMGN A 1 offset (-5, 34)
+		TMGN A 1 offset (-90,100)
+		TMGN A 1 offset (-80,89)
+		TMGN A 1 offset (-70,79)
+		TMGN A 1 offset (-60,70)
+		TMGN A 1 offset (-50,62)
+		TMGN A 1 offset (-40,55)
+		TMGN A 1 offset (-30,49)
+		TMGN A 1 offset (-20,44)
+		TMGN A 1 offset (-15,40)
+		TMGN A 1 offset (-10,37)
+		TMGN A 1 offset (-5,34)
+		TMGN A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
+	Deselect:
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		TMGN A 1 offset (-4,34)
+		TMGN A 1 offset (-8,40)
+		TMGN A 1 offset (-16,49)
+		TMGN A 1 offset (-24,62)
+		TMGN A 1 offset (-32,79)
+		TMGN A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+		TNT1 A 0
+		TNT1 A 0 A_TakeInventory("timeGunSafety")
+		TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TMGN A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TMGN A 5 A_WeaponReady
+		TMGN A 0 A_GiveInventory ("TimeGunAmmo", 2)
+		Goto Ready+2
 	Fire:
 		TNT1 A 0
 		TNT1 A 0 A_GiveInventory("timeGunSafety")

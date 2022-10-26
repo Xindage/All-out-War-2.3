@@ -75,12 +75,27 @@ script 101 (VOID)
 	GotBarracks[TEAM_BLUE] = False;
 	
 	// [Dusk] {9/10/12} Check MAPF_NODEFEVENTS before reddening anything.
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	// 2022/10/11 Xindage - Jump to the new redden tag if map is has 3D sectors.
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(1,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(1,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		//SetLineTexture(3,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3"); // [Cata] Deprecated
 		ReddenSector (1);
 		//ReddenSector (2); [Cata] Deprecated.
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BBarId = 100; BBarId < 110; BBarId++)
+			{
+			ReddenSector(BBarId);
+			}
+		}
+		SetLineTexture(100,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(101,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(109,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(109,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -104,10 +119,26 @@ script 102 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
 	GotRefinery[TEAM_BLUE] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(5,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(5,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		ReddenSector (5);
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BRefId = 110; BRefId < 120; BRefId++)
+			{
+			ReddenSector(BRefId);
+			}
+		}
+		SetLineTexture(110,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(111,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(112,SIDE_FRONT,TEXTURE_MIDDLE,"BTERREF1");
+		SetLineTexture(113,SIDE_FRONT,TEXTURE_BOTTOM,"BTERREF1");
+		SetLineTexture(119,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(119,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -130,14 +161,30 @@ script 103 (void) {
 	Thing_Destroy(105,0);
 	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
 	GotPlant[TEAM_BLUE] = False;
-	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(7,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(3,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
 		SetLineTexture(7,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(3,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
 		ReddenSector (7);
 		//ReddenSector (2); [Cata] Don't know why this is here, but deprecated.
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BResId = 120; BResId < 130; BResId++)
+			{
+			ReddenSector(BResId);
+			}
+		}
+		SetLineTexture(120,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(121,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(122,SIDE_FRONT,TEXTURE_MIDDLE,"BTERRES1");
+		SetLineTexture(123,SIDE_FRONT,TEXTURE_BOTTOM,"BTERRES1");
+		SetLineTexture(129,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(129,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -165,11 +212,27 @@ script 104 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
 	GotFactory[TEAM_BLUE] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(9,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(9,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		ReddenSector (9);
 		ReddenSector (10);
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BWarId = 130; BWarId < 140; BWarId++)
+			{
+			ReddenSector(BWarId);
+			}
+		}
+		SetLineTexture(130,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(131,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(132,SIDE_FRONT,TEXTURE_MIDDLE,"BTERWAR1");
+		SetLineTexture(133,SIDE_FRONT,TEXTURE_BOTTOM,"BTERWAR1");
+		SetLineTexture(139,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(139,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -186,17 +249,35 @@ script 104 (VOID)
 }
 
 //---------------------------BLUE REPAIR FACILITY DEATH
+// 2022/10/11 Xindage - Now repair dies with its hitboxes.
+// Is tid tag 110 and 210 free?
+// SetActorProperty seems obsolete.
+
 script 105 (VOID)
 {
-	//Thing_Remove(109);
+	Thing_Destroy(110,0);
+	Thing_Destroy(109,0);
 	GotRepair[TEAM_BLUE] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		ReddenSector (13);
 		ReddenSector (14);
 	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BRepId = 140; BRepId < 150; BRepId++)
+			{
+			ReddenSector(BRepId);
+			}
+		}
+		ChangeFloor(149, "MCT6");
+		SetLineTexture(149,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(149,SIDE_FRONT,TEXTURE_MIDDLE,"-");
+	}
 	
-	SetActorProperty(109,APROP_Health,0);
+	// SetActorProperty(109,APROP_Health,0);
 	
 	// SetFont("BIGFONT");
 	// HudMessageBold(s:"The \chBlue Repair Facility\cd has been destroyed!!";
@@ -221,10 +302,22 @@ script 114 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
 	GotObelisk[TEAM_BLUE] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		ReddenSector (19);
 		SetLineTexture(11,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(11,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int BObeId = 150; BObeId < 160; BObeId++)
+			{
+			ReddenSector(BObeId);
+			}
+		}
+		SetLineTexture(150,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(151,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
 	}
 	
 	SetFont("BIGFONT");
@@ -249,7 +342,7 @@ script 201 (VOID)
 	
 	GotBarracks[TEAM_RED] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(2,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		//SetLineTexture(4,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3"); [Cata] Deprecated.
 		
@@ -258,6 +351,20 @@ script 201 (VOID)
 		
 		ReddenSector (3);
 		//ReddenSector (4); [Cata] Deprecated
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RBarId = 200; RBarId < 210; RBarId++)
+			{
+			ReddenSector(RBarId);
+			}
+		}
+		SetLineTexture(200,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(201,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(209,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(209,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -280,21 +387,37 @@ script 202 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_RED);
 	GotRefinery[TEAM_RED] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(6,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(6,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		ReddenSector (6);
 	}
-	
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RRefId = 210; RRefId < 220; RRefId++)
+			{
+			ReddenSector(RRefId);
+			}
+		}
+		SetLineTexture(210,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(211,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(212,SIDE_FRONT,TEXTURE_MIDDLE,"BTERREF1");
+		SetLineTexture(213,SIDE_FRONT,TEXTURE_BOTTOM,"BTERREF1");
+		SetLineTexture(219,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(219,SIDE_FRONT,TEXTURE_MIDDLE,"-");
+	}
+
 	SetFont("BIGFONT");
-	
+
 	HudMessageBold(s:"The \cgRed Refinery\cd has been destroyed!!"; HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
 	Log(n:0, s:" destroys Red Refinery.");
 	AwardBuildingDestruction (TEAM_BLUE, false);
 	SYNC_UpdateBuildingHealth (BUILDING_REFINERY, TEAM_RED);
 	AwardBuildingDamage (BUILDING_REFINERY, TEAM_RED);
 	CallEvent (ACTION_DESTROY_REFINERY, TEAM_RED);
-	
+
 	if( (intHolder[i_SuddenDeath]) || (intHolder[i_SuddenDeath]) || (intHolder[i_TicketPool]))
 		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_refinery"));
 }
@@ -306,8 +429,8 @@ script 203 (VOID)
 	Thing_Destroy(205,0);
 	ACS_ExecuteAlways(99, 0, TEAM_RED);
 	GotPlant[TEAM_RED] = False;
-	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(8,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(4,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
 		
@@ -315,6 +438,22 @@ script 203 (VOID)
 		SetLineTexture(4,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
 		ReddenSector (8);
 		//ReddenSector (4); [Cata] Don't know why this is here, but gone now.
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RResId = 220; RResId < 230; RResId++)
+			{
+			ReddenSector(RResId);
+			}
+		}
+		SetLineTexture(220,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(221,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(222,SIDE_FRONT,TEXTURE_MIDDLE,"BTERRES1");
+		SetLineTexture(223,SIDE_FRONT,TEXTURE_BOTTOM,"BTERRES1");
+		SetLineTexture(229,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(229,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SetFont("BIGFONT");
@@ -341,12 +480,27 @@ script 204 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_RED);
 	GotFactory[TEAM_RED] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) 
-	{
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(10,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(10,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
 		ReddenSector (11);
 		ReddenSector (12);
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RWarId = 230; RWarId < 240; RWarId++)
+			{
+			ReddenSector(RWarId);
+			}
+		}
+		SetLineTexture(230,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(231,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
+		SetLineTexture(232,SIDE_FRONT,TEXTURE_MIDDLE,"BTERWAR1");
+		SetLineTexture(233,SIDE_FRONT,TEXTURE_BOTTOM,"BTERWAR1");
+		SetLineTexture(239,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(239,SIDE_FRONT,TEXTURE_MIDDLE,"-");
 	}
 	
 	SYNC_UpdateBuildingHealth (BUILDING_FACTORY, TEAM_RED);
@@ -365,15 +519,32 @@ script 204 (VOID)
 }
 
 //---------------------------RED REPAIR FACILITY DEATH
-script 205 (VOID) {
+// For details on what changed please read line 189
+script 205 (VOID)
+{
+	Thing_Destroy(210,0);
+	Thing_Destroy(209,0);
 	GotRepair[TEAM_RED] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		ReddenSector (15);
 		ReddenSector (16);
 	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RRepId = 240; RRepId < 250; RRepId++)
+			{
+			ReddenSector(RRepId);
+			}
+		}
+		ChangeFloor(249, "MCT6");
+		SetLineTexture(249,SIDE_BACK,TEXTURE_MIDDLE,"-");
+		SetLineTexture(249,SIDE_FRONT,TEXTURE_MIDDLE,"-");
+	}
 	
-	SetActorProperty(209,APROP_Health,0);
+	// SetActorProperty(209,APROP_Health,0);
 	
 	/*SetFont("BIGFONT");
 	HudMessageBold(s:"The \cgRed Repair Facility\cd has been destroyed!!";
@@ -399,10 +570,22 @@ script 214 (VOID)
 	ACS_ExecuteAlways(99, 0, TEAM_RED);
 	GotObelisk[TEAM_RED] = False;
 	
-	if (!CheckMapFlags (MAPF_NoDefEvents)) {
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		ReddenSector (20);
 		SetLineTexture(12,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 		SetLineTexture(12,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+	}
+
+	if (GetConfig(CONFIG_3DBUILDINGS))
+	{
+		{
+		for (int RObeId = 250; RObeId < 260; RObeId++)
+			{
+			ReddenSector(RObeId);
+			}
+		}
+		SetLineTexture(250,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(251,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
 	}
 	
 	SetFont("BIGFONT");

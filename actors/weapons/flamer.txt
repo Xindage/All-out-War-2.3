@@ -1,5 +1,9 @@
 // Flamethrower
 actor Flamer : AOWWeapon 21047 {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+ALT_AMMO_OPTIONAL
 	Obituary "$OB_FLAMER"
 	Inventory.PickupMessage "You got the flamethrower!"
@@ -20,78 +24,162 @@ actor Flamer : AOWWeapon 21047 {
 	Spawn:
 		FLMR X -1
 		stop
-	Ready:
-		FL_R A 0 A_StopSound (CHAN_WEAPON)
-		FL_R A 0 A_JumpIfInventory ("IsBlue", 1, "Ready.Blue")
-		FL_R ABCABCABCABCABCABCABCABCABCABCABCABC 2 A_WeaponReady
-		loop
-	Ready.Blue:
-		FL_B ABCABCABCABCABCABCABCABCABCABCABCABC 2 A_WeaponReady
-		loop
-	Deselect:
-		FL_R A 0 A_JumpIfInventory ("IsBlue", 1, "DeSelect.Blue")
-		FL_R E 0 A_StopSound (CHAN_WEAPON)
-		FL_R E 1 offset (-5, 34)
-		FL_R E 1 offset (-16, 38)
-		FL_R E 1 offset (-23, 45)
-		FL_R E 1 offset (-32, 56)
-		FL_R E 1 offset (-42, 66)
-		FL_R E 1 offset (-51, 73)
-		FL_R E 1 offset (-63, 87)
-		FL_R E 1 offset (-78, 97)
-		FL_R E 1 offset (-88, 111)
-		FL_R E 1 offset (-99, 121)
-		FL_R E 1 offset (-112, 133)
-		FL_R E 1 offset (-125, 154)
-		FL_R E 0 offset (-1, 33)
-		FL_R E 0 A_Lower
-		wait
-	Deselect.Blue:
-		FL_B E 0 A_StopSound (CHAN_WEAPON)
-		FL_B E 1 offset (-5, 34)
-		FL_B E 1 offset (-16, 38)
-		FL_B E 1 offset (-23, 45)
-		FL_B E 1 offset (-32, 56)
-		FL_B E 1 offset (-42, 66)
-		FL_B E 1 offset (-51, 73)
-		FL_B E 1 offset (-63, 87)
-		FL_B E 1 offset (-78, 97)
-		FL_B E 1 offset (-88, 111)
-		FL_B E 1 offset (-99, 121)
-		FL_B E 1 offset (-112, 133)
-		FL_B E 1 offset (-125, 154)
-		FL_B E 0 offset (-1, 33)
-		FL_B E 0 A_Lower
-		wait
-	Select:
-		FL_R E 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
-		FL_R E 1 offset (-125, 154)
-		FL_R E 1 offset (-112, 133)
-		FL_R E 1 offset (-99, 121)
-		FL_R E 1 offset (-88, 111)
-		FL_R E 1 offset (-78, 97)
-		FL_R E 1 offset (-63, 87)
-		FL_R E 1 offset (-51, 73)
-		FL_R E 1 offset (-42, 66)
-		FL_R E 1 offset (-32, 56)
-		FL_R E 1 offset (-23, 45)
-		FL_R E 1 offset (-16, 38)
-		FL_R E 1 offset (-5, 34)
+    Select:
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
+		FL_R A 1 offset (-90,100)
+		FL_R A 1 offset (-80,89)
+		FL_R A 1 offset (-70,79)
+		FL_R A 1 offset (-60,70)
+		FL_R A 1 offset (-50,62)
+		FL_R A 1 offset (-40,55)
+		FL_R A 1 offset (-30,49)
+		FL_R A 1 offset (-20,44)
+		FL_R A 1 offset (-15,40)
+		FL_R A 1 offset (-10,37)
+		FL_R A 1 offset (-5,34)
+		FL_R A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
 	Select.Blue:
-		FL_B E 1 offset (-125, 154)
-		FL_B E 1 offset (-112, 133)
-		FL_B E 1 offset (-99, 121)
-		FL_B E 1 offset (-88, 111)
-		FL_B E 1 offset (-78, 97)
-		FL_B E 1 offset (-63, 87)
-		FL_B E 1 offset (-51, 73)
-		FL_B E 1 offset (-42, 66)
-		FL_B E 1 offset (-32, 56)
-		FL_B E 1 offset (-23, 45)
-		FL_B E 1 offset (-16, 38)
-		FL_B E 1 offset (-5, 34)
+	    FL_B A 1 offset (-90,100)
+		FL_B A 1 offset (-80,89)
+		FL_B A 1 offset (-70,79)
+		FL_B A 1 offset (-60,70)
+		FL_B A 1 offset (-50,62)
+		FL_B A 1 offset (-40,55)
+		FL_B A 1 offset (-30,49)
+		FL_B A 1 offset (-20,44)
+		FL_B A 1 offset (-15,40)
+		FL_B A 1 offset (-10,37)
+		FL_B A 1 offset (-5,34)
+		FL_B A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
+	Deselect:
+	    TNT1 A 0 A_StopSound (CHAN_WEAPON)
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
+		FL_R A 1 offset (-4,34)
+		FL_R A 1 offset (-8,40)
+		FL_R A 1 offset (-16,49)
+		FL_R A 1 offset (-24,62)
+		FL_R A 1 offset (-32,79)
+		FL_R A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	DeselectBlue:
+		FL_B A 1 offset (-4,34)
+		FL_B A 1 offset (-8,40)
+		FL_B A 1 offset (-16,49)
+		FL_B A 1 offset (-24,62)
+		FL_B A 1 offset (-32,79)
+		FL_B A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+		FL_R A 0 A_JumpIfInventory ("IsBlue", 1, "Ready.Blue")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R BC 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R BC 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_R BC 2 A_WeaponReady
+		FL_R A 0 A_StopSound (CHAN_WEAPON)
+		loop
+	Ready.Blue:
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B BC 2 A_WeaponReady
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B BC 2 A_WeaponReady
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B AB 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B CA 2 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		FL_B BC 2 A_WeaponReady
+		FL_R A 0 A_StopSound (CHAN_WEAPON)
+		loop
 	Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
@@ -100,8 +188,8 @@ actor Flamer : AOWWeapon 21047 {
 		FL_R E 2
 		FL_R E 0 A_GunFlash
 		FL_R E 0 A_PlaySound ("flamer2/fire", CHAN_WEAPON, 1.0, true)
-		FL_R E 1 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
-		FL_R E 1 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_R E 2 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 1, 5, random(2, 6))
+		FL_R E 2 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 0, 5, random(2, 6))
 		FL_R E 1 A_ReFire
 		FL_R E 1
 		FL_R E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
@@ -110,8 +198,8 @@ actor Flamer : AOWWeapon 21047 {
 		FL_R E 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		FL_R E 0 A_GunFlash
 		FL_R E 0 A_JumpIfInventory("IsBlue",1,"HoldBlue")
-		FL_R E 1 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
-		FL_R E 1 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_R E 2 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 1, 5, random(2, 6))
+		FL_R E 2 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 0, 5, random(2, 6))
 		FL_R E 1 A_ReFire
 		FL_R E 1 offset (4, 35)
 		FL_R E 1 offset (2, 33)
@@ -122,16 +210,16 @@ actor Flamer : AOWWeapon 21047 {
 		FL_B E 2
 		FL_B E 0 A_GunFlash
 		FL_B E 0 A_PlaySound ("flamer2/fire", CHAN_WEAPON, 1.0, true)
-		FL_B E 1 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
-		FL_B E 1 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_B E 2 bright offset (1, 32) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 1, 5, random(2, 6))
+		FL_B E 2 bright offset (2, 33) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 0, 5, random(2, 6))
 		FL_B E 1 A_ReFire
 		FL_B E 1 offset (2, 33)
 		FL_B E 1 offset (1, 32)
 		FL_B E 2 A_PlaySound ("flamer2/down", CHAN_WEAPON)
 		goto Ready
 	HoldBlue:
-		FL_B E 1 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 1, 5, random(-3, 3))
-		FL_B E 1 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-3,3), 0, 5, random(-3, 3))
+		FL_B E 2 bright offset (4, 35) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 1, 5, random(2, 6))
+		FL_B E 2 bright offset (5, 36) A_FireCustomMissile ("FlamethrowerFire", random(-2,2), 0, 5, random(2, 6))
 		FL_B E 1 A_ReFire
 		FL_B E 1 offset (4, 35)
 		FL_B E 1 offset (2, 33)
@@ -168,7 +256,12 @@ actor Flamer : AOWWeapon 21047 {
 		FL_R E 1 offset (10, 38)
 		FL_R E 1 offset (5, 35)
 		FL_R E 1 offset (0, 32)
-		FL_R E 25
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_R EE 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_R EE 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_R E 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		FL_R E 0 A_ReFire
 		goto Ready
 	AltReloadBlue:
@@ -184,7 +277,12 @@ actor Flamer : AOWWeapon 21047 {
 		FL_B E 1 offset (10, 38)
 		FL_B E 1 offset (5, 35)
 		FL_B E 1 offset (0, 32)
-		FL_B E 25
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_B EE 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_B EE 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		FL_B E 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		FL_B E 0 A_ReFire
 		goto Ready
 	AltRejected:
@@ -211,8 +309,8 @@ actor FlameThrowerFire {
 	Scale 0.41
 	radius 4
 	height 4
-	speed 34
-	damage (random(2,3))
+	speed 25
+	damage (random(1,2))
 	damagetype "Fire"
 	decal "FlameScorch"
 	states {
@@ -223,7 +321,7 @@ actor FlameThrowerFire {
 		FLMX LMNO 2 bright A_FadeOut(0.16)
 		stop
 	Death:
-		TNT1 A 0 A_Explode(2,128)
+		TNT1 A 0 A_Explode(8,128)
 		TNT1 A 0 A_SpawnItemEx("FlameDecay", random(-16,16), random(-16,16), 4, 0, 0, 0, 0, SXF_TRANSFERPOINTERS, 240)
 		TNT1 AAA 1 A_SpawnItemEx("FlameThrowerFireRemains", random(0,1), 0, random(0,8), random(0,1), 0, random(0,3), random(0,12)*30, SXF_TRANSFERPOINTERS, 32)
 		stop

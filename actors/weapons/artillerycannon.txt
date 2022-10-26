@@ -8,101 +8,117 @@
  */
 
 actor ArtilleryCannon : AOWWeapon 21085 {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
 	+WEAPON.NOAUTOFIRE
 	Obituary "$OB_ARTILLERYCANNON" // "%o was demolished by %k's artillery cannon."
 	Inventory.PickupMessage "You got the artillery cannon!"
-	Weapon.AmmoType "ArtilleryShellAmmo"
+	Weapon.AmmoType "ArtilleryCharge"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 5
 	Weapon.AmmoType2 "ArtilleryShellAmmo"
-	Weapon.AmmoUse2 1
 	Weapon.PreferredSkin "MarineSRockets"
 	Weapon.SelectionOrder 11
 	Weapon.UpSound "weapons/up/artil"
 	Scale 0.6
 	//$Category Weapons
+	+WEAPON.AMMO_OPTIONAL
 	Tag "Artillery Cannon"
 	
 	States {
-	Select:
-		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"SelectBlue")
-		MASR A 1 offset (-125, 154)
-		MASR A 1 offset (-112, 133)
-		MASR A 1 offset (-99, 121)
-		MASR A 1 offset (-88, 111)
-		MASR A 1 offset (-78, 97)
-		MASR A 1 offset (-63, 87)
-		MASR A 1 offset (-51, 73)
-		MASR A 1 offset (-42, 66)
-		MASR A 1 offset (-32, 56)
-		MASR A 1 offset (-23, 45)
-		MASR A 1 offset (-16, 38)
-		MASR A 1 offset (-5, 34)
+    Select:
+		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
+		MASR A 1 offset (-90,100)
+		MASR A 1 offset (-80,89)
+		MASR A 1 offset (-70,79)
+		MASR A 1 offset (-60,70)
+		MASR A 1 offset (-50,62)
+		MASR A 1 offset (-40,55)
+		MASR A 1 offset (-30,49)
+		MASR A 1 offset (-20,44)
+		MASR A 1 offset (-15,40)
+		MASR A 1 offset (-10,37)
+		MASR A 1 offset (-5,34)
+		MASR A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
 		goto ready
-	SelectBlue:
-		MASB A 1 offset (-125, 154)
-		MASB A 1 offset (-112, 133)
-		MASB A 1 offset (-99, 121)
-		MASB A 1 offset (-88, 111)
-		MASB A 1 offset (-78, 97)
-		MASB A 1 offset (-63, 87)
-		MASB A 1 offset (-51, 73)
-		MASB A 1 offset (-42, 66)
-		MASB A 1 offset (-32, 56)
-		MASB A 1 offset (-23, 45)
-		MASB A 1 offset (-16, 38)
-		MASB A 1 offset (-5, 34)
+	Select.Blue:
+	    MASB A 1 offset (-90,100)
+		MASB A 1 offset (-80,89)
+		MASB A 1 offset (-70,79)
+		MASB A 1 offset (-60,70)
+		MASB A 1 offset (-50,62)
+		MASB A 1 offset (-40,55)
+		MASB A 1 offset (-30,49)
+		MASB A 1 offset (-20,44)
+		MASB A 1 offset (-15,40)
+		MASB A 1 offset (-10,37)
+		MASB A 1 offset (-5,34)
+		MASB A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)	
 		goto ready
 	Deselect:
-		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
-		MASR A 1 offset (-5, 34)
-		MASR A 1 offset (-16, 38)
-		MASR A 1 offset (-23, 45)
-		MASR A 1 offset (-32, 56)
-		MASR A 1 offset (-42, 66)
-		MASR A 1 offset (-51, 73)
-		MASR A 1 offset (-63, 87)
-		MASR A 1 offset (-78, 97)
-		MASR A 1 offset (-88, 111)
-		MASR A 1 offset (-99, 121)
-		MASR A 1 offset (-112, 133)
-		MASR A 1 offset (-125, 154)
-		MASR A 0 offset (-1, 33)
-		MASR A 0 A_Lower
+		TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+	    TNT1 A 0 A_JumpIfInventory("IsBlue",1,"DeselectBlue")
+		MASR A 1 offset (-4,34)
+		MASR A 1 offset (-8,40)
+		MASR A 1 offset (-16,49)
+		MASR A 1 offset (-24,62)
+		MASR A 1 offset (-32,79)
+		MASR A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
 		wait
 	DeselectBlue:
-		MASB A 1 offset (-5, 34)
-		MASB A 1 offset (-16, 38)
-		MASB A 1 offset (-23, 45)
-		MASB A 1 offset (-32, 56)
-		MASB A 1 offset (-42, 66)
-		MASB A 1 offset (-51, 73)
-		MASB A 1 offset (-63, 87)
-		MASB A 1 offset (-78, 97)
-		MASB A 1 offset (-88, 111)
-		MASB A 1 offset (-99, 121)
-		MASB A 1 offset (-112, 133)
-		MASB A 1 offset (-125, 154)
-		MASB A 0 offset (-1, 33)
-		MASB A 0 A_Lower
+		MASB A 1 offset (-4,34)
+		MASB A 1 offset (-8,40)
+		MASB A 1 offset (-16,49)
+		MASB A 1 offset (-24,62)
+		MASB A 1 offset (-32,79)
+		MASB A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
 		wait
 	Ready:
-		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"ReadyBlue")
+	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+	    TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Ready.Blue")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
 		MASR A 1 A_WeaponReady
-		wait
-	ReadyBlue:
+		Loop
+	Ready.Blue:
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+	    TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload.Blue")
 		MASB A 1 A_WeaponReady
-		wait
+		Loop
 	Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Fire.Blue")
+	    TNT1 A 0 A_JumpIfNoAmmo("Empty")
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,1)
+        Goto Empty
 		MASR A 1 A_PlayWeaponSound ("artillery/fire")
 		MASR B 1 A_GunFlash
 		MASR B 2 BRIGHT A_FireCustomMissile ("ArtilleryShell", 0, 1, 8)
 		MASR B 0 Radius_Quake(5,8,0,1,0)
 		goto Fire.End
 	Fire.Blue:
+	    TNT1 A 0 A_JumpIfNoAmmo("Empty.Blue")
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,1)
+        Goto Empty.Blue
 		MASB A 1 A_PlayWeaponSound ("artillery/fire")
 		MASB B 1 A_GunFlash
 		MASB B 2 BRIGHT A_FireCustomMissile ("ArtilleryShell", 0, 1, 8)
@@ -114,7 +130,9 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASR E 1 bright offset (9, 41)
 		MASR A 1 offset (12, 44) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (15, 47)
-		MASR A 1 offset (18, 50) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASR A 1 offset (17, 49) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASR A 1 offset (18, 50)
+		MASR A 1 offset (17, 49) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (15, 47)
 		MASR A 1 offset (12, 44) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (9, 41)
@@ -122,18 +140,29 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASR A 1 offset (3, 35)
 		MASR A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (0, 32)
-		MASR A 32 A_JumpIfInventory("IsArtillerySoldier", 1, "Fire.EndFast")
-		MASR A 18 A_PlaySound ("artillery/reload", 5)
-		MASR A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASR A 0 A_ReFire
-		goto Ready
+		TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier", 1, "Fire.End2")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR A 8
+		goto Reload
+	Fire.End2:
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR A 1
+	    goto Reload
 	Fire.EndBlue:
 		MASB C 1 bright offset (3, 35) A_Recoil (5)
 		MASB D 1 bright offset (6, 38) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB E 1 bright offset (9, 41)
 		MASB A 1 offset (12, 44) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (15, 47)
-		MASB A 1 offset (18, 50) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASB A 1 offset (17, 49) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASB A 1 offset (18, 50)
+		MASB A 1 offset (17, 49) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (15, 47)
 		MASB A 1 offset (12, 44) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (9, 41)
@@ -141,35 +170,70 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASB A 1 offset (3, 35)
 		MASB A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (0, 32)
-		MASB A 32 A_JumpIfInventory ("IsArtillerySoldier", 1, "Fire.EndFastBlue")
-		MASB A 18 A_PlaySound ("artillery/reload", 5)
-		MASB A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASB A 0 A_ReFire
+		TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier", 1, "Fire.EndBlue2")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB A 8
+		goto Reload.Blue
+	Fire.EndBlue2:
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB A 1
+	    goto Reload.Blue
+     Empty:
+        MASR A 10 A_PlaySound("weapons/empty5")
+	 Reload:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,2)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryShellAmmo",1,2)
+	    TNT1 A 0
+	    Goto Ready
+		TNT1 A 0 A_PlaySound ("artillery/reload", 5)
+		MASR A 20
+		TNT1 A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		TNT1 A 0 A_TakeInventory("ArtilleryShellAmmo",1)
+	    TNT1 A 0 A_GiveInventory("ArtilleryCharge",1)
+		TNT1 A 0 A_ReFire
 		goto Ready
-	Fire.EndFast:
-		MASR A 21
-		MASR A 12 A_PlaySound ("artillery/reload", 5)
-		MASR A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASR A 0 A_ReFire
-		goto Ready
-	Fire.EndFastBlue:
-		MASB A 21
-		MASB A 12 A_PlaySound ("artillery/reload", 5)
-		MASB A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASB A 0 A_ReFire
+     Empty.Blue:
+        MASB A 10 A_PlaySound("weapons/empty5")
+	 Reload.Blue:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,2)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryShellAmmo",1,2)
+	    TNT1 A 0
+	    Goto Ready
+		TNT1 A 0 A_PlaySound ("artillery/reload", 5)
+		MASB A 20
+		TNT1 A 0 A_SpawnItemEx("ArtilleryCasing",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		TNT1 A 0 A_TakeInventory("ArtilleryShellAmmo",1)
+	    TNT1 A 0 A_GiveInventory("ArtilleryCharge",1)
+		TNT1 A 0 A_ReFire
 		goto Ready
 	AltFire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "AltFire.Blue")
+	    TNT1 A 0 A_JumpIfNoAmmo("Empty")
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,1)
+        Goto Empty
 		MASR B 1 A_PlayWeaponSound ("artillery/fire1")
 		MASR B 0 A_GunFlash
+		TNT1 A 0 A_TakeInventory("ArtilleryCharge",1)
 		MASR B 1 BRIGHT A_FireCustomMissile ("ArtilleryShell80mm", 0, 1, 8)
 		MASR B 0 Radius_Quake(7,8,0,1,0)
 		goto AltFire.End
 	AltFire.Blue:
+	    TNT1 A 0 A_JumpIfNoAmmo("Empty.Blue")
+        TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,1)
+        Goto Empty.Blue
 		MASB B 1 A_PlayWeaponSound ("artillery/fire1")
 		MASB B 0 A_GunFlash
+		TNT1 A 0 A_TakeInventory("ArtilleryCharge",1)
 		MASB B 1 BRIGHT A_FireCustomMissile ("ArtilleryShell80mm", 0, 1, 8)
 		MASB B 0 Radius_Quake(7,8,0,1,0)
 		goto AltFire.EndBlue
@@ -179,46 +243,96 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASR E 1 bright offset (12, 44)
 		MASR A 1 offset (16, 48) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (20, 52)
-		MASR A 1 offset (24, 56) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASR A 1 offset (23, 55) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASR A 6 offset (26, 56)
+		MASR A 1 offset (23, 55) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (20, 52)
 		MASR A 1 offset (16, 48) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (12, 44)
 		MASR A 1 offset (8, 40) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (4, 36)
-		MASR A 3 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASR A 51 A_JumpIfInventory("IsArtillerySoldier", 1, "AltFire.EndFast")
-		MASR A 18 A_PlaySound ("artillery/reload", 5)
-		MASR A 0 A_SpawnItemEx("ArtilleryCasing80mm",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASR A 0 A_ReFire
-		Goto Ready
+		MASR A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASR A 1 offset (0, 32)
+		TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier", 1, "AltFire.End2")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR A 3
+		goto HeavyReload
+	AltFire.End2:
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR A 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASR A 4
+        goto HeavyReload
 	AltFire.EndBlue:
 		MASB C 1 bright offset (4, 36) A_Recoil (7)
 		MASB D 1 bright offset (8, 40) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB E 1 bright offset (12, 44)
 		MASB A 1 offset (16, 48) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (20, 52)
-		MASB A 1 offset (24, 56) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASB A 1 offset (23, 55) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASB A 6 offset (26, 56)
+		MASB A 1 offset (23, 55) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (20, 52)
 		MASB A 1 offset (16, 48) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (12, 44)
 		MASB A 1 offset (8, 40) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (4, 36)
-		MASB A 3 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASB A 51 A_JumpIfInventory("IsArtillerySoldier", 1, "AltFire.EndFastBlue")
-		MASB A 18 A_PlaySound ("artillery/reload", 5)
-		MASB A 0 A_SpawnItemEx("ArtilleryCasing80mm",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
-		MASB A 0 A_ReFire
-		goto Ready
-	AltFire.EndFast:
-		MASR A 27
-		MASR A 18 A_PlaySound ("artillery/reload", 5)
+		MASB A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
+		MASB A 1 offset (0, 32)
+		TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier", 1, "AltFire.EndBlue2")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB A 3
+		goto HeavyReload.Blue
+	AltFire.EndBlue2:
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB AA 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB A 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MASB A 4
+		goto HeavyReload.Blue
+    HeavyReload:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+		TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,2)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryShellAmmo",1,2)
+	    TNT1 A 0
+	    Goto Ready
+		TNT1 A 0 A_PlaySound ("artillery/reload", 5)
+		MASR A 20
 		MASR A 0 A_SpawnItemEx("ArtilleryCasing80mm",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		TNT1 A 0 A_TakeInventory("ArtilleryShellAmmo",1)
+	    TNT1 A 0 A_GiveInventory("ArtilleryCharge",1)
 		MASR A 0 A_ReFire
-		goto Ready
-	AltFire.EndFastBlue:
-		MASB A 27
-		MASB A 18 A_PlaySound ("artillery/reload", 5)
+		Goto Ready
+    HeavyReload.Blue:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+		TNT1 A 0 A_JumpIfInventory("ArtilleryCharge",1,2)
+        TNT1 A 0 A_JumpIfInventory("ArtilleryShellAmmo",1,2)
+	    TNT1 A 0
+	    Goto Ready
+		TNT1 A 0 A_PlaySound ("artillery/reload", 5)
+		MASB A 20
 		MASB A 0 A_SpawnItemEx("ArtilleryCasing80mm",3,15,29,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		TNT1 A 0 A_TakeInventory("ArtilleryShellAmmo",1)
+	    TNT1 A 0 A_GiveInventory("ArtilleryCharge",1)
 		MASB A 0 A_ReFire
 		goto Ready
 	Flash:
@@ -238,7 +352,7 @@ actor ArtilleryShell {
 	Radius 11
 	Height 8
 	Speed 75
-	Damage (34)
+	Damage (20)
 	DamageType "MassDriver"
 	DeathSound "artillery/explosion"
 	Decal "Scorch"
@@ -258,15 +372,15 @@ actor ArtilleryShell {
 		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-32,32), random(-32,32), 4)
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 0 A_SpawnItemEx ("HeavyMissileQuake")
-		TNT1 A 1 A_Explode (80, 184, 1)
-		TNT1 A 4 A_Explode (95, 256, 1)
+		TNT1 A 1 A_Explode (100, 256, 1)
+		TNT1 A 4 A_Explode (100, 384, 1)
 		stop
 	}
 }
 
 actor ArtilleryShell80mm : ArtilleryShell {
 	Speed 50
-	Damage (63)
+	Damage (50)
 	DamageType "AntiArmor"
 	Scale 0.74
 	Translation "1:31=128:140", "32:39=141:143"
@@ -277,8 +391,15 @@ actor ArtilleryShell80mm : ArtilleryShell {
 		TNT1 A 0 A_SpawnItemEx ("FlameDecay", random(-32,32), random(-32,32), 4)
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 0 A_SpawnItemEx ("HeavyMissileQuake")
-		TNT1 A 1 A_Explode (100, 224, 1)
-		TNT1 A 5 A_Explode (110, 324, 1)
+		TNT1 A 1 A_Explode (110, 256, 1)
+		TNT1 A 5 A_Explode (110, 384, 1)
 		stop
 	}
+}
+
+actor ArtilleryCharge : Ammo {
+	inventory.amount 0
+	inventory.maxamount 1
+	ammo.backpackamount 0
+	ammo.backpackmaxamount 1
 }

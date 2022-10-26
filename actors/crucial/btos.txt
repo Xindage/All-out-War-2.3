@@ -213,3 +213,48 @@ actor ShortBTOObeliskRed : BTOObeliskRed 21312 {
 	tag "[Hitbox] Red Obelis (short)"
 	height 256
 }
+
+// 2022/10/04 Xindage - Repair pads that uses BTO
+// TODO: Script that kill this BTO
+actor BTORepairBlue : BaseTerminalOutsideBlue 21313
+{
+    tag "[Hitbox] Blue Repair Facility (Ground)"
+    height 12
+    states
+    {
+    Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTID (0, 108)
+        TNT1 A 0 Thing_SetSpecial (0, 0, 109, 0, 0)
+        TNT1 B -1
+        stop
+    }
+}
+
+actor BTORepairRed : BaseTerminalOutside 21314
+{
+    tag "[Hitbox] Red Repair Facility (Ground)"
+    height 12
+    states
+    {
+    Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTID (0, 208)
+        TNT1 A 0 Thing_SetSpecial (0, 0, 209, 0, 0)
+        TNT1 A -1
+        stop
+    }
+}
+
+// Nomal sized btos, for repair "buildings"
+actor BTORepairBluetall : BTORepairBlue 21315
+{
+    tag "[Hitbox] Blue Repair Facility (Tall)"
+    height 512
+}
+
+actor BTORepairRedtall : BTORepairRed 21316
+{
+    tag "[Hitbox] Red Repair Facility (Tall)"
+    height 512
+}

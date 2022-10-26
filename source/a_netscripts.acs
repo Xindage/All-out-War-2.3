@@ -50,13 +50,12 @@ script SC_USEGRENADE (int whichnade) NET {
 	
 	if (CheckInventory("InMenu") ||
 		CheckInventory("IsInSpawnRoom") ||
-		CheckInventory("IsUsingBindFragGrenade") ||
-		CheckInventory("IsUsingBindFlashbang") ||
-		CheckInventory("IsUsingBindRemoteC4") ||
+		CheckInventory("ActionFragGrenade") ||
+		CheckInventory("ActionFlashbang") ||
+		CheckInventory("ActionRemoteC4") ||
+		CheckInventory("ActionMeleeAttack") ||
 		CheckInventory("SelfHeal"))
 		terminate;
-	
-	throwBindOldWep[playernumber()] = GetWeapon();
 	
 	switch(whichnade)
 	{
@@ -64,38 +63,46 @@ script SC_USEGRENADE (int whichnade) NET {
 		default:
 		case 0:
 		
-			if( (!CheckInventory("FragGrenade")) || (!CheckInventory("FragGrenadeAmmo")) | (CheckInventory("IsUsingBindFragGrenade")) )
+			if( (!CheckInventory("FragGrenade")) || (!CheckInventory("FragGrenadeAmmo")) | (CheckInventory("ActionFragGrenade")) )
 				terminate;
 				
-			GiveInventory("IsUsingBindFragGrenade",1);
-			SetWeapon("FragGrenade");
-			
+			GiveInventory("ActionFragGrenade",1);
 			break;
-			
 			
 		case 1:
 		
-			if( (!CheckInventory("Flashbang")) || (!CheckInventory("FlashbangAmmo")) | (CheckInventory("IsUsingBindFlashbang")) )
+			if( (!CheckInventory("Flashbang")) || (!CheckInventory("FlashbangAmmo")) | (CheckInventory("ActionFlashbang")) )
 				terminate;
 				
-			GiveInventory("IsUsingBindFlashbang",1);
-			SetWeapon("Flashbang");
-			
+			GiveInventory("ActionFlashbang",1);
 			break;
-			
 			
 		case 2:
 		
-			if( (!CheckInventory("RemoteC4")) || (CheckInventory("IsUsingBindRemoteC4")) )
+			if( (!CheckInventory("RemoteC4")) || (CheckInventory("ActionRemoteC4")) )
 				terminate;
 				
-			SetWeapon("RemoteC4");
-			GiveInventory("IsUsingBindRemoteC4",1);
-			
+			GiveInventory("ActionRemoteC4",1);
+			break;
+
+		case 3:
+			if(CheckInventory("ActionMeleeAttack"))
+				terminate;
+				
+            if(CheckInventory("Lightsaber"))
+			ActivatorSound ("weapons/son", 127);
+			GiveInventory("ActionMeleeAttack",1);
+ 
+            if(!CheckInventory("Lightsaber"))
+            GiveInventory("ActionMeleeAttack",1);
 			break;
 	}
 }
-	
+
+Script "reloadweapon" (VOID) NET
+{
+	GiveInventory("ActionReload", 1);
+}	
 
 // =============================================================================
 // [Dusk] This allows players to switch to the losing team

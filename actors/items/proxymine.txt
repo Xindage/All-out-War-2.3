@@ -72,6 +72,7 @@ Actor ProxyMineRed {
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
 	DamageFactor "Flash", 			0.0
+	DamageFactor "StealthKnife",    0.5
 	Translation "112:127=228:246"
 	
 	States {
@@ -112,6 +113,7 @@ Actor ProxyMineRed {
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (150, 256, 1)
 		stop
+	Death.StealthKnife:
 	Death.Energy:
 	Death.Deconstruction:
 	Death.Disarm:
@@ -212,6 +214,7 @@ Actor ProxyMineRedd {
 	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
+	DamageFactor "StealthKnife",    0.5
 	translation "112:127=175:190"
 	
 	States {
@@ -248,6 +251,7 @@ Actor ProxyMineRedd {
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (150, 256, 1)
 		stop
+	Death.StealthKnife:
 	Death.Energy:
 	Death.Deconstruction:
 	Death.Disarm:
@@ -302,6 +306,7 @@ Actor ProxyMineBluee {
 	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
+	DamageFactor "StealthKnife",    0.5
 	translation "112:127=200:207"
 	
 	States {
@@ -338,6 +343,7 @@ Actor ProxyMineBluee {
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (150, 256, 1)
 		stop
+	Death.StealthKnife:
 	Death.Energy:
 	Death.Deconstruction:
 	Death.Disarm:

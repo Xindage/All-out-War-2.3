@@ -311,3 +311,17 @@ actor RepairTerminalBlue : BaseTerminalBlue 21109 {
 		goto Idle
 	}
 }
+
+// 2022/10/04 Xindage - Repair pads that uses MTC
+actor RepairTerminalRedMTC : RepairTerminalRed 21114
+{
+    Tag "Red Repair Facility Terminal"
+    Radius 24
+    Height 48
+}
+actor RepairTerminalBlueMTC : RepairTerminalBlue 21113
+{
+    Tag "Blue Repair Facility Terminal"
+    Radius 24
+    Height 48
+}
