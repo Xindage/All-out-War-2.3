@@ -1103,42 +1103,6 @@ actor Utility_Percent : Ammo {
 	Ammo.BackpackMaxAmount 0
 }
 
-actor Utility_TurretBase {
-	damagefactor "Disarm", 0.0
-	damagefactor "Fist", 0.5
-	damagefactor "Mechstomp", 0.0
-	damagefactor "Explosion", 1.5
-	damagefactor "AntiArmor", 2.5
-	damagefactor "Fire", 0.6
-	damagefactor "Chemical", 0.6
-	DamageFactor "StealthKnife", 1.0
-	painchance "Energy", 255
-	radius 24
-	height 56
-	scale 0.75
-	mass 0x7FFFFFFF
-	speed 0
-
-	MONSTER
-	+FLOORCLIP
-	+NOBLOOD
-	+NOICEDEATH
-	-SOLID
-	-COUNTKILL
-	+FRIENDLY
-	+NOTARGET
-	+LOOKALLAROUND
-	+NEVERRESPAWN
-	
-	states {
-	Death.StealthKnife:
-	Death.Deconstruction:
-		"----" A 2 A_PlaySound ("utility/deconstruct")
-		"----" AAAAAAAAAA 2 A_Fadeout(0.1)
-		stop
-	}
-}
-
 // This actor is used to clear places like War Factory hanger doors, teleport
 // destinations and the like from utility items
 actor AntiUtilityExplosion {
