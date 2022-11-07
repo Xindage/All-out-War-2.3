@@ -71,12 +71,13 @@ script SC_DEATH DEATH {
 	// melee weapon, the killer gets the bomb pack.
 	if (GetClass () == CLASS_SuicideBomber &&
 		AproxDistance (0, GetTargetInfo (TARGETINFO_TID)) < 80.0 && 
-		(
-			CheckTargetWeapon ("Unarmed") ||
-			CheckTargetWeapon ("EagerBeaver") ||
-			CheckTargetWeapon ("Knife")
-			CheckTargetWeapon ("Lightsaber")
-		))
+			(
+				CheckTargetWeapon ("Unarmed") ||
+				CheckTargetWeapon ("EagerBeaver") ||
+				CheckTargetWeapon ("Knife") ||
+				CheckTargetWeapon ("Lightsaber")
+			)
+		)
 	{
 		GiveToTarget ("BombPackItem", 1);
 		TargetMessage ("You got the bomb pack! Terrorist!");

@@ -54,8 +54,8 @@ script SC_USEGRENADE (int whichnade) NET {
 		CheckInventory("ActionFlashbang") ||
 		CheckInventory("ActionRemoteC4") ||
 		CheckInventory("ActionMeleeAttack") ||
-		CheckInventory("SelfHeal"))
-		CheckInventory("ActionReload") ||
+		CheckInventory("SelfHeal") ||
+		CheckInventory("ActionReload"))
 		terminate;
 	
 	switch(whichnade)
