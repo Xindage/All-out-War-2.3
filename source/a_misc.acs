@@ -123,6 +123,8 @@ script SC_CheckC4Placement (int team)
 script 320 (int Which)
 {
 	//SetHudSize(1680,1050,0);
+	if (CheckInventory("FlashbangCooldown"))
+		terminate;
 	
 	switch(Which)
 	{
@@ -142,6 +144,7 @@ script 320 (int Which)
 			break;
 		
 		case 3:	// [SG] Flashbang hit
+		    GiveInventory("FlashbangCooldown", 1);
 			FadeTo(255,255,255,1.0,0.0);
 			Delay(35*2);
 			FadeTo(255,255,255,0.0,2.0);
@@ -208,6 +211,7 @@ Script "selfHealCoolDownHandler" (void)
 	if (GetHealth() <= GetSpawnHealth() / 2 && !CheckInventory("selfHealCoolDownItem"))
 		GiveInventory("SelfHealItem", 1);
 }*/
+
 
 /*script SC_SelfHealHealth (void) {
 	// [JD] Not exactly sure what this is for... Just going to comment it out for now

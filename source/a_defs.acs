@@ -45,7 +45,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Handgun", "Handgun", "PistolMagazine", "NewClipAmmo"},
 	{"Sub-Machine Gun", "SubMachineGun", "SMGMag", "NewClipAmmo"},
 	{"Shotgun", "Boomstick", "ShotgunAmmo", ""},
-	{"Double Shotgun", "DoubleShotgun", "ShotgunAmmo", ""},
+	{"Double Shotgun", "DoubleShotgun", "SSGShell", "ShotgunAmmo"},
 	{"Machine Gun", "MachineGun", "MachinegunMag", "MachineGunAmmo"},
 	{"Gatling Gun", "GatlingGun", "MachineGunAmmo", ""},
 	{"Rifle", "Rifle", "RifleAmmo", "RifleGrenadeAmmo"},
@@ -88,7 +88,8 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperBolt", "SniperAmmo"},
 	{"Chrono Bow", "ChronoBow", "ChronoBolt", ""},
 	{"Karasawa", "Karasawa", "KarasawaAmmo", ""},
-	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},/*
+	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},
+	{"BFG 2704", "BFG 2704", "", ""},/*
 	{"Advanced Sniper Rifle", "AdvancedSniperRifle", "RifleAmmo", ""},
 	
 	{"Automatic Shotgun", "AutoShotgun", "autoshellammo", "shotgunammo"},
@@ -102,7 +103,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 16, 400, 10}, //handgun
 	{1, 60, 400, 25}, //smg
 	{1, 50, 0, 25}, //shotgun
-	{1, 50, 0, 50}, //ssg
+	{1, 2, 50, 50}, //ssg
 	{1, 45, 400, 50}, //machine
 	{1, 400, 0, 100}, //gattling
 	{1, 30, 4, 25}, //Rifle
@@ -110,11 +111,11 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 40, 0, 125}, //grenade rifle
 	{1, 200, 100, 25}, //stealth rifle
 	{1, 200, 100, 25}, //laser rifle
-	{1, 175, 0, 0}, //time gun
+	{1, 175, 0, 400}, //time gun
 	{1, 40, 0, 125}, //artillery canon
 	{1, 400, 0, 150}, //laser chaingun
 	{1, 0, 0, 0}, //util
-	{1, 10, 0, 0}, //plasma cannon	// [SG] selling Plasma Cannon? no
+	{1, 10, 0, 500}, //plasma cannon
 	{1, 200, 4, 125}, //chem spray
 	{1, 120, 0, 125}, // tib autorifle
 	{1, 120, 0, 75}, // tib autorifle weak
@@ -123,7 +124,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 0, 0, 0}, // deconstruction gun
 	{1, 0, 0, 0}, // bomb squad gun
 	{1, 0, 0, 0}, // heal gun
-	{1, 1, 20, 125}, // missile launcher
+	{1, 1, 15, 125}, // missile launcher
 	{1, 400, 4, 125}, // flamethrower
 	{1, 200, 0, 150}, //shock rifle
 	{1, 1, 40, 125}, //sniper rifle
@@ -146,6 +147,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 25, 0, 300}, //chrono bow
 	{1, 40, 0, 125}, // karasawa. Resell value was $125
 	{1, 250, 4, 125}, // Nail MachineGun
+	{1, 0, 0, 500}, // BFG 20704
 	/*{1, 40, 0, 0}, //adv sniper rifle
 	
 	{1, 50, 8, 100}, //auto shottie
@@ -250,12 +252,12 @@ function void InitClasses (void) {
 		4, 2, 0,
 		ITEM_GRENADE, ITEM_RIFLE, 0, 0, 0, 0);
 	
-	AddClass (CLASS_Rocketeer, "Rocket Soldier", 500, 0.7, DEP_BARRACKS,
+	AddClass (CLASS_Rocketeer, "Rocket Soldier", 500, 0.75, DEP_BARRACKS,
 		2, ARMOD_EXPLO,
 		2, 2, 0,
 		ITEM_MISSILE, ITEM_RIFLE, 0, 0, 0, 0);
 	
-	AddClass (CLASS_StealthTrooper, "Stealth Trooper", 600, 1.0, DEP_NONE,
+	AddClass (CLASS_StealthTrooper, "Stealth Trooper", 600, 0.95, DEP_NONE,
 		-1, ARMOD_ENERGY,
 		2, 2, CF_IsStealth,
 		ITEM_LaserRifle, ITEM_KNIFE, 0, 0, 0, 0);
@@ -673,7 +675,7 @@ int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
 	
 	//Orca
 	{
-		1500, 
+		1250, 
 		1000, 
 		MECHWEIGHT_LIGHT, 
 		0,
@@ -681,7 +683,7 @@ int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
 	
 	//Tortoise
 	{
-		2500, 
+		2000, 
 		3000, 
 		MECHWEIGHT_MEDIUM, 
 		0,
@@ -705,8 +707,8 @@ int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
 	
 	// Wolverine
 	{
+		2500, 
 		3000, 
-		3500, 
 		MECHWEIGHT_MEDIUM, 
 		0,
 	}, 
@@ -714,7 +716,7 @@ int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
 	// Madcat
 	{
 		3000, 
-		5000, 
+		4000, 
 		MECHWEIGHT_HEAVY, 
 		MF_POWER,
 	}, 
@@ -722,22 +724,22 @@ int Mechs_int[NUM_MECHS][NUM_MECH_KEYS_INT] = {
 	// Titan
 	{
 		3500, 
-		4000, 
+		5000, 
 		MECHWEIGHT_HEAVY, 
 		MF_POWER,
 	}, 
 	
 	// [Cata] Lancer
 	{
-		3000, 
-		4000, 
+		2750, 
+		3500, 
 		MECHWEIGHT_MEDIUM, 
 		0,
 	},
 	
 	// Juggernaut
 	{
-		5000, 
+		4500, 
 		5000, 
 		MECHWEIGHT_HEAVY, 
 		MF_POWER,

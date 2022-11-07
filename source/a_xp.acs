@@ -212,6 +212,7 @@ script 91 (void) {
 		
 		if (rank >= RANK_CAPTAIN) {
 			GiveInventory ("EagerBeaver", 1);
+			TakeInventory ("Unarmed", 1);
 		}
 		
 		if (rank >= RANK_MAJOR) {

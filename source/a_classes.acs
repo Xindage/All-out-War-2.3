@@ -213,6 +213,7 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("MissileMag", 1);
 		GiveInventory ("PistolMagazine", 60);
 		GiveInventory ("SMGMag", 60);
+		GiveInventory ("SSGShell", 2);
 		GiveInventory ("SniperBolt", 1);
 		SetWeapon ("Unarmed");
 		SetAmmoCapacity ("TimedC4Ammo", 1);
@@ -426,6 +427,10 @@ function int SetClass (int id, int scflags) {
 	// Tag the minigunner so it deals more damage
 	if (id == CLASS_Minigunner || id == CLASS_Commando)
 		GiveInventory ("IsMinigunner", 1);
+
+	// Tag the rocket soldier so it have its fast reloading and altfire
+	if (id == CLASS_Rocketeer || id == CLASS_Commando)
+		GiveInventory ("IsRocketSoldier", 1);
 
 	// Tag the artillery soldier so it can have its fast reloading
 	if (id == CLASS_ARTILLERY)

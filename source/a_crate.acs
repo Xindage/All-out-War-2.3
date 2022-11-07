@@ -625,6 +625,8 @@ script 309 (int c) {
 			SetWeapon ("EagerBeaver");
 		else
 			ActivatorSound ("weapons/sawup", 127);
+			
+		TakeInventory ("Unarmed", 1);
 		break;
 	case CRATE_MARINEBEACON:
 		GiveInventory("MarineBeaconItem",1);
@@ -690,6 +692,9 @@ script 309 (int c) {
 		CheckAndRemove ("Nail-Machine Gun");
 		CheckAndRemove ("Lightsaber");
 		CheckAndRemove ("BFG 2704");
+		
+		TakeInventory ("FlashbangAmmo", 4);
+		TakeInventory ("FragGrenadeAmmo", 4);
 		
 		if (CheckInventory ("EagerBeaver")) {
 			TakeInventory ("EagerBeaver", 1);

@@ -537,8 +537,9 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define ITEM_CryoBow			43
 #define ITEM_Karasawa			44
 #define ITEM_NailMG				45
+#define ITEM_BFG2704			46
 // -- Total of items
-#define MAX_ITEMS				46 // Amount of items in the above list
+#define MAX_ITEMS				47 // Amount of items in the above list
 #define ITEM_maxGrenades		4
 #define ITEM_maxFlashBangs		4
 #define ITEM_maxC4 				4

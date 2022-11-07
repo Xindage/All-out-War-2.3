@@ -55,6 +55,7 @@ script SC_USEGRENADE (int whichnade) NET {
 		CheckInventory("ActionRemoteC4") ||
 		CheckInventory("ActionMeleeAttack") ||
 		CheckInventory("SelfHeal"))
+		CheckInventory("ActionReload") ||
 		terminate;
 	
 	switch(whichnade)
@@ -213,6 +214,9 @@ script SC_CCMD_SELLWEAPON (void) NET {
 		GenericError ("You can't sell that!");
 		terminate;
 	}
+	
+	if (CheckWeapon("EagerBeaver"))
+		GiveInventory("Unarmed", 1);
 
 	// All good, sell it.
 	TakeInventory (weapon, 1);

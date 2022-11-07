@@ -211,12 +211,13 @@ script SC_MARINE_DEATH (int i) {
 	AI_ClearMarine (i);
 	
 	// Give the killer a bounty if he was an enemy player
+	// 2022/10/17 Xindage - Balanced bot marines.
 	if (PlayerNumber() != -1 && PlayerTeam() != AITeam) {
 		LocalAmbientSound ("game/boink", 127);
-		AddExperience (100);
-		GiveCredits (intHolder[i_CreditFragAward]);
-		TakeTickets (AITeam, 1);
-		Team_GivePoints (PlayerTeam(), 2, false);
+		AddExperience (50); // Same > Player
+		GiveCredits (intHolder[i_CreditFragAward] * 0.5);
+//		TakeTickets (AITeam, 1); // Dont worth a ticket.
+		Team_GivePoints (PlayerTeam(), 1, false); // Half > Player
 	}
 }
 

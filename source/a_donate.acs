@@ -44,7 +44,8 @@ function void DonateCredits (int donatee, int dosh) {
 	}
 	
 	// [JD] This is to cut down on the donation abuse (Players joining and spectating to donate to teammates).
-	if (GetRank() == RANK_PRIVATE)
+	// 2022/10/13 Xindage - Allow server to allow toogle it on/off, this forced rank is sometimes annyoing.
+	if (GetRank() == RANK_PRIVATE && GetCVAR ("zeta_donaterank"))
 	{
 		IntelMessageNoLog ("\cgYou need to be a higher rank!", false);
 		return;

@@ -33,21 +33,26 @@ script SC_DEATH DEATH {
 		PlasmaCooldown[PlayerNumber()] = Timer() + intHolder[i_PlasmaCooldownTime];
 	
 	// How much is this thing worth?
+	// Xindage 2022/10/17 - three mechs was missing from the list: Mastodon, tortoise and lancer.
+	// Mech points is also now based on their weight.
 	int points = 1;
-	if (CheckInventory ("IsMech")) {
-		
+	if (CheckInventory ("IsMech"))
+	{
+		// Light
 		if (CheckInventory ("OrcaWeapons") ||
-			CheckInventory ("RavenWeapons")) {
-			
-			points = 3;
-		}
-		else if (CheckInventory ("WolverineWeapons") ||
-			CheckInventory ("MadCatWeapons") ||
+			CheckInventory ("RavenWeapons") ||
+			CheckInventory ("MastodonWeapons"))
+			{points = 3;}
+		// Medium
+		if (CheckInventory ("TortoiseWeapons") ||
 			CheckInventory ("TitanWeapons") ||
-			CheckInventory ("JuggernautWeapons")) {
-			
-			points = 4;
-		}
+			CheckInventory ("WolverineWeapons"))
+			{points = 4;}
+		// Heavy
+		if (CheckInventory ("MadCatWeapons") ||
+			CheckInventory ("TitanWeapons") ||
+			CheckInventory ("JuggernautWeapons"))
+			{points = 5;}
 	}
 	
 	// If we're in alternate experience mode, we lose all experience now
@@ -70,6 +75,7 @@ script SC_DEATH DEATH {
 			CheckTargetWeapon ("Unarmed") ||
 			CheckTargetWeapon ("EagerBeaver") ||
 			CheckTargetWeapon ("Knife")
+			CheckTargetWeapon ("Lightsaber")
 		))
 	{
 		GiveToTarget ("BombPackItem", 1);
