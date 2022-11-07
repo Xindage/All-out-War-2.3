@@ -6,7 +6,7 @@ actor Flashbang : AOWWeapon {
     Weapon.BobStyle Alpha
     +NOEXTREMEDEATH
     +NOALERT 
-    inventory.pickupmessage "Flashbang!"
+    inventory.pickupmessage "Picked up a flashbang."
     Weapon.kickback 50
     Weapon.AmmoType "FlashbangAmmo"
     Weapon.AmmoUse 1
@@ -17,7 +17,7 @@ actor Flashbang : AOWWeapon {
     Weapon.UpSound "weapons/up/flashbang"	
 	Weapon.PreferredSkin "MarineFist"
     Obituary "$OB_FLASHBANG"
-	DropItem "FlashbangAmmo"	
+	DropItem "FlashbangItem"	
     States {
 	Select:
 	    FLSH A 1 offset (90,100)
@@ -238,6 +238,31 @@ actor FlashbangFlare
         PPCX AAAAAAAAA 2 bright A_FadeOut(0.15)
         stop
   }
+}
+
+ACTOR FlashbangItem : CustomInventory
+{
+   Inventory.Amount 1
+   Inventory.MaxAmount 1
+   Inventory.PickupSound "frag/pinpull"
+   Inventory.PickupMessage "Picked up a flashbang."
+   Scale 0.15
+   +FLOORCLIP
+   States
+   {
+   Spawn:
+      FLSH X 1
+      Loop
+   Pickup:
+	  TNT1 A 0 A_JumpIfInventory("Flashbang",1,"GiveAmmo")
+	  Goto GiveItem
+   GiveAmmo:
+      TNT1 A 0 A_GiveInventory("FlashbangAmmo",1)
+      Stop
+   GiveItem:
+      TNT1 A 0 A_GiveInventory("Flashbang")
+	  Stop
+   } 
 }
 
 // =============================================================================

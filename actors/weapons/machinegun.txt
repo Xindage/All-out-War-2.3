@@ -264,6 +264,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		AK4R QRS 1
 		AK4R TUV 2
 		TNT1 A 0 A_JumpIfInventory("MachineGunAmmo",1,"Reload2")
+		Goto Ready
     Reload2:
 	    TNT1 A 0 A_TakeInventory("MachineGunAmmo",1)
 	    TNT1 A 0 A_GiveInventory("MachinegunMag",1)

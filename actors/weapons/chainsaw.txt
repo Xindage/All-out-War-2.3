@@ -16,6 +16,7 @@ actor EagerBeaver : AOWWeapon replaces Chainsaw {
 	decal "BulletChip"
 	states {
     Select:
+	    SAWG C 0 A_TakeInventory ("Unarmed", 1)
 		SAWG C 1 offset (90,100)
 		SAWG C 1 offset (80,89)
 		SAWG C 1 offset (70,79)
@@ -75,6 +76,7 @@ actor EagerBeaver : AOWWeapon replaces Chainsaw {
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Denied")
 		TNT1 A 0 A_FireCustomMissile ("ChainSawThrown")
 		TNT1 A 0 A_StopSound (CHAN_WEAPON)
+		TNT1 A 0 A_GiveInventory ("Unarmed", 1)
 		TNT1 A 0 A_TakeInventory ("EagerBeaver", 1)
 		goto Deselect
 	Denied:

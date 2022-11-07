@@ -137,10 +137,10 @@ actor GrenadeAmmo : Ammo {
 //AM Guided Missiles; Missile Launcher
 actor MissileAmmo : Ammo {
 	+IGNORESKILL
-	inventory.amount 20
-	inventory.maxamount 20
-	ammo.backpackamount 20
-	ammo.backpackmaxamount 20
+	inventory.amount 15
+	inventory.maxamount 15
+	ammo.backpackamount 15
+	ammo.backpackmaxamount 15
 }
 
 //50mm/80mm Howitzer Shells; Artillery Gun

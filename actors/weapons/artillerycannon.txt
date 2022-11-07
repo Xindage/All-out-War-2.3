@@ -17,7 +17,7 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 	Inventory.PickupMessage "You got the artillery cannon!"
 	Weapon.AmmoType "ArtilleryCharge"
 	Weapon.AmmoUse 1
-	Weapon.AmmoGive 5
+	Weapon.AmmoGive2 5
 	Weapon.AmmoType2 "ArtilleryShellAmmo"
 	Weapon.PreferredSkin "MarineSRockets"
 	Weapon.SelectionOrder 11
