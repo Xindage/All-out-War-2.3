@@ -1,6 +1,6 @@
 // Lancer mech
 actor Lancer : MechPlayer_Base {
-	Health 4000
+	Health 3500
 	Radius 58
 	Height 128
 	PainChance 0

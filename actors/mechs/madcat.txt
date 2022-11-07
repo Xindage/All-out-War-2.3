@@ -1,6 +1,6 @@
 // MAD CAT
 actor MadCat : MechPlayer_Base {
-	health 5000
+	health 4000
 	radius 64
 	height 144
 	mass 4000

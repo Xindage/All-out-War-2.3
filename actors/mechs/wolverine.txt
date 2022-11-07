@@ -1,6 +1,6 @@
 // Wolverine mech
 actor Wolverine : MechPlayer_Base {
-	Health 3500
+	Health 3000
 	Radius 58
 	Height 128
 	Mass 4000
