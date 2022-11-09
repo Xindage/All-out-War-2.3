@@ -144,6 +144,45 @@ map aow19 "Hell's March" {
 	next = "aow01"
 }
 
+map AOW20 "Mining Camp"
+{
+	next = "AOW21"
+	sky1 = "STSKY9"
+	music = "D_AOW02"
+	levelnum = 20
+}
+
+map AOW21 "Aow Zone"
+{
+	next = "AOW22"
+	sky1 = "SKYFOG"
+	music = "D_AOW21"
+	levelnum = 21
+}
+
+map AOW22 "Happy Fragging"
+{
+	next = "AOW23"
+	sky1 = "STSKY14"
+	music = "D_AOW16"
+	levelnum = 22
+}
+
+map AOW23 "Immortal Kombat"
+{
+	next = "AOW24"
+	music = "D_AOW23"
+	sky1 = "stars"
+	levelnum = 23
+}
+
+map AOW24 "Convulsion of the nature"
+{
+	music = "D_AOW24"
+	levelnum = 24
+	next = "AOW01"
+}
+
 skill Normal {
 	name = "Normal"
 	damagefactor = 1.0

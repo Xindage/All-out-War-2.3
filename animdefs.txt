@@ -122,3 +122,25 @@ texture CRYSSLI1
 	pic CRYSSLI2 tics 8
 	pic CRYSSLI3 tics 8
 	pic CRYSSLI4 tics 8
+
+// Extra package merge data ahead:
+texture BTERREF1
+    allowdecals
+    pic BTERREF1 rand 1 2
+    pic BTERREF2 rand 1 2
+    pic BTERREF1 rand 1 2
+    pic BTERREF2 rand 1 2
+    pic BTERREF3 rand 1 2
+    pic BTERREF2 rand 1 2
+    pic BTERREF3 rand 1 2
+
+texture BTERRES1
+    allowdecals
+    pic BTERRES1 tics 1
+    pic BTERRES2 tics 1
+    pic BTERRES3 rand 1 2
+
+texture BTERWAR1
+    allowdecals
+    pic BTERWAR1 tics 1
+    pic BTERWAR2 tics 1

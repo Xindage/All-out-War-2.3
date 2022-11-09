@@ -208,10 +208,23 @@ actor ShortBTOObeliskBlue : BTOObeliskBlue 21311 {
 	tag "[Hitbox] Blue Obelisk (short)"
 	height 256
 }
+
 actor ShortBTOObeliskRed : BTOObeliskRed 21312 {
 	//$Category Hitboxes
 	tag "[Hitbox] Red Obelis (short)"
 	height 256
+}
+
+actor ShorterBTOObeliskBlue : BTOObeliskBlue 21313 {
+        //$Category Hitboxes
+        tag "[Hitbox] Blue Obelisk (shorter)"
+        height 72
+}
+
+actor ShorterBTOObeliskRed : BTOObeliskRed 21314 {
+        //$Category Hitboxes
+        tag "[Hitbox] Red Obelis (shorter)"
+        height 72
 }
 
 // 2022/10/04 Xindage - Repair pads that uses BTO

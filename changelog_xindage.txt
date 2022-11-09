@@ -1,0 +1,120 @@
+===========================================================
+Title                   : All Out War 2: Extra
+Filename                : aow_v2.2-extra_vxx.pk3
+Author                  : Xindage (discord: Xindage#2825)
+
+Original Release date   : 2024/08/23 (v01)
+Prior Version 04 (----/--/--)
+						-Added Mining camp. Xindage (aow20)
+						-Added Aow Zone. Xindage (aow21)
+Version 04 (2022/10/02)
+						-Added changelog (Finally)
+						-Playable beta version of happy fragging. Unknown author (aow22)
+						-Playable beta version of Immortal Kombat. The Jesus (aow23)
+						-Revamped Aow02, (Barrens)
+
+Version 04b (2022/10/09)
+						-Fixed bad tag and the teleport to field. (aow20)
+						-Fixed teleport to field. (aow22)
+						-Fixed research centre control. (aow22)
+						-Facilitate to invade the side entrances as infantry. (aow22)
+						-Fixed several minor issues. (aow23)
+						-Added crates to facilitate invasion to both ob and bar. (aow23)
+
+Version 05-beta (2022/10/15)
+						-Updated the A01 layout to 3d mode. (aow02)
+
+Version 05 (2022/10/23)
+						-A01 layout barracks doors are now wide. (A01)
+						-Repair pad is now more vulnerable to attacks in its BTOs. (A01)
+						-Building has extra scripts on death. (A01)
+						-Fixed repair pad. (aow02)
+						-Update in immortal kombat by k4r4t3k4n4k4s. (aow23)
+						-Updated Renegade 2030 to 3D mode. (aow08)
+						-Added Convulsion of the nature. k4r4t3k4n4k4s (aow24)
+
+===========================================================
+* What is included
+
+			AOW02 - (A01) - Barrens - Author: Unknown - Last edited by: Xindage - Base: aow 2.2
+				Changes:
+				- Buildings now uses the A01 theme.
+				- Map is now symmetric. (Balance change)
+				- The cliffs now looks more natural.
+				- Added credits intro.
+				- Fixed a killing sector in bounds.
+				- New spawn room.
+
+			AOW08 - (A01 - Modified) - Renegade 2030 - Author: Unknown - Last edited by: Xindage - Base: aow 2.2
+				Changes: !!! BETA WARNING !!! - This map is still in beta and it's subject to changes.
+				- Buildings now uses the A01 theme.
+				- Barracks still uses the wide outside walls.
+
+			AOW20 - (A20) - Mining Camp - Author: Xindage - Last edited by: Xindage - Base: omega
+				Changes:
+				- Fixed the symmetry of the map.
+				- Added side entrance to the base, leading behind barracks.
+				- Another new entrance behind the abandoned structure.
+				- Abandoned structure is now similar to the buildings.
+				- Additional tib field is added on the side cave.
+				- Main tib field moved near the main entrance.
+				- Terminal room is new.
+
+			AOW21 - (A02) - Aow Zone - Author: Xindage - Last edited by: Xindage - Base: aow 2.1
+				Changes:
+				- You cant attack enemy building from your own base.
+				- Decreased the overall area of each base.
+				- Moved buildings around just a bit.
+				- Added extra checks to prevent portal out of bounds.
+				- Repair facility is now deeper inside base.
+
+			AOW22 - (A03) - Happy Fragging - Author: unknown - Last edited by: Xindage - Base: omega
+				Changes: !!! BETA WARNING !!! - This map is still in beta and it's subject to changes.
+				- Buildings now uses the A03 theme. (WIP)
+
+			AOW23 - (A04) - Immortal Kombat - Author: k4r4t3k4n4k4s - Last edited by: Xindage - Base: aow 2.1
+				Changes: !!! BETA WARNING !!! - This map is still in beta and it's subject to changes.
+				- Update the building from both team.
+				- Extra improvements were made to each buildings.
+
+			AOW24 - (A05) - Convulsion of the nature - Author: unknown - Last edited by: k4r4t3k4n4k4s - Base: omega
+				Changes: !!! BETA WARNING !!! - This map is still in beta and it's subject to changes.
+				- Few paths are blocked while the player count is low.
+
+===========================================================
+* Load order / Requirements *
+											- aow_v2.2-core_r041118.pk3
+											- aow_v2.2-patch_r050518.pk3
+											- aow_v2.2-maps_r050518.pk3
+											- aow_v2.2-music_r101217.pk3
+											- aow_v2.2-patch_r050518.pk3
+											- aow2_nasty_dogs_vx.x.pk3
+											- aow_v2.2-extra_vxx.pk3
+
+===========================================================
+* Supporters *
+											- Gaturra
+											- Madcat
+											- The Jesus
+											- Korp
+My personal thanks for gaturra, if it was not for her i'll probably not be maintaining this map pack.
+
+===========================================================
+* Copyright / Permissions *
+
+This file is an addon map pack for Gaturra patch which purpose is to bring back past maps that was not converted to work
+on aow 2.2.
+
+You MAY distribute this file, provided you include this text file, with
+no modifications. You may distribute this file in any electronic
+format (BBS, Diskette, CD, etc) as long as you include this file
+intact.
+
+===========================================================
+* Contact / Notes *
+	If you want to add your own map on the server too, contact me on discord (Xindage#2825) or in the oficial aow2.2 discord.
+	And dont be scared of me, I dont peck. :>
+
+	Map released in beta state can be disabled in case of major bugs, if it's the case please wait for it on the next version.
+
+	By last i'm not a faster map so things will be done when its done, please dont rush me...
