@@ -30,6 +30,7 @@ actor IsStealth : Inventory {}
 actor IsGunman : Inventory {}
 actor IsMachinegunner : Inventory {}
 actor IsMinigunner : Inventory {}
+actor IsRocketSoldier : Inventory {}
 actor IsDemoExpert : Inventory {}
 actor IsShockTrooper : Inventory {}
 actor IsKarasawaSoldier : Inventory {}

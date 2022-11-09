@@ -1172,7 +1172,6 @@ $musicvolume d_aow15 0.4
 // [JD] AOW16
 Ambient/Rain	AMBRAIN
 
-
 //Nasty Dogs - MeleeAttacks
 weapons/gswing      dsswing
 
@@ -1191,6 +1190,12 @@ weapons/m16clipou		CLPM16OU
 weapons/m16clipin		CLPM16IN
 weapons/m16draw			CLPM6LAD
 weapons/m16fire         DSOICW
+
+//Nasty Dogs - Missile launcher
+MissileLauncher/LockedBeep		MLLocked
+MissileLauncher/TargetLocked	MLLockTr
+MissileLauncher/StartLockOn		MLLockOn
+missilelauncher/busrtShot       MLBurst1
 
 //Nasty Dogs - Shock rifle/Tesla cannon
 TSLAEND TSLAEND
@@ -1249,6 +1254,3 @@ weapons/pistolr2 DSPSREL2
 
 
 $random weapons/pistolfire { weapons/pistolf1 weapons/pistolf2 weapons/pistolf3 weapons/pistolf4 }
-
-
-

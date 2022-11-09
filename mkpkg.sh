@@ -8,7 +8,7 @@ echo "Result is : $vardate"
 
 # Generate data pk7.
 # Here is compressed all visual and auditive data of the game but musics.
-7z a OUTPUT/aow2.3_data_r$vardate.pk7 animadef.txt colormap.dat dbigfont.lmp decaldef.txt fontdefs.txt hirestex.txt keyconf.txt modeldef.txt notch.dat playpal.pal sbarinfo.txt skininfo.txt sndinfo.txt sndseq.txt startup.dat terrain.txt textures.iwadfix.txt textures.txt -r textures/* sprites/* sounds/* patches/* models/* graphics/* flats/* -m0=copy
+7z a OUTPUT/aow2.3_data_r$vardate.pk7 animadef.txt colormap.dat dbigfont.lmp decaldef.txt fontdefs.txt hirestex.txt hirestex.weapons.txt keyconf.txt modeldef.txt notch.dat playpal.pal sbarinfo.txt skininfo.txt sndinfo.txt sndseq.txt startup.dat terrain.txt textures.iwadfix.txt textures.txt -r textures/* sprites/* sounds/* patches/* models/* graphics/* flats/* -m0=copy
 
 # Generate code pk7.
 # Here is compressed all the actors and acs from the source into the file.

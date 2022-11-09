@@ -448,44 +448,49 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define AGF_DONTADD 32
 
 // Class identifiers
-#libdefine CLASS_None					-1
-#libdefine CLASS_Gunman					0
-#libdefine CLASS_Engineer				1
-#libdefine CLASS_Minigunner				2
-#libdefine CLASS_Technician				3
-#libdefine CLASS_Flamer					4
-#libdefine CLASS_Rifleman				5
-#libdefine CLASS_Machinegunner			6
-#libdefine CLASS_Grenadier				7
-#libdefine CLASS_Rocketeer				8
-#libdefine CLASS_StealthTrooper			9
+// [Xindage] 09/25/22 - Sort Class by price, it looks better in game.
+// Each category can hold up to 10 classes, exceeding classes wont appear.
+#libdefine CLASS_None					-1	// Default None
+// Generic
+#libdefine CLASS_Gunman					0	// Free
+#libdefine CLASS_Shotgunner				1	// Free
+#libdefine CLASS_LazerRifleman			2	// 150
+#libdefine CLASS_DoubleShotgunner		3	// 200
+#libdefine CLASS_Rifleman				4	// 200
+#libdefine CLASS_Machinegunner			5	// 300
+#libdefine CLASS_TiberiumAutorifleman	6	// 400
+#libdefine CLASS_Flamer					7	// 450
+#libdefine CLASS_Grenadier				8	// 450
+#libdefine CLASS_StealthTrooper			9	// 600
+// Combat
+#libdefine CLASS_Minigunner				10	// 400
+#libdefine CLASS_CombustionGunner		11	// 400
+#libdefine CLASS_Rocketeer				12	// 500
+#libdefine CLASS_ChemWarrior			13	// 550
+#libdefine CLASS_GaussGunner			14	// 600
+#libdefine CLASS_Artillery				15	// 600
+#libdefine CLASS_JetTrooper				16	// 600
+#libdefine CLASS_NailMachineGunner		17	// 650
+#libdefine CLASS_Sniper					18	// 750
+#libdefine CLASS_Commando				19	// 1000
+// Power
+#libdefine CLASS_PlasmaGunner			20	// 600
+#libdefine CLASS_ShockTrooper			21	// 600
+#libdefine CLASS_LaserChaingunner		22	// 650
+#libdefine CLASS_KarasawaSoldier		23	// 800
+#libdefine CLASS_ChronoArcher			24	// 1000
+// Support
+#libdefine CLASS_Harvester				25	// Free
+#libdefine CLASS_Engineer				26	// Free
+#libdefine CLASS_Technician				27	// 200
+#libdefine CLASS_FieldMedic				28	// 300
+#libdefine CLASS_AdvHarvester			29	// 400
+#libdefine CLASS_UtilityGuy				30	// 500
+#libdefine CLASS_DemoExpert				31	// 550
+#libdefine CLASS_SuicideBomber			32	// 1500
+#libdefine CLASS_TimeCop				33	// 2000
 // ----
-#libdefine CLASS_GaussGunner			10
-#libdefine CLASS_ChemWarrior			11
-#libdefine CLASS_ShockTrooper			12
-#libdefine CLASS_Commando				13
-#libdefine CLASS_Shotgunner				14
-#libdefine CLASS_SuicideBomber			15
-#libdefine CLASS_Sniper					16
-#libdefine CLASS_UtilityGuy				17
-#libdefine CLASS_DemoExpert				18
-#libdefine CLASS_FieldMedic				19
-// ----
-#libdefine CLASS_LaserChaingunner		20
-#libdefine CLASS_JetTrooper				21
-#libdefine CLASS_TiberiumAutorifleman	22 // this thing needs a shorter name, seriously.
-#libdefine CLASS_DoubleShotgunner		23
-#libdefine CLASS_PlasmaGunner			24
-#libdefine CLASS_Artillery				25
-#libdefine CLASS_TimeCop				26
-#libdefine CLASS_Harvester				27
-#libdefine CLASS_AdvHarvester			28
-#libdefine CLASS_CombustionGunner		29
-#libdefine CLASS_ChronoArcher			30
-#libdefine CLASS_KarasawaSoldier		31
-#libdefine CLASS_NailMachineGunner		32
-// ----
-#libdefine NUMCLASSES					33 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
+#libdefine NUMCLASSES					34 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
 
 // Item identifiers
 #define ITEM_None				0

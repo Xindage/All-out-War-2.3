@@ -45,3 +45,16 @@ ACTOR RedPlasmaFlare : BaseFlare
 		stop	
 	}
 }
+
+Actor RocketFlare : BaseFlare
+{
+alpha 1.0
+yscale 0.6
+xscale 0.6
+states
+	{
+	Spawn:
+	    LEYS O 2 BRIGHT
+		Stop
+	}
+}
