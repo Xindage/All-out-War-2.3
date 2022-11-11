@@ -21,6 +21,7 @@ actor BaseTerminalOutside {
 	DamageFactor "Mechstomp", 0.0
 	DamageFactor "Monster", 0.0
 	DamageFactor "Deconstruction", 0.0
+	DamageFactor "SuperWeapon" 1.0
 	-SOLID
 	+SHOOTABLE
 	+NOBLOOD
