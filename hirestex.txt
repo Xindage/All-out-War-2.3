@@ -52,11 +52,12 @@ remap FRG3E0 FRG3E0H
 
 
 //Pulse
-remap PLGXA0 PBLST_A0
-remap PLGXB0 PBLST_A1
-remap PLGXC0 PBLST_A2
-remap PLGXD0 PBLST_A3
-remap PLGXE0 PBLST_A4
+// PLGX is unused in aow 2.2, its used in 2.1 and omega.
+//remap PLGXA0 PBLST_A0
+//remap PLGXB0 PBLST_A1
+//remap PLGXC0 PBLST_A2
+//remap PLGXD0 PBLST_A3
+//remap PLGXE0 PBLST_A4
 remap PPCXA0 UTFLARE3
 remap E21XA1A5 E21HA1A5
 remap E21XA2A8 E21HA2A8

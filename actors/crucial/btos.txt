@@ -216,13 +216,13 @@ actor ShortBTOObeliskRed : BTOObeliskRed 21312 {
 	height 256
 }
 
-actor ShorterBTOObeliskBlue : BTOObeliskBlue 21313 {
+actor ShorterBTOObeliskBlue : BTOObeliskBlue 21317 {
         //$Category Hitboxes
         tag "[Hitbox] Blue Obelisk (shorter)"
         height 72
 }
 
-actor ShorterBTOObeliskRed : BTOObeliskRed 21314 {
+actor ShorterBTOObeliskRed : BTOObeliskRed 21318 {
         //$Category Hitboxes
         tag "[Hitbox] Red Obelis (shorter)"
         height 72
