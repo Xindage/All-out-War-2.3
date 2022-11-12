@@ -1,0 +1,6 @@
+Actor FlashbangCooldown : PowerDamage
+{
++INVENTORY.ADDITIVETIME
+DamageFactor "nothing", 1.0
+Powerup.duration -4
+}

@@ -80,7 +80,7 @@ actor ChemicalSprayer : AOWWeapon 21066 {
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		CHMS A 19
-		CHMS B 1 A_PlaySound ("phosnade/fire", 5)
+		CHMS B 1 A_PlaySound ("chem/grenade", 5)
 		CHMS C 1
 		TNT1 A 0 Radius_Quake(4,6,0,1,0)
 		CHMS D 1 bright A_SetPitch(pitch-1.0)

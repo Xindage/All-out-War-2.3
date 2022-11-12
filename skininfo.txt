@@ -28,6 +28,11 @@ sprite = PLRF
 CrouchSprite=PLRC
 }
 
+{
+name = "MarineLightsaber"
+sprite = PZSA
+}
+
 
 /////////////////////////////////////////DOOM MARINES
 {

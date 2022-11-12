@@ -136,6 +136,9 @@ actor Player : DoomPlayer {
 		PLAY JJJ 0 A_SpawnItemEx("Credits1",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,128)
 		PLAY J 0 A_SpawnItemEx("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
 		PLAY J 6 A_NoBlocking
+		PLAY J 0 A_JumpIfInventory ("Hasgrenadeon", 1, 2)
+		PLAY J 0 A_Jump (256, 2)
+		PLAY J 0 A_SpawnItemEx("deathgrenade",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0, SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY)
 		PLAY K 6
 		PLAY L 6 A_PlaySound("misc/thud")
 		PLAY M 6
@@ -160,6 +163,9 @@ actor Player : DoomPlayer {
 		PLAY O 0 A_StopSound (6)
 		PLAY O 4
 		PLAY P 0 A_NoBlocking
+		PLAY P 0 A_JumpIfInventory ("Hasgrenadeon", 1, 2)
+		PLAY P 0 A_Jump (256, 2)
+		PLAY P 0 A_SpawnItemEx("deathgrenade",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0, SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY)
 		PLAY PPP 0 A_SpawnItemEx ("Credits1",random(-4,4),random(-4,4),random(32,48),random(-4,4),random(-4,4),random(4,8),0,0,128)
 		PLAY P 0 A_SpawnItemEx ("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
 		PLAY P 0 A_Scream

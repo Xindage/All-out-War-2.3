@@ -36,6 +36,7 @@
 #include "actors/misc/shrubs.txt"
 #include "actors/misc/debug.txt"
 #include "actors/misc/signs.txt"
+#include "actors/misc/misc.txt"
 #include "actors/items/armoritems.txt"
 #include "actors/items/backpack.txt"
 #include "actors/items/credits.txt"

@@ -129,12 +129,12 @@ script SC_CUSTOMINVENTORY (int action, int team) {
 		break;
 	case 4:
 		// Activate self-heal
-		if (CheckInventory ("SelfHeal") ||
-			CheckInventory("IsUsingBindFragGrenade") ||
-			CheckInventory("IsUsingBindFlashbang") ||
-			CheckInventory("IsUsingBindRemoteC4") ||
-			CheckInventory("ActionMeleeAttack") ||
-			CheckInventory("ActionReload"));
+		if (CheckInventory("SelfHeal") ||
+		    CheckInventory("ActionFragGrenade") ||
+		    CheckInventory("ActionFlashbang") ||
+		    CheckInventory("ActionRemoteC4") ||
+		    CheckInventory("ActionMeleeAttack") ||
+		    CheckInventory("ActionReload"))
 			terminate;
 		GiveInventory ("SelfHeal", 1);
 		throwBindOldWep[playernumber()] = GetWeapon();

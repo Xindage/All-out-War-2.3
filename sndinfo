@@ -30,221 +30,22 @@ godlike godlike
 wicked wicked
 
 // $rolloff * 400 3600
-
 blanksnd			blanksnd
 game/rank			veteran
 misc/nope			nope
 
 gun/bang m90
 
-pistol/fire			dspistol
-$rolloff pistol/fire 100 600
-
 $rolloff 			100mm/fire	1000 5000
-subby/fire			dssubby
-$volume subby/fire 0.6
-$limit				subby/fire	0
 rifle/fire			dsrifle
-rifle/reload			dsmssgr2
+rifle/reload		dsmssgr2
 
-ak47/fire			dsmachgn
-$limit ak47/fire	0
-$volume ak47/fire	0.667
-
-repairgun/fire			repairgn
+repairgun/fire		repairgn
 gauss/fire			dsgauss
 gauss/background	dsgausi
 Gauss/Select		gauss_s
 laser/fire			lsrlfire
-lchaingun/fire			lsclfire
-
-
-// Select sounds
-
-weapons/up/fragnade			weapup00
-weapons/up/flashbang		weapup00
-weapons/up/fists			weapup00
-weapons/up/remotec4			weapup00
-weapons/up/repair			weapup01
-weapons/up/pistol			weapup02
-weapons/up/shotgun			weapup03
-weapons/up/gatling			weapup04
-weapons/up/artil			weapup05
-weapons/up/rocket			weapup05
-weapons/up/plasmagun		weapup06
-weapons/up/karasawa			weapup06
-weapons/up/bfg				weapup07
-weapons/up/laserrifle		weapup08
-weapons/up/flamer			weapup09
-weapons/up/chem				weapup09
-weapons/up/sniper			weapup10
-weapons/up/revolver			weapup11
-weapons/up/chrono			weapup12
-weapons/up/laserchaingun	weapup13
-weapons/up/ssg				weapup14
-weapons/up/rifle			weapup15
-weapons/up/timegun			weapup16
-weapons/up/utilgun			weapup17
-weapons/up/machinegun		weapup18
-weapons/up/plasmacannon		weapup19
-weapons/up/gauss			weapup20
-weapons/up/smg				weapup21
-weapons/up/shockrifle		weapup22
-weapons/up/nadelauncher		weapup23
-weapons/up/tibrifle			weapup24
-weapons/up/combrifle		weapup24
-
-
-//CryoBow
-weapons/cryobowfire     DSBOWFIR
-weapons/cryobowshot     DSBOWSHT
-weapons/cryobowreload   DSBOWREL
-weapons/cryobowhit      DSBOWHIT
-weapons/cryobowfreeze	DSPSYIC1
-weapons/cryobowflyby    DSBOWFLY
-
-//Quad Barrel Shotgun
-quadshotgun/fire		DSQSFIRE
-quadshotgun/insert1     DSQSINS1
-quadshotgun/insert2     DSQSINS2
-quadshotgun/insert3     DSQSINS3
-quadshotgun/insert4     DSQSINS4
-
-//Nail Bomb Sounds
-$random Weapons/NBBounce {Weapons/NBBounce1 Weapons/NBBounce2}
-
-Weapons/NBBounce1	DSNBBNC1
-Weapons/NBBounce2	DSNBBNC2
-Weapons/NailBomb	DSNBMBLC
-Weapons/NailBombExp	DSNBBEXP
-
-//Nail Machinegun
-Weapons/NailMGFire	    NAILFIRE
-Weapons/NailHit		    NAILHIT
-Weapons/NailHitBleed	NAILHTBD
-Weapons/NailFlight	    NAILFLY
-Weapons/NailSGFire	    NLSGFIRE
-
-$Limit Weapons/NailHit		0
-$Limit Weapons/NailHitBleed	0
-
-// Gatling gun
-gatling/fire		minifire
-gatling/alt			minialtf
-gatling/spin		bminigun
-gatling/spinup		spinup
-minigun/fire2		rminigfi
-minigun/loop		rminiglo
-$volume minigun/fire2 0.8
-$limit minigun/fire2 0
-
-gatling/boom1		mineexp1
-gatling/boom2		mineexp2
-$random gatling/boom {
-	gatling/boom1
-	gatling/boom2
-}
-$limit gatling/boom 0
-
-// Bomb pack
-terrorist/pickup		itercara
-terrorist/select		icolbeep
-terrorist/activate		kamafail
-terrorist/fail			kamafail
-terrorist/scream		dssuscrm
-
-// Chemical sprayer
-chem/grenade			chemnade
-chem/fire				chemfire
-
-// Volt Autorifle
-voltrifle/fire			voltfire
-voltrifle/decay			voltdeca
-
-//Karasawa
-Weapons/KarasawaHit	    KSAWHIT
-Weapons/KarasawaFire	KSAWFIRE
-Weapons/KarasawaIdle	KSAWIDLE
-Weapons/KarasawaCharge	KSAWCHRG
-Weapons/KarasawaShock	KSAWSHCK
-
-$Limit Weapons/KarasawaHit	0
-$Limit Weapons/KarasawaFire    	0
-
-// [JD] Karasawa
-Weapons/KarasawaSwitchOn			KSAWSWON
-$Volume	Weapons/KarasawaSwitchOn	0.5
-
-Weapons/KarasawaSwitchOff			KSAWSOFF
-$Volume	Weapons/KarasawaSwitchOff	0.5
-
-$Volume	Weapons/KarasawaIdle		0.5
-
-$Volume	Weapons/KarasawaShock		1
-
-Weapons/KarasawaCharge1				KSAWCHR1
-Weapons/KarasawaCharge2				KSAWCHR2
-Weapons/KarasawaCharge3				KSAWCHR3
-$Random Weapons/KarasawaCharge
-{
-	Weapons/KarasawaCharge1
-	Weapons/KarasawaCharge2
-	Weapons/KarasawaCharge3
-}
-
-Weapons/KarasawaArc1				KSAWARC1
-Weapons/KarasawaArc2				KSAWARC2
-$Random Weapons/KarasawaArc
-{
-	Weapons/KarasawaArc1
-	Weapons/KarasawaArc2
-}
-
-//Flashbang Grenades
-flash/flashthrow	flshthrw
-flash/flashbounce	flshbnce
-$random				flash/flash { flash/flash1 flash/flash2 flash/flash3 }
-flash/flash1		flshexp1
-flash/flash2		flshexp2
-flash/flash3		flshexp3
-
-//Frag Grenade
-frag/pinpull		pinpull
-frag/throw			throw
-$random Weapons/fragbounce {FragBounce1 FragBounce2 FragBounce3 FragBounce4 FragBounce5 FragBounce6}
-
-FragBounce1    FRAGBNC1
-FragBounce2    FRAGBNC2
-FragBounce3    FRAGBNC3
-FragBounce4    FRAGBNC4
-FragBounce5    FRAGBNC5
-FragBounce6    FRAGBNC6
-
-// Plasma Cannon
-plasmacannon/fire		plasmaca
-plasmacannon/altfire		plasmac3
-plasmacannon/explode		plasmaex
-plasmacannon/altexplode		plasmae3
-$rolloff 			plasmacannon/explode	2000 7500
-$rolloff 			plasmacannon/altexplode	2000 7500
-$limit				plasmacannon/explode	0
-$limit				plasmacannon/altexplode	0
-
-// Sniper rifle
-rc50/fire			rc50fire
-rc50/boltopen			rc50blto
-rc50/boltclose			rc50bltc
-rc50/zoomin				rc50ZmIn
-$rolloff 			rc50/fire	500 3000
-
-// Artillery cannon (incl. Juggernaut's)
-artillery/fire1			ds80mm1
-artillery/fire2			ds80mm2
-$random artillery/fire		{artillery/fire1 artillery/fire2}
-artillery/explosion		expnew17
-artillery/reload		mechrald
-$limit 				artillery/explosion	0
-// $rolloff 			artillery/explosion	500 2000
+lchaingun/fire		lsclfire
 
 // C4
 c4/use				c4use03
@@ -264,8 +65,6 @@ $rolloff c4/disarm 400 1700
 $rolloff c4/remote 200 1200
 $rolloff c4/remote2 200 1200
 $rolloff c4/proxy 200 1200
-
-phosnade/fire			dsgrenf
 
 mech/step			mechstep
 $limit				mech/step		0
@@ -533,35 +332,10 @@ $random 			misc/shell	{ misc/shell1 misc/shell2 }
 misc/shell1			shell2
 misc/shell2			shell2
 
-// missile launcher sounds
-seeker/beep			seekbeep
-missilelauncher/see		seekwarn
-mislfire mislfire
-mislfir2 mislfir2
-$random missilelauncher/fire		{ mislfire mislfir2 }
-missilelauncher/reload		mislload
-missilelauncher/clipout		mislrelo
-
 //door
 door/start	mdoors22
 door/loop	mdoorl22
 door/end	mdoore22
-
-fist/wall			dspunchw
-fist/hit			dspunch
-$limit				fist/wall		0
-$limit				fist/hit		0
-
-/*
-$random				grenade/fire	{ grenade/fire1 grenade/fire2 }
-grenade/fire1			grenf01
-grenade/fire2			grenf02
-*/
-grenade/fire			dsgrenf
-$random					grenade/explode	{ grenade/explode1 grenade/explode2 }
-grenade/explode1		mineexp1
-grenade/explode2		mineexp2
-grenade/bounce			grenabnc
 
 menu/activate			menusnd4	// Activate a new menu
 menu/backup			menusnd3	// Backup to previous menu
@@ -1172,32 +946,177 @@ $musicvolume d_aow15 0.4
 // [JD] AOW16
 Ambient/Rain	AMBRAIN
 
-//Nasty Dogs - MeleeAttacks
+// Select sounds
+weapons/up/fragnade			weapup00
+weapons/up/flashbang		weapup00
+weapons/up/fists			weapup00
+weapons/up/remotec4			weapup00
+weapons/up/repair			weapup01
+weapons/up/pistol			weapup02
+weapons/up/shotgun			weapup03
+weapons/up/gatling			weapup04
+weapons/up/artil			weapup05
+weapons/up/rocket			weapup05
+weapons/up/plasmagun		weapup06
+weapons/up/karasawa			weapup06
+weapons/up/bfg				weapup07
+weapons/up/laserrifle		weapup08
+weapons/up/flamer			weapup09
+weapons/up/chem				weapup09
+weapons/up/sniper			weapup10
+weapons/up/revolver			weapup11
+weapons/up/chrono			weapup12
+weapons/up/laserchaingun	weapup13
+weapons/up/ssg				weapup14
+weapons/up/rifle			weapup15
+weapons/up/timegun			weapup16
+weapons/up/utilgun			weapup17
+weapons/up/machinegun		weapup18
+weapons/up/plasmacannon		weapup19
+weapons/up/gauss			weapup20
+weapons/up/smg				weapup21
+weapons/up/shockrifle		weapup22
+weapons/up/nadelauncher		weapup23
+weapons/up/tibrifle			weapup24
+weapons/up/combrifle		weapup24
+
+//Flashbang Grenades
+flash/flashthrow	flshthrw
+flash/flashbounce	flshbnce
+$random				flash/flash { flash/flash1 flash/flash2 flash/flash3 }
+flash/flash1		flshexp1
+flash/flash2		flshexp2
+flash/flash3		flshexp3
+
+//Frag Grenade
+frag/pinpull		pinpull
+frag/throw			throw
+
+FragBounce1    FRAGBNC1
+FragBounce2    FRAGBNC2
+FragBounce3    FRAGBNC3
+FragBounce4    FRAGBNC4
+FragBounce5    FRAGBNC5
+FragBounce6    FRAGBNC6
+$random Weapons/fragbounce {FragBounce1 FragBounce2 FragBounce3 FragBounce4 FragBounce5 FragBounce6}
+
+//Nasty Dogs - Fists
+fist/wall			dspunchw
+fist/hit			dspunch
+$limit				fist/wall		0
+$limit				fist/hit		0
 weapons/gswing      dsswing
 
+//Nasty Dogs - Pistol
+weapons/pistolf1 DSPISTO1
+weapons/pistolf2 DSPISTO2
+weapons/pistolf3 DSPISTO3
+weapons/pistolf4 DSPISTO4
+$random weapons/pistolfire { weapons/pistolf1 weapons/pistolf2 weapons/pistolf3 weapons/pistolf4 }
+
+weapons/pistolr1 DSPSREL1
+weapons/pistolr2 DSPSREL2
+
+//Nasty Dogs - Silenced pistol
+pistol/fire			 dspistol
+$rolloff pistol/fire 100 600
+
+// Sniper rifle
+rc50/fire			rc50fire
+rc50/boltopen		rc50blto
+rc50/boltclose		rc50bltc
+rc50/zoomin			rc50ZmIn
+$rolloff 			rc50/fire	500 3000
+
+//Quad Barrel Shotgun
+quadshotgun/fire		DSQSFIRE
+quadshotgun/insert1     DSQSINS1
+quadshotgun/insert2     DSQSINS2
+quadshotgun/insert3     DSQSINS3
+quadshotgun/insert4     DSQSINS4
 
 //Nasty Dogs - SubMachinegun
+subby/fire			  dssubby
+$volume subby/fire 0.6
+$limit				  subby/fire 0
 weapons/SMGIN         SMGMAGIN
 weapons/SMGOut        SMGMAGOU
 weapons/SMGSafty      SMGSAFTY
 weapons/SMGEmpty	  DSCLIP
 
-weapons/empty1			DSCLICK1
-weapons/empty5			DSCLICK5
-
 //Nasty Dogs - Machinegun
-weapons/m16clipou		CLPM16OU
-weapons/m16clipin		CLPM16IN
-weapons/m16draw			CLPM6LAD
-weapons/m16fire         DSOICW
+weapons/m16clipou	  CLPM16OU
+weapons/m16clipin	  CLPM16IN
+weapons/m16draw		  CLPM6LAD
+weapons/m16fire       DSOICW
+
+//Nail Bomb Sounds
+$random Weapons/NBBounce {Weapons/NBBounce1 Weapons/NBBounce2}
+Weapons/NBBounce1	DSNBBNC1
+Weapons/NBBounce2	DSNBBNC2
+Weapons/NailBomb	DSNBMBLC
+Weapons/NailBombExp	DSNBBEXP
+
+//Nail Machinegun
+Weapons/NailMGFire	    NAILFIRE
+Weapons/NailHit		    NAILHIT
+Weapons/NailHitBleed	NAILHTBD
+Weapons/NailFlight	    NAILFLY
+Weapons/NailSGFire	    NLSGFIRE
+$Limit Weapons/NailHit		0
+$Limit Weapons/NailHitBleed	0
+
+// Gatling gun
+gatling/fire		minifire
+gatling/alt			minialtf
+gatling/spin		bminigun
+gatling/spinup		spinup
+minigun/fire2		rminigfi
+minigun/loop		rminiglo
+$volume minigun/fire2 0.8
+$limit minigun/fire2 0
+
+gatling/boom1		mineexp1
+gatling/boom2		mineexp2
+$random gatling/boom { gatling/boom1 gatling/boom2 }
+$limit gatling/boom 0
+
+//Grenade launcher
+/*
+$random				grenade/fire	{ grenade/fire1 grenade/fire2 }
+grenade/fire1			grenf01
+grenade/fire2			grenf02
+*/
+grenade/fire			dsgrenf
+$random					grenade/explode	{ grenade/explode1 grenade/explode2 }
+grenade/explode1		mineexp1
+grenade/explode2		mineexp2
+grenade/bounce			grenabnc
 
 //Nasty Dogs - Missile launcher
+seeker/beep			            seekbeep
+missilelauncher/see		        seekwarn
+mislfire mislfire
+mislfir2 mislfir2
+$random missilelauncher/fire	{ mislfire mislfir2 }
+missilelauncher/reload		    mislload
 MissileLauncher/LockedBeep		MLLocked
 MissileLauncher/TargetLocked	MLLockTr
 MissileLauncher/StartLockOn		MLLockOn
 missilelauncher/busrtShot       MLBurst1
 
+// Artillery cannon (incl. Juggernaut's)
+artillery/fire1			ds80mm1
+artillery/fire2			ds80mm2
+$random artillery/fire		{artillery/fire1 artillery/fire2}
+artillery/explosion		expnew17
+artillery/reload		mechrald
+$limit 				artillery/explosion	0
+// $rolloff 			artillery/explosion	500 2000
+
 //Nasty Dogs - Shock rifle/Tesla cannon
+voltrifle/fire			voltfire
+voltrifle/decay			voltdeca
 TSLAEND TSLAEND
 TSLAFIR TSLAFIR
 TSLSTRT TSLSTRT
@@ -1208,20 +1127,45 @@ TSLPRJC1 TSLPRJC1
 plasmacaster/fire    PLCASFIR
 plasmacaster/fly     PLCASFLY
 plasmacaster/explode PLCASEXP
-PlasmaCaster/Charge PLCCHR
-PlasmaCaster/Full   PLCFULL
-PlasmaCaster/Reload PLCREL
-PlasmaCaster/Shot   PLCFIRE
-PlasmaCaster/Hit    PLCHIT
+PlasmaCaster/Charge  PLCCHR
+PlasmaCaster/Full    PLCFULL
+PlasmaCaster/Reload  PLCREL
+PlasmaCaster/Shot    PLCFIRE
+PlasmaCaster/Hit     PLCHIT
 
 Weapons/KsawHit	    KSAWHIT
 Weapons/KsawFire	KSAWFIRE
 Weapons/KsawIdle	KSAWIDLE
 Weapons/KsawCharge	KSAWCHRG
 Weapons/KsawShock	KSAWSHCK
-
 $Limit Weapons/KsawHit	    0
 $Limit Weapons/KsawFire    	0
+
+// [JD] Karasawa
+Weapons/KarasawaHit2	KSAWHIT2
+Weapons/KarasawaFire2	KSAWFIR2
+Weapons/KarasawaIdle2	KSAWIDL2
+Weapons/KarasawaShock2	KSAWSHC2
+
+$Limit Weapons/KarasawaHit2	   0
+$Limit Weapons/KarasawaFire2   0
+$Volume	Weapons/KarasawaIdle2  0.5
+$Volume	Weapons/KarasawaShock2 1
+
+Weapons/KarasawaSwitchOn			KSAWSWON
+$Volume	Weapons/KarasawaSwitchOn	0.5
+
+Weapons/KarasawaSwitchOff			KSAWSOFF
+$Volume	Weapons/KarasawaSwitchOff	0.5
+
+Weapons/KarasawaCharge1				KSAWCHR1
+Weapons/KarasawaCharge2				KSAWCHR2
+Weapons/KarasawaCharge3				KSAWCHR3
+$Random Weapons/KarasawaCharge { Weapons/KarasawaCharge1 Weapons/KarasawaCharge2 Weapons/KarasawaCharge3 }
+
+Weapons/KarasawaArc1				KSAWARC1
+Weapons/KarasawaArc2				KSAWARC2
+$Random Weapons/KarasawaArc { Weapons/KarasawaArc1 Weapons/KarasawaArc2 }
 
 //Nasty Dogs - Lightsaber
 ZSaber/key         ZSABKEY
@@ -1244,13 +1188,35 @@ saberhtw2 dssabht2
 saberhtw3 dssabht3
 $random weapons/sclash { saberhtw1 saberhtw2 saberhtw3 }
 
-//Nasty Dogs - Handgun
-weapons/pistolf1 DSPISTO1
-weapons/pistolf2 DSPISTO2
-weapons/pistolf3 DSPISTO3
-weapons/pistolf4 DSPISTO4
-weapons/pistolr1 DSPSREL1
-weapons/pistolr2 DSPSREL2
+// Plasma Cannon
+plasmacannon/fire		plasmaca
+plasmacannon/altfire		plasmac3
+plasmacannon/explode		plasmaex
+plasmacannon/altexplode		plasmae3
+$rolloff 			plasmacannon/explode	2000 7500
+$rolloff 			plasmacannon/altexplode	2000 7500
+$limit				plasmacannon/explode	0
+$limit				plasmacannon/altexplode	0
 
+//CryoBow
+weapons/cryobowfire     DSBOWFIR
+weapons/cryobowshot     DSBOWSHT
+weapons/cryobowreload   DSBOWREL
+weapons/cryobowhit      DSBOWHIT
+weapons/cryobowfreeze	DSPSYIC1
+weapons/cryobowflyby    DSBOWFLY
 
-$random weapons/pistolfire { weapons/pistolf1 weapons/pistolf2 weapons/pistolf3 weapons/pistolf4 }
+// Chemical sprayer
+chem/grenade			chemnade
+chem/fire				chemfire
+
+// Bomb pack
+terrorist/pickup		itercara
+terrorist/select		icolbeep
+terrorist/activate		kamafail
+terrorist/fail			kamafail
+terrorist/scream		dssuscrm
+
+//Nasty Dogs - Misc
+weapons/empty1			DSCLICK1
+weapons/empty5			DSCLICK5
