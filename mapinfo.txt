@@ -183,6 +183,14 @@ map AOW24 "Convulsion of the nature"
 	next = "AOW01"
 }
 
+map AOW25 "Cross Fire"
+{
+	next = "aow01"
+	sky1 = "stars"
+	music = "d_aow06"
+	levelnum = 25
+}
+
 skill Normal {
 	name = "Normal"
 	damagefactor = 1.0
