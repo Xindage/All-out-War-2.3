@@ -221,3 +221,40 @@ actor ChemicalGrenade {
 		stop
 	}
 }
+
+// if not kept it crashes.
+actor ChemicalShotDummy {
+	PROJECTILE
+	//+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	-ACTIVATEIMPACT
+	-ACTIVATEPCROSS
+	renderstyle Add
+	alpha 0.9
+	Radius 8
+	Height 8
+	Speed 30 //20% faster than flamershot
+	Damage (0)
+	Scale 0.5
+	States {
+	Spawn:
+		// [Dusk] If we're in low-fx mode, potentially just remove the actor
+		TNT1 A 0
+		CHMS A 0 A_JumpIf (ACS_ExecuteWithResult(910, 0) < 0, "MightClear")
+		goto Idle
+	MightClear:
+		TNT1 A 0 A_Jump (128, 1)
+		goto Idle
+		TNT1 A 0
+		stop
+	Idle:
+		TNT1 A 4
+		TIBX ABCDEFGHIJKL 2 bright
+		TIBX MMNNOOPPQQ 1 bright A_FadeOut(0.1)
+		stop
+	Death:
+		TIBX H 3 bright A_Stop
+		TIBX IIJJKKLLMMOOPPQQ 1 bright A_FadeOut(0.07)
+		stop
+	}
+}
