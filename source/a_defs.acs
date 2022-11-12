@@ -264,7 +264,7 @@ function void InitClasses (void) {
 		ITEM_LaserRifle, ITEM_KNIFE, 0, 0, 0, 0);
 
 	// Combat
-	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.7, DEP_NONE,
+	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.7, DEP_BARRACKS,
 		1, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_GATLING, 0, 0, 0, 0, 0);
