@@ -1,0 +1,13 @@
+// 2022/10/11 Xindage - Placing this obeject in the map allow acs to use the newer tag system.
+// Refs: a_staticdata (Line 155), a_core.acs (Line 347), a_bases.acs (ReddenSector change)
+// a_mechs.acs (Line 75), a_utility.acs (Lines 151, 160, 234 and 242)
+Actor CONFIG_buildingsIs3D 30002
+{
+    +NOBLOCKMAP
+    States
+    {
+        Spawn:
+            TNT1 A -1
+            Stop
+    }
+}

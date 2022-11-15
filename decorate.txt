@@ -13,6 +13,7 @@
 #include "actors/crucial/terminals.txt"
 #include "actors/crucial/btos.txt"
 #include "actors/crucial/gameconfig.txt"
+#include "actors/crucial/mapcfgitems.txt"
 
 #include "actors/effects/casings.txt"
 #include "actors/effects/gore.txt"
