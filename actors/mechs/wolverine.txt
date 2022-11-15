@@ -155,7 +155,7 @@ actor WolverineWeapons : AOWWeapon {
 		MHUD A 0 A_TakeInventory ("MechRocketAmmo", 10)
 		MHUD A 0 ACS_ExecuteAlways (319, 0, 1, 4) // reload
 		MHUD B 0 Bright A_GunFlash
-		MHUD BBBBBBBBBB 2 A_FireCustomMissile ("LongRangeMissile", 0, 0, 25)
+		MHUD BBBBBBBBBB 2 A_FireCustomMissile ("LongRangeMissile", 0, 0, random(-25,-20), random(20,25))
 		MHUD A 20
 		MHUD A 2 A_Refire
 		Goto Ready
@@ -300,7 +300,6 @@ actor DamagedWolverine {
 	Mass 2000
 	+SHOOTABLE
 	PainChance 0
-	scale 1.75
 	bloodtype "HHMetalHit"
 	bloodcolor "White"
 	obituary "%o went boom."
@@ -321,7 +320,6 @@ actor DamagedWolverine {
 }
 
 actor EjectedWolverine {
-	scale 1.75
 	translation "112:127=[255,255,255]:[0,0,0]"
 	States {
 	Spawn:
