@@ -309,28 +309,18 @@ actor MastodonSwitch2 : PermanentPowerup {Powerup.Type "Mastodon2"}
 	}
   }
 
-
-  Actor DonFlameFX
-  {
-	PROJECTILE
-	+CLIENTSIDEONLY
-	+FORCEXYBILLBOARD
-	-RANDOMIZE
+Actor DonFlameFX : FlameFX {
 	Radius 24
 	Height 60
-	Damage 0
-	Renderstyle Add
-	Alpha 0.75
 	States
 	{
-	  Spawn:
+	Spawn:
 	  TNT1 A 0
 	  MFLM A 4 Bright
 	  MFLM BCDEFGH 4 Bright
 	  MFLM ABCDEFGHABCDEFGH 4 Bright A_FadeOut(0.1)
 	  Stop
-	  
-	  Death:
+	Death:
 	  MFLM A 2 Bright
 	  MFLM BCDEFGH 4 Bright
 	  MFLM ABCDEFGHABCDEFGH 4 Bright A_FadeOut(0.1)
@@ -339,47 +329,31 @@ actor MastodonSwitch2 : PermanentPowerup {Powerup.Type "Mastodon2"}
   }
 
 
-  Actor DonFlameDecay
-  {
-	+NOBLOCKMAP
-	+NODAMAGETHRUST
-	+NOEXPLODEFLOOR
-	Gravity 0.5
-	DamageType "Fire"
-	Obituary "%o was playing with %k's fire."
-	reactiontime 16
+  Actor DonFlameDecay : FlameDecay {
 	States
 	{
-	  Spawn:
+	Spawn:
 	  TNT1 A 0
 	  TNT1 A 0 A_SpawnItemEx ("DonFlameDecayFX")
 	  TNT1 A 0 A_PlaySoundEx("fire/fire","SoundSlot6",1)
-	  
-	  Idle:
-	  TNT1 A 12 Bright A_Explode (32, 128)
+	Idle:
+	  TNT1 A 15 Bright A_Explode (32, 128)
 	  TNT1 A 0 A_CountDown
 	  Loop
-	  
-	  Death:
-	  TNT1 A 0 A_PlaySoundEx("fire/firefade","SoundSlot6",0)
-	  Stop
 	}
   }
 
 
-  Actor DonFlameDecayFX
-  {
-	+NOBLOCKMAP +CLIENTSIDEONLY
+  Actor DonFlameDecayFX : FlameDecayFX {
 	States
 	{
-	  Spawn:
+	Spawn:
 	  TNT1 AAAAAAAAAAA 5 A_SpawnItemEx("DonFlameFX", random(-16,16), random(-16,16), random(0,8), 0, 0, random(1,2), 0, 128, 0)
 	  TNT1 AAAAAAAAAAA 5 A_SpawnItemEx("DonFlameFX", random(-16,16), random(-16,16), random(0,8), 0, 0, random(1,2), 0, 128, 0)
 	  TNT1 AAAAAAAAAAA 5 A_SpawnItemEx("DonFlameFX", random(-16,16), random(-16,16), random(0,8), 0, 0, random(1,2), 0, 128, 0)
 	  Stop
 	}
   }
-
 
   Actor DamagedMastodon
   {

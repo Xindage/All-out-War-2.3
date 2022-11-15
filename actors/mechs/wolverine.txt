@@ -6,6 +6,7 @@ actor Wolverine : MechPlayer_Base {
 	Mass 4000
 	PainChance 0
 	PainChance "Flash", 255
+	player.colorrange 112, 127
 	Player.DisplayName "Wolverine"
 	player.soundclass "wolv"
 	player.forwardmove 0.45
@@ -14,7 +15,6 @@ actor Wolverine : MechPlayer_Base {
 	Player.ViewHeight 96
 	Player.AttackZOffset 13
 	Player.MorphWeapon "WolverineWeapons"
-	scale 1.75
 	states {
 	Spawn:
 		ROB1 A 0
@@ -56,11 +56,6 @@ actor Wolverine : MechPlayer_Base {
 		goto Spawn
 	Drown:
 		TNT1 A 0 Thing_Damage (0, 300, 12)
-		goto Spawn
-	Melee:
-		ROB1 F 15 bright A_SpawnItemEx ("MechStepDamageWeak", 0, -24, 4)
-		ROB1 F 5 bright A_SpawnItemEx ("MechStepDamageWeak", 0, 24, 4)
-		ROB1 G 10
 		goto Spawn
 	Death:
 		ROB1 A 0
@@ -169,7 +164,7 @@ actor WolverineWeapons : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("IsBlue", 1, "FirePulseBlue")
 		MHUD A 0 Radius_Quake (1, 4, 0, 1, 0)
 		MHUD D 0 A_Light2
-		MHUD D 1 bright A_FireCustomMissile ("PulseBall", 0, 1, 25)
+		MHUD D 1 bright A_FireCustomMissile ("PulseBall", 0, 1, -25)
 		MHUD D 1 bright A_Light1
 		MHUD C 1
 		MHUD C 1 A_ReFire
@@ -179,7 +174,7 @@ actor WolverineWeapons : AOWWeapon {
 		MHUD C 0
 		MHUD A 0 Radius_Quake (1, 4, 0, 1, 0)
 		MHUD D 0 A_Light2
-		MHUD D 1 bright A_FireCustomMissile ("PulseBallBlue", 0, 1, 25)
+		MHUD D 1 bright A_FireCustomMissile ("PulseBallBlue", 0, 1, -25)
 		MHUD D 1 bright A_Light1
 		MHUD C 1
 		MHUD C 1 A_ReFire

@@ -17,7 +17,7 @@ actor BurningCorpse {
 	obituary "$OB_CORPSEBURN" // "%o got too close to %k burning corpse."
 	radius 20
 	height 56
-	speed 8
+	speed 12
 	damagetype "FireSpecial"
 	painsound "player/burn"
 	states {

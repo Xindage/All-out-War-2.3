@@ -1,6 +1,6 @@
 remap m_doom m_doomhi
 
-//Double shotgun
+//double shotgun
 remap DSG2A0 DSG2A0H
 remap DSG2B0 DSG2B0H
 remap DSG2C0 DSG2C0H
@@ -58,7 +58,7 @@ remap DSR1N0 DSR1N0H
 
 
 
-//Missile launcher
+//missile launcher
 remap MSLBA0 MSLBA0x
 remap MSLBB0 MSLBB0x
 remap MSLBC0 MSLBC0x
@@ -76,4 +76,49 @@ remap MSLRE0 MSLRE0x
 remap MSLRF0 MSLRF0x
 remap MSLRG0 MSLRG0x
 remap MSLRH0 MSLRH0x
+
+//artillery cannon
+remap masba0 masba0x
+remap masbb0 masbb0x
+remap masbc0 masbc0x
+remap masbd0 masbd0x
+remap masbe0 masbe0x
+remap masbf0 masbf0x
+remap masbg0 masbg0x
+remap masbh0 masbh0x
+remap masbi0 masbi0x
+remap masbj0 masbj0x
+remap masbk0 masbk0x
+remap masbl0 masbl0x
+remap masbm0 masbm0x
+remap masbn0 masbn0x
+remap masbo0 masbo0x
+remap masbp0 masbp0x
+remap masbq0 masbq0x
+remap masbr0 masbr0x
+remap masbs0 masbs0x
+remap masbt0 masbt0x
+remap masbu0 masbu0x
+
+remap masra0 masra0x
+remap masrb0 masrb0x
+remap masrc0 masrc0x
+remap masrd0 masrd0x
+remap masre0 masre0x
+remap masrf0 masrf0x
+remap masrg0 masrg0x
+remap masrh0 masrh0x
+remap masri0 masri0x
+remap masrj0 masrj0x
+remap masrk0 masrk0x
+remap masrl0 masrl0x
+remap masrm0 masrm0x
+remap masrn0 masrn0x
+remap masro0 masro0x
+remap masrp0 masrp0x
+remap masrq0 masrq0x
+remap masrr0 masrr0x
+remap masrs0 masrs0x
+remap masrt0 masrt0x
+remap masru0 masru0x
 
