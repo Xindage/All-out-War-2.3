@@ -47,7 +47,10 @@ server	int		zeta_nospawninvul			=		0;
 server	int		zeta_nodisconnectdonate		=		0;
 	
 // [Dusk] {11/19/12} How many seconds must the player be in game until they can donate?
-server	int		zeta_donatewait				=		0;
+server	int		zeta_donatewait				=		60;
+
+// [Xindage] {11/15/22} Setting to 1 force player needing to be at least rank once before donate.
+server	int		zeta_donaterank				=		0;
 	
 // [Dusk] {1/16/13} How many seconds does a beacon take to detonate?
 server	int		zeta_nukecountdown			=		60;
