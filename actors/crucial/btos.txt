@@ -238,7 +238,7 @@ actor BTORepairBlue : BaseTerminalOutsideBlue 21313
     {
     Spawn:
         TNT1 A 0
-        TNT1 A 0 Thing_ChangeTID (0, 108)
+        TNT1 A 0 Thing_ChangeTID (0, 110)
         TNT1 A 0 Thing_SetSpecial (0, 0, 109, 0, 0)
         TNT1 B -1
         stop
@@ -253,7 +253,7 @@ actor BTORepairRed : BaseTerminalOutside 21314
     {
     Spawn:
         TNT1 A 0
-        TNT1 A 0 Thing_ChangeTID (0, 208)
+        TNT1 A 0 Thing_ChangeTID (0, 210)
         TNT1 A 0 Thing_SetSpecial (0, 0, 209, 0, 0)
         TNT1 A -1
         stop
