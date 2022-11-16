@@ -16,7 +16,7 @@ echo "Generating code package."
 # Compile the acs.
 acc source/aow2scrp.acs acs/aow2scrp.o
 echo "ACS source was compiled successfully!"
-zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt gldefs.txt language.txt loadacs.txt teaminfo.txt TextColours.txt TextColours2.txt TextColours3.txt TextColours4.txt TextColours5.txt  acs/* source/* actors/* credits/*
+zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt changelog_gaturra.txt gldefs.txt language.txt loadacs.txt teaminfo.txt TextColours.txt TextColours2.txt TextColours3.txt TextColours4.txt TextColours5.txt  acs/* source/* actors/* credits/*
 
 # Generate maps pk3.
 echo "Generating maps package."

@@ -1,151 +1,27 @@
 ===========================================================================================================================================================
-Title                   : All Out War 2: Nasty Dogs (beta)
-Filename                : aow2_nasty_dogs_vx.x.pk3
+Title                   : All Out War 2.3: Nasty Dogs
+Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
+Discord server          : https://discord.gg/JTdv4PP7
 
-Original Release date   : 2024/04/18 (v0.1)
-Version 0.1 (2022/04/18)
-                          -player forwardmove-sidemove is now 1:1 (like back in aow_omega_r2539)
-                          -submachinegun primary fire and secondary is back (like back in aow_omega_r2539)
-						  -karasawa projectile has been replaced (like back in aow_2.1)
-						  -energy weapons (slot 7) has been moved to slot 6 (seriously, this is how it should be from start)
-Version 1.1 (2022/08/14)
-                          -Added reload key (currently for SMG, machinegun and sniper)
-						  -Fast throwing grenades, flashbangs and melee attacks from keybinds
-						  -Added melee attack key (automatically uses the stronger melee weapon from inventory)
-						  -Added Obelisk trails
-						  -Dropable knife
-						  -Balance: rifle grenades capacity reduced to 4 (previously was 8)
-						  -Fixed: random weapon crate giving redundant weapons (laser rifle when already having stealth laser rifle)
-Version 1.4 (2022/08/15)
-                          -Sniper rifle works as usual
-						  -Fixed: invisible weapons when using melee attack key too fast
-						  -Submachinegun and machinegun magazine capacity increased
-Version 1.4.1 (2022/08/16)
-                          -Fixed: submachineguns and other weapons not giving primary ammo.
-						  -Fixed: missing sprites in machinegun and submachinegun reload state
-Version 1.4.3 (2022/08/17)
-                          -Submachinegun magazine capacity increased to 60
-						  -Submachinegun, machinegun, artillery cannon, rocket launcher and sniper rifle can be switched at the start of reloading
-                          -Fixed submachinegun and machinegun animation missing frames
-Version 1.5 (2022/08/19)
-                          -plasma cannon purchase cooldown set to 3 minutes by default
-						  -Initial +1 C4 and plasma cannon purchase cooldown set to 5 minutes
-                          -Machinegun damage restored (from 6 to 5 as usual)
-						  -Flashbang grenade radius decreased 25%
-                          -Fixed: sniper rifle class without primary ammo in sniper class
-						  -Fixed: stealth troppers not dropping laser rifles on death
-						  -Fixed: unable to use melee attacks while having chainsaw
-						  -Fixed: missing fists after selling chainsaw
-						  -Fixed: karasawa soldier class cost restored
-						  -Fixed (testing): unable to fire after throwing frag / flashbang grenade
-Version 1.5.1 (2022/08/21)
-                          -Plasma rifle projectile speed increased 25%
-                          -Fixed: laser rifle cant be sold
-						  -Fixed: incorrect delay after switching empty weapons
-Version 1.5.2 (2022/08/25)
-                          -Karasawa will drop on death
-                          -Fist attack damage and range from melee attack increased
-                          -Fixed: missing fists after leveling up to captain
-						  -Fixed: empty magazines after using resign class
-						  -Fixed: empty laserrifle pickups
-Version 1.5.3 (2022/09/03)
-                          -Added Lightsaber crate
-						  -Added BFG 2704 crate
-						  -Added grade 1 armor to shotgunner class
-						  -Added Karasawa in random weapon crate
-						  -Added Handgun
-						  -Added armor weakness which means some classes are more effective against certain other classes (ex: chem deals more damage agains fire classes), this feature
-						   was present in older aow 2 version but was removed in aow 2.2, this time its more balanced.
-						  -Rearranged weapons slots 7 and 8 (slot 7 is now for bfg weapons as should be)
-						  -Knife damage decreased from 130 to 120
-						  -Shotgun damage decreased 25% (same damage as aow 2.1 shotgun)
-						  -Removed warning printed on karasawa soldier purchase
-						  -Armor upgrades are now more efective (each armor upgrade decreases damage by 10%)
-						  -Fixed: chemsprayer insane damage (was x3 times stronger than aow 2.1 chemsprayer)
-						  -Fixed: flamer insane damage (was x2 times stronger than aow 2.1 flamer)
-						  -Fixed: berserk max health doesnt remain when rank up
-Version 1.5.4 (2022/09/04)
-                          -Decreased pistol damage and range (now should be balanced)
-						  -Max utility guys limit set to 3 by default
-Version 1.5.4c (2022/09/07)
-                          -Deactivable remote c4
-						  -Flashbang ang frag grenades delay removed from keybind
-                          -Fixed: wrong damage type on knife (this was the reason why it does so much damage)
-						  -Fixed: knife cant disarm mines/c4/remote c4
-Version 1.5.5 (2022/09/09)
-                          -Minor fixes related to grenades and remote c4
-						  -Mastodon homing missiles are back
-						  -Plasma cannon secondary fire is back
-						  -Decorate updated to the r050518 version
-						  -Fixed: invisible submachinegun when reloading twice
-						  -Fixed: being unable to use flash or frag grenades when no ammo
-						  -Fixed: knife cant disam sandbags
-Version 1.5.6 (2022/09/13)
-                          -Smoother select and deselect weapon animations
-						  -Combustion autorifle altfire now fires 6 projectiles (previously was 4)
-						  -Tiberium autorifle primary altfire now fires 6 projectiles (previously was 4) and altfire 4 (previously was 3)
-						  -Combustion autorifle weak altfire now fires 4 projectiles (previously was 3)
-                          -Melee attacks, flash grenades, frag grenades and remote c4 via keybind can now be performed faster
-                          -Mastodon missile speed increased
-						  -Melee attack damage decreased
-						  -Lightsaber crate chance decreased
-						  -Fixed: combustion autorifle and tiberium autorifle weapon name tags, sound conflics and reloading ammo amount.
-Version 1.5.6e (2022/09/15)
-                          -Minor desync fixes with some weapons
-                          -Fixed: missing sprite on missile launcher
-						  -Fixed: deselect animation conflict with healgun
-Version 1.5.7b (2022/09/18)
-                          -Technician class price decreased (from 300 to 200)
-						  -Rifleman speed increased (from 0.8 to 0.9)
-						  -Lightsaber no longer pushes enemies away when dealing damage
-                          -Knife damage increased
-                          -Field medic class armor grade decreased to 1
-						  -Fixed: knife ignores armor grade
-Version 1.5.8 (2022/10/05)
-                          -Missile launcher ammo capacity increased to 20
-                          -Added Eject mech keybind
-                          -Damage taken by armor weakness decreased
-                          -Minigunner, machinegunner and gunman classes have better accuracy/extra altfire/better fire rate with their main weapon
-                          -Buffed flamer and chemsprayer
-						  -Buffed tiberium and combustion autorifle
-						  -Lightsabre range increased
-						  -Fixed: crate giving timegun while already having it
-						  -Fixed: low karasawa ammo from backpacks
-						  -Fixed: player animations not working when using frag grenades/flashbangs/remote c4/melee attacks key binds
-Version 1.5.9g (2022/10/14)
-                          -Shock rifle altfire damage radius increased
-                          -Gattlinggun damage decreased a bit
-                          -Remote C4 no longer dissapear when put near your own terminal
-                          -Shockrifle altfire projectile speed increased
-                          -New fire sounds for machinegun by Barney the dinosaur
-                          -Artillery cannon projectile buffed
-						  -Missile launcher projectile speed increased, max turn angle decreased
-                          -Thrown chainsaw buffed (same damage as aow 2.1)
-                          -Reworked shockrifle altfire sprites by Barney the dinosaur
-                          -Field medic armor increased to grade 2 (as before)
-                          -Fixed: combustion rifle class unable to use keybids
-                          -Fixed: desync when using minigun spin barrel mode
-						  -Fixed: conflict when selling gattling gun while spinning
-						  -Fixed: player animation not working when using keybinds
-						  -Fixed: not being able to use keybinds while bfg 2704 is selected
-						  > In order to keep balance, each class will have a bonus with their main weapon, these are the current weapons using that:
-						      - Gunman                : better fire rate and accuracy
-							  - Machinegunner         : burst fire (altfire)
-							  - Minigunner            : can spin the gatling gun without firing bullets (reload key)
-							  - Artillery soldier     : faster reloading
-							  - Shock trooper         : altfire
-							  - Karasawa soldier      : extra altfire mode (reload key)
-							  - Demoliotion expert    : can deactivate remote c4 charges with the USE key
-							  - Tiberium autorifle    : better ammo capacity, 6 projectiles per altfire instead 4
-							  - Combustion auto rifle : better ammo capacity, 6 projectiles per altfire instead 4
-							  - Field medic           : faster regeneration
-							  
-						  < Version 1.5.9h test (2022/10/17) >
-						  * test version
-						  - missile launcher projectile speed decreased
-						  - smg, maghinegun, hangun and gattlinggun no longer deal random damage
-						  - Fixed: gattling gun doing x2 damage
+Original Release date   : 2022/04/18 (v0.1)
+Version r221115 (2022/11/15)
+                          - Burning/chemical corpses move faster
+						  - Fire remains from projectiles now does more damage
+                          - Artillery cannon altfire deals more damage fire damage
+                          - Rebalanced price and health in some mechs
+                          - Added missile launcher altfire for rocket soldier and commando class
+						  - Added double shotgun altfire for the double shotgunner class
+                          - BFG 2704, Plasma cannon and Timegun can now be sold
+                          - Melee attack damage increased
+                          - Stealth trooper speed slighty decreased
+                          - Fixed: blue missiles from missile launcher doesnt have any lights
+						  - Fixed: unable to pickup frag/flashbang grenades after running out of ammo
+						  - Fixed: disarm crate doesnt remove frag/flashbang ammo
+						  - Fixed: getting damaged by laser/fire/chem removes flashbang blindness
+						  - Fixed: selling chainsaw doesnt give you back your fists
+						  - Fixed: artillery cannon pickup doesnt doesnt give ammo
+						  - Fixed: wrong radius damage on fire and chemical remains
 
 ===========================================================================================================================================================
 * What is included *
@@ -167,17 +43,30 @@ Version 1.5.9g (2022/10/14)
 						  -Reload animations                                     (for many of them)
 						  -Fast switching                                        (weapons can be selected and switched while reloading faster)
 						  
-						                    - Fixes -
-						  -Fixed: random weapon crate giving redundant weapons (laser rifle when already having stealth laser rifle)
+						                    - Balance -
+						  > In order to keep balance, each class will have a bonus with their main weapon, these are the current weapons using that:
+						      - Gunman                : better fire rate and accuracy
+							  - Double shotgunner     : alt fire and faster reloading
+							  - Machinegunner         : burst fire (altfire)
+							  - Minigunner            : can spin the gatling gun without firing bullets (reload key)
+							  - Rocket soldier        : altfire and faster reloading
+							  - Artillery soldier     : faster reloading
+							  - Shock trooper         : altfire
+							  - Karasawa soldier      : extra altfire mode (reload key)
+							  - Demoliotion expert    : can deactivate remote c4 charges with the USE key
+							  - Tiberium autorifle    : better ammo capacity, 6 projectiles per altfire instead 4
+							  - Combustion auto rifle : better ammo capacity, 6 projectiles per altfire instead 4
+							  - Field medic           : faster regeneration
+							  - Commando              : same as minigunner, rocket soldier and gauss gunner
+						  
+						  
 
 ===========================================================================================================================================================
 * Load order / Requirements *
-                                            - aow_v2.2-core_r041118.pk3
-                                            - aow_v2.2-patch_r050518.pk3
-                                            - aow_v2.2-maps_r050518.pk3
-                                            - aow_v2.2-music_r101217.pk3
-                                            - aow_v2.2-patch_r050518.pk3
-											- aow2_nasty_dogs_vx.x.pk3
+                                            - aow2.3_music_rxxxxxx.pk3
+                                            - aow2.3_maps_rxxxxxx.pk3
+											- aow2.3_data_rxxxxxx.pk3
+											- aow2.3_code_rxxxxxx.pk3
 
 ===========================================================================================================================================================
 * Creepers / Trolls *
@@ -185,6 +74,7 @@ Version 1.5.9g (2022/10/14)
 											- Beton                          : known server impersonator
 											- Edy pagarza                    : known troll
 											- Lebben                         : server crasher, bug exploiter and ban evader
+											- Demented terminator            : harasser
 
 ===========================================================================================================================================================
 * Supporters *
@@ -202,17 +92,22 @@ Thank you too all of you who have stuck by my side and helped in this project !!
 ===========================================================================================================================================================
 * Copyright / Permissions *
 
-This file is an addon for AOW 2.2 which purpose is to bring back some features from classic aow versions
-all credits goes for aow team.
+The purpose of this mod is to bring back some features from classic aow versions
 
 
-
-
+                                            - special thanks to:
+					      - AOW Team
+	                      - Demy Veronika                                       : AOW 2.1 creator
+                          - JD                                                  : AOW 2.2 creator
+ 
                                             - About project -
-						  - Handgun                                                : fire sprites: Realm667, sounds: doom 3, reload animation and code by Gaturra
-						  - SMG reload animation                                   : Sprites and code by Gaturra
-						  - Machinegun reload animation                            : Sprites and code by Gaturra
-						  - Lightsaber                                             : Sprites and code by Gaturra
+						  - Handgun                                             : fire sprites: Realm667, sounds: doom 3, reload animation and code by Gaturra
+						  - SMG                                                 : Sprites by aow team, animation and code by Gaturra
+						  - Machinegun                                          : Sprites and code by Gaturra
+						  - Lightsaber                                          : Sprites and code by Gaturra
+						  - Missile launcher                                    : Sprites and code by Gaturra, sounds from Doom 4
+						  - Artillery cannon                                    : Sprites and code by Gaturra
+						  - Double shotgun                                      : Sprites by Lucas Kord, animation and code by Gaturra
 						  
 						                    - About music -
 						  - Startup music                                          : March to doom from Renegade X
