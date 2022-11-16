@@ -218,6 +218,10 @@ script SC_CCMD_SELLWEAPON (void) NET {
 	if (CheckWeapon("EagerBeaver"))
 		GiveInventory("Unarmed", 1);
 
+	if (CheckInventory ("IsHarvester") && (CheckWeapon("TiberiumAutorifle") || CheckWeapon("TiberiumAutorifleWeak")))
+		GenericError ("You can't sell your main weapon!");
+		terminate;
+
 	// All good, sell it.
 	TakeInventory (weapon, 1);
 	GiveCredits (value);

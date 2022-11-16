@@ -223,29 +223,29 @@ function void InitClasses (void) {
 		1, 1, 0,
 		ITEM_SHOTGUN, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_LazerRifleman, "Lazer Rifleman", 150, 0.95, DEP_NONE,
-		0, ARMOD_ENERGY,
+	AddClass (CLASS_Rifleman, "Rifleman", 200, 0.9, DEP_NONE,
+		1, ARMOD_NOCHANGE,
 		1, 1, 0,
-		ITEM_LaserRifle, 0, 0, 0, 0, 0);
+		ITEM_RIFLE, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 200, 0.8, DEP_NONE,
+	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 250, 0.8, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		1, 1, 0,
 		ITEM_SSG, 0, 0, 0, 0, 0);
-
-	AddClass (CLASS_Rifleman, "Rifleman", 200, 0.9, DEP_NONE,
-		1, ARMOD_NOCHANGE,
-		2, 1, 0,
-		ITEM_RIFLE, 0, 0, 0, 0, 0);
 
 	AddClass (CLASS_MachineGunner, "Machine Gunner", 300, 0.9, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_MACHINEGUN, 0, 0, 0, 0, 0);
 
+	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.7, DEP_NONE,
+		1, ARMOD_NOCHANGE,
+		1, 1, 0,
+		ITEM_GATLING, 0, 0, 0, 0, 0);
+
 	AddClass (CLASS_TiberiumAutorifleman, "Tiberium Autorifleman", 400, 0.85, DEP_NONE,
 		1, ARMOD_CHEM,
-		2, 1, 0,
+		1, 1, 0,
 		ITEM_TIBRIFLE, 0, 0, 0, 0, 0);
 
 	AddClass (CLASS_Flamer, "Flamer", 450, 0.7, DEP_NONE,
@@ -264,89 +264,84 @@ function void InitClasses (void) {
 		ITEM_LaserRifle, ITEM_KNIFE, 0, 0, 0, 0);
 
 	// Combat
-	AddClass (CLASS_Minigunner, "Minigunner", 400, 0.7, DEP_BARRACKS,
-		1, ARMOD_NOCHANGE,
-		2, 1, 0,
-		ITEM_GATLING, 0, 0, 0, 0, 0);
-
 	AddClass (CLASS_CombustionGunner, "Combustion Gunner", 400, 0.85, DEP_BARRACKS,
 		1, ARMOD_FIRE,
 		2, 1, 0,
 		ITEM_COMBUSTRIFLE, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_Rocketeer, "Rocket Soldier", 500, 0.75, DEP_BARRACKS,
+		AddClass (CLASS_Rocketeer, "Rocket Soldier", 500, 0.75, DEP_BARRACKS,
 		2, ARMOD_EXPLO,
-		2, 2, 0,
+		3, 2, 0,
 		ITEM_MISSILE, ITEM_RIFLE, 0, 0, 0, 0);
 
-	AddClass (CLASS_ChemWarrior, "Chem Warrior", 550, 0.7, DEP_BARRACKS,
+		AddClass (CLASS_ChemWarrior, "Chem Warrior", 550, 0.7, DEP_BARRACKS,
 		2, ARMOD_CHEM,
 		2, 1, 0,
 		ITEM_CHEMSPRAY, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_GaussGunner, "Gauss Gunner", 600, 0.8, DEP_BARRACKS,
+		AddClass (CLASS_GaussGunner, "Gauss Gunner", 600, 0.8, DEP_BARRACKS,
 		2, ARMOD_ENERGY,
-		2, 1, 0,
+		1, 1, 0,
 		ITEM_GAUSS, ITEM_RIFLE, 0, 0, 0, 0);
 
-	AddClass (CLASS_Artillery, "Artillery Soldier", 600, 0.7, DEP_BARRACKS,
-		2, ARMOD_EXPLO,
-		2, 1, 0,
-		ITEM_ARTILLERY, ITEM_RIFLE, 0, 0, 0, 0);
-
-	AddClass (CLASS_JetTrooper, "Jet Trooper", 600, 0.65, DEP_BARRACKS,
+		AddClass (CLASS_JetTrooper, "Jet Trooper", 600, 0.65, DEP_BARRACKS,
 		2, ARMOD_NOCHANGE,
-		2, 1, 0,
+		1, 0, 0,
 		ITEM_MACHINEGUN, ITEM_RIFLE, ITEM_JETPACK, 0, 0, 0);
+
+		AddClass (CLASS_Artillery, "Artillery Soldier", 600, 0.7, DEP_BARRACKS,
+		2, ARMOD_EXPLO,
+		3, 2, 0,
+		ITEM_ARTILLERY, ITEM_RIFLE, 0, 0, 0, 0);
 
 	AddClass (CLASS_NailMachineGunner, "Nail-MachineGunner", 650, 0.75, DEP_BARRACKS,
 		2, ARMOD_NOCHANGE,
 		2, 1, 0,
 		ITEM_NAILMG, ITEM_RIFLE, 0, 0, 0, 0);
 
-	AddClass (CLASS_Sniper, "Sniper", 750, 0.675, DEP_BARRACKS,
+	AddClass (CLASS_Sniper, "Sniper", 750, 0.65, DEP_BARRACKS,
 		1, ARMOD_NOCHANGE,
-		2, 1, CF_IsSniper,
+		1, 0, CF_IsSniper,
 		ITEM_SNIPER, 0, 0, 0, 0, 0);
 
 	AddClass (CLASS_Commando, "Commando", 1000, 0.85, DEP_BARRACKS,
 		2, ARMOD_NOCHANGE,
 		4, 2, CF_Warning|CF_CantPilot,
-		ITEM_GAUSS, ITEM_MISSILE, ITEM_GATLING, ITEM_RIFLE, 0, 0);
+		ITEM_GAUSS, ITEM_MISSILE, ITEM_GATLING, 0, 0, 0);
 
 	// Power
-	AddClass (CLASS_PlasmaGunner, "Plasma Gunner", 600, 0.8, DEP_CENTRE,
-		2, ARMOD_ENERGY,
-		2, 1, 0,
-		ITEM_PLASMA, 0, 0, 0, 0, 0);
+	AddClass (CLASS_LazerRifleman, "Lazer Rifleman", 300, 1.0, DEP_CENTRE,
+		1, ARMOD_ENERGY,
+		1, 0, 0,
+		ITEM_LaserRifle, 0, 0, 0, 0, 0);
 
 	AddClass (CLASS_ShockTrooper, "Shock Trooper", 600, 0.7, DEP_CENTRE,
 		1, ARMOD_ENERGY,
-		2, 1, 0,
+		1, 1, 0,
 		ITEM_SHOCKRIFLE, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_LaserChaingunner, "Laser Chaingunner", 650, 0.75, DEP_CENTRE,
+		AddClass (CLASS_PlasmaGunner, "Plasma Gunner", 600, 0.8, DEP_CENTRE,
 		2, ARMOD_ENERGY,
-		2, 1, 0,
+		1, 1, 0,
+		ITEM_PLASMA, 0, 0, 0, 0, 0);
+
+		AddClass (CLASS_LaserChaingunner, "Laser Chaingunner", 600, 0.75, DEP_CENTRE,
+		2, ARMOD_ENERGY,
+		1, 1, 0,
 		ITEM_LASERCHAIN, 0, 0, 0, 0, 0);
 
 	AddClass (CLASS_KarasawaSoldier, "Karasawa Soldier", 800, 0.8, DEP_CENTRE,
 		2, ARMOD_ENERGY,
-		2, 1, 0,
+		1, 1, 0,
 		ITEM_KARASAWA, ITEM_MACHINEGUN, 0, 0, 0, 0);
 
-	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.9, DEP_CENTRE,
+	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.8, DEP_CENTRE,
 		2, ARMOD_NOCHANGE,
-		4, 2, CF_Warning|CF_CantPilot,
-		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
+		2, 1, CF_Warning|CF_CantPilot,
+		ITEM_CRYOBOW, ITEM_SHOTGUN, 0, 0, 0, 0);
 
 	// Support
-	AddClass (CLASS_Harvester, "Tiberium Harvester", 0, 0.65, DEP_REFINERY,
-		0, ARMOD_CHEM,
-		1, 1, (CF_IsHarvester | CF_Support | CF_DamageDebuff),
-		ITEM_SMG, 0, 0, 0, 0, 0);
-
-	AddClass (CLASS_Engineer, "Engineer", 0, 0.8, DEP_NONE,
+	AddClass (CLASS_Engineer, "Engineer", 0, 0.75, DEP_NONE,
 		0, ARMOD_NOCHANGE,
 		1, 1, CF_Support,
 		ITEM_REPAIR, 0, 0, 0, 0, 0);
@@ -356,17 +351,7 @@ function void InitClasses (void) {
 		2, 2, CF_Support,
 		ITEM_ADVREPAIR, ITEM_SMG, ITEM_MINE_X4, 0, 0, 0);
 
-	AddClass (CLASS_FieldMedic, "Field Medic", 300, 0.85, DEP_NONE,
-		2, ARMOD_CHEM,
-		2, 1, (CF_IsMedic | CF_Support | CF_DamageDebuff),
-		ITEM_HEALGUN, ITEM_TIBRIFLEWEAK, ITEM_MEDFIELD, 0, 0, 0);
-
-	AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.8, DEP_REFINERY,
-		1, ARMOD_CHEM,
-		2, 1, (CF_IsHarvester | CF_CantPilot | CF_Support),
-		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
-
-	AddClass (CLASS_DemoExpert, "Demolitions Expert", 550, 0.75, DEP_NONE,
+		AddClass (CLASS_DemoExpert, "Demolitions Expert", 600, 0.75, DEP_NONE,
 		2, ARMOD_EXPLO,
 		4, 4, (CF_CantPilot | CF_Support),
 		ITEM_BOMBSQUAD, ITEM_SHOTGUN, ITEM_REMOTEC4, ITEM_MINE_X6, 0, 0);
@@ -374,7 +359,12 @@ function void InitClasses (void) {
 	AddClass (CLASS_UtilityGuy, "Utility Guy", 650, 0.75, DEP_NONE,
 		2, ARMOD_NOCHANGE,
 		1, 1, CF_CantPilot|CF_Support,
-		ITEM_UTILITY, ITEM_REPAIR, ITEM_DECON, 0, 0, 0);
+		ITEM_UTILITY, ITEM_REPAIR, ITEM_DECON, ITEM_SMG, 0, 0);
+
+	AddClass (CLASS_FieldMedic, "Field Medic", 300, 0.85, DEP_NONE,
+		2, ARMOD_CHEM,
+		2, 0, (CF_IsMedic | CF_Support | CF_DamageDebuff),
+		ITEM_HEALGUN, ITEM_TIBRIFLEWEAK, ITEM_MEDFIELD, 0, 0, 0);
 
 	AddClass (CLASS_SuicideBomber, "Suicide Bomber", 1750, 1.0, DEP_NONE,
 		0, ARMOD_NOCHANGE,
@@ -383,10 +373,19 @@ function void InitClasses (void) {
 
 	AddClass (CLASS_TimeCop, "Time Cop", 2000, 0.9, DEP_CENTRE,
 		2, ARMOD_NOCHANGE,
-		4, 2, (CF_Warning | CF_CantPilot | CF_Support),
+		3, 2, (CF_Warning | CF_CantPilot | CF_Support),
 		ITEM_TIMEGUN, ITEM_MACHINEGUN, 0, 0, 0, 0);
 
-		
+	AddClass (CLASS_Harvester, "Tiberium Harvester", 0, 0.65, DEP_REFINERY,
+		0, ARMOD_CHEM,
+		1, 0, (CF_IsHarvester | CF_Support | CF_DamageDebuff),
+		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
+
+		AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.8, DEP_REFINERY,
+		1, ARMOD_CHEM,
+		2, 0, (CF_IsHarvester | CF_CantPilot | CF_Support),
+		ITEM_TIBRIFLE, ITEM_SMG, 0, 0, 0, 0);
+
 	/*AddClass (CLASS_AdvancedSniper, "Advanced Sniper", 1000, 0.55, DEP_CENTRE,
 		-1, ARMOD_NOCHANGE,
 		2, 1, CF_IsSniper,

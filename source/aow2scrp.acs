@@ -454,41 +454,42 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // Generic
 #libdefine CLASS_Gunman					0	// Free
 #libdefine CLASS_Shotgunner				1	// Free
-#libdefine CLASS_LazerRifleman			2	// 150
-#libdefine CLASS_DoubleShotgunner		3	// 200
-#libdefine CLASS_Rifleman				4	// 200
-#libdefine CLASS_Machinegunner			5	// 300
+#libdefine CLASS_Rifleman				2	// 200
+#libdefine CLASS_DoubleShotgunner		3	// 250
+#libdefine CLASS_Machinegunner			4	// 300
+#libdefine CLASS_Minigunner				5	// 400
 #libdefine CLASS_TiberiumAutorifleman	6	// 400
 #libdefine CLASS_Flamer					7	// 450
 #libdefine CLASS_Grenadier				8	// 450
 #libdefine CLASS_StealthTrooper			9	// 600
 // Combat
-#libdefine CLASS_Minigunner				10	// 400
-#libdefine CLASS_CombustionGunner		11	// 400
-#libdefine CLASS_Rocketeer				12	// 500
-#libdefine CLASS_ChemWarrior			13	// 550
-#libdefine CLASS_GaussGunner			14	// 600
+#libdefine CLASS_CombustionGunner		10	// 400
+#libdefine CLASS_Rocketeer				11	// 500
+#libdefine CLASS_ChemWarrior			12	// 550
+#libdefine CLASS_GaussGunner			13	// 600
+#libdefine CLASS_JetTrooper				14	// 600
 #libdefine CLASS_Artillery				15	// 600
-#libdefine CLASS_JetTrooper				16	// 600
-#libdefine CLASS_NailMachineGunner		17	// 650
-#libdefine CLASS_Sniper					18	// 750
-#libdefine CLASS_Commando				19	// 1000
+#libdefine CLASS_NailMachineGunner		16	// 650
+#libdefine CLASS_Sniper					17	// 750
+#libdefine CLASS_Commando				18	// 1000
 // Power
-#libdefine CLASS_PlasmaGunner			20	// 600
-#libdefine CLASS_ShockTrooper			21	// 600
-#libdefine CLASS_LaserChaingunner		22	// 650
+#libdefine CLASS_LazerRifleman			19	// 300
+#libdefine CLASS_ShockTrooper			20	// 600
+#libdefine CLASS_PlasmaGunner			21	// 600
+#libdefine CLASS_LaserChaingunner		22	// 600
 #libdefine CLASS_KarasawaSoldier		23	// 800
 #libdefine CLASS_ChronoArcher			24	// 1000
 // Support
-#libdefine CLASS_Harvester				25	// Free
-#libdefine CLASS_Engineer				26	// Free
-#libdefine CLASS_Technician				27	// 200
-#libdefine CLASS_FieldMedic				28	// 300
-#libdefine CLASS_AdvHarvester			29	// 400
-#libdefine CLASS_UtilityGuy				30	// 500
-#libdefine CLASS_DemoExpert				31	// 550
-#libdefine CLASS_SuicideBomber			32	// 1500
-#libdefine CLASS_TimeCop				33	// 2000
+#libdefine CLASS_Engineer				25	// Free
+#libdefine CLASS_Technician				26	// 200
+#libdefine CLASS_DemoExpert				27	// 600
+#libdefine CLASS_UtilityGuy				28	// 650
+#libdefine CLASS_SuicideBomber			29	// 1500
+#libdefine CLASS_TimeCop				30	// 2000
+#libdefine CLASS_FieldMedic				31	// 300
+#libdefine CLASS_Harvester				32	// Free
+#libdefine CLASS_AdvHarvester			33	// 450
+
 // ----
 #libdefine NUMCLASSES					34 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
 
