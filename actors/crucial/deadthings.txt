@@ -27,35 +27,35 @@ actor BurningCorpse {
 		BDT1 A 0 BRIGHT A_NoBlocking
 		BDT1 A 0 BRIGHT A_Pain
 		BDT1 A 0 BRIGHT A_Wander
-		BDT1 A 0 A_Explode(8,128)
+		BDT1 A 0 A_Explode(8,96)
 		BDT1 A 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 A 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 A 2 BRIGHT A_Wander
-		BDT1 A 0 A_Explode(8,128)
+		BDT1 A 0 A_Explode(8,96)
 		BDT1 A 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 A 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 A 2 BRIGHT A_Wander
-		BDT1 B 0 A_Explode(8,128)
+		BDT1 B 0 A_Explode(8,96)
 		BDT1 B 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 B 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 B 2 BRIGHT A_Wander
-		BDT1 B 0 A_Explode(8,128)
+		BDT1 B 0 A_Explode(8,96)
 		BDT1 B 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 B 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 B 2 BRIGHT A_Wander
-		BDT1 C 0 A_Explode(8,128)
+		BDT1 C 0 A_Explode(8,96)
 		BDT1 C 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 C 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 C 2 BRIGHT A_Wander
-		BDT1 C 0 A_Explode(8,128)
+		BDT1 C 0 A_Explode(8,96)
 		BDT1 C 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 C 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 C 2 BRIGHT A_Wander
-		BDT1 D 0 A_Explode(8,128)
+		BDT1 D 0 A_Explode(8,96)
 		BDT1 D 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 D 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,8), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 D 2 BRIGHT A_Wander
-		BDT1 D 0 A_Explode(8,128)
+		BDT1 D 0 A_Explode(8,96)
 		BDT1 D 0 A_SpawnItemEx("BurnDeathShot", random(-16,16), random(-16,16), random(24,64), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 D 0 A_SpawnItemEx("BurnDeathShotFloor", random(-16,16), random(-16,16), random(0,4), 0, 0, 0.1*random(2,5), 0, 128, 32)
 		BDT1 D 2 BRIGHT A_Wander
@@ -156,28 +156,28 @@ actor ChemicalCorpse : BurningCorpse {
 		CDT1 C 0 BRIGHT A_Pain
 		CDT1 C 0 BRIGHT A_PlaySound ("chem/chem", 5, 1.0, 1)
 		CDT1 D 0 BRIGHT A_Wander
-		CDT1 A 0 A_Explode(8,128)
+		CDT1 A 0 A_Explode(8,96)
 		CDT1 AAAA 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),  0, 128, 32)
 		CDT1 A 2 BRIGHT A_Wander
-		CDT1 A 0 A_Explode(8,128)
+		CDT1 A 0 A_Explode(8,96)
 		CDT1 AAAA 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 A 2 BRIGHT A_Wander
-		CDT1 B 0 A_Explode(8,128)
+		CDT1 B 0 A_Explode(8,96)
 		CDT1 BBBB 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 B 2 BRIGHT A_Wander
-		CDT1 B 0 A_Explode(8,128)
+		CDT1 B 0 A_Explode(8,96)
 		CDT1 BBBB 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 B 2 BRIGHT A_Wander
-		CDT1 C 0 A_Explode(8,128)
+		CDT1 C 0 A_Explode(8,96)
 		CDT1 CCCC 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 C 2 BRIGHT A_Wander
-		CDT1 C 0 A_Explode(8,128)
+		CDT1 C 0 A_Explode(8,96)
 		CDT1 CCCC 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 C 2 BRIGHT A_Wander
-		CDT1 D 0 A_Explode(8,128)
+		CDT1 D 0 A_Explode(8,96)
 		CDT1 DDDD 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 D 2 BRIGHT A_Wander
-		CDT1 D 0 A_Explode(8,128)
+		CDT1 D 0 A_Explode(8,96)
 		CDT1 DDDD 0 A_SpawnItemEx("ChemicalFlame", random(-16,16), random(-16,16), random(16,64), 0, 0, 0.5*random(2,5),    0, 128, 32)
 		CDT1 D 2 BRIGHT A_Wander
 		CDT1 A 0 A_GiveInventory("BurnCount",1)

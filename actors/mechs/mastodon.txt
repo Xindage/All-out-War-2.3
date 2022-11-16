@@ -337,7 +337,7 @@ Actor DonFlameFX : FlameFX {
 	  TNT1 A 0 A_SpawnItemEx ("DonFlameDecayFX")
 	  TNT1 A 0 A_PlaySoundEx("fire/fire","SoundSlot6",1)
 	Idle:
-	  TNT1 A 15 Bright A_Explode (32, 128)
+	  TNT1 A 15 Bright A_Explode (32, 96)
 	  TNT1 A 0 A_CountDown
 	  Loop
 	}
