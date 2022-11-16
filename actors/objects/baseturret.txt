@@ -25,7 +25,7 @@
 	+NEVERRESPAWN
 
 	// Test Flags
-	// +LOOKALLAROUND Disabled for testing purposes.
+	+LOOKALLAROUND Disabled for testing purposes.
 	+MISSILEMORE
 	+MISSILEEVENMORE
 	+QUICKTORETALIATE
