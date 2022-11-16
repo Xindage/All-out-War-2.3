@@ -1,4 +1,4 @@
- actor Utility_TurretBase {
+actor Utility_TurretBase {
 	damagefactor "Disarm", 0.0
 	damagefactor "Fist", 0.5
 	damagefactor "Mechstomp", 0.0
@@ -6,7 +6,7 @@
 	damagefactor "AntiArmor", 2.5
 	damagefactor "Fire", 0.6
 	damagefactor "Chemical", 0.6
-	DamageFactor "StealthKnife", 1.0
+	DamageFactor "StealthKnife", 1.5
 	painchance "Energy", 255
 	radius 24
 	height 56
@@ -22,17 +22,8 @@
 	-COUNTKILL
 	+FRIENDLY
 	+NOTARGET
+	+LOOKALLAROUND
 	+NEVERRESPAWN
-
-	// Test Flags
-	+LOOKALLAROUND Disabled for testing purposes.
-	+MISSILEMORE
-	+MISSILEEVENMORE
-	+QUICKTORETALIATE
-	+ALWAYSFAST
-	+STANDSTILL
-	// Note: These flags are to make turrets extreme agressive and ignore allied players so
-	// it can focuses more on enemy players only, but allowing some new strats.
 
 	states {
 	Death.StealthKnife:
@@ -42,5 +33,3 @@
 		stop
 	}
 }
-
-actor Turretalert : Inventory {inventory.maxamount 3}
