@@ -525,3 +525,15 @@ Actor RainDrop
     Stop
   }
 }
+
+Actor decorativebackpack 30012
+{
+  Radius 16
+  Height 26
+  States
+  {
+  Spawn:
+    BPAK A -1
+    Stop
+  }
+}

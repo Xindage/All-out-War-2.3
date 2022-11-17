@@ -180,7 +180,7 @@ map AOW24 "Convulsion of the nature"
 {
 	music = "D_AOW24"
 	levelnum = 24
-	next = "AOW01"
+	next = "AOW25"
 }
 
 map AOW25 "Cross Fire"
