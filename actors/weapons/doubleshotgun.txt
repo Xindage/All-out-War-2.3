@@ -7,8 +7,6 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 	//$Category Weapons
 	Inventory.PickupMessage "You got the double shotgun!"
 	Obituary "$OB_DOUBLESHOTGUN" // "%o was splattered by %k's double shotgun."
-	AttackSound "weapons/sshotf"
-	DropItem "Boomstick"
 	Weapon.SelectionOrder 16
 	Weapon.Kickback 30
 	Weapon.AmmoType "SSGShell"
@@ -70,21 +68,26 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		DSG2 A 2 A_Light1
 		DSG2 A 0 Radius_Quake(6,4,0,1,0)
 		TNT1 A 0 A_TakeInventory("SSGShell",2)
+		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 		TNT1 A 0 Bright A_FireBullets (15.7, 11.7, 20, 5, "HandgunPuff", 1, 750)
 		DSG2 B 2 bright A_Light2
 		TNT1 A 0 A_Light0
 		TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,"ReloadBoth")
 		DSG1 CDEFFFFGGGHHIJ 1
 	    Goto Ready
-    AltFire:
+	AltFire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+	    LSRF A 0 A_JumpIfInventory ("IsDoubleShotgunner", 1, "AltFireSkill")
+		goto Ready
+    AltFireSkill:
         TNT1 A 0 A_JumpIfInventory("SSGShell",2,"FireLeft")
 	    TNT1 A 0 A_JumpIfInventory("SSGShell",1,1)
-	    Goto Reload
+	    Goto Empty
 		DSG2 A 2 A_Light1
 		DSG2 A 0 Radius_Quake(3,4,0,1,0)
 		TNT1 A 0 A_TakeInventory("SSGShell",1)
+		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 		TNT1 A 0 Bright A_FireBullets (8.4, 6.4, 8, 5, "HandgunPuff", 1, 1000)
 		DSG1 B 2 bright A_Light2
 		TNT1 A 0 A_Light0
@@ -95,6 +98,7 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 	    TNT1 A 0 A_Light1
         TNT1 A 0 Radius_Quake(3,4,0,1,0)
 	    TNT1 A 0 A_TakeInventory("SSGShell",1)
+		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 	    TNT1 A 0 Bright A_FireBullets (8.4, 6.4, 8, 5, "HandgunPuff", 1, 1000)
 		DSG1 A 2 bright A_Light2
 		TNT1 A 0 A_Light0
@@ -106,26 +110,104 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
     Reload:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)
   	    TNT1 A 0 A_JumpIfInventory("SSGShell",2,3)
-		TNT1 A 0 A_JumpIfInventory("SSGShell",1,"Reload2")
+		TNT1 A 0 A_JumpIfInventory("SSGShell",1,"ReloadLeft")
         TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,2)
 		TNT1 A 0
 		Goto Ready
+		TNT1 A 0 A_JumpIfInventory ("IsDoubleShotgunner", 1, "ReloadFast")
+		DSR1 ABCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		DSR1 F 2 A_PlaySound ("weapons/sshoto", CHAN_5)
+		TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+		
+		DSR2 BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		DSR2 F 4
+		DSR3 GHI 2
+		
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+		DSR3 L 2
+
+		DSR1 K 12
+		DSR1 LMN 2
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+		DSR2 LMN 2
+		DSR2 O 2 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 PQRS 2
+		DSG2 A 5 A_ReFire
+		goto Ready
+	ReloadFast:
 		DSR1 ABCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		DSR1 F 2 A_PlaySound ("weapons/sshoto", CHAN_5)
 		TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
 		DSR2 BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		DSR2 F 4
-		DSR2 G 2 A_PlaySound ("weapons/sshotl", CHAN_6)
-		DSR2 HIJ 2
-		DSR2 K 4 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 GHI 2
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
 	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",2)
 	    TNT1 A 0 A_GiveInventory("SSGShell",2)
-		DSR2 LMNOPQRS 2
+		DSR2 LMN 2
+		DSR2 O 2 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 PQRS 2
 		DSG2 A 5 A_ReFire
 		goto Ready
-    Reload2:
+    ReloadBoth:
+	    TNT1 A 0 A_JumpIfInventory ("IsDoubleShotgunner", 1, "ReloadBothFast")
+        DSG2 CD 2
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		DSG2 EFGH 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		DSR2 A 2 A_PlaySound ("weapons/sshoto", CHAN_5)
+		TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+
+		DSR2 BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		DSR2 F 4
+		DSR3 GHI 2
+
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+		DSR3 L 2
+
+		DSR1 K 12
+		DSR1 LMN 2
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+		DSR2 LMN 2
+		DSR2 O 2 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 PQRS 2
+		DSG2 A 5 A_ReFire
+		goto Ready
+    ReloadBothFast:
+        DSG2 CD 2
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		DSG2 EFGH 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		DSR2 A 2 A_PlaySound ("weapons/sshoto", CHAN_5)
+		TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+		DSR2 BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		DSR2 F 4
+		DSR2 GHI 2
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",2)
+	    TNT1 A 0 A_GiveInventory("SSGShell",2)
+		DSR2 LMN 2
+		DSR2 O 2 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 PQRS 2
+		DSG2 A 5 A_ReFire
+		goto Ready
+    ReloadLeft:
 	    TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",1,2)
 		TNT1 A 0
 		Goto Ready
@@ -136,34 +218,18 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		TNT1 A 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
 		DSR1 GHIJ 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		DSR1 K 4
-		DSR1 L 2 A_PlaySound ("weapons/sshotl", CHAN_6)
-		DSR1 MN 2
-		DSR2 J 2
-		DSR2 K 4 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR1 LMN 2
+		DSR2 J 2 A_PlaySound ("weapons/sshotl", CHAN_6)
+		DSR2 K 4
 	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
 	    TNT1 A 0 A_GiveInventory("SSGShell",1)
-		DSR2 LMNOPQRS 2
-		DSG2 A 5 A_ReFire
-		goto Ready
-   ReloadBoth:
-        DSG2 CD 2
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		DSG2 EFGH 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		DSR2 A 2 A_PlaySound ("weapons/sshoto", CHAN_5)
-		TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
-		DSR2 BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		DSR2 F 4
-		DSR2 G 2 A_PlaySound ("weapons/sshotl", CHAN_6)
-		DSR2 HIJ 2
-		DSR2 K 4 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
-	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",2)
-	    TNT1 A 0 A_GiveInventory("SSGShell",2)
-		DSR2 LMNOPQRS 2
+		DSR2 LMN 2
+		DSR2 O 2 A_PlaySound ("weapons/sshotc", CHAN_WEAPON)
+		DSR2 PQRS 2
 		DSG2 A 5 A_ReFire
 		goto Ready
 	Spawn:
-		TNT1 A 0
+		DSG2 X -1
 		stop
 	}
 }

@@ -269,7 +269,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         Goto Empty
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("missilelauncher/fire", CHAN_WEAPON)
-		TNT1 A 0 A_JumpIfTargetInLOS ("Fire.Homing")
+		TNT1 A 0 A_JumpIfCloser(1536, "Fire.Homing")
 		TNT1 A 0 A_FireCustomMissile ("HeavyMissile", 0, 1, 0)
 		goto Fire.End
 	FireBlue:
@@ -279,7 +279,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         Goto Empty.Blue
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("missilelauncher/fire", CHAN_WEAPON)
-		TNT1 A 0 A_JumpIfTargetInLOS ("Fire.HomingBlue")
+		TNT1 A 0 A_JumpIfCloser(1536, "Fire.HomingBlue")
 		TNT1 A 0 A_FireCustomMissile("HeavyMissileBlue", 0, 1, 0)
 		Goto Fire.EndBlue
 
@@ -388,7 +388,6 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_FireCustomMissile("HeavyHomingBlueMissile")
 		Goto Fire.EndBlue
     Fire.End:
-	    TNT1 A 0 A_TakeInventory("MissileMag",1)
 		MSLR D 1 offset (1, 35) Radius_Quake(6,12,0,1,0)
 		MSLR D 0 Offset (1, 35) A_Recoil (18)
 		MSLR D 1 offset (2, 38) A_ZoomFactor(0.952)
@@ -425,7 +424,6 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_ReFire
 		Goto Ready
     Fire.EndBlue:
-	    TNT1 A 0 A_TakeInventory("MissileMag",1)
 		MSLB D 1 offset (1, 35) Radius_Quake(6,12,0,1,0)
 		MSLB D 0 Offset (1, 35) A_Recoil (18)
 		MSLB D 1 offset (2, 38) A_ZoomFactor(0.952)

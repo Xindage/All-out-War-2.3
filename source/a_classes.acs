@@ -416,7 +416,11 @@ function int SetClass (int id, int scflags) {
 	if (id == CLASS_DemoExpert)
 		GiveInventory ("IsDemoExpert", 1);
 
-	// Tag the minigunner so it has better fire rate anda accuracy
+	// Tag the double shotgunner so it can use altfire
+	if (id == CLASS_DoubleShotgunner)
+		GiveInventory ("IsDoubleShotgunner", 1);
+
+	// Tag the gunman so it has better fire rate anda accuracy
 	if (id == CLASS_Gunman)
 		GiveInventory ("IsGunman", 1);
 

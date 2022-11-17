@@ -28,6 +28,7 @@ actor IsMCT : Inventory {}
 actor IsArtillerySoldier : Inventory {}
 actor IsStealth : Inventory {}
 actor IsGunman : Inventory {}
+actor IsDoubleShotgunner : Inventory {}
 actor IsMachinegunner : Inventory {}
 actor IsMinigunner : Inventory {}
 actor IsRocketSoldier : Inventory {}

@@ -56,7 +56,10 @@ remap DSR1L0 DSR1L0H
 remap DSR1M0 DSR1M0H
 remap DSR1N0 DSR1N0H
 
-
+remap DSR3G0 DSR3G0H
+remap DSR3H0 DSR3H0H
+remap DSR3I0 DSR3I0H
+remap DSR3L0 DSR3L0H
 
 //missile launcher
 remap MSLBA0 MSLBA0x

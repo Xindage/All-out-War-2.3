@@ -5,7 +5,9 @@ Author                  : Gaturra (discord: Gaturra#8745)
 Discord server          : https://discord.gg/JTdv4PP7
 
 Original Release date   : 2022/04/18 (v0.1)
-Version r221115 (2022/11/15)
+Version r221117 (2022/11/17)
+                          - Double shotgun is now dropped on death
+						  - Karasawa spread mode now affects primary fire too
                           - Burning/chemical corpses move faster
 						  - Fire remains from projectiles now does more damage
                           - Artillery cannon altfire deals more damage fire damage
@@ -105,9 +107,9 @@ The purpose of this mod is to bring back some features from classic aow versions
 						  - SMG                                                 : Sprites by aow team, animation and code by Gaturra
 						  - Machinegun                                          : Sprites and code by Gaturra
 						  - Lightsaber                                          : Sprites and code by Gaturra
-						  - Missile launcher                                    : Sprites and code by Gaturra, sounds from Doom 4
+						  - Missile launcher                                    : Sounds from Doom 2016, Sprites and code by Gaturra
 						  - Artillery cannon                                    : Sprites and code by Gaturra
-						  - Double shotgun                                      : Sprites by Lucas Kord, animation and code by Gaturra
+						  - Double shotgun                                      : Sprites by Lucas Kord, sounds from Doom 3, animation and code by Gaturra
 						  
 						                    - About music -
 						  - Startup music                                          : March to doom from Renegade X

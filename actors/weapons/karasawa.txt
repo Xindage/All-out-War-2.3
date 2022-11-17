@@ -244,6 +244,7 @@ ACTOR Karasawa : AOWWeapon
         KSWB N 6
         goto Ready
     FireSkill:
+        TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"FireSpread")
  	    KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWR A 0 Radius_Quake(3,random(8,12),0,1,0)
 	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt", 0, 1, 0, 0)
@@ -261,10 +262,49 @@ ACTOR Karasawa : AOWWeapon
         KSWR A 0 A_Light0
         KSWR N 6
         goto Ready
-    FireSkill.Blue:  
+    FireSkill.Blue: 
+	    TNT1 A 0 A_JumpIfInventory("KarasawaMode1",1,"FireSpread.Blue")
         KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
 	    KSWB A 0 Radius_Quake(3,random(8,12),0,1,0)
 	    KSWB D 1 Bright A_FireCustomMissile("KsawBoltBlue", 0, 1, 0, 0)
+        KSWB E 1 Bright A_ZoomFactor(0.990)
+		KSWB F 1 Bright A_ZoomFactor(0.980) 
+		KSWB F 1 Bright A_ZoomFactor(0.975)  
+		KSWB G 1 Bright A_ZoomFactor(0.980) 
+		KSWB G 1 Bright A_ZoomFactor(0.985) 
+		KSWB H 1 Bright A_ZoomFactor(0.990) 
+		KSWB H 1 Bright A_ZoomFactor(1)
+        KSWB I 0 Bright A_Light2
+        KSWB I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
+        KSWB IA 4 A_Light1
+        KSWB JKLMN 4
+        KSWB A 0 A_Light0
+        KSWB N 6
+        goto Ready
+    FireSpread:
+ 	    KSWR A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWR A 0 Radius_Quake(3,random(8,12),0,1,0)
+		KSWR D 0 A_FireCustomMissile("KsawBolt2", -3, 1, 0, 0)
+	    KSWR D 1 Bright A_FireCustomMissile("KsawBolt2", +3, 1, 0, 0)
+        KSWR E 1 Bright A_ZoomFactor(0.990)
+		KSWR F 1 Bright A_ZoomFactor(0.980) 
+		KSWR F 1 Bright A_ZoomFactor(0.975)  
+		KSWR G 1 Bright A_ZoomFactor(0.980) 
+		KSWR G 1 Bright A_ZoomFactor(0.985) 
+		KSWR H 1 Bright A_ZoomFactor(0.990) 
+		KSWR H 1 Bright A_ZoomFactor(1)
+        KSWR I 0 Bright A_Light2
+        KSWR I 0 A_PlaySoundEx("Weapons/KsawCharge", "SoundSlot7", 0)
+        KSWR IA 4 A_Light1
+        KSWR JKLMN 4
+        KSWR A 0 A_Light0
+        KSWR N 6
+        goto Ready
+    FireSpread.Blue: 
+        KSWB A 0 A_PlaySound("Weapons/KsawFire",5)
+	    KSWB A 0 Radius_Quake(3,random(8,12),0,1,0)
+		KSWB D 0 A_FireCustomMissile("KsawBolt2Blue", -3, 1, 0, 0)
+	    KSWB D 1 Bright A_FireCustomMissile("KsawBolt2Blue", +3, 1, 0, 0)
         KSWB E 1 Bright A_ZoomFactor(0.990)
 		KSWB F 1 Bright A_ZoomFactor(0.980) 
 		KSWB F 1 Bright A_ZoomFactor(0.975)  
@@ -550,7 +590,7 @@ Actor KsawBolt2
    Radius 6
    Height 4
    Speed 80
-   Damage (20)
+   Damage (30)
    ReactionTime 25
    Alpha 1.0
    XScale 1.5
