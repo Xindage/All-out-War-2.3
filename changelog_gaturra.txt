@@ -17,6 +17,7 @@ Version r221117 (2022/11/17)
                           - BFG 2704, Plasma cannon and Timegun can now be sold
                           - Melee attack damage increased
                           - Stealth trooper speed slighty decreased
+                          - Players drop its grenade on death if he's holding an active one.
                           - Fixed: blue missiles from missile launcher doesnt have any lights
 						  - Fixed: unable to pickup frag/flashbang grenades after running out of ammo
 						  - Fixed: disarm crate doesnt remove frag/flashbang ammo

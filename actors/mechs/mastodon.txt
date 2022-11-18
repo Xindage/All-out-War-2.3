@@ -291,6 +291,7 @@ actor MastodonSwitch2 : PermanentPowerup {Powerup.Type "Mastodon2"}
 	Gravity .5
 	-NOGRAVITY
 	DeathSound "tankflame"
+	DamageType "Explosion"
 	States
 	{
 	  Spawn:
