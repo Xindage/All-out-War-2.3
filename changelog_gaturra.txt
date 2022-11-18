@@ -5,7 +5,7 @@ Author                  : Gaturra (discord: Gaturra#8745)
 Discord server          : https://discord.gg/JTdv4PP7
 
 Original Release date   : 2022/04/18 (v0.1)
-Version r221117 (2022/11/17)
+Version r221118 (2022/11/18)
                           - Double shotgun is now dropped on death
 						  - Karasawa spread mode now affects primary fire too
                           - Burning/chemical corpses move faster
@@ -25,6 +25,7 @@ Version r221117 (2022/11/17)
 						  - Fixed: selling chainsaw doesnt give you back your fists
 						  - Fixed: artillery cannon pickup doesnt doesnt give ammo
 						  - Fixed: wrong radius damage on fire and chemical remains
+						  - Fixed: Mastodon alt-fire now dont blow up mines and remotes c4s.
 
 ===========================================================================================================================================================
 * What is included *
