@@ -26,6 +26,20 @@ Version r221118 (2022/11/18)
 						  - Fixed: artillery cannon pickup doesnt doesnt give ammo
 						  - Fixed: wrong radius damage on fire and chemical remains
 						  - Fixed: Mastodon alt-fire now dont blow up mines and remotes c4s.
+Version r221119 (2022/11/19)
+                          - Double shotgun changes were reverted (including removed altfire and switching before reloading)
+                          - Missile launcher altfire is now more friendly user
+                          - New buildings in Aow01 (Aow Zone)
+                          - 3D mode conversion alongside QOL changes in Aow08 (Floating city)
+                          - 3D mode conversion alongside changes by k4r4t3k4n4k4s on aow11 (Waste plant)
+                          - New map Aow26 (All out war)
+                          - Fixed: mechs max hp
+						  - Fixed: homing missiles vertical velocity
+						  - Fixed: Misc fixes Aow03 (Oasis)
+						  - Fixed: You can now refine in aow24 (Convulsion of the Nature)
+						  - Fixed: Misc Fix by goatsex on aow25 (Cross Fire)
+						  - Fixed: Restored lost music for aow17 18 and 19 (Mining site, Disk defrag and hell's march)
+
 
 ===========================================================================================================================================================
 * What is included *
@@ -50,7 +64,6 @@ Version r221118 (2022/11/18)
 						                    - Balance -
 						  > In order to keep balance, each class will have a bonus with their main weapon, these are the current weapons using that:
 						      - Gunman                : better fire rate and accuracy
-							  - Double shotgunner     : alt fire and faster reloading
 							  - Machinegunner         : burst fire (altfire)
 							  - Minigunner            : can spin the gatling gun without firing bullets (reload key)
 							  - Rocket soldier        : altfire and faster reloading
@@ -71,6 +84,7 @@ Version r221118 (2022/11/18)
                                             - aow2.3_maps_rxxxxxx.pk3
 											- aow2.3_data_rxxxxxx.pk3
 											- aow2.3_code_rxxxxxx.pk3
+											- aow2.3_patch_rxxxxxx.pk3
 
 ===========================================================================================================================================================
 * Creepers / Trolls *

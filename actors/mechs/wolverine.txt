@@ -11,7 +11,7 @@ actor Wolverine : MechPlayer_Base {
 	player.soundclass "wolv"
 	player.forwardmove 0.45
 	player.sidemove 0.15
-	player.maxhealth 3500
+	player.maxhealth 3000
 	Player.ViewHeight 96
 	Player.AttackZOffset 13
 	Player.MorphWeapon "WolverineWeapons"

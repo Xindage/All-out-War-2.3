@@ -4,7 +4,7 @@ actor MadCat : MechPlayer_Base {
 	radius 64
 	height 144
 	mass 4000
-	player.maxhealth 5000
+	player.maxhealth 4000
 	//player.colorrange 112, 127
 	player.displayname "Mad Cat"
 	player.forwardmove 0.54

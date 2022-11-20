@@ -191,6 +191,14 @@ map AOW25 "Cross Fire"
 	levelnum = 25
 }
 
+map AOW26 "All Out War"
+{
+	next = "AOW01"
+	sky1 = "sky14"
+	music = "D_AOW26"
+	levelnum = 26
+}
+
 skill Normal {
 	name = "Normal"
 	damagefactor = 1.0

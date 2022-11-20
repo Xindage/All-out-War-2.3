@@ -7,7 +7,7 @@ actor Lancer : MechPlayer_Base {
 	Player.DisplayName "Lancer"
 	player.forwardmove 0.56
 	player.sidemove 0.25
-	player.maxhealth 4000
+	player.maxhealth 3500
 	Player.ViewHeight 96
 	Player.MorphWeapon "LancerWeapons"
 	scale 2.5

@@ -550,24 +550,31 @@ object HeavyMissile
     frame MISR { light ROCKET }
 }
 
-/* [TT] Deprecated
 object HeavyMissileBlue
 {
     frame MISB { light ROCKET }
 }
-*/
 
 object HeavyHomingMissile
 {
     frame MISR { light ROCKET }
 }
 
-/* [TT] Deprecated
-object HeavyHomingMissileBlue
+object HeavyHomingBlueMissile
 {
     frame MISB { light ROCKET }
 }
-*/
+
+object HeavyBurstMissile
+{
+    frame MISR { light ROCKET }
+}
+
+object HeavyBurstMissileBlue
+{
+    frame MISB { light ROCKET }
+}
+
 
 ///////Plasma Related stuff
 ///////////////////////////
