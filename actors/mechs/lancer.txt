@@ -26,7 +26,7 @@ actor Lancer : MechPlayer_Base {
 		loop
 	See:
 		PGRD A 0 SetPlayerProperty (0, 0, 3)
-		PGRD B 8 A_JumpIfHealthLower (1000, "SeeDamaged")
+		PGRD B 8 A_JumpIfHealthLower (500, "SeeDamaged")
 		PGRD C 0 A_SpawnItemEx ("LancerStepDamageWeak", 0, -24, 4)
 		PGRD A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, -24, 4)
 		PGRD C 8 

@@ -104,3 +104,4 @@ actor SpentSyringe {
 }
 
 Actor selfHealCoolDownItem : Inventory { Inventory.MaxAmount 1 }
+actor EnhancedSelfHeal : Inventory {}

@@ -590,7 +590,7 @@ Actor KsawBolt2
    Radius 6
    Height 4
    Speed 80
-   Damage (30)
+   Damage (25)
    ReactionTime 25
    Alpha 1.0
    XScale 1.5

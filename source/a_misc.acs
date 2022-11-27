@@ -180,11 +180,12 @@ script SC_SelfHealHealth (void) {
 		terminate;
 	}
 	
-	// And then give the rest over time
-	for (i = 0; i < (SELFHEALHEALTH / 2) && GetHealth() < GetSpawnHealth(); ++i) {
-		//HealThing (1);
-		SetActorProperty(0, APROP_HEALTH, GetHealth() + 1);
-		delay (35);
+    // And then give the rest over time
+    for (i = 0; i < (SELFHEALHEALTH / 2) && GetHealth() < GetSpawnHealth(); ++i) {
+        //HealThing (1);
+        SetActorProperty(0, APROP_HEALTH, GetHealth() + 1);
+        if (checkinventory ("EnhancedSelfHeal")) delay (35 / 2);
+        else delay (35);
 	}
 }
 

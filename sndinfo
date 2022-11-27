@@ -1,3 +1,6 @@
+// Nasty Dogs - Maps
+Airstrike/Ready airredy1
+
 //[Cata] Mortar launcher
 BARLFIRE BARLFIRE
 BARLRELD BARLRELD
@@ -353,7 +356,7 @@ misc/k_pkup			dskeyup		// Pickup key
 misc/health_pkup		dshealup	// Pickup health
 misc/armor_pkup			dsarmoup	// Pickup armor
 misc/ammo_pkup			dsammoup	// Pickup ammo
-misc/credit_pkup		dsradio		// Pickup credits
+misc/credit_pkup		dscoins		// Pickup credits
 
 // [Dusk] {9/29/12} Use normal rolloff for these
 $rolloff misc/w_pkup 200 1200

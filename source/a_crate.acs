@@ -217,7 +217,7 @@ function int CheckCrate (int c) {
 		// still a low probability, just pretend that it's true.
 		// The client ATM doesn't even use this since the open deck
 		// doesn't provide the bomb crate.
-		if (netstate != NETSTATE_Client && GetRank () <= RANK_MASTERSGT && !random (0, 2))
+		if (netstate != NETSTATE_Client && GetRank () <= RANK_LIEUTENANT && !random (0, 2))
 			return false;
 	case CRATE_BASECRASHER:
 		return CheckBaseCrasher(PlayerTeam()); // [SG] defined in a_functions.acs
@@ -257,7 +257,7 @@ function int CheckCrate (int c) {
 				!GetConfig (CONFIG_TOURNAMENTMODE);
 	case CRATE_DISARM:
 		// Same logic here as in bomb crate.
-		if (GetRank () >= RANK_MASTERSGT &&
+		if (GetRank () >= RANK_LIEUTENANT &&
 			!random (0, 2))
 			return false;
 		return	!CheckInventory ("IsMech") && // don't disarm a mech
@@ -671,7 +671,7 @@ script 309 (int c) {
 		CheckAndRemove ("Flashbang");
 		CheckAndRemove ("FragGrenade");
 		CheckAndRemove ("RepairGunUpgrade");
-		if (GetRank () < RANK_MAJOR)
+		if (GetRank () < RANK_GENERAL)
 			CheckAndRemove ("RepairGun");
 		CheckAndRemove ("HealGun");
 		CheckAndRemove ("BombSquadGun");

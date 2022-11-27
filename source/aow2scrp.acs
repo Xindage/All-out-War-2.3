@@ -60,10 +60,10 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define XPREQ_OFFICER 1500
 #define XPREQ_LIEUTENANT 2000
 #define XPREQ_CAPTAIN 2500
-#define XPREQ_MAJOR 3000
-#define XPREQ_LTCOLONEL 3500
-#define XPREQ_COLONEL 4000
-#define XPREQ_GENERAL 5000
+#define XPREQ_MAJOR 3250
+#define XPREQ_LTCOLONEL 4000
+#define XPREQ_COLONEL 5000
+#define XPREQ_GENERAL 6000
 
 // ============================================================================
 // Hudmessage values

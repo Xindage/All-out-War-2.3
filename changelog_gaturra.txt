@@ -6,8 +6,7 @@ Discord server          : https://discord.gg/JTdv4PP7
 
 Original Release date   : 2022/04/18 (v0.1)
 Version r221118 (2022/11/18)
-                          - Double shotgun is now dropped on death
-						  - Karasawa spread mode now affects primary fire too
+                          - Karasawa spread mode now affects primary fire too
                           - Burning/chemical corpses move faster
 						  - Fire remains from projectiles now does more damage
                           - Artillery cannon altfire deals more damage fire damage
@@ -23,12 +22,12 @@ Version r221118 (2022/11/18)
 						  - Fixed: disarm crate doesnt remove frag/flashbang ammo
 						  - Fixed: getting damaged by laser/fire/chem removes flashbang blindness
 						  - Fixed: selling chainsaw doesnt give you back your fists
-						  - Fixed: artillery cannon pickup doesnt doesnt give ammo
+						  - Fixed: artillery cannon pickup doesnt give ammo
 						  - Fixed: wrong radius damage on fire and chemical remains
 						  - Fixed: Mastodon alt-fire now dont blow up mines and remotes c4s.
-Version r221119 (2022/11/19)
+Version r221120 (2022/11/20)
                           - Double shotgun changes were reverted (including removed altfire and switching before reloading)
-                          - Missile launcher altfire is now more friendly user
+                          - Missile launcher altfire is now more user friendly
                           - New buildings in Aow01 (Aow Zone)
                           - 3D mode conversion alongside QOL changes in Aow08 (Floating city)
                           - 3D mode conversion alongside changes by k4r4t3k4n4k4s on aow11 (Waste plant)
@@ -39,7 +38,20 @@ Version r221119 (2022/11/19)
 						  - Fixed: You can now refine in aow24 (Convulsion of the Nature)
 						  - Fixed: Misc Fix by goatsex on aow25 (Cross Fire)
 						  - Fixed: Restored lost music for aow17 18 and 19 (Mining site, Disk defrag and hell's march)
-
+Version r221127 (2022/11/27)
+                          - Machinegun altfire spread slighty decreased (from 3 to 2.5)
+						  - Experience required per rank has changed in the same way as AOW 2.1
+						  - Some rewards by rank have changed (submachinegun at 1500 exp, ehnahced selfheal at 400 and repairgun at the last rank)
+                          - Mastodon and lancer damage smoke no longer appears when they still have a lot of health
+                          - Chemical/fire decay damage decreased (from 12 to 8)
+                          - Jet tropper class now have gatling gun instead machinegun as main weapon
+                          - Texture fixes and improvements on AOW01, AOW15 and AOW26
+                          - Missile launcher altfire has been nerfed (less max turn angle and speed)
+                          - credit pickup sounds now differ from chat sounds
+                          - Fixed: double shotgun price reverted to 200
+						  - Fixed: desync on missile launcher homing missiles
+						  - Fixed: missile launcher crosshair visibility
+						  - Fixed: players getting 30k credits randomly
 
 ===========================================================================================================================================================
 * What is included *
@@ -62,7 +74,7 @@ Version r221119 (2022/11/19)
 						  -Fast switching                                        (weapons can be selected and switched while reloading faster)
 						  
 						                    - Balance -
-						  > In order to keep balance, each class will have a bonus with their main weapon, these are the current weapons using that:
+						  > In order to keep balance, each class will have a bonus with their main weapon:
 						      - Gunman                : better fire rate and accuracy
 							  - Machinegunner         : burst fire (altfire)
 							  - Minigunner            : can spin the gatling gun without firing bullets (reload key)

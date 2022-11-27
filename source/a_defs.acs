@@ -228,7 +228,7 @@ function void InitClasses (void) {
 		2, 1, 0,
 		ITEM_RIFLE, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 250, 0.8, DEP_NONE,
+	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 200, 0.8, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		1, 1, 0,
 		ITEM_SSG, 0, 0, 0, 0, 0);
@@ -287,7 +287,7 @@ function void InitClasses (void) {
 	AddClass (CLASS_JetTrooper, "Jet Trooper", 600, 0.65, DEP_BARRACKS,
 		2, ARMOD_NOCHANGE,
 		2, 1, 0,
-		ITEM_MACHINEGUN, ITEM_RIFLE, ITEM_JETPACK, 0, 0, 0);
+		ITEM_GATLING, ITEM_RIFLE, ITEM_JETPACK, 0, 0, 0);
 
 	AddClass (CLASS_Artillery, "Artillery Soldier", 600, 0.7, DEP_BARRACKS,
 		2, ARMOD_EXPLO,

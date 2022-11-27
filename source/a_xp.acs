@@ -53,7 +53,7 @@ function void DoAddExperience (int XP, int forcemessage) {
 function void SetExperience (int exp) {
 	// Clamp the value
 	if (exp < 0) exp = 0;
-	if (exp > 3250) exp = 3250;
+	if (exp > 6000) exp = 6000;
 	
 	Experience[PlayerNumber ()] = exp;
 	SetInventory ("Experience", Experience[PlayerNumber()]);
@@ -178,50 +178,42 @@ script 91 (void) {
 			terminate;
 		
 		if (rank >= RANK_SERGEANT)
-			GiveInventory ("SubMachineGun", 1);
+			GiveInventory ("Handgun", 1);
 		
-		if (rank >= RANK_OFFICER && GetAmmoCapacity ("FragGrenadeAmmo") < 2)
-		{
+		if (rank >= RANK_MASTERSGT && GetAmmoCapacity ("FragGrenadeAmmo") < 2) {
 			SetFragGrenades (2);
-		}
-		
-		else if (rank >= RANK_MAJOR && GetAmmoCapacity ("FragGrenadeAmmo") < 3)
-		{
+		} else if (rank >= RANK_LIEUTENANT && GetAmmoCapacity ("FragGrenadeAmmo") < 3) {
 			SetFragGrenades (3);
 		}
-		
-		else if (rank >= RANK_COLONEL && GetAmmoCapacity ("FragGrenadeAmmo") < 4)
-		{
-			SetFragGrenades (4);
-		}
-		
-		if (rank >= RANK_OFFICER && GetAmmoCapacity ("FlashbangAmmo") < 2)
-		{
-			SetFlashbangs (2);
-		}
-		
-		else if (rank >= RANK_MAJOR && GetAmmoCapacity ("FlashbangAmmo") < 3)
-		{
-			SetFlashbangs (3);
-		}
-		
-		else if (rank >= RANK_COLONEL && GetAmmoCapacity ("FlashbangAmmo") < 4)
-		{
-			SetFlashbangs (4);
-		}
+
+		if (rank >= RANK_OFFICER)
+			GiveInventory ("SubMachineGun", 1);
 		
 		if (rank >= RANK_CAPTAIN) {
 			GiveInventory ("EagerBeaver", 1);
 			TakeInventory ("Unarmed", 1);
 		}
 		
-		if (rank >= RANK_MAJOR) {
+		if (rank >= RANK_MAJOR && GetAmmoCapacity ("FlashbangAmmo") < 2)
+		{
+			SetFlashbangs (2);
+		}
+
+		if (rank >= RANK_LTCOLONEL)
+			GiveInventory ("FastSelfHeal", 1);
+		
+		if (rank >= RANK_COLONEL && GetAmmoCapacity ("FlashbangAmmo") < 3)
+		{
+			SetFlashbangs (3);
+		}
+		
+		if (rank >= RANK_GENERAL) {
 			if (CheckInventory("RepairGun") && !CheckInventory("RepairGunUpgrade"))
 				GiveInventory ("RepairGunUpgrade", 1);
 			else
 				GiveInventory ("RepairGun", 1);
 		}
-		
+
 		GiveInventory ("HasRankUpgrades", 1);
 	}
 }

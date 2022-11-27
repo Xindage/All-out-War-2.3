@@ -215,7 +215,8 @@ script SC_MARINE_DEATH (int i) {
 	if (PlayerNumber() != -1 && PlayerTeam() != AITeam) {
 		LocalAmbientSound ("game/boink", 127);
 		AddExperience (50); // Same > Player
-		GiveCredits (intHolder[i_CreditFragAward] * 0.5);
+		GiveCredits (50);
+//		GiveCredits (intHolder[i_CreditFragAward] * 0.5); // This line is bugged.
 //		TakeTickets (AITeam, 1); // Dont worth a ticket.
 		Team_GivePoints (PlayerTeam(), 1, false); // Half > Player
 	}

@@ -309,8 +309,8 @@ function int SetClass (int id, int scflags) {
 	SetArmorGrade (Classes_int[id][CK_ARMOR], Classes_int[id][CK_ARMOD]);
 	
 	// Give a handgun unless undesired
-	if (!(cflags & CF_NoPistol))
-		GiveItem (ITEM_HANDGUN, false);
+	/*if (!(cflags & CF_NoPistol))
+		GiveItem (ITEM_HANDGUN, false);*/
 	
 	// C4
 	int c4 = Classes_int[id][CK_C4] + checkInventory("TimedC4Count");
@@ -428,8 +428,8 @@ function int SetClass (int id, int scflags) {
 	if (id == CLASS_MachineGunner)
 		GiveInventory ("IsMachinegunner", 1);
 
-	// Tag the minigunner so it deals more damage
-	if (id == CLASS_Minigunner || id == CLASS_Commando)
+	// Tag the minigunner so it can spin the gattlinggun without firing
+	if (id == CLASS_Minigunner || id == CLASS_JetTrooper || id == CLASS_Commando)
 		GiveInventory ("IsMinigunner", 1);
 
 	// Tag the rocket soldier so it have its fast reloading and altfire
@@ -445,7 +445,7 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("IsShockTrooper", 1);
 		}
 
-	// Tag the minigunner so it deals more damage
+	// Tag the karasawa soldier so he has extra fire modes
 	if (id == CLASS_KarasawaSoldier)
 		GiveInventory ("IsKarasawaSoldier", 1);
 
