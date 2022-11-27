@@ -595,6 +595,11 @@ function int getMechIndex(void)
 //EJECT MECH
 script 697 (void) 
 {
+	if (CheckInventory("Justmorphed"))
+		{
+		GenericError("You cant eject yet.");
+		terminate;
+		}
 	int MechType = getMechIndex();
 	if(MechType == -1) terminate;
 	
@@ -901,6 +906,11 @@ script SC_JUGGARMORHELP (void)
 	SetFont ("BIGFONT");
 	HudMessage (s:"Powersuit online!";
 	HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_GREEN, 0.5, 0.45, 2.0, 1.0);
+
+	// Hack to prevent ejection as soon you use the instant juggernaut
+	GiveInventory ("Justmorphed", 1);
+	delay (35 * 5);
+	TakeInventory ("Justmorphed", 1);
 }
 
 // [JD] Checks the area around us to determine if we have enough room to use the instant juggernaut

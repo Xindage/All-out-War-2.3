@@ -278,6 +278,9 @@ Actor warFactoryHangerClear : CustomInventory
 	}
 }
 
+// [Xindage] used to fix ejecting from instant juggernaut
+actor Justmorphed : Inventory {inventory.maxamount 1}
+
 // [JD] Placing this in a map will only allow players to purchase light mechs.
 Actor CONFIG_LightMechsOnly 30001
 {
