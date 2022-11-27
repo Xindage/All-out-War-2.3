@@ -288,9 +288,11 @@ actor FragGrenadeThrown7 : FragGrenadeThrown {Speed 36}
 actor FragGrenadeThrown8 : FragGrenadeThrown {Speed 39}
 actor FragGrenadeThrown9 : FragGrenadeThrown {Speed 42}
 actor FragGrenadeThrown10 : FragGrenadeThrown {Speed 45}
+
 // Special drop on death grenades.
 actor deathgrenade : FragGrenadeThrown
 {
+	Obituary "$OB_FRAGGRENADESPECIAL"
 	States
 	{
 	Spawn:
