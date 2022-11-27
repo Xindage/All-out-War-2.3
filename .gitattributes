@@ -1,0 +1,27 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.txt text eol=lf
+*.acs text eol=lf
+sndinfo text eol=lf
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+
+# Ignore the main folders that contain binary only files.
+flats/* binary
+graphics/* binary
+maps/* binary
+models/* binary
+music/* binary
+patches/* binary
+sound/* binary
+sprites/* binary
+textures/* binary
+
+# Ignore root files that is also binary.
+*.dat
+*.pal
+*.lmp
