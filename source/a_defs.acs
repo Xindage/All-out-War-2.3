@@ -310,7 +310,7 @@ function void InitClasses (void) {
 		ITEM_GAUSS, ITEM_MISSILE, ITEM_GATLING, ITEM_RIFLE, 0, 0);
 
 	// Power
-	AddClass (CLASS_LazerRifleman, "Lazer Rifleman", 300, 1.0, DEP_CENTRE,
+	AddClass (CLASS_LaserRifleman, "Laser Rifleman", 300, 1.0, DEP_CENTRE,
 		1, ARMOD_ENERGY,
 		1, 0, 0,
 		ITEM_LaserRifle, 0, 0, 0, 0, 0);
