@@ -597,12 +597,12 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 	Pain.FireSpecial:
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
 	Pain.Fire:
-		TNT1 G 0 ACS_ExecuteAlways(974, 0)
-		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
+        TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_FIRE)
+        TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
 	Pain.ChemicalSpecial:
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
 	Pain.Chemical:
-		TNT1 G 0 ACS_ExecuteAlways(361, 0)
+        TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_CHEM)
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
 
 	Pain:
