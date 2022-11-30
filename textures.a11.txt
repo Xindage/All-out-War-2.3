@@ -1,0 +1,71 @@
+Texture a11blok1, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok1, 0, 0 {}
+}
+
+Texture a11blok2, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok1, 0, 0 {}
+}
+
+Texture a11blok3, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok2, 0, 0 {}
+}
+
+Texture a11blok4, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok2, 0, 0 {}
+}
+
+Texture a11blok5, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok3, 0, 0 {}
+}
+
+Texture a11blok6, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok3, 0, 0 {}
+}
+
+Texture a11blok7, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok4, 0, 0 {}
+}
+
+Texture a11blok8, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok4, 0, 0 {}
+}
+
+Texture a11blok9, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok5, 0, 0 {}
+}
+
+Texture a11bloka, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok5, 0, 0 {}
+}
+
+Texture a11blokb, 128, 128 {
+	XScale 2.0
+	YScale 2.0
+	Patch a11blok6, 0, 0 {}
+}
+
+Texture a11blokc, 128, 128 {
+	XScale 4.0
+	YScale 4.0
+	Patch a11blok6, 0, 0 {}
+}
