@@ -149,6 +149,10 @@ script 650 (int amount, int repairtype, int turret) {
 				bonus = 1;
 			}
 		}
+
+		// Timecop using hyperspeed cannot be healed.
+		if (CheckInventory("timeGunSafety"))
+			terminate;
 		
 		// Heal the teammate
 		hp = GetHealth ();
