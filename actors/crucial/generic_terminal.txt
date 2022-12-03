@@ -1,0 +1,76 @@
+actor GenericTerminalBase {
+	Tag "Generic Terminal"
+	-SOLID
+	+SHOOTABLE
+	+NEVERRESPAWN
+	+NOBLOOD
+	+DONTGIB
+	+NOICEDEATH
+	+QUICKTORETALIATE
+	+NEVERRESPAWN
+	+GHOST
+	
+	var int user_max_health;
+	var int user_health;
+	var int user_team;
+	Gravity 0
+	Radius 16
+	Height 16
+	Health 0x7FFFFFFF
+	Mass 0x7FFFFFFF
+	PainChance 255
+	DamageFactor "Bullet", 0.0
+	DamageFactor "Rifle", 0.0
+	DamageFactor "Explosion", 0.0
+	DamageFactor "Fire", 0.0
+	DamageFactor "Fist", 0.0
+	DamageFactor "FireSpecial", 0.0
+	DamageFactor "Chemical", 0.0
+	DamageFactor "ChemicalSpecial", 0.0
+	DamageFactor "Energy", 0.0
+	DamageFactor "AntiArmor", 0.0
+	DamageFactor "Time", 0.0
+	DamageFactor "Disarm", 1.0
+	DamageFactor "Ice", 0.0
+	DamageFactor "Superweapon", 0.0
+	DamageFactor "MassDriver", 0.0
+	DamageFactor "Mechstomp", 0.0
+	DamageFactor "Monster", 0.0
+	DamageFactor "Mine", 0.0
+	DamageFactor "Deconstruction", 0.0
+	
+	States {
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag ("ISMONSTER",1)
+		TNT1 A 0 A_ClearTarget
+	Idle:
+		TNT1 A -1 A_Stop
+	Pain:
+		TNT1 A 0 ACS_ExecuteAlways(1004) //change user_health
+		goto Idle
+	}
+}
+
+actor GenericTerminalBlue : GenericTerminalBase 29500
+{
+	Tag "Generic Terminal Blue"
+	States 
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_ExecuteAlways(1003, 0, 70, 0) //init: int maxHealth, int team
+			Goto Super::Spawn
+	}
+}
+actor GenericTerminalRed : GenericTerminalBase 29501
+{
+	Tag "Generic Terminal Red"
+	States 
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_ExecuteAlways(1003, 0, 70, 1) //init int health, int team
+			Goto Super::Spawn
+	}
+}
