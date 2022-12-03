@@ -6,7 +6,7 @@ addplayerclass Player
 weaponsection AOW2
 setslot 0 RemoverGun RepairGun HealGun BombSquadGun
 setslot 1 Unarmed EagerBeaver FragGrenade Flashbang RemoteC4 Knife "Lightsaber"
-setslot 2 Handgun Rifle SniperRifleWeak SniperRifle BloodRevolver advancedsniperrifle
+setslot 2 Handgun "StealthPistol" Rifle SniperRifleWeak SniperRifle "StealthSniperRifle" BloodRevolver advancedsniperrifle
 setslot 3 Boomstick DoubleShotgun AutoShotgun "Quad Shotgun"
 setslot 4 SubMachineGun MachineGun GatlingGun JumpjetGatlingGun "Nail-Machine Gun"
 setslot 5 GrenadeLauncher MissileLauncher ArtilleryCannon MortarLauncher
@@ -16,7 +16,7 @@ setslot 8 Flamer CombustionAutorifleWeak CombustionAutorifle ChemicalSprayer Tib
 
 // =============================================================================
 // Key section
-addkeysection "All Out War 2" AOW2Keybinds
+addkeysection "All Out War 2.3" AOW2Keybinds
 addmenukey "Donation: Open/close menu" donationmenu
 addmenukey "Donation: Change name" donationname
 addmenukey "Donation: Donate $100" donationgive
@@ -29,10 +29,14 @@ addmenukey "Open preferences" aow_preferences
 addmenukey "Use Frag Grenade" usefraggrenade
 addmenukey "Use Flashbang" useflashbang
 addmenukey "Remote C4 Detonator" usedetonator
+addmenukey "Melee Attack" meleeattack
+addmenukey "Reload Weapon" reloadweapon
+addmenukey "Eject Mech" ejectmech
 
 defaultbind g usefraggrenade
 defaultbind f useflashbang
-defaultbind r usedetonator
+defaultbind q meleeattack
+defaultbind r reloadweapon
 
 // =============================================================================
 // ALIAS CCMDS
@@ -109,16 +113,7 @@ alias a_notarget "puke 945 15"
 alias a_exit "puke 945 16"
 alias a_health "puke 945 17 %1"
 alias a_fly "puke 945 18"
-
-// =============================================================================
-// Nasty dogs
-addkeysection "All Out War 2: Nasty Dogs" NastyDogsKeybinds
-addmenukey "Melee Attack" meleeattack
-addmenukey "Reload Weapon" reloadweapon
-addmenukey "Eject Mech" ejectmech
-defaultbind q meleeattack
-defaultbind r reloadweapon
-ALIAS meleeattack "puke 828 3"
-ALIAS reloadweapon "Pukename reloadweapon"
-ALIAS ejectmech "use MechEjectButton"
+alias meleeattack "puke 828 3"
+alias reloadweapon "Pukename reloadweapon"
+alias ejectmech "use MechEjectButton"
 

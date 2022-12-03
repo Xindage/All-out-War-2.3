@@ -114,8 +114,23 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 	
 	// Jetpack fuel bar
 	InInventory Jetpack {
-		DrawImage "fuelicon", -65, -57;
+		DrawImage "fuelicon", -60, -48, CenterBottom, 0, 16;
 		DrawBar "progbr1o", "progbar2", JetpackFuel, horizontal, -50, -60;
+	}
+	
+	// Stealth charge bar
+	InInventory IsStealth
+	{
+        InInventory not Jetpack, 1
+		{ 
+		    DrawImage "stlticon", -60, -50, CenterBottom, 0, 16;
+		    DrawBar "progbr1b", "progbar2", StealthCharge, horizontal, -50, -60;
+		}
+        InInventory Jetpack, 1
+		{ 
+		    DrawImage "stlticon", -60, -65, CenterBottom, 0, 16;
+		    DrawBar "progbr1b", "progbar2", StealthCharge, horizontal, -50, -75;
+		}
 	}
 
 	// Frag Grenades
@@ -173,52 +188,52 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 	// Iron Curtain (30)
 	// Time gun effects
 	InInventory PowerBerserk {
-		DrawImage "prh_back", -45, -80;
-		DrawImage "prh_pstr", -45, -80;
-		DrawBar "prh_barr", "prh_barx", PowerupTime BerserkSwitch, vertical, -43, -78;
+		DrawImage "prh_back", -45, -100;
+		DrawImage "prh_pstr", -45, -100;
+		DrawBar "prh_barr", "prh_barx", PowerupTime BerserkSwitch, vertical, -43, -98;
 	}
 	
 	InInventory PowerInvisibility {
 		InInventory Not PowerBerserk {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_blur", -45, -80;
-			DrawBar "prh_barg", "prh_barx", PowerupTime Blursphere, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_blur", -45, -100;
+			DrawBar "prh_barg", "prh_barx", PowerupTime Blursphere, vertical, -43, -98;
 		}
 	}
 	
 	InInventory PowerSpeedUpgrade {
 		InInventory Not PowerInvisibility || PowerBerserk {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_sped", -45, -80;
-			DrawBar "prh_barg", "prh_barx", PowerupTime SpeedUpgrade, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_sped", -45, -100;
+			DrawBar "prh_barg", "prh_barx", PowerupTime SpeedUpgrade, vertical, -43, -98;
 		}
 	}
 	
 	InInventory PowerFatigue {
 		InInventory Not PowerInvisibility || PowerBerserk {
 		InInventory Not PowerSpeedUpgrade {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_fati", -45, -80;
-			DrawBar "prh_barr", "prh_barx", PowerupTime SpeedDowngrade, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_fati", -45, -100;
+			DrawBar "prh_barr", "prh_barx", PowerupTime SpeedDowngrade, vertical, -43, -98;
 		}}
 	}
 	
 	InInventory PowerThermalCloak {
 		InInventory Not PowerInvisibility || PowerBerserk {
 		InInventory Not PowerSpeedUpgrade || PowerFatigue {
-			DrawImage "prh_back", -45, -80;
+			DrawImage "prh_back", -45, -100;
 			
 			// Draw the enemy team's obelisk as the icon, since that's what is
 			// getting silenced out.
 			InInventory IsBlue {
-				DrawImage "prh_thrr", -45, -80;
+				DrawImage "prh_thrr", -45, -100;
 			}
 			
 			InInventory Not IsBlue {
-				DrawImage "prh_thrb", -45, -80;
+				DrawImage "prh_thrb", -45, -100;
 			}
 			
-			DrawBar "prh_barg", "prh_barx", PowerupTime ThermalCloak, vertical, -43, -78;
+			DrawBar "prh_barg", "prh_barx", PowerupTime ThermalCloak, vertical, -43, -98;
 		}}
 	}
 	
@@ -226,9 +241,9 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 		InInventory Not PowerInvisibility || PowerBerserk {
 		InInventory Not PowerSpeedUpgrade || PowerFatigue {
 		InInventory Not PowerThermalCloak {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_invu", -45, -80;
-			DrawBar "prh_barw", "prh_barx", PowerupTime IronCurtain, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_invu", -45, -100;
+			DrawBar "prh_barw", "prh_barx", PowerupTime IronCurtain, vertical, -43, -98;
 		}}}
 	}
 	
@@ -236,9 +251,9 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 		InInventory Not PowerInvisibility || PowerBerserk {
 		InInventory Not PowerSpeedUpgrade || PowerFatigue {
 		InInventory Not PowerThermalCloak || PowerIronCurtain {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_timf", -45, -80;
-			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunFloat, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_timf", -45, -100;
+			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunFloat, vertical, -43, -98;
 		}}}
 	}
 	
@@ -247,9 +262,9 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 		InInventory Not PowerSpeedUpgrade || PowerFatigue {
 		InInventory Not PowerThermalCloak || PowerTimeGunFloat {
 		InInventory Not PowerIronCurtain {
-			DrawImage "prh_back", -45, -80;
-			DrawImage "prh_tims", -45, -80;
-			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunBoost, vertical, -43, -78;
+			DrawImage "prh_back", -45, -100;
+			DrawImage "prh_tims", -45, -100;
+			DrawBar "prh_baro", "prh_barx", PowerupTime TimeGunBoost, vertical, -43, -98;
 		}}}}
 	}
 	

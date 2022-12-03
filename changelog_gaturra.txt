@@ -52,6 +52,14 @@ Version r221127 (2022/11/27)
 						  - Fixed: desync on missile launcher homing missiles
 						  - Fixed: missile launcher crosshair visibility
 						  - Fixed: players getting 30k credits randomly
+Version r221203 (2022/12/03)
+                          - Handgun is back
+                          - Added stealth assassin class
+                          - Selfheal gets upgraded at officer and general ranks
+                          - Blood revolver is now automatically removed when no ammo left
+						  - Stealth weapons no longer needs to be selected in order to recharge stealth ammo
+						  - Stealth ammo is shown on hud instead as secondary ammo
+						  - Some rewards by rank have changed, submachinegun at 500 exp (SERGEANT), fast selfheal at 1500 exp (OFFICER) and repairgun at 4000 exp (LT COLONEL)
 
 ===========================================================================================================================================================
 * What is included *

@@ -473,25 +473,26 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine CLASS_Sniper					17	// 750
 #libdefine CLASS_Commando				18	// 1000
 // Power
-#libdefine CLASS_LaserRifleman			19	// 300
+#libdefine CLASS_LazerRifleman			19	// 300
 #libdefine CLASS_ShockTrooper			20	// 600
 #libdefine CLASS_PlasmaGunner			21	// 600
 #libdefine CLASS_LaserChaingunner		22	// 600
 #libdefine CLASS_KarasawaSoldier		23	// 800
 #libdefine CLASS_ChronoArcher			24	// 1000
+#libdefine CLASS_StealthAssassin		25	// 1200
 // Support
-#libdefine CLASS_Engineer				25	// Free
-#libdefine CLASS_Technician				26	// 200
-#libdefine CLASS_DemoExpert				27	// 600
-#libdefine CLASS_UtilityGuy				28	// 650
-#libdefine CLASS_SuicideBomber			29	// 1500
-#libdefine CLASS_TimeCop				30	// 2000
-#libdefine CLASS_FieldMedic				31	// 300
-#libdefine CLASS_Harvester				32	// Free
-#libdefine CLASS_AdvHarvester			33	// 450
+#libdefine CLASS_Engineer				26	// Free
+#libdefine CLASS_Technician				27	// 200
+#libdefine CLASS_DemoExpert				28	// 600
+#libdefine CLASS_UtilityGuy				29	// 650
+#libdefine CLASS_SuicideBomber			30	// 1500
+#libdefine CLASS_TimeCop				31	// 2000
+#libdefine CLASS_FieldMedic				32	// 300
+#libdefine CLASS_Harvester				33	// Free
+#libdefine CLASS_AdvHarvester			34	// 450
 
 // ----
-#libdefine NUMCLASSES					34 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
+#libdefine NUMCLASSES					35 // [JD] If you add anymore classes, be sure to update 'ClassID' as well
 
 // Item identifiers
 #define ITEM_None				0
@@ -544,8 +545,10 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define ITEM_Karasawa			44
 #define ITEM_NailMG				45
 #define ITEM_BFG2704			46
+#define ITEM_StealthSniper		47
+#define ITEM_StealthPistol		48
 // -- Total of items
-#define MAX_ITEMS				47 // Amount of items in the above list
+#define MAX_ITEMS				49 // Amount of items in the above list
 #define ITEM_maxGrenades		4
 #define ITEM_maxFlashBangs		4
 #define ITEM_maxC4 				4

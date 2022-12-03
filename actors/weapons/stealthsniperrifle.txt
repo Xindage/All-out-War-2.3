@@ -1,0 +1,390 @@
+// Sniper rifle
+actor StealthSniperRifle : AOWWeapon {
+    Weapon.BobSpeed 1.75
+    Weapon.BobRangeX 0.2
+    Weapon.BobRangeY 0.4
+    Weapon.BobStyle Alpha
+	obituary "$OB_SNIPER" // "%o was picked off by %k's Sniper Rifle."
+	weapon.selectionorder 3
+	weapon.kickback 80
+	weapon.Ammotype "StealthSniperBolt"
+	Weapon.AmmoType2 "SniperAmmo"
+	weapon.ammouse 1
+	Weapon.AmmoGive2 5
+	DropItem "SniperRifleWeak"
+	inventory.pickupmessage "You got the sniper rifle!"
+	Weapon.PreferredSkin "MarineSniper"
+	Weapon.UpSound "weapons/up/sniper"
+	Tag "Stealth Sniper Rifle"
+	decal "BulletChipBig"
+	+WEAPON.AMMO_OPTIONAL
+	states {
+    Select:
+	    TNT1 A 0 A_TakeInventory ("StealthFire", 1)
+		SSNI A 1 offset (-90,100)
+		SSNI A 1 offset (-80,89)
+		SSNI A 1 offset (-70,79)
+		SSNI A 1 offset (-60,70)
+		SSNI A 1 offset (-50,62)
+		SSNI A 1 offset (-40,55)
+		SSNI A 1 offset (-30,49)
+		SSNI A 1 offset (-20,44)
+		SSNI A 1 offset (-15,40)
+		SSNI A 1 offset (-10,37)
+		SSNI A 1 offset (-5,34)
+		SSNI A 1 offset (0,0)
+		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
+		goto ready
+	Deselect:
+		SSNI AA 0 A_JumpIfInventory ("IsStealthZoomed", 1, "AltFireZoomOff")
+		TNT1 A 0 A_TakeInventory ("StealthFire", 1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+	    TNT1 A 0 A_TakeInventory("ActionFragGrenade",1)	
+        TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
+        TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
+        TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
+		SSNI A 1 offset (-4,34)
+		SSNI A 1 offset (-8,40)
+		SSNI A 1 offset (-16,49)
+		SSNI A 1 offset (-24,62)
+		SSNI A 1 offset (-32,79)
+		SSNI A 1 offset (-40,100)
+		TNT1 A 0 offset (-1, 33)
+		TNT1 A 0 A_Lower
+		wait
+	Ready:
+		SSNI AA 0 A_JumpIfInventory ("IsStealthZoomed", 1, "ReadyZoomed")
+		TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
+		TNT1 A 0 A_JumpIfInventory("StealthMode",1,"Ready.Stealth")
+	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 1 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("StealthFire", 1)
+		loop
+	ReadyZoomed:
+		TNT1 A 0 A_JumpIfInventory("StealthMode",1,"ReadyZoomed.Stealth")
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 1 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("StealthFire", 1)
+		loop
+	Ready.Stealth:
+		TNT1 A 0 A_JumpIfInventory("StealthCharge", 1, 1)
+		goto AltFireOff
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
+		SSNI A 5 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("StealthCharge",1)
+		goto Ready
+	ReadyZoomed.Stealth:
+		TNT1 A 0 A_JumpIfInventory("StealthCharge", 1, 1)
+		goto AltFireOff
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireZoomOff")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"ReloadZoomed")
+		TNT1 A 5 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("StealthCharge",1)
+		goto ReadyZoomed
+	Fire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory("StealthMode", 1, "Fire.Stealth")
+	FireGo:
+	    TNT1 A 0 A_JumpIfNoAmmo("Empty")
+        TNT1 A 0 A_JumpIfInventory("StealthSniperBolt",1,1)
+        Goto Empty
+		TNT1 A 0 A_JumpIfInventory ("IsStealthZoomed", 1, "FireZoomed")
+		TNT1 A 0 A_GunFlash
+		TNT1 A 0 A_PlayWeaponSound("StealthSniper/fire")
+		TNT1 A 0 A_FireCustomMissile("SniperProjectile",random(-4,4),1,8,8,0,random(-4,4))
+		SSNI B 2 BRIGHT
+		SSNI C 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SSNI DE 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		goto Reload
+	Fire.Stealth:
+		TNT1 A 0 A_JumpIfInventory ("StealthMode", 3, "FireGo")
+		TNT1 A 0 A_GiveInventory ("StealthFire", 1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		goto FireGo
+	Restealth:
+		TNT1 A 0 A_JumpIfInventory ("StealthFire", 1, 2)
+		goto Ready
+		TNT1 A 0 A_TakeInventory ("StealthFire", 1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		SSNI AAAAAAAAAAAAAAA 1 A_WeaponReady
+		goto Ready
+	RestealthZoomed:
+		TNT1 A 0 A_JumpIfInventory ("StealthFire", 1, 2)
+		goto Ready
+		TNT1 A 0 A_TakeInventory ("StealthFire", 1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		TNT1 A 15 A_WeaponReady
+		goto Ready
+	AltRejected:
+		SSNI A 16 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+     Empty:
+        TNT1 A 0 A_JumpIfInventory("IsStealthZoomed",1,"Empty2")
+        SSNI A 10 A_PlaySound("weapons/empty1")
+	 Reload:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+        TNT1 A 0 A_JumpIfInventory("StealthSniperBolt",1,2)
+        TNT1 A 0 A_JumpIfInventory("SniperAmmo",1,2)
+	    TNT1 A 0
+	    Goto Restealth
+		SSNI A 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SSNR ABCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		SSNR F 5 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SSNR FGHI 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SSNR J 5 A_PlaySound ("rc50/boltopen")
+		SSNR KL 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+	    TNT1 A 0 A_PlaySound ("rc50/boltclose")
+		SSNR M 5 A_SpawnItemEx("RifleShellCasing",3,15,30,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		SSNR NOPQR 2
+		TNT1 A 0 A_TakeInventory("SniperAmmo",1)
+	    TNT1 A 0 A_GiveInventory("StealthSniperBolt",1)
+		SSNR A 1 A_ReFire
+		goto Restealth
+	FireZoomed:
+		TNT1 A 0 A_ZoomFactor (5.8)
+		TNT1 A 0 A_PlayWeaponSound("StealthSniper/fire")
+		TNT1 A 2 Bright A_FireCustomMissile("SniperProjectile",0,1,0,8,0,0)
+		TNT1 A 0 A_ZoomFactor (6.00)
+		TNT1 A 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		TNT1 AA 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		goto ReloadZoomed
+    Empty2:
+        TNT1 A 10 A_PlaySound("weapons/empty1")
+	ReloadZoomed:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+        TNT1 A 0 A_JumpIfInventory("StealthSniperBolt",1,2)
+        TNT1 A 0 A_JumpIfInventory("SniperAmmo",1,2)
+	    TNT1 A 0
+	    Goto RestealthZoomed
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		TNT1 AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 5 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		TNT1 AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		TNT1 A 5 offset (0, 40) A_PlaySound ("rc50/boltopen")
+		TNT1 A 4 offset (0, 35) A_SpawnItemEx("RifleShellCasing",3,15,30,random(-2,-4),random(2,3),random(0,-1),random(45,60),128)
+		TNT1 A 0 A_PlaySound ("rc50/boltclose")
+		TNT1 A 10 offset (0, 33)
+		TNT1 A 5
+		TNT1 A 0 A_TakeInventory("SniperAmmo",1)
+	    TNT1 A 0 A_GiveInventory("StealthSniperBolt",1)
+		TNT1 A 1 A_ReFire
+		goto RestealthZoomed
+	AltFire:
+	    SSNI A 8 A_JumpIfInventory ("IsStealthZoomed", 1, "AltFire2")
+		TNT1 A 0 A_ReFire ("AltFireZoomOn")
+		TNT1 A 0 A_JumpIfInventory ("StealthCharge", 1, 1)
+		goto AltRejected
+		SSNI A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff")
+		SSNI A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		goto Ready
+	AltFireOff:
+		SSNI A 5 A_JumpIfInventory ("StealthMode", 3, "AltRejected")
+		SSNI A 5
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		SSNI A 40 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltFire2:
+	    TNT1 A 8
+		TNT1 A 0 A_ReFire ("AltFireZoomOn") //hmmm
+		TNT1 A 0 A_JumpIfInventory ("StealthCharge", 1, 1)
+		goto AltRejected
+		TNT1 A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff2")
+		TNT1 A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
+		goto Ready
+	AltFireOff2:
+		TNT1 A 5 A_JumpIfInventory ("StealthMode", 3, "AltRejected")
+		TNT1 A 5
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		TNT1 A 40 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	AltFireZoomOn:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+		SSNI A 1 A_JumpIfInventory ("IsStealthZoomed", 1, "AltFireZoomOff")
+		TNT1 A 0 ACS_ExecuteAlways (916, 0, 0)
+		TNT1 A 0 A_GiveInventory ("IsStealthZoomed", 1)
+		TNT1 A 0 A_PlaySound ("rc50/zoomin")
+		SSNI A 7
+		TNT1 A 10 A_ZoomFactor (6.0)
+		goto Ready
+	AltFireZoomOff:
+		TNT1 A 0 A_TakeInventory ("IsStealthZoomed", 1)
+		TNT1 A 0 A_PlaySound ("rc50/zoomin")
+		TNT1 A 3 A_ZoomFactor (1.0)
+		TNT1 A 7 ACS_ExecuteAlways (916, 0, 0)
+		SSNI A 10
+		goto Ready
+	AltFireOff:
+		SSNI A 5 A_JumpIfInventory ("StealthMode", 3, "AltRejected")
+		SSNI A 5
+		TNT1 A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_OFF)
+		SSNI A 40 A_WeaponReady (WRF_NOSECONDARY)
+		goto Ready
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItem("SniperRifleWeak")
+		stop
+	Flash:
+		TNT1 A 2 A_Light1
+		TNT1 A 2 A_Light2
+		TNT1 A 0 A_Light0
+		stop
+	}
+}
+
+ACTOR SniperProjectile : FastProjectile
+{
+  Height 2
+  Radius 2
+  Speed 300
+  damage (105)
+  Scale 0.1
+  RenderStyle Add
+  Projectile
+  Missileheight 8
+  +FORCEXYBILLBOARD
+  +BLOODSPLATTER
+  Missiletype "SniperProjTrail"
+  Damagetype "Rifle"
+  Decal "Bulletchip"
+  States
+  {
+  Spawn:
+	TNT1 A 0
+	CLBA A 1 BRIGHT
+	Loop
+  Death:
+  Crash:
+	TNT1 AAA 0 A_StopSound(CHAN_BODY)
+	TNT1 A 0 A_PlaySound("StealthSniper/WallHit",CHAN_BODY)
+	TNT1 A 0
+	TNT1 AAAAAAAA 0 A_SpawnItemEx("SparkPuff", 0, 0, 0, Random(-8, 8), Random(-8, 8), Random(-8, 8))
+	TNT1 AA 0 A_SpawnItemEx("SparkSmoke", 0, 0, 0, Random(-1, 1), Random(-1, 1), Random(-1, 1))
+	TNT1 A 0 A_PlaySound("bullet/ricochet")
+	CLBA AAAAA 1 BRIGHT A_Fadeout(0.2) 
+	Stop
+  XDeath:
+	TNT1 AAA 0 A_StopSound(CHAN_BODY)
+	TNT1 A 1 A_PlaySound("StealthSniper/FleshHit",CHAN_BODY)
+	Stop
+	}
+}
+
+ACTOR SniperProjTrail
+{
+  +NOINTERACTION
+  +NOTIMEFREEZE
+  -NOGRAVITY
+  Alpha 0.3
+  Decal "-"
+  Renderstyle Add
+  Scale 0.1
+  Missileheight 8
+  States
+  {
+  Spawn:
+	CLBA AAAAAAAAAA 1 A_Fadeout(0.1)
+	Stop
+	}
+}
+
+actor IsStealthZoomed : Inventory {}
+
+actor StealthSniperBolt : Ammo {
+	inventory.amount 0
+	inventory.maxamount 1
+	ammo.backpackamount 0
+	ammo.backpackmaxamount 1
+    +IGNORESKILL
+}

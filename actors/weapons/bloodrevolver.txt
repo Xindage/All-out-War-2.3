@@ -40,7 +40,8 @@ actor BloodRevolver : AOWWeapon {
         TNT1 A 0 A_TakeInventory("ActionFlashbang",1)
         TNT1 A 0 A_TakeInventory("ActionRemoteC4",1)	
         TNT1 A 0 A_TakeInventory("ActionMeleeAttack",1)
-		TNT1 A 0 A_TakeInventory("ActionReload",1)	
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
+		TNT1 A 0 A_JumpIfNoAmmo ("DeselectNoAmmo")
 		REVO A 1 offset (4,34)
 		REVO A 1 offset (8,40)
 		REVO A 1 offset (16,49)
@@ -50,6 +51,16 @@ actor BloodRevolver : AOWWeapon {
 		TNT1 A 0 offset (1, 33)
 		TNT1 A 0 A_Lower
 		wait
+	DeselectNoAmmo:
+		REVO A 1 offset (4,34)
+		REVO A 1 offset (8,40)
+		REVO A 1 offset (16,49)
+		REVO A 1 offset (24,62)
+		REVO A 1 offset (32,79)
+		REVO A 1 offset (40,100)
+		TNT1 A 0 offset (1, 33)
+		TNT1 A 0 A_TakeInventory ("BloodRevolver")
+		Stop
 	Ready:
 	    TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
 		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")

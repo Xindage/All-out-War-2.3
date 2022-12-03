@@ -1021,8 +1021,8 @@ weapons/pistolr1 DSPSREL1
 weapons/pistolr2 DSPSREL2
 
 //Nasty Dogs - Silenced pistol
-pistol/fire			 dspistol
-$rolloff pistol/fire 100 600
+weapons/spistolfire	 dspistol
+$rolloff weapons/spistolfire 100 600
 
 // Sniper rifle
 rc50/fire			rc50fire
@@ -1030,6 +1030,23 @@ rc50/boltopen		rc50blto
 rc50/boltclose		rc50bltc
 rc50/zoomin			rc50ZmIn
 $rolloff 			rc50/fire	500 3000
+
+// Nasty Dogs - Stealth sniper
+StealthSniper/fire SNIPFIRE
+$rolloff StealthSniper/fire 1200 3000
+$limit StealthSniper/fire 0
+SNPRFHT1					SNPRFHT1
+SNPRFHT2					SNPRFHT2
+SNPRFHT3					SNPRFHT3
+$Random StealthSniper/FleshHit { SNPRFHT1 SNPRFHT2 SNPRFHT3 }
+$Volume StealthSniper/FleshHit 0.4
+
+SNPRWHT1					SNPRWHT1
+SNPRWHT2					SNPRWHT2
+SNPRWHT3					SNPRWHT3
+SNPRWHT4					SNPRWHT4
+$Random StealthSniper/WallHit { SNPRWHT1 SNPRWHT2 SNPRWHT3 SNPRWHT4 }
+$Volume StealthSniper/WallHit 0.4
 
 //Quad Barrel Shotgun
 quadshotgun/fire		DSQSFIRE

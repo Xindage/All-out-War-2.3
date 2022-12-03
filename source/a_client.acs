@@ -454,8 +454,15 @@ script SC_CL_SNIPERZOOM (void) CLIENTSIDE {
 	// Fade out
 	if (CheckInventory ("IsZoomed"))
 		FadeTo (255, 0, 0, 0.2, 0.3);
-	else
+		
+	// Stealth Fade out
+	if (CheckInventory ("IsStealthZoomed")) {
+	    FadeTo (0, 255, 0, 0.2, 0.3);
+	}
+
+	if ((!CheckInventory ("IsStealthZoomed")) && (!CheckInventory ("IsZoomed"))) {
 		FadeTo (0, 0, 0, 0, 0.3);
+	}
 }
 
 // =============================================================================
