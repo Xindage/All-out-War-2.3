@@ -51,8 +51,8 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Rifle", "Rifle", "RifleAmmo", "RifleGrenadeAmmo"},
 	{"Gauss Rifle", "GaussRifle",  "GaussRifleAmmo", ""},
 	{"Grenade Launcher", "GrenadeLauncher", "GrenadeAmmo", ""},
-	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", "StealthCharge"},
-	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", "StealthCharge"},
+	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", ""},
+	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", ""},
 	{"Time Gun", "TimeGun", "TimeGunAmmo", ""},
 	{"Artillery Cannon", "ArtilleryCannon", "ArtilleryShellAmmo", ""},
 	{"Laser Chaingun", "LaserChaingun", "LaserChaingunAmmo", ""},
@@ -71,7 +71,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Shock Rifle", "ShockRifle", "GeneporiumCharge", ""},
 	{"Sniper Rifle", "SniperRifle", "SniperBolt", "SniperAmmo"},
 	{"Plasma Rifle", "PlasmaGun", "PlasmaRifleAmmo", ""},
-	{"Stealth Knife", "Knife", "StealthCharge", ""},
+	{"Stealth Knife", "Knife", "", ""},
 	{"Chainsaw", "EagerBeaver", "", ""},
 	{"Bomb Pack", "BombPack", "", ""},
 	{"Remote C4", "RemoteC4", "RemoteC4Ammo", ""},
@@ -89,9 +89,10 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Chrono Bow", "ChronoBow", "ChronoBolt", ""},
 	{"Karasawa", "Karasawa", "KarasawaAmmo", ""},
 	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},
-	{"BFG 2704", "BFG 2704", "", ""},/*
-	{"Advanced Sniper Rifle", "AdvancedSniperRifle", "RifleAmmo", ""},
-	
+	{"BFG 2704", "BFG 2704", "", ""},
+	{"Stealth Sniper Rifle", "StealthSniperRifle", "StealthSniperBolt", "SniperAmmo"},
+	{"Stealth Pistol", "StealthPistol", "StealthPistolMag", "NewClipAmmo"},
+/*	
 	{"Automatic Shotgun", "AutoShotgun", "autoshellammo", "shotgunammo"},
 	{"Mortar Launcher", "MortarLauncher", "MortarAmmo", ""},*/
 };
@@ -109,8 +110,8 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 30, 4, 25}, //Rifle
 	{1, 50, 0, 125}, //guass
 	{1, 40, 0, 125}, //grenade rifle
-	{1, 200, 100, 25}, //stealth rifle
-	{1, 200, 100, 25}, //laser rifle
+	{1, 200, 0, 25}, //stealth rifle
+	{1, 200, 0, 25}, //laser rifle
 	{1, 175, 0, 400}, //time gun
 	{1, 40, 0, 125}, //artillery canon
 	{1, 400, 0, 150}, //laser chaingun
@@ -148,9 +149,10 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 40, 0, 125}, // karasawa. Resell value was $125
 	{1, 250, 4, 125}, // Nail MachineGun
 	{1, 0, 0, 500}, // BFG 20704
-	/*{1, 40, 0, 0}, //adv sniper rifle
+	{1, 1, 40, 125}, //stealth sniper rifle
+	{1, 16, 400, 10}, //Stealth pistol
 	
-	{1, 50, 8, 100}, //auto shottie
+	/*{1, 50, 8, 100}, //auto shottie
 	{1, 50, 50, 70},*/ //mortar launcher
 };
 
@@ -180,7 +182,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
  *
  *	row 2:
  *	- armor grade (-1 - 5)
- *	- armor modifier (ARMOD_NOCHANGE, ARMOD_EXPLO, ARMOD_ENERGY, ARMOD_CHEM, ARMOD_FIRE)
+ *	- armor modifier (ARMOD_NOCHANGE, ARMOD_BULLET, ARMOD_EXPLO, ARMOD_ENERGY, ARMOD_CHEM, ARMOD_FIRE)
  *
  *	row 3:
  *	- frag grenades & flashbangs
@@ -339,6 +341,11 @@ function void InitClasses (void) {
 		2, ARMOD_NOCHANGE,
 		4, 2, CF_Warning|CF_CantPilot,
 		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
+		
+	AddClass (CLASS_StealthAssassin, "Stealth Assassin", 1200, 0.9, DEP_CENTRE,
+		-1, ARMOD_BULLETPROOF,
+		2, 2, (CF_NoPistol | CF_Warning | CF_IsSniper | CF_IsStealth),
+		ITEM_STEALTHSNIPER, ITEM_STEALTHPISTOL, 0, 0, 0, 0);
 
 	// Support
 	AddClass (CLASS_Engineer, "Engineer", 0, 0.8, DEP_NONE,
@@ -385,13 +392,8 @@ function void InitClasses (void) {
 		1, ARMOD_CHEM,
 		2, 1, (CF_IsHarvester | CF_CantPilot | CF_Support),
 		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
-
-	/*AddClass (CLASS_AdvancedSniper, "Advanced Sniper", 1000, 0.55, DEP_CENTRE,
-		-1, ARMOD_NOCHANGE,
-		2, 1, CF_IsSniper,
-		ITEM_ADVANCEDSNIPER, 0, 0, 0, 0, 0);
 		
-	AddClass (CLASS_AutoShotgunner, "Auto Shotgunner", 650, 0.75, DEP_BARRACKS,
+	/*AddClass (CLASS_AutoShotgunner, "Auto Shotgunner", 650, 0.75, DEP_BARRACKS,
 		1, ARMOD_BULLET,
 		2, 1, 0,
 		ITEM_AutoShotgunner, 0, 0, 0, 0, 0);

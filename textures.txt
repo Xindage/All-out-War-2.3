@@ -699,10 +699,16 @@ Graphic "JETICON", 25, 29
 
 Graphic "FUELICON", 19, 28
 {
-	XScale 2.200
-	YScale 2.200
-	Offset 8, 20
+	XScale 1
+	YScale 1
 	Patch "FUELICON", 0, 0
+}
+
+Graphic "STLTICON", 29, 58
+{
+	XScale 1
+	YScale 1
+	Patch "STLTICON", 0, 0
 }
 
 Graphic "ODEKICON", 24, 21
@@ -1096,6 +1102,13 @@ Graphic "PROGBAR1", 128, 16
 	XScale 3.000
 	YScale 3.000
 	Patch "PROGBAR1", 0, 0
+}
+
+Graphic "PROGBR1B", 128, 16
+{
+	XScale 3.000
+	YScale 3.000
+	Patch "PROGBR1B", 0, 0
 }
 
 Graphic "PROGBR1O", 128, 16

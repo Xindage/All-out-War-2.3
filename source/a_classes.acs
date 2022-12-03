@@ -211,10 +211,12 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("ArtilleryCharge", 1);
 		GiveInventory ("MachinegunMag", 45);
 		GiveInventory ("MissileMag", 1);
-		GiveInventory ("PistolMagazine", 60);
+		GiveInventory ("PistolMagazine", 16);
+		GiveInventory ("StealthPistolMag", 16);
 		GiveInventory ("SMGMag", 60);
 		GiveInventory ("SSGShell", 2);
 		GiveInventory ("SniperBolt", 1);
+		GiveInventory ("StealthSniperBolt", 1);
 		SetWeapon ("Unarmed");
 		SetAmmoCapacity ("TimedC4Ammo", 1);
 		SetAmmoCapacity ("FragGrenadeAmmo", 1);
@@ -309,8 +311,8 @@ function int SetClass (int id, int scflags) {
 	SetArmorGrade (Classes_int[id][CK_ARMOR], Classes_int[id][CK_ARMOD]);
 	
 	// Give a handgun unless undesired
-	/*if (!(cflags & CF_NoPistol))
-		GiveItem (ITEM_HANDGUN, false);*/
+	if (!(cflags & CF_NoPistol))
+		GiveItem (ITEM_HANDGUN, false);
 	
 	// C4
 	int c4 = Classes_int[id][CK_C4] + checkInventory("TimedC4Count");
@@ -410,6 +412,7 @@ function int SetClass (int id, int scflags) {
 		SetActorProperty (0, APROP_DeathSound, "stealth/death");
 		ActivatorSound("misc/stealth",255);
 		GiveInventory ("IsStealth", 1);
+		GiveInventory ("StealthCharge", 100);
 		}
 
 	// Tag the demolitoin expert so it can disarm remote c4

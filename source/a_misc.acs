@@ -64,13 +64,15 @@ script SC_WEAPONCHECK OPEN {
 		// stealth weapons, aka laser rifle and knife.
 		if (CheckInventory ("StealthMode") == 2 &&
 			!CheckWeapon ("StealthLaserRifle") &&
+			!CheckWeapon ("StealthSniperRifle") &&
+			!CheckWeapon ("StealthPistol") &&
 			!CheckWeapon ("Knife"))
 		{
 			ACS_ExecuteAlways (SC_Stealth, 0, STEALTH_ForceOff);
 		}
 		
 		// [Dusk] Force the player to destealth as long as he isn't using a stealth weapon.
-		if (!CheckWeapon ("StealthLaserRifle") && !CheckWeapon ("Knife"))
+		if (!CheckWeapon ("StealthLaserRifle") && !CheckWeapon ("StealthSniperRifle") && !CheckWeapon ("StealthPistol") && !CheckWeapon ("Knife"))
 			ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF);
 		
 		// [Dusk] If the player has become berserk, push his armor to stack
@@ -172,6 +174,13 @@ script SC_SelfHealHealth (void) {
 	GiveInventory("selfHealCoolDownItem", 1);
 	ACS_NamedExecuteAlways("selfHealCoolDownHandler", 0, 0, 0, 0);
 	//HealThing (SELFHEALHEALTH / 2);
+
+	// [Gaturra] with enhancedselfheal you get 50 instantly.
+	if (CheckInventory ("EnhancedSelfheal")) {
+	    SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH));
+		terminate;
+	}
+
 	// [JD] Had to rewrite this because Self Heal wouldn't work passed 100 HP.
 	SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH / 2));
 	if (GetHealth() >= GetSpawnHealth())
@@ -184,7 +193,7 @@ script SC_SelfHealHealth (void) {
     for (i = 0; i < (SELFHEALHEALTH / 2) && GetHealth() < GetSpawnHealth(); ++i) {
         //HealThing (1);
         SetActorProperty(0, APROP_HEALTH, GetHealth() + 1);
-        if (checkinventory ("EnhancedSelfHeal")) delay (35 / 2);
+        if (checkinventory ("FastSelfHeal")) delay (35 / 2);
         else delay (35);
 	}
 }
@@ -366,4 +375,16 @@ script "SC_PLASMARIFLEHEAT" (void)
 		
 		Delay(3);
 	}
+}
+
+// [Gaturra] same for stealth weapons
+Script "SC_STEALTHCHARGE" ENTER
+{
+	while (GetHealth() > 0 && CheckInventory("StealthMode") == 0)
+		{
+		GiveInventory("StealthCharge",1);
+		Delay(35);
+		}
+	Delay(5);
+	Restart;
 }

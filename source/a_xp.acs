@@ -178,7 +178,7 @@ script 91 (void) {
 			terminate;
 		
 		if (rank >= RANK_SERGEANT)
-			GiveInventory ("Handgun", 1);
+			GiveInventory ("SubMachineGun", 1);
 		
 		if (rank >= RANK_MASTERSGT && GetAmmoCapacity ("FragGrenadeAmmo") < 2) {
 			SetFragGrenades (2);
@@ -187,32 +187,28 @@ script 91 (void) {
 		}
 
 		if (rank >= RANK_OFFICER)
-			GiveInventory ("SubMachineGun", 1);
+			GiveInventory ("FastSelfHeal", 1);
 		
 		if (rank >= RANK_CAPTAIN) {
 			GiveInventory ("EagerBeaver", 1);
 			TakeInventory ("Unarmed", 1);
 		}
 		
-		if (rank >= RANK_MAJOR && GetAmmoCapacity ("FlashbangAmmo") < 2)
-		{
+		if (rank >= RANK_MAJOR && GetAmmoCapacity ("FlashbangAmmo") < 2) {
 			SetFlashbangs (2);
-		}
-
-		if (rank >= RANK_LTCOLONEL)
-			GiveInventory ("FastSelfHeal", 1);
-		
-		if (rank >= RANK_COLONEL && GetAmmoCapacity ("FlashbangAmmo") < 3)
-		{
+		} else if (rank >= RANK_COLONEL && GetAmmoCapacity ("FlashbangAmmo") < 3) {
 			SetFlashbangs (3);
 		}
 		
-		if (rank >= RANK_GENERAL) {
+		if (rank >= RANK_LTCOLONEL) {
 			if (CheckInventory("RepairGun") && !CheckInventory("RepairGunUpgrade"))
 				GiveInventory ("RepairGunUpgrade", 1);
 			else
 				GiveInventory ("RepairGun", 1);
 		}
+
+		if (rank >= RANK_GENERAL)
+			GiveInventory ("EnhancedSelfHeal", 1);
 
 		GiveInventory ("HasRankUpgrades", 1);
 	}

@@ -655,6 +655,7 @@ script 309 (int c) {
 		CheckAndRemove ("Boomstick");
 		CheckAndRemove ("DoubleShotgun");
 		CheckAndRemove ("Rifle");
+		CheckAndRemove ("StealthSniperRifle");
 		CheckAndRemove ("GaussRifle");
 		CheckAndRemove ("GrenadeLauncher");
 		CheckAndRemove ("StealthLaserRifle");
@@ -703,6 +704,9 @@ script 309 (int c) {
 		
 		if (CheckInventory ("Knife"))
 			SetWeapon ("Knife");
+			
+		if (CheckInventory ("StealthPistol"))
+			SetWeapon ("StealthPistol");
 			
 		else {
 			

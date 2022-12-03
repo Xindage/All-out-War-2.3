@@ -13,9 +13,6 @@ actor StealthLaserRifle : AOWWeapon {
 	Weapon.AmmoType "LaserRifleAmmo"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 20
-	Weapon.AmmoType2 "StealthCharge"
-	Weapon.AmmoUse2 3
-	Weapon.AmmoGive2 0
 	weapon.SlotNumber 8
 	Weapon.PreferredSkin "MarineGrenade"
 	Weapon.UpSound "weapons/up/laserrifle"
@@ -90,38 +87,7 @@ actor StealthLaserRifle : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRF A 5 A_WeaponReady
-		TNT1 A 0 A_GiveInventory("StealthCharge",1)
+		LSRF A 1 A_WeaponReady
 		TNT1 A 0 A_TakeInventory ("StealthFire", 1)
 		loop
 	Ready.Blue:
@@ -130,38 +96,7 @@ actor StealthLaserRifle : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
-		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
-		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
-		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		LSRB A 5 A_WeaponReady
-		TNT1 A 0 A_GiveInventory("StealthCharge",1)
+		LSRB A 1 A_WeaponReady
 		TNT1 A 0 A_TakeInventory ("StealthFire", 1)
 		loop
 	Ready.Stealth:
@@ -315,7 +250,8 @@ actor StealthLaserRifle : AOWWeapon {
 		TNT1 A 0 A_Print("You need a Stealth Suit!")
 		goto Ready
 	AltFire2:
-		LSRF A 0 A_JumpIfNoAmmo ("AltRejected")
+		TNT1 A 0 A_JumpIfInventory ("StealthCharge", 1, 1)
+		goto AltRejected
 		LSRF A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff")
 		LSRF A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
 		goto Ready
@@ -335,7 +271,8 @@ actor StealthLaserRifle : AOWWeapon {
 		TNT1 A 0 A_Print("You need a Stealth Suit!")
 		goto Ready
 	AltFire2.Blue:
-		LSRB A 0 A_JumpIfNoAmmo ("AltRejected.Blue")
+		TNT1 A 0 A_JumpIfInventory ("StealthCharge", 1, 1)
+		goto AltRejected.Blue
 		LSRB A 5 A_JumpIfInventory("StealthMode", 1, "AltFireOff.Blue")
 		LSRB A 50 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_ON)
 		goto Ready

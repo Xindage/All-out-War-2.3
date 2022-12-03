@@ -147,3 +147,10 @@
 
 //Nasty Dogs - Weapons
 #include "actors/weapons/Lightsaber.txt"
+
+#include "actors/weapons/stealthpistol.txt"
+#include "actors/weapons/stealthsniperrifle.txt"
+
+//Goatsex - Terminals
+#include "actors/crucial/generic_terminal.txt"
+
