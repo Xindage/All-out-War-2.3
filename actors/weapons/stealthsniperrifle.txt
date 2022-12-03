@@ -328,7 +328,7 @@ ACTOR SniperProjectile : FastProjectile
   Height 2
   Radius 2
   Speed 300
-  damage (105)
+  damage (95)
   Scale 0.1
   RenderStyle Add
   Projectile

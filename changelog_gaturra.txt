@@ -60,6 +60,9 @@ Version r221203 (2022/12/03)
 						  - Stealth weapons no longer needs to be selected in order to recharge stealth ammo
 						  - Stealth ammo is shown on hud instead as secondary ammo
 						  - Some rewards by rank have changed, submachinegun at 500 exp (SERGEANT), fast selfheal at 1500 exp (OFFICER) and repairgun at 4000 exp (LT COLONEL)
+						  - Fixed: Grenade drop on death now happen in fire, chem and energy death. (no drop in time death intentional)
+						  - Fixed: Cant eject instant juggernaut as soon you active it (must wait).
+						  - Fixed: Timecop cannot be healed while boosting to prevent exploit.
 
 ===========================================================================================================================================================
 * What is included *

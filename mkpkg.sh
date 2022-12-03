@@ -8,7 +8,7 @@ echo "Result is : $vardate"
 
 # Generate data pk3.
 # Here is compressed all visual and auditive data of the game but musics.
-zip -Ar0 OUTPUT/aow2.3_data_r$vardate.pk3 animdefs.txt colormap.dat dbigfont.lmp decaldef.txt fontdefs.txt hirestex.txt hirestex.weapons.txt keyconf.txt modeldef.txt notch.dat playpal.pal sbarinfo.txt skininfo.txt sndinfo* sndseq.txt startup.dat terrain.txt textures.iwadfix.txt textures.txt textures/* sprites/* sounds/* patches/* models/* graphics/* flats/*
+zip -Ar0 OUTPUT/aow2.3_data_r$vardate.pk3 animdefs.txt colormap.dat dbigfont.lmp decaldef.txt fontdefs.txt hirestex.txt hirestex.weapons.txt keyconf.txt modeldef.txt notch.dat playpal.pal sbarinfo.txt skininfo.txt sndinfo* sndseq.txt startup.dat terrain.txt textures.*.txt textures.txt textures/* sprites/* sounds/* patches/* models/* graphics/* flats/*
 
 # Generate code pk3.
 # Here is compressed all the actors and acs from the source into the file.
