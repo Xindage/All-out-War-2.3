@@ -997,6 +997,7 @@ script 810 (void) {
 			TID_CRATESPOT_END - TID_CRATESPOT_START);
 	
 	Thing_ChangeTID (0, i);
+	SpawnSpotForced ("CrateMapMarker", i, 0, 0);
 }
 
 // ============================================================================

@@ -105,30 +105,31 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ============================================================================
 // Thing IDs
 // TODO: move these to 1000+ range
-#define TID_BARRACKS_BLUE 101
-#define TID_BARRACKS_RED 201
-#define TID_REFINERY_BLUE 103
-#define TID_REFINERY_RED 203
-#define TID_RESCENTRE_BLUE 105
-#define TID_RESCENTRE_RED 205
-#define TID_FACTORY_BLUE 107
-#define TID_FACTORY_RED 207
-#define TID_REPAIR_BLUE 109
-#define TID_REPAIR_RED 209
-#define TID_OBELISK_BLUE 114
-#define TID_OBELISK_RED 214
-#define TID_CRATE 401
-#define TID_TIBERIUM 402
-#define TID_CRATESPOT_START 410 // 410 - 422
-#define TID_CRATESPOT_END 442
-#define TID_MINIREF_BLUE 901
-#define TID_MINIREF_RED 900
-#define TID_HEALTHREGEN_BLUE 903
-#define TID_HEALTHREGEN_RED 902
-#define TID_AMMOREGEN_BLUE 905
-#define TID_AMMOREGEN_RED 904
+#define TID_BARRACKS_BLUE 101		//1101
+#define TID_BARRACKS_RED 201		//1201
+#define TID_REFINERY_BLUE 103		//1102
+#define TID_REFINERY_RED 203		//1202
+#define TID_RESCENTRE_BLUE 105		//1103
+#define TID_RESCENTRE_RED 205		//1203
+#define TID_FACTORY_BLUE 107		//1104
+#define TID_FACTORY_RED 207			//1204
+#define TID_OBELISK_BLUE 114		//1105
+#define TID_OBELISK_RED 214			//1205
+#define TID_REPAIR_BLUE 109			//1106
+#define TID_REPAIR_RED 209			//1206
+#define TID_HEALTHREGEN_BLUE 903	//1107
+#define TID_HEALTHREGEN_RED 902		//1207
+#define TID_AMMOREGEN_BLUE 905		//1108
+#define TID_AMMOREGEN_RED 904		//1208
+#define TID_MINIREF_BLUE 901		//1109
+#define TID_MINIREF_RED 900			//1209
 
-// New TIDs
+#define TID_TIBERIUM 402			//1000
+#define TID_CRATE 1300				//1001
+#define TID_CRATESPOT_START 410		//1002
+// 410 - 442 We reall need 32 spots?
+#define TID_CRATESPOT_END 442		//1034
+
 #define TID_TELENODE_BLUE1			1500
 #define TID_TELENODE_BLUE2			1501
 #define TID_TELENODE_RED1			1502

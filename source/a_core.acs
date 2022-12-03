@@ -51,7 +51,7 @@ script SC_GAMEINIT OPEN {
 	}
 	
 	// Map markers
-	SpawnSpotForced ("CrateMapMarker", TID_CRATE, 0, 0);
+	//SpawnSpotForced ("CrateMapMarker", TID_CRATE, 0, 0);
 	SpawnSpotForced ("TiberiumMapMarker", TID_TIBERIUM, 0, 0);
 	
 	// [Dusk] It's possible that the war factory isn't present.

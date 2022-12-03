@@ -9,7 +9,6 @@ actor PowerupCrateSpot 21410 {
 	Tag "Powerup Crate Spot"
 	States {
 	Spawn:
-		TNT1 A 0
 		TNT1 A 0 A_GiveInventory ("IsCrateSpot", 1)
 		TNT1 A 0 ACS_ExecuteAlways (810, 0) // Get a TID for the spot.
 		TNT1 A -1
@@ -38,8 +37,12 @@ actor PowerupCrate : CustomInventory 21411 {
 	}
 }
 
+// Map marker for Powerup Crate.
 actor CrateMapMarker : MapMarker {
-	scale 0.3
+	//$Category Markers
+	Tag "Powerup Crate Map-Marker"
+	+CLIENTSIDEONLY
+	scale 0.4
 	states {
 	Spawn:
 		AMRK A -1
