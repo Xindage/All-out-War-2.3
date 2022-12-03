@@ -473,7 +473,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine CLASS_Sniper					17	// 750
 #libdefine CLASS_Commando				18	// 1000
 // Power
-#libdefine CLASS_LazerRifleman			19	// 300
+#libdefine CLASS_LaserRifleman			19	// 300
 #libdefine CLASS_ShockTrooper			20	// 600
 #libdefine CLASS_PlasmaGunner			21	// 600
 #libdefine CLASS_LaserChaingunner		22	// 600
