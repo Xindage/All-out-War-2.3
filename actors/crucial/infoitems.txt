@@ -27,6 +27,7 @@ actor IsInSpawnRoom : Inventory {}
 actor IsMCT : Inventory {}
 actor IsArtillerySoldier : Inventory {}
 actor IsStealth : Inventory {}
+actor IsRifleman : Inventory {}
 actor IsGunman : Inventory {}
 actor IsDoubleShotgunner : Inventory {}
 actor IsMachinegunner : Inventory {}

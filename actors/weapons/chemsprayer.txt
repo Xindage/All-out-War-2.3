@@ -117,8 +117,8 @@ actor ChemicalShot {
 	Alpha 0.9
 	Radius 8
 	Height 8
-	Speed 45 //
-	Damage (random (2,3))
+	Speed 30 //
+	Damage (random (3,5))
 	DamageType "Chemical"
 	decal "ChemScorch"
 	Scale 0.5
@@ -165,7 +165,7 @@ actor AnthraxDecay {
 	Spawn:
 		TNT1 AA 0 A_PlaySound("chem/chem")
 		TNT1 A 0 A_SpawnItemEx ("AnthraxDecayFX")
-		TNT1 AAAAAAAAAAA 15 BRIGHT A_Explode(8, 96)
+		TNT1 AAAAAAAAAAA 15 BRIGHT A_Explode(4, 128)
 		stop
 	}
 }

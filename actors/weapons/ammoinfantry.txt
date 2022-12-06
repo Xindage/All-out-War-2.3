@@ -32,9 +32,9 @@ actor RifleAmmo : Ammo {
 
 actor RifleGrenadeAmmo : Ammo {
 	inventory.amount 1
-	inventory.maxamount 4
+	inventory.maxamount 6
 	ammo.backpackamount 1
-	ammo.backpackmaxamount 4
+	ammo.backpackmaxamount 6
 }
 
 //.416 Remington Magnum; Sniper Rifle

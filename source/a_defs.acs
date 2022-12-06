@@ -107,7 +107,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 2, 50, 50}, //ssg
 	{1, 45, 400, 50}, //machine
 	{1, 400, 0, 100}, //gattling
-	{1, 30, 4, 25}, //Rifle
+	{1, 30, 6, 25}, //Rifle
 	{1, 50, 0, 125}, //guass
 	{1, 40, 0, 125}, //grenade rifle
 	{1, 200, 0, 25}, //stealth rifle
@@ -150,7 +150,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 250, 4, 125}, // Nail MachineGun
 	{1, 0, 0, 500}, // BFG 20704
 	{1, 1, 40, 125}, //stealth sniper rifle
-	{1, 16, 400, 10}, //Stealth pistol
+	{1, 12, 400, 10}, //Stealth pistol
 	
 	/*{1, 50, 8, 100}, //auto shottie
 	{1, 50, 50, 70},*/ //mortar launcher
@@ -343,7 +343,7 @@ function void InitClasses (void) {
 		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
 		
 	AddClass (CLASS_StealthAssassin, "Stealth Assassin", 1200, 0.9, DEP_CENTRE,
-		-1, ARMOD_BULLETPROOF,
+		-1, ARMOD_ENERGY,
 		2, 2, (CF_NoPistol | CF_Warning | CF_IsSniper | CF_IsStealth),
 		ITEM_STEALTHSNIPER, ITEM_STEALTHPISTOL, 0, 0, 0, 0);
 

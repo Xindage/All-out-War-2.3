@@ -8,7 +8,7 @@ actor Player : DoomPlayer {
 	player.crouchsprite "PLYC"
 	player.startitem "Unarmed", 1
 	Player.StartItem "PistolMagazine" 16
-	Player.StartItem "StealthPistolMag" 16
+	Player.StartItem "StealthPistolMag" 12
 	Player.StartItem "SSGShell" 2
 	Player.StartItem "SMGMag" 60
 	Player.StartItem "SniperBolt" 1

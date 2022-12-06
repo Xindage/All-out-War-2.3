@@ -222,7 +222,7 @@ actor ShockRifle : AOWWeapon 21068 {
 		TNT1 A 0 A_TakeInventory ("GeneporiumCharge", 50)
         TNT1 A 0 A_Playweaponsound("TSLPRJC1")
         TNT1 A 0 A_Recoil(8)
-        TNT1 A 0 A_FireCustomMissile("ShockCannonBallSmallBlue",0,1,5,3)
+        TNT1 A 0 A_FireCustomMissile("TeslaShot2",0,1,5,3)
         VOLB LMN 2 bright 
         VOLB OPQRSTU 3
         goto ready
@@ -237,7 +237,7 @@ actor ShockRifle : AOWWeapon 21068 {
 		TNT1 A 0 A_TakeInventory ("GeneporiumCharge", 50)
         TNT1 A 0 A_Playweaponsound("TSLPRJC1")
         TNT1 A 0 A_Recoil(8)
-        TNT1 A 0 A_FireCustomMissile("ShockCannonBallSmallRed",0,1,5,3)
+        TNT1 A 0 A_FireCustomMissile("TeslaShot2Red",0,1,5,3)
         VOLR LMN 2 bright 
         VOLR OPQRSTU 3
         goto ready
@@ -460,168 +460,112 @@ actor VoltageDecayClusterFX {
 	}
 }
 
-actor ShockCannonBallSmallBlue {
-	PROJECTILE
-	radius 10
-	height 10
-	speed 25
-	damage (60)
-	renderstyle Add
-	alpha 0.9
-	scale 0.75
-	deathsound "ppc/explode"
+//********************************
+actor TeslaShot2 : plasmaball {
+	Damage (50)
+    SeeSound ""
+    DeathSound "TSLPRJC2"
+    RenderStyle Add
+    alpha 0.5
+    height 10
+    radius 10
+    Decal "GaussScorch"
+    +EXTREMEDEATH
 	damageType "Energy"
 	obituary "$OB_SHOCKRIFLE"
-	states {
-	Spawn:
-		PPCX A 1 BRIGHT A_SpawnItemEx ("ShockCannonBallSmallFX")
-		TNT1 A 0 BRIGHT A_Explode (4, 256, 0)
-		loop
-	Death:
-		TNT1 A 1 A_SpawnItemEx("MadCatSpawnShitSmall",0,0,0)
-		TNT1 AAAAAA 2 A_Explode (10, 512, 0)
-		stop
-	}
+    States {
+    Spawn: 
+        MRS2 A 1 bright A_SpawnItem("TeslaTail")
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtra",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    MRS2 B 1 bright A_SpawnItem("TeslaExtra")
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaTail",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+		TNT1 A 0 BRIGHT A_Explode (10, 128, 0)
+        Loop
+	death:
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtra",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtra",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtra",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    MRS2 CDEFG 2 bright A_Explode (15, 256, 0)
+	    Stop
+    }
 }
 
-actor ShockCannonBallSmallRed : ShockCannonBallSmallBlue {
-    states {
-	Spawn:
-		PPCX B 1 BRIGHT A_SpawnItemEx ("ShockCannonBallSmallFXRed")
-		TNT1 A 0 BRIGHT A_Explode (4, 256, 0)
-		loop
-	Death:
-		TNT1 A 1 A_SpawnItemEx("MadCatSpawnShitSmallRed",0,0,0)
-		TNT1 AAAAAA 2 A_Explode (10, 512, 0)
-		stop
-	}
-}
-
-actor MadcatSpawnShitSmall {
+Actor TeslaExtra
+{
+	Projectile
+	Damage 0
+	+RIPPER
+	+BLOODLESSIMPACT
+	+CLIENTSIDEONLY
+	Speed 0
 	Radius 1
 	Height 1
-	States {
+	Scale 0.6
+	RenderStyle Add
+	States
+	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx ("ShockCannonBallSmallImpact",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
-		TNT1 AAAA 0 A_SpawnItemEx ("ShockCannonBallSmallFX",0,0,0,random(-4,4),random(-4,4),random(-4,4),0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
-		stop
+		ZAPR ABC 1 Bright
+		NULL A 0 A_Jump(160,1)
+		Loop
+		ZAPR ABC 1 Bright
+		ZAPR DE 1 Bright A_FadeOut
+		Wait
+	Death:
+		NULL A 1
+		Stop
 	}
 }
 
-actor MadcatSpawnShitSmallRed {
+Actor Teslatail
+{
+	Projectile
+	Damage 0
+	+RIPPER
+	+BLOODLESSIMPACT
+	+NOGRAVITY
+	+CLIENTSIDEONLY
+	Speed 0
 	Radius 1
 	Height 1
-	States {
+	Scale 0.3
+	RenderStyle Add
+	States
+	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx ("ShockCannonBallSmallImpactRed",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
-		TNT1 AAAA 0 A_SpawnItemEx ("ShockCannonBallSmallFXRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
-		stop
+		MRS2 AB 1 bright A_FadeOut
+		wait
 	}
 }
 
-actor ShockCannonBallSmallFX {
-	+CLIENTSIDEONLY
-	+NOINTERACTION
-	states {
-	Spawn:
-		TNT1 A 0
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSpark", random(-8,8), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSpark", random(-16, 0), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSpark", random(-27,-16), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSpark", random(-46,-27), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 A 0 A_SpawnItemEx("VoltagePuff2", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4), 0, 128, 0)
-		stop
-	}
+Actor TeslaExtraSmall : TeslaExtra { Scale 0.2 }
+Actor TeslatailSmall : Teslatail { Scale 0.05 }
+
+actor TeslaShot2Red : TeslaShot2 {
+    States {
+    Spawn: 
+        MRS2 A 1 bright A_SpawnItem("TeslaTailRed")
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtraRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    MRS2 B 1 bright A_SpawnItem("TeslaExtraRed")
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaTailRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+		TNT1 A 0 BRIGHT A_Explode (10, 128, 0)
+        Loop
+	death:
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtraRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailRedSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtraRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailRedSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslaExtraRed",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    NULL AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TeslatailRedSmall",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(1,360))
+	    MRS2 CDEFG 2 bright A_Explode (15, 256, 0)
+	    Stop
+    }
 }
 
-actor ShockCannonBallSmallFXRed {
-	+CLIENTSIDEONLY
-	+NOINTERACTION
-	states {
-	Spawn:
-		TNT1 A 0
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSparkRed", random(-8,8), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSparkRed", random(-16, 0), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSparkRed", random(-27,-16), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 AA 0 A_SpawnItemEx ("VoltageSparkRed", random(-46,-27), random(-8,8), random(-8,8), random(-4,4), random(-4,4), random(-4,4), 0, 0, 32)
-		TNT1 A 0 A_SpawnItemEx("VoltagePuff2Red", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4), 0, 128, 0)
-		stop
-	}
-}
-
-actor ShockCannonBallSmallImpact {
-	+NOCLIP
-	+NOINTERACTION
-	+CLIENTSIDEONLY
-	renderstyle Add
-	alpha 0.9
-	scale 1.5
-	reactiontime 7
-	states {
-	Spawn:
-		TNT1 A 0
-		TNT1 AAA 0 A_SpawnItemEx("ShockCannonTrailSmall",0,0,random(8,16),0,0,random(8,16),0,128,0)
-		TNT1 AAAA 0 A_SpawnItemEx("VoltageSpark", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-	Idle:
-		PPCX A 2 bright A_FadeOut(0.05)
-		TNT1 AAAA 0 A_SpawnItemEx("VoltageSpark", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-		TNT1 AA 0 A_SpawnItemEx("VoltagePuff", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-		TNT1 A 0 A_Countdown
-		loop
-	Death:
-		PPCX AAAAAA 2 bright A_FadeOut(0.15)
-		stop
-	}
-}
-
-actor ShockCannonBallSmallImpactRed : ShockCannonBallSmallImpact {
-	states {
-	Spawn:
-		TNT1 A 0
-		TNT1 AAA 0 A_SpawnItemEx("ShockCannonTrailSmallRed",0,0,random(8,16),0,0,random(8,16),0,128,0)
-		TNT1 AAAA 0 A_SpawnItemEx("VoltageSparkRed", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-	Idle:
-		PPCX B 2 bright A_FadeOut(0.05)
-		TNT1 AAAA 0 A_SpawnItemEx("VoltageSparkRed", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-		TNT1 AA 0 A_SpawnItemEx("VoltagePuffRed", random(-32,32), random(-32,32), random(-32,32), random(-4,4), random(-4,4), random(-4,4))
-		TNT1 A 0 A_Countdown
-		loop
-	Death:
-		PPCX BBBBBB 2 bright A_FadeOut(0.15)
-		stop
-	}
-}
-
-actor ShockCannonTrailSmall {
-	radius 1
-	height 1
-	speed 2
-	damage 0
-	PROJECTILE
-	-RANDOMIZE
-	renderstyle Add
-	alpha 0.5
-	scale 0.75
-	states {
-	Spawn:
-		VOLX AAAAAAAAA 2 bright A_FadeOut(0.07)
-		stop
-	Death:
-		PPCX A 0 BRIGHT A_SpawnItemEx("VoltageDecay",random(-8,8),random(-8,8),random(-8,8),0,0,0,0,128,128)
-		stop
-	}
-}
-
-actor ShockCannonTrailSmallRed : ShockCannonTrailSmall {
-    Translation "192:207=224:247"
-	states {
-	Spawn:
-		VOLX AAAAAAAAA 2 bright A_FadeOut(0.07)
-		stop
-	Death:
-		PPCX A 0 BRIGHT A_SpawnItemEx("VoltageDecayRed",random(-8,8),random(-8,8),random(-8,8),0,0,0,0,128,128)
-		stop
-	}
-}
+Actor TeslaExtraRed : TeslaExtra { Translation "192:207=224:247" }
+Actor TeslatailRed : Teslatail { Translation "192:207=224:247" }
+Actor TeslatailRedSmall : TeslatailRed { Scale 0.05 }
+//******************************** Translation "192:207=224:247"

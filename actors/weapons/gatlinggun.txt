@@ -124,9 +124,9 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Fire.Blue")
 		TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "FireSpin")
 		TNT1 A 0 A_PlaySound ("gatling/spinup", CHAN_WEAPON)
-		GATR A 4
-		GATR B 3 offset (-1, 30)
-		GATR A 2 offset (-2, 28)
+		GATR A 3 A_JumpIfInventory("IsMinigunner",1,1)
+		GATR B 2 offset (-1, 30)
+		GATR A 1 offset (-2, 28)
 		GATR B 1 offset (-3, 26)
 		GATR A 1 offset (-5, 24)
 		GATR B 1 offset (-7, 22)
@@ -139,9 +139,9 @@ actor GatlingGun : AOWWeapon 21045 {
 	Fire.Blue:
 		TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "FireSpin.Blue")
 		TNT1 A 0 A_PlaySound ("gatling/spinup", CHAN_WEAPON)
-		GATB A 4
-		GATB B 3 offset (-1, 30)
-		GATB A 2 offset (-2, 28)
+		GATB A 3 A_JumpIfInventory("IsMinigunner",1,1)
+		GATB B 2 offset (-1, 30)
+		GATB A 1 offset (-2, 28)
 		GATB B 1 offset (-3, 26)
 		GATB A 1 offset (-5, 24)
 		GATB B 1 offset (-7, 22)
@@ -159,13 +159,13 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_PlaySound ("minigun/fire2", 5)
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		TNT1 A 0 A_SetPitch(pitch-0.45)
 		GAFR B 1 offset (-17, 10) Bright A_Light1
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		GAFR C 1 offset (-17, 8) Bright A_SetPitch(pitch-0.45)
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		GAFR D 1 offset (-19, 8) A_Light1
@@ -177,13 +177,13 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_PlaySound ("minigun/fire2", 5)
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		TNT1 A 0 A_SetPitch(pitch-0.45)
 		GAFB B 1 offset (-17, 10) Bright A_Light1
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (9.6, 4.8, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		GAFB C 1 offset (-17, 8) Bright A_SetPitch(pitch-0.45)
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		GAFB D 1 offset (-19, 8) A_Light1
@@ -197,13 +197,13 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_PlaySound ("minigun/fire2", 5)
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		TNT1 A 0 A_SetPitch(pitch-0.45)
 		GAFR B 1 offset (-17, 10) Bright A_Light1
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		GAFR C 1 offset (-17, 8) Bright A_SetPitch(pitch-0.45)
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		GAFR D 1 offset (-19, 8) A_Light1
@@ -215,13 +215,13 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_PlaySound ("minigun/fire2", 5)
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		TNT1 A 0 A_SetPitch(pitch-0.45)
 		GAFB B 1 offset (-17, 10) Bright A_Light1
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		TNT1 A 0 A_Light2
 		TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,32,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 6, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
+		TNT1 A 0 A_FireBullets (7.2, 3.6, 2, 5, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 2048)
 		GAFB C 1 offset (-17, 8) Bright A_SetPitch(pitch-0.45)
 		TNT1 A 0 A_SetPitch(pitch+0.45)
 		GAFB D 1 offset (-19, 8) A_Light1
@@ -274,9 +274,9 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_JumpIfInventory ("IsBlue", 1, "Altfire.Blue")
 		TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "AltfireSpin")
 		TNT1 A 0 A_PlaySound ("gatling/spinup", 5)
-		GATR A 4
-		GATR B 3 offset (-1, 30)
-		GATR A 2 offset (-2, 28)
+		GATR A 3 A_JumpIfInventory("IsMinigunner",1,1)
+		GATR B 2 offset (-1, 30)
+		GATR A 1 offset (-2, 28)
 		GATR B 1 offset (-3, 26)
 		GATR A 1 offset (-5, 24)
 		GATR B 1 offset (-7, 22)
@@ -289,9 +289,9 @@ actor GatlingGun : AOWWeapon 21045 {
 	AltFire.Blue:
 		TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "AltfireSpin.Blue")
 		TNT1 A 0 A_PlaySound ("gatling/spinup", 5)
-		GATB A 4
-		GATB B 3 offset (-1, 30)
-		GATB A 2 offset (-2, 28)
+		GATB A 3 A_JumpIfInventory("IsMinigunner",1,1)
+		GATB B 2 offset (-1, 30)
+		GATB A 1 offset (-2, 28)
 		GATB B 1 offset (-3, 26)
 		GATB A 1 offset (-5, 24)
 		GATB B 1 offset (-7, 22)
@@ -413,9 +413,9 @@ actor GatlingGun : AOWWeapon 21045 {
  	    TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "SpinDown")
  	    TNT1 A 0 A_GiveInventory("SpinGattlingGun", 1)
 		TNT1 A 0 A_PlaySound ("gatling/spinup", CHAN_WEAPON)
-		GATR A 4
-		GATR B 3 offset (-1, 30)
-		GATR A 2 offset (-2, 28)
+		GATR A 3
+		GATR B 2 offset (-1, 30)
+		GATR A 1 offset (-2, 28)
 		GATR B 1 offset (-3, 26)
 		GATR A 1 offset (-5, 24)
 		GATR B 1 offset (-7, 22)
@@ -429,9 +429,9 @@ actor GatlingGun : AOWWeapon 21045 {
 		TNT1 A 0 A_JumpIfInventory("SpinGattlingGun", 1, "SpinDown")
  	    TNT1 A 0 A_GiveInventory("SpinGattlingGun", 1)
 		TNT1 A 0 A_PlaySound ("gatling/spinup", CHAN_WEAPON)
-		GATB A 4
-		GATB B 3 offset (-1, 30)
-		GATB A 2 offset (-2, 28)
+		GATB A 3
+		GATB B 2 offset (-1, 30)
+		GATB A 1 offset (-2, 28)
 		GATB B 1 offset (-3, 26)
 		GATB A 1 offset (-5, 24)
 		GATB B 1 offset (-7, 22)

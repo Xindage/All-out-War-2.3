@@ -212,7 +212,7 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("MachinegunMag", 45);
 		GiveInventory ("MissileMag", 1);
 		GiveInventory ("PistolMagazine", 16);
-		GiveInventory ("StealthPistolMag", 16);
+		GiveInventory ("StealthPistolMag", 12);
 		GiveInventory ("SMGMag", 60);
 		GiveInventory ("SSGShell", 2);
 		GiveInventory ("SniperBolt", 1);
@@ -422,6 +422,10 @@ function int SetClass (int id, int scflags) {
 	// Tag the double shotgunner so it can use altfire
 	if (id == CLASS_DoubleShotgunner)
 		GiveInventory ("IsDoubleShotgunner", 1);
+
+	// Tag the rifleman so it has better accuracy
+	if (id == CLASS_Rifleman)
+		GiveInventory ("IsRifleman", 1);
 
 	// Tag the gunman so it has better fire rate anda accuracy
 	if (id == CLASS_Gunman)

@@ -65,7 +65,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		TNT1 A 0 A_JumpIfInventory ("IsMachinegunner", 1, "FireSkill")
 		TNT1 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash
 		AK47 B 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -73,7 +73,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		AK47 DE 1 A_Light0
 		AK47 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash ("Flash2")
 		AK47 F 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -81,7 +81,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		AK47 HI 1 A_Light0
 		AK47 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.6, 1.6, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash
 		AK47 B 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -93,7 +93,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	FireSkill:
 		TNT1 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash
 		AK47 B 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -101,7 +101,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		AK47 DE 1 A_Light0
 		AK47 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash ("Flash2")
 		AK47 F 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -109,7 +109,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 		AK47 HI 1 A_Light0
 		AK47 A 0 A_Light2
 		TNT1 A 0 bright A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+		TNT1 A 0 BRIGHT A_FireBullets (1.2, 1.2, -1, 10, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		TNT1 A 0 BRIGHT A_GunFlash
 		AK47 B 1 bright A_SetPitch(pitch-0.5)	
 		TNT1 A 0 A_SetPitch(pitch+0.5)	
@@ -188,7 +188,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	    Goto Empty
 	    TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-	    TNT1 A 0 A_FireBullets (2.5, 2.5, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+	    TNT1 A 0 A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		AK47 B 1 Bright Radius_Quake(4,3,0,1,0)
 	    TNT1 A 0 A_TakeInventory("MachinegunMag",1)
 	    AK47 C 1 A_Light1
@@ -198,7 +198,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	
 	    TNT1 A 0 A_GunFlash ("Flash2")
 	    TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-	    TNT1 A 0 A_FireBullets (2.5, 2.5, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+	    TNT1 A 0 A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		AK47 F 1 Bright Radius_Quake(4,3,0,1,0)
 	    TNT1 A 0 A_TakeInventory("MachinegunMag",1)
 	    AK47 G 1 A_Light1
@@ -208,7 +208,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	
 	    TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-	    TNT1 A 0 A_FireBullets (2.5, 2.5, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+	    TNT1 A 0 A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		AK47 B 1 Bright Radius_Quake(4,3,0,1,0)
 	    TNT1 A 0 A_TakeInventory("MachinegunMag",1)
 	    AK47 C 1 A_Light1
@@ -218,7 +218,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	
 	    TNT1 A 0 A_GunFlash ("Flash2")
 	    TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-	    TNT1 A 0 A_FireBullets (2.5, 2.5, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+	    TNT1 A 0 A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		AK47 F 1 Bright Radius_Quake(4,3,0,1,0)
 	    TNT1 A 0 A_TakeInventory("MachinegunMag",1)
 	    AK47 G 1 A_Light1
@@ -228,7 +228,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 
 	    TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_SpawnItemEx("RifleShellCasing",4,13,34,random(-2,-4),random(2,3),random(0,1),random(45,60),128)
-	    TNT1 A 0 A_FireBullets (2.5, 2.5, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
+	    TNT1 A 0 A_FireBullets (1.6, 1.6, -1, 12, "RiflePuff", FBF_NORANDOM|FBF_USEAMMO, 3072)
 		AK47 B 1 Bright Radius_Quake(4,3,0,1,0)
 	    TNT1 A 0 A_TakeInventory("MachinegunMag",1)
 	    AK47 C 1 A_Light1
@@ -236,24 +236,46 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 
 	    AK47 E 1
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-        AK47 AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+        AK47 AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		AK47 AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 	    Goto Ready
     Empty:
-        TNT1 A 0 A_PlayWeaponSound("weapons/empty1")
-		AK47 AAAAAAAAAA 1 A_WeaponReady(WRF_NOFIRE)
+	    TNT1 A 0 A_JumpIfInventory("IsMachinegunner",1,"Reload")
+		AK47 A 10 A_PlayWeaponSound("weapons/empty1")
     Reload:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)
   	    TNT1 A 0 A_JumpIfInventory("MachinegunMag",45,2)
         TNT1 A 0 A_JumpIfInventory("MachineGunAmmo",1,2)
 		TNT1 A 0
 		Goto Ready
+		TNT1 A 0 A_JumpIfInventory("IsMachinegunner",1,"ReloadFast")
 	    AK4R A 3 A_PlayWeaponSound("weapons/m16clipou")
  	    AK4R BCDE 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 	    TNT1 A 0 A_FireCustomMissile("SMGEmptyMagSpawner",0,0,0,1)
-		AK4R FF 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		AK4R FFFFF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		AK4R FF 5 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		AK4R FFFFF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		AK4R G 2 A_PlayWeaponSound("weapons/m16clipin")
+		AK4R HIBAJKK 2
+		AK4R L 3
+		TNT1 A 0 A_PlayWeaponSound("weapons/m16draw")
+	    AK4R MNOP 3
+		AK4R P 2
+		AK4R QRS 1
+		AK4R TUV 2
+		TNT1 A 0 A_JumpIfInventory("MachineGunAmmo",1,"Reload2")
+		Goto Ready
+    ReloadFast:
+	    AK4R A 3 A_PlayWeaponSound("weapons/m16clipou")
+ 	    AK4R BCDE 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    TNT1 A 0 A_FireCustomMissile("SMGEmptyMagSpawner",0,0,0,1)
+		AK4R FFFF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		AK4R FFFF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		AK4R G 2 A_PlayWeaponSound("weapons/m16clipin")
 		AK4R HIBAJKK 2

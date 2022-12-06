@@ -2,7 +2,7 @@
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/JTdv4PP7
+Discord server          : https://discord.gg/4Sp4gQUv
 
 Original Release date   : 2022/04/18 (v0.1)
 Version r221118 (2022/11/18)
@@ -64,6 +64,26 @@ Version r221203 (2022/12/03)
 						  - Fixed: Grenade drop on death now happen in fire, chem and energy death. (no drop in time death intentional)
 						  - Fixed: Cant eject instant juggernaut as soon you active it (must wait).
 						  - Fixed: Timecop cannot be healed while boosting to prevent exploit.
+Version r221204 (2022/12/04)
+                          - Submachinegun and machinegun reload faster when having their respective class
+                          - Handgun and stealth pistol damage slighty decreased
+                          - Rifle grenades amount increased from 4 to 6
+						  - Rifle recoil is stronger when not having the class Rifleman
+                          - Stealth pistol magazine decreased from 16 to 12, damage slighty decreased
+						  - Stealh assassin class no longer uses bullet proof
+						  - Stealth sniper now uses a hitscan projectile
+						  - Machinegun altfire spread slighty decreased, delay increased
+						  - Fixed: wrong obituary on stealth sniper and stealth pistol
+						  - Fixed: Powerup crates now appear on automap
+						  - Fixed: homing missiles not able to hit enemies using crouch
+Version r221206 (2022/12/06)
+                          - Shock rifle altfire projectile damage radius decreased
+                          - Stealth sniper damage decreased (from 90 to 75)
+                          - Gatlinggun damage slighty decreased (from 6 to 5 as it was before)
+						  - Rifle random recoil removed
+						  - Fixed: wrong speed on chemical shot projectile
+						  - Fixed: chem/fire decay doing too much damage (now deals the same damage as before)
+						  - Fixed: missing gatling gun pickup sprite
 
 ===========================================================================================================================================================
 * What is included *
@@ -150,6 +170,7 @@ The purpose of this mod is to bring back some features from classic aow versions
 						  - Missile launcher                                    : Sounds from Doom 2016, Sprites and code by Gaturra
 						  - Artillery cannon                                    : Sprites and code by Gaturra
 						  - Double shotgun                                      : Sprites by Lucas Kord, sounds from Doom 3, animation and code by Gaturra
+						  - Shock rifle                                         : tesla cannon sprites from realm667
 						  
 						                    - About music -
 						  - Startup music                                          : March to doom from Renegade X
