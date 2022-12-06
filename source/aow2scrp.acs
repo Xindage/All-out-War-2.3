@@ -275,7 +275,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_MARINE_COMENSATION		990
 #libdefine SC_CL_PLAYERDEATH			991
 #libdefine SC_TEAMMESSAGE_TICKER		992
-//										993
+#libdefine SC_SETAIARMORGRADE			993 // New script for Ai marines.
 #libdefine SC_Death						994
 //										995
 #libdefine SC_GameOver					996

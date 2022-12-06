@@ -129,7 +129,9 @@ function void SetPlayerArmorGrade (int p, int n, int mod) {
 
 // for testing and decorate (ai marines, et al)
 script SC_SETARMORGRADE (int grade, int mod)
+{
 	SetArmorGrade (grade, mod);
+}
 
 // [Dusk] ARMOR DISPLAY COMMAND		// [SG] armors no longer have weaknesses as of now, updating with new values
 // Argh! Data tables!
@@ -250,4 +252,35 @@ script SC_CL_ARMORPREDICT (int modtype) CLIENTSIDE {
 	}
 	
 	TakeInventory ("ArmorChangeProgress", 175);
+}
+
+// [Xindage] Ai marines now use a simple version of the armor settings
+script SC_SETAIARMORGRADE (int grade, int mod)
+{
+    GiveInventory( strparam( s: "Grade", d: grade, s: "Armor" ), 1 );
+	if ( mod != ARMOD_NOCHANGE )
+	{
+		switch (mod)
+		{
+            case ARMOD_FIRE:
+				GiveInventory( "FireProof", 1 );
+				break;
+
+			case ARMOD_CHEM:
+				GiveInventory( "ChemicalProof", 1 );
+				break;
+
+			case ARMOD_EXPLO:
+				GiveInventory( "ExplosiveResistance", 1 );
+				break;
+
+			case ARMOD_ENERGY:
+				GiveInventory( "EnergyResistance", 1 );
+				break;
+
+			case ARMOD_BULLETPROOF:
+				GiveInventory( "BulletProof", 1 );
+				break;
+		}
+    }
 }
