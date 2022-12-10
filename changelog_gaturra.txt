@@ -85,6 +85,20 @@ Version r221206 (2022/12/06)
 						  - Fixed: chem/fire decay doing too much damage (now deals the same damage as before)
 						  - Fixed: missing gatling gun pickup sprite
 
+Version r221210 (2022/12/06)
+						  - Tiberium system was completely reworked from the ground
+                          - Shock rifle altfire projectile damage radius decreased
+                          - Reverted submachinegun and machinegun changes
+                          - Several map fixes
+
+===========================================================================================================================================================
+* What is new about the tiberium system *
+
+		Tiberium now reward players who don't die and also don't give to your team an absurd amount of credits.
+		Continuously harvesting without dying increase the credits and experience.
+		Your team does not gain a fixed amount when a tiberium is refined, now the value given to the team is divided equally among all team members, up to a minimum value if the value is too low, your own bonus increases this value as well.
+		Also resigning your class don't take away your bonus, so you can freely switch from harvest to adv harvest without loss.
+
 ===========================================================================================================================================================
 * What is included *
 
