@@ -60,9 +60,12 @@ server	int		zeta_nukecountdown			=		60;
 server	int		zeta_nukesurpreme			=		0;
 
 // [Dusk] Tiberium amounts
-server	int		zeta_tiberium_self			=		225;
-server	int		zeta_tiberium_other			=		75;
-server	int		zeta_tiberium_advperc		=		260;
+server	int		zeta_tiberium_self			=		200;
+server	int		zeta_tiberium_other			=		100;
+server	int		zeta_tiberium_advself		=		350;
+server	int		zeta_tiberium_advother		=		300;
+server	int		zeta_tiberium_stack         =       5;
+server	int		zeta_tiberium_maxstacks     =       15;
 																
 server	int		zeta_ticketpool				=		0;
 server	int		zeta_tickets				=		75;

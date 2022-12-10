@@ -185,6 +185,8 @@ function int SetClass (int id, int scflags) {
 			bool HasLightsaber = True;
 		if (CheckInventory ("BFG 2704"))
 			bool HasBFG2704 = True;
+		if (CheckInventory("TiberiumStack"))
+			int Hastibstacks = CheckInventory("TiberiumStack");
 		if (CheckInventory ("IsInSpawnRoom"))
 			bool InSpawn = true;
 		if (CheckInventory ("InMenu"))
@@ -238,7 +240,8 @@ function int SetClass (int id, int scflags) {
 		
 		if (HasTiberiumAutorifle)
 			GiveItem (ITEM_TibRifleWeak, false);
-		
+
+		GiveInventory ("TiberiumStack", Hastibstacks);
 		GiveInventory ("GreenHueRemover", HasIronCurtain);
 		GiveInventory ("RedHueRemover", HasBerserk);
 		GiveInventory ("BeaconItem", HasSuperWeapon);

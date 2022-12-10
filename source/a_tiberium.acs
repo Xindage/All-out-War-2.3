@@ -1,76 +1,123 @@
 // determine should we pick up Tiberium or leave it there
 script 357 (void) {
 	SetResultValue (0);
-	if (CheckInventory ("IsHarvester") && !CheckInventory ("TiberiumCrystal")) {
+	if (CheckInventory ("IsHarvester") && !CheckInventory ("TiberiumCrystal"))
+	{
 		SetResultValue (1);
 		SetFont ("SMALLFONT");
 		IntelMessage ("\cJTake it back to the \cQRefinery!", false);
 	}
 }
 
-function bool RefineTiberium (int team) {
-	if (Team != PlayerTeam()) {
+function bool RefineTiberium (int team)
+{
+	if (Team != PlayerTeam())
+	{
 		GenericError ("This is not your terminal!");
 		return false;
 	}
-	
+
 	if (!CheckRefinery (Team))
 		return false;
-	
-	if (!CheckInventory ("IsHarvester") || !CheckInventory ("TiberiumCrystal")) {
+
+	if (!CheckInventory ("IsHarvester") || !CheckInventory ("TiberiumCrystal"))
+	{
 		GenericError ("You need to be a \cfHarvester\c- and have \cdTiberium!");
 		return false;
 	}
 	
-	int i;
-	
 	TakeInventory ("TiberiumCrystal",1);
-	
+
+	// Declare the used int.
+	int i;
+	int teamamount;
+	int share;
+	int playeramount;
+	int teammates = GetTeamProperty (PlayerTeam(), TPROP_NumPlayers) - 1;
+	int stackcount = CheckInventory("TiberiumStack");
+	int stackvalue = GetCVar ("zeta_tiberium_stack");
+//	int self = PlayerNumber ();
+
 	// How much to give for others?
-	int amount = GetCVar ("zeta_tiberium_other");
-	if (EnhancedRefining[Team]) {
-		if(GetCVar ("zeta_tiberium_advperc") == 260)
-			amount = 200;	// [SG] I like nice, round numbers.
-		else {
-		int factor = (GetCVar ("zeta_tiberium_advperc") << 16) / 100;
-		amount = (amount * factor) >> 16;
+	teamamount = GetCVar (EnhancedRefining[Team] ? "zeta_tiberium_advother" : "zeta_tiberium_other" );
+    if (teammates > 0) // Dont calculate if there's no teammates.
+    {
+        share = (teamamount + stackcount * stackvalue) / teammates;
+		if (!EnhancedRefining[PlayerTeam()])
+		{
+			if (share < 15)
+				share = 15;
+		}
+		else if (share < 30)
+		{
+			share = 30;
 		}
 	}
-	
-	int self = PlayerNumber ();
-	if (GetCVar ("zeta_tiberium_self") > 0) {
-		GiveCredits (GetCVar ("zeta_tiberium_self") - GetCVar ("zeta_tiberium_other"));
-		GivePoints (1);
-		AddExperience (50);
-		
-		SetFont ("BIGFONT");
-		if (amount <= 0)
+
+	// How much give to the harvester?
+	LocalAmbientSound ("powerup/credsound", 127);
+	if (EnhancedRefining[PlayerTeam()]) playeramount = GetCVar ("zeta_tiberium_advself");
+	else playeramount = GetCVar ("zeta_tiberium_self");
+	GiveCredits (playeramount + stackcount * stackvalue);
+	//Print the message for the player.
+	SetFont ("BIGFONT"); // Can i set it just once?
+    if (teammates <= 0) // No teammates
 			HudMessage (s:"You have refined the \cDTiberium\c and have earned \cQ$\cD",
-				d:GetCVar ("zeta_tiberium_self"), s:"\c-!";
+				d:playeramount + stackcount * stackvalue, s:"\c-!";
 				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
-		else
-			HudMessage (s:"You have refined the \cDTiberium!\n\cQ$\cD",
-				d:(GetCVar ("zeta_tiberium_self") - GetCVar ("zeta_tiberium_other") + amount), s:"\c- for you, \cq$\cd", d:amount,
-				s:"\c- for teammates!";
-				HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+	else // Has teammates, inform teh activator the amount for each menber.
+		HudMessage (s:"You have refined the \cDTiberium!\n\cQ$\cD",
+			d:playeramount + stackcount * stackvalue,
+			s:"\c- for you, \cq$\cd", d:share, s:"\c- for teammates!";
+			HUDMSG_FADEOUT, 1800+PlayerNumber(), CR_WHITE, 0.5, 0.45, 2.0, 1.0);
+
+	// Give XP by stack values. If madness
+	if (stackcount >= 26) AddExperience(100);
+	else if (stackcount >= 21) AddExperience(90);
+	else if (stackcount >= 16) AddExperience(80);
+	else if (stackcount >= 11) AddExperience(70);
+	else if (stackcount >= 6) AddExperience(60);
+	else AddExperience(50); // Please dont set stack cvar higher than 20. Def 15.
+
+	if (stackcount >= GetCVar ("zeta_tiberium_maxstacks")) GivePoints (2); // Bonus point on full stack
+	else
+	{ //Give a stack and normal amount if havent met the requirements.
+		GiveInventory("TiberiumStack", 1);
+		GivePoints (1);
 	}
+
+		// Give a little extra for who reach the max stack. Disabled for now.
+		/*if (CheckInventory("TiberiumStack") == (GetCVar ("zeta_tiberium_maxstacks") - 1)) // Must happen only once.
+		{
+			if (PlayerTeam() == TEAM_RED) {
+				IntelMessage (strparam (n:0, s:"\c- from \cARed Team\cJ has reached the max refining stack bonus!"), true); }
+			else {
+				IntelMessage (strparam (n:0, s:"\c- from \cNBlue Team\cJ has reached the max refining stack bonus!"), true); }
+			if (CheckInventory("TiberiumAutorifleWeak"))
+			{
+				TakeInventory("TiberiumAutorifleWeak", 1);
+				GiveInventory("TiberiumAutorifle", 1);
+			}
+		}*/
 	
 	Log (n:0, s:" refines for ", s:TeamNames[PlayerTeam()], s:" Team");
 	TeamMessage (TMSG_TIBREFINE, 0, playernumber());
 	
+	int originalPlayer = PlayerNumber();
+
 	// Distribute amounts to teammeats
-	if (amount > 0) {
-		for (i = 0; i < MAXPLAYERS; i++) {
-			if (!PlayerInGame(i) || GetPlayerInfo (i, PLAYERINFO_TEAM) != PlayerTeam())
+	if (teamamount > 0)
+	{
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			if (!PlayerInGame (i) || GetPlayerTeam (i) != team || i == originalPlayer)
 				continue;
-			
-			GivePlayerCredits (i, amount);
-			
-			SetActivator (3800+i);
+
+			GivePlayerCredits (i, share);
+
+			SetActivatorToPlayer(i);
 			LocalAmbientSound ("powerup/credsound", 127);
 		}
-	} else {
-		LocalAmbientSound ("powerup/credsound", 127);
 	}
 	
 	return true;

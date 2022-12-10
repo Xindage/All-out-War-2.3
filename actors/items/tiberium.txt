@@ -200,3 +200,7 @@ actor TiberiumCrystalSound 21408 {
 		stop
 	}
 }
+
+// Xindage: Inventory iten given by refining tiberium, each time you stack that and it increase your money on refining.
+// This item is limited via "zeta_tiberium_maxstacks" CVAR. but a hard limit of 256 is set.
+actor TiberiumStack : Inventory {Inventory.MaxAmount 256}
