@@ -441,7 +441,6 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		MSLB DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		Goto Reload.Blue
      Empty:
-	    TNT1 A 0 A_JumpIfInventory("IsRocketSoldier",1,"Reload")
         MSLR D 10 A_PlaySound("weapons/empty5")
 	 Reload:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)
@@ -457,7 +456,6 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_ReFire
 		Goto Ready
      Empty.Blue:
-	    TNT1 A 0 A_JumpIfInventory("IsRocketSoldier",1,"Reload.Blue")
         MSLB D 10 A_PlaySound("weapons/empty5")
 	 Reload.Blue:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)

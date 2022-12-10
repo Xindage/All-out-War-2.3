@@ -171,7 +171,6 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASB A 3
 		goto Reload.Blue
      Empty:
-	    TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier",1,"Reload")
         MASR A 10 A_PlaySound("weapons/empty5")
 	 Reload:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)
@@ -203,7 +202,6 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		TNT1 A 0 A_ReFire
 		goto Ready
      Empty.Blue:
-	    TNT1 A 0 A_JumpIfInventory("IsArtillerySoldier",1,"Reload.Blue")
         MASB A 10 A_PlaySound("weapons/empty5")
 	 Reload.Blue:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)

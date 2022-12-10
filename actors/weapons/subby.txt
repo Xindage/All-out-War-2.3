@@ -243,7 +243,6 @@ actor SubMachineGun : AOWWeapon 21043 {
 		SUBB A 2 offset (1, 32) A_ReFire
 		goto Ready
 	Empty:
-		TNT1 A 0 A_JumpIfInventory("IsGunman",1,"Reload")
 		SUBR A 10 A_PlayWeaponSound("weapons/empty1")
 	Reload:
 		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Reload.Blue")
@@ -252,7 +251,6 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 A_JumpIfInventory("NewClipAmmo",1,2)
 		TNT1 A 0
 		Goto Ready
-		TNT1 A 0 A_JumpIfInventory("IsGunman",1,"ReloadFast")
 		SUBR B 3 A_PlayWeaponSound("weapons/SMGOut")
 		SUBR HGFED 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
@@ -275,7 +273,6 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 
 		Goto Ready
 	Empty.Blue:
-		TNT1 A 0 A_JumpIfInventory("IsGunman",1,"Reload.Blue")
 		SUBB A 10 A_PlayWeaponSound("weapons/empty1")
 	Reload.Blue:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)
@@ -283,7 +280,6 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 A_JumpIfInventory("NewClipAmmo",1,2)
 		TNT1 A 0
 		Goto Ready
-		TNT1 A 0 A_JumpIfInventory("IsGunman",1,"ReloadFast.Blue")
 		SUBB B 3 A_PlayWeaponSound("weapons/SMGOut")
 		SUBB HGFED 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
@@ -291,36 +287,6 @@ actor SubMachineGun : AOWWeapon 21043 {
 		SUBB CCCCC 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		SUBB CCCCC 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBB DEF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBB G 2 A_PlayWeaponSound("weapons/SMGIn")
-		SUBB HIJKLMN 2
-		TNT1 A 0 A_JumpIfInventory("NewClipAmmo",1,"Reload2")		 
-		Goto Ready
-	ReloadFast:
-		SUBR B 3 A_PlayWeaponSound("weapons/SMGOut")
-		SUBR HGFED 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_FireCustomMissile("SMGEmptyMagSpawner",0,0,0,1)
-		SUBR CCCC 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBR CCCC 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBR DEF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBR G 2 A_PlayWeaponSound("weapons/SMGIn")
-		SUBR HIJKLMN 2
-		TNT1 A 0 A_JumpIfInventory("NewClipAmmo",1,"Reload2")		 
-		Goto Ready
-	ReloadFast.Blue:
-		SUBB B 3 A_PlayWeaponSound("weapons/SMGOut")
-		SUBB HGFED 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_FireCustomMissile("SMGEmptyMagSpawner",0,0,0,1)
-		SUBB CCCC 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBB CCCC 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		SUBB DEF 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
