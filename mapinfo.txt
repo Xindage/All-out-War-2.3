@@ -178,6 +178,7 @@ map AOW23 "Immortal Kombat"
 
 map AOW24 "Convulsion of the nature"
 {
+	next = "aow25"
 	music = "D_AOW24"
 	levelnum = 24
 	next = "AOW25"
@@ -185,7 +186,7 @@ map AOW24 "Convulsion of the nature"
 
 map AOW25 "Cross Fire"
 {
-	next = "aow01"
+	next = "aow26"
 	sky1 = "stars"
 	music = "d_aow06"
 	levelnum = 25
@@ -193,7 +194,7 @@ map AOW25 "Cross Fire"
 
 map AOW26 "All Out War"
 {
-	next = "AOW01"
+	next = "AOW27"
 	sky1 = "sky14"
 	music = "D_AOW26"
 	levelnum = 26
@@ -201,12 +202,19 @@ map AOW26 "All Out War"
 
 map AOW27 "Hoth"
 {
-	next = "AOW01"
+	next = "AOW28"
 	sky1 = "SKYFOG0"
 	music = "D_AOW17"
 	levelnum = 27
 }
 
+map AOW28 "Dust3"
+{
+	next = "AOW01"
+	sky1 = "SKYFOG0"
+	music = "D_AOW17"
+	levelnum = 28
+}
 
 skill Normal {
 	name = "Normal"
