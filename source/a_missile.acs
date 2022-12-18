@@ -1,10 +1,14 @@
 // =============================================================================
 // [Dusk] Missile launcher targeter
+// Xindage several debugs lines were added.
 script SC_CL_MISSILETARGETER (void) CLIENTSIDE {
 	if (ActivatorTID () != 3800 + intHolder[i_consoleplayer]) terminate;
 	int mytid = 3800 + intHolder[i_consoleplayer];
 	int t;
 	int team = PlayerTeam ();
+	int myindex = ConsolePlayerNumber;
+
+	Log(s:"Missile acs detected me as tid ", d:mytid);
 
 	while (CheckWeapon ("MissileLauncher") && !Checkinventory ("MissileMode1") && GetActorProperty (0, APROP_Health) > 0) {
 		SetActivatorToTarget (0);
@@ -25,7 +29,8 @@ script SC_CL_MISSILETARGETER (void) CLIENTSIDE {
 			delay (4);
 		}
 
-		SetActivator (mytid);
+//		SetActivator (mytid);
+		SetActivatorToPlayer (myindex); // This does not work, mytid is getting the wrong person?
 		delay (1);
 	}
 

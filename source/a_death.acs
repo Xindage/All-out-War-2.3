@@ -89,6 +89,10 @@ script SC_DEATH DEATH {
 	
 	int n0 = PlayerNumber();
 	int t0 = PlayerTeam();
+
+	// Check if the death happens in the enemy base area
+	bool IsInEnemyBase = SC_DEFENSEKILL(t0);
+
 	SetActivatorToTarget (0);
 	
 	// Remove tickets from the victim team.
@@ -101,15 +105,19 @@ script SC_DEATH DEATH {
 		
 		int n1 = PlayerNumber();
 		int t1 = PlayerTeam();
+		int extra = 1.0;
 		
 		// No points for suicides
-		if (n0 != n1 && n1 != -1) {
-			GivePoints (2*points);
-			
+		if (n0 != n1 && n1 != -1)
+		{
 			LocalAmbientSound ("game/boink", 127);
-			GiveCredits (intHolder[i_CreditFragAward]);
-			
-			AddExperience(50);
+
+			// Give 50% bonus to all if the kill was a defensive one.
+			if (IsInEnemyBase) extra = 1.5;
+
+			GivePoints ((2*points * extra) >> 16 );
+			GiveCredits(( intHolder[i_CreditFragAward] * extra ) >> 16 );
+			AddExperience((50 * extra) >> 16 );
 			
 			delay (5);
 			// [Cata] Moved to a_sprees.acs
@@ -122,6 +130,34 @@ script SC_DEATH DEATH {
 			*/
 		}
 	}
+}
+
+// [Xindage] Script called to check if the death happened in the bounds of the base for purpose of giving extra
+// Its the same script used by the utilgun but in reverse.
+// Global caches and miniref are dont count for this purpose.
+function bool SC_DEFENSEKILL (int team)
+{
+	if (!team)
+	{
+		if (CheckActorDistance(0,201,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,203,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,205,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,207,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,209,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,214,MAX_TURRET_DISTANCE/2)) { return true; }
+		else { return false; }
+	}
+	else
+	{
+		if (CheckActorDistance(0,101,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,103,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,105,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,107,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,109,MAX_TURRET_DISTANCE/2)) { return true; }
+		else if (CheckActorDistance(0,114,MAX_TURRET_DISTANCE/2)) { return true; }
+		else { return false; }
+	}
+	return false;
 }
 
 // Client-side death script
