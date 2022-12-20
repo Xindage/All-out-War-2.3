@@ -272,6 +272,8 @@ script 105 (VOID)
 			ReddenSector(BRepId);
 			}
 		}
+		SetLineTexture(140,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(141,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
 		ChangeFloor(149, "MCT6");
 		SetLineTexture(149,SIDE_BACK,TEXTURE_MIDDLE,"-");
 		SetLineTexture(149,SIDE_FRONT,TEXTURE_MIDDLE,"-");
@@ -539,6 +541,8 @@ script 205 (VOID)
 			ReddenSector(RRepId);
 			}
 		}
+		SetLineTexture(240,SIDE_FRONT,TEXTURE_MIDDLE,"MCT6");
+		SetLineTexture(241,SIDE_FRONT,TEXTURE_BOTTOM,"MCT6");
 		ChangeFloor(249, "MCT6");
 		SetLineTexture(249,SIDE_BACK,TEXTURE_MIDDLE,"-");
 		SetLineTexture(249,SIDE_FRONT,TEXTURE_MIDDLE,"-");
