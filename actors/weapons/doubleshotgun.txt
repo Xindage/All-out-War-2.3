@@ -8,12 +8,14 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 	Inventory.PickupMessage "You got the double shotgun!"
 	Obituary "$OB_DOUBLESHOTGUN" // "%o was splattered by %k's double shotgun."
 	AttackSound "weapons/sshotf"
-	DropItem "Boomstick"
+	DropItem "DoubleShotgunPickup"
 	Weapon.SelectionOrder 16
 	Weapon.Kickback 30
-	Weapon.AmmoType "ShotgunAmmo"
-	Weapon.AmmoUse 2
+	Weapon.AmmoType "SSGShell"
+	Weapon.AmmoType2 "ShotgunAmmo"
+	Weapon.AmmoUse 0
 	Weapon.AmmoGive 0
+	Weapon.AmmoGive2 8
 	Weapon.PreferredSkin "MarineSSG"
 	Weapon.UpSound "weapons/up/ssg"
 	Tag "Double Shotgun"
@@ -55,35 +57,153 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Reload")
 	    SHT2 A 1 A_WeaponReady
 		Loop
-	Fire:
+    Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+	    TNT1 A 0 A_JumpIfInventory("SSGShell",2,"FireBoth")
+	    TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,"Reload")
+	    Goto Empty
+    FireBoth:
 		SHT2 A 3
 		SHT2 A 0 Radius_Quake(5,4,0,1,0)
-		SHT2 A 0 Bright A_GunFlash
-		SHT2 A 0 Bright A_FireBullets (15.7, 11.7, 20, 5, "HandgunPuff", 1, 750)
-		SHT2 A 1 bright
-		SHT2 A 1 Bright
-		SHT2 A 5
-		SHT2 B 7
-		SHT2 C 7 A_CheckReload
-		SHT2 DD 0 A_SpawnItemEx("ShotgunShellCasing",8,8,31,random(2,4),random(2,3),random(1,3),156)
-		SHT2 D 7 A_OpenShotgun2
-		SHT2 E 7
-		SHT2 F 7 A_LoadShotgun2
-		SHT2 G 6
-		SHT2 H 6 A_CloseShotgun2
-		SHT2 A 5 A_ReFire
+		TNT1 A 0 A_TakeInventory("SSGShell",2)
+        SG2F A 2 BRIGHT A_FireBullets (15.7, 11.7, 20, 5, "HandgunPuff", 1, 750)
+        SG2F B 2 BRIGHT
+	    SHT2 BCD 1
+	    SHT2 A 2 A_CheckReload
+		TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,"ReloadBoth")
+		Goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
+		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
+	    LSRF A 0 A_JumpIfInventory ("IsDoubleShotgunner", 1, "AltFireGo")
 		goto Ready
-	Flash:
-		SHT2 I 3 Bright A_Light1
-		SHT2 J 4 Bright A_Light2
-		TNT1 A 28 A_Light0
-		stop
-	Spawn:
+    AltFireGo:
+        TNT1 A 0 A_JumpIfInventory("SSGShell",2,"AltFireLeft")
+	    TNT1 A 0 A_JumpIfInventory("SSGShell",1,2)
+		TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,"Reload")
+	    Goto Empty
+		SG2F E 2 A_Light1
+		TNT1 A 0 Radius_Quake(3,4,0,1,0)
+		TNT1 A 0 A_TakeInventory("SSGShell",1)
+		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1000)
+		SG2F F 2 bright A_Light2
+		TNT1 A 0 A_Light0
+		SHT2 BCD 1
+		SHT2 A 3
+		Goto Ready
+    AltFireLeft:
+		SG2F C 2 A_Light1
+		TNT1 A 0 Radius_Quake(3,4,0,1,0)
+		TNT1 A 0 A_TakeInventory("SSGShell",1)
+		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1000)
+		SG2F D 2 bright A_Light2
+		TNT1 A 0 A_Light0
+		SHT2 BCD 1
+		SHT2 A 3
+		Goto Ready
+    Empty:
+        TNT1 A 0 A_PlayWeaponSound("weapons/empty1")
+		SHT2 A 10 A_WeaponReady(WRF_NOFIRE)
+    Reload:
+	    TNT1 A 0 A_TakeInventory("ActionReload",1)
+  	    TNT1 A 0 A_JumpIfInventory("SSGShell",2,3)
+		TNT1 A 0 A_JumpIfInventory("SSGShell",1,"ReloadLeft") //reloadleft
+        TNT1 A 0 A_JumpIfInventory("ShotgunAmmo",2,2)
 		TNT1 A 0
+		Goto Ready
+    ReloadBoth:
+	    TNT1 A 0 A_JumpIfInventory ("IsDoubleShotgunner", 1, "ReloadBothFast")
+        SHT2 EFG 1 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT2 HIJJ 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT2 K 2 A_OpenShotgun2
+	    TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+	    SHT2 LMN 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		SHT4 OP 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+        SHT4 Q 1
+		SHT4 RS 1
+        SHT4 V 3 A_LoadShotgun2
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+		SHT4 WXY 2
+		SHT4 Z 12
+		SHT3 NOP 2
+		SHT3 Q 1
+		SHT2 RS 1
+        SHT2 T 3 A_LoadShotgun2
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+        SHT2 UVWXYZ 2
+	    ST2F A 2 A_CloseShotgun2
+        ST2F B 2
+	    SHT2 A 5 A_ReFire
+        Goto Ready
+    ReloadBothFast:
+        SHT2 EFG 1 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT2 HIJJ 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT2 K 2 A_OpenShotgun2
+	    TNT1 AA 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+	    SHT2 LMNOP 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+        SHT2 QRS 1
+        SHT2 T 3 A_LoadShotgun2
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",2)
+	    TNT1 A 0 A_GiveInventory("SSGShell",2)
+        SHT2 UVWXYZ 2
+	    ST2F A 2 A_CloseShotgun2
+        ST2F B 2
+	    SHT2 A 5 A_ReFire
+        Goto Ready
+    ReloadLeft:
+        SHT2 EFG 1 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT2 HIJJ 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+	    SHT3 K 2 A_OpenShotgun2
+	    TNT1 A 0 A_SpawnItemEx("ShotgunShellCasing",25,8,25,Random(2,4),Random(3,6),Random(3,6),0)
+	    SHT3 LMNOP 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+        SHT3 Q 1
+		SHT2 RS 1
+        SHT2 T 3 A_LoadShotgun2
+	    TNT1 A 0 A_TakeInventory("ShotgunAmmo",1)
+	    TNT1 A 0 A_GiveInventory("SSGShell",1)
+        SHT2 UVWXYZ 2
+	    ST2F A 2 A_CloseShotgun2
+        ST2F B 2
+	    SHT2 A 5 A_ReFire
+        Goto Ready
+	Spawn:
+		SGN2 A -1
 		stop
 	}
+}
+
+actor DoubleShotgunPickup : CustomInventory {
+	inventory.pickupmessage "You got the double shotgun!"
+	inventory.pickupsound "weapons/up/ssg"
+	states {
+    Spawn:
+		SGN2 A -1
+		Loop
+	Pickup:
+	    TNT1 A 0 A_JumpIfInventory("IsStealth",1,"Denied")
+		TNT1 A 0 A_GiveInventory ("DoubleShotgun")
+		stop
+    Denied:
+	    TNT1 A 0
+	    Fail
+	}
+}
+
+ACTOR SSGShell : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 2
+Ammo.BackpackAmount 0
+Ammo.BackpackMaxAmount 2
+Inventory.Icon "SGN2A0"
++IGNORESKILL
 }

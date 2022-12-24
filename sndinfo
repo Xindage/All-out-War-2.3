@@ -1031,23 +1031,6 @@ rc50/boltclose		rc50bltc
 rc50/zoomin			rc50ZmIn
 $rolloff 			rc50/fire	500 3000
 
-// Nasty Dogs - Stealth sniper
-StealthSniper/fire SNIPFIRE
-$rolloff StealthSniper/fire 1200 3000
-$limit StealthSniper/fire 0
-SNPRFHT1					SNPRFHT1
-SNPRFHT2					SNPRFHT2
-SNPRFHT3					SNPRFHT3
-$Random StealthSniper/FleshHit { SNPRFHT1 SNPRFHT2 SNPRFHT3 }
-$Volume StealthSniper/FleshHit 0.4
-
-SNPRWHT1					SNPRWHT1
-SNPRWHT2					SNPRWHT2
-SNPRWHT3					SNPRWHT3
-SNPRWHT4					SNPRWHT4
-$Random StealthSniper/WallHit { SNPRWHT1 SNPRWHT2 SNPRWHT3 SNPRWHT4 }
-$Volume StealthSniper/WallHit 0.4
-
 //Quad Barrel Shotgun
 quadshotgun/fire		DSQSFIRE
 quadshotgun/insert1     DSQSINS1
@@ -1208,8 +1191,16 @@ saberhtw2 dssabht2
 saberhtw3 dssabht3
 $random weapons/sclash { saberhtw1 saberhtw2 saberhtw3 }
 
+// Nasty Dogs - Stealth Gauss Rifle
+weapons/railcharge          RGCHARGE
+weapons/railgunlaser1	    RGLASER1
+weapons/railgunlaser2	    RGLASER2
+weapons/railgunlaser3	    RGLASER3
+weapons/railgunlaser4	    RGLASER4
+$random weapons/railgunlaser { weapons/railgunlaser1 weapons/railgunlaser2 weapons/railgunlaser3 weapons/railgunlaser4 }
+
 // Plasma Cannon
-plasmacannon/fire		plasmaca
+plasmacannon/fire		    plasmaca
 plasmacannon/altfire		plasmac3
 plasmacannon/explode		plasmaex
 plasmacannon/altexplode		plasmae3

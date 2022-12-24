@@ -546,7 +546,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define ITEM_Karasawa			44
 #define ITEM_NailMG				45
 #define ITEM_BFG2704			46
-#define ITEM_StealthSniper		47
+#define ITEM_StealthGauss		47
 #define ITEM_StealthPistol		48
 // -- Total of items
 #define MAX_ITEMS				49 // Amount of items in the above list
@@ -781,4 +781,3 @@ global int 63:deathtoll;
 #include "a_timegun.acs"
 #include "a_tiberium.acs"
 #include "a_utility.acs"
-#include "a_missile.acs"

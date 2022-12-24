@@ -64,7 +64,7 @@ script SC_WEAPONCHECK OPEN {
 		// stealth weapons, aka laser rifle and knife.
 		if (CheckInventory ("StealthMode") == 2 &&
 			!CheckWeapon ("StealthLaserRifle") &&
-			!CheckWeapon ("StealthSniperRifle") &&
+			!CheckWeapon ("StealthGaussRifle") &&
 			!CheckWeapon ("StealthPistol") &&
 			!CheckWeapon ("Knife"))
 		{
@@ -72,7 +72,7 @@ script SC_WEAPONCHECK OPEN {
 		}
 		
 		// [Dusk] Force the player to destealth as long as he isn't using a stealth weapon.
-		if (!CheckWeapon ("StealthLaserRifle") && !CheckWeapon ("StealthSniperRifle") && !CheckWeapon ("StealthPistol") && !CheckWeapon ("Knife"))
+		if (!CheckWeapon ("StealthLaserRifle") && !CheckWeapon ("StealthGaussRifle") && !CheckWeapon ("StealthPistol") && !CheckWeapon ("Knife"))
 			ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF);
 		
 		// [Dusk] If the player has become berserk, push his armor to stack
@@ -178,6 +178,11 @@ script SC_SelfHealHealth (void) {
 	// [Gaturra] with enhancedselfheal you get 50 instantly.
 	if (CheckInventory ("EnhancedSelfheal")) {
 	    SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH));
+	    if (GetHealth() >= GetSpawnHealth())
+	    {
+		    SetActorProperty(0, APROP_HEALTH, GetSpawnHealth());
+		    terminate;
+	    }
 		terminate;
 	}
 

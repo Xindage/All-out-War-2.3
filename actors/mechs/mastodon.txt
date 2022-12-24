@@ -259,8 +259,8 @@ actor MastodonSwitch2 : PermanentPowerup {Powerup.Type "Mastodon2"}
   Actor DonHomingMissile : HeavyMissile
   {
    //+SEEKERMISSILE
-	Damage(45)
-	Speed 70
+	Damage(50)
+	Speed 50
 	Obituary "$OB_SEEKERMISSILE"
 	States
 	{

@@ -84,7 +84,8 @@ Actor ProxyMineRed {
 		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
 		Loop
 	See:
-		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 0 A_JumpIfCloser(64, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_JumpIfTargetInLOS ("Melee") //Not sure what this is for....
 		PC4T A 2 A_ClearTarget
 		goto Idle
 	Clear:
@@ -111,7 +112,7 @@ Actor ProxyMineRed {
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
-		TNT1 A 1 A_Explode (150, 256, 1)
+		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
 	Death.StealthKnife:
 	Death.Energy:
@@ -130,12 +131,12 @@ actor ProxyMineExplosion {
 	Speed 1
 	Damage 0
 	Obituary "$OB_MINE"
-	DamageType "MassDriver"
+	DamageType "Rifle"
 	states {
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
-		TNT1 A 1 A_Explode (150, 256, 1)
+		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
 	}  
 }
@@ -215,7 +216,7 @@ Actor ProxyMineRedd {
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
 	DamageFactor "StealthKnife",    0.5
-	translation "112:127=175:190"
+	translation "112:127=228:246"
 	
 	States {
 	Spawn:
@@ -224,7 +225,8 @@ Actor ProxyMineRedd {
 		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
 		Loop
 	See:
-		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 0 A_JumpIfCloser(64, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_JumpIfTargetInLOS ("Melee") //Not sure what this is for....
 		PC4T A 2 A_ClearTarget
 		goto Idle
 	Clear:
@@ -249,7 +251,7 @@ Actor ProxyMineRedd {
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
-		TNT1 A 1 A_Explode (150, 256, 1)
+		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
 	Death.StealthKnife:
 	Death.Energy:
@@ -307,7 +309,7 @@ Actor ProxyMineBluee {
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
 	DamageFactor "StealthKnife",    0.5
-	translation "112:127=200:207"
+	translation "112:127=194:207"
 	
 	States {
 	Spawn:
@@ -316,7 +318,8 @@ Actor ProxyMineBluee {
 		PC4T A 6 A_LookEx (LOF_NOSOUNDCHECK, 0, 64)
 		Loop
 	See:
-		PC4T A 0 A_JumpIfCloser(86, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 0 A_JumpIfCloser(64, "Melee") //Checks if they are close enough. If so goes to Melee.
+		PC4T A 2 A_JumpIfTargetInLOS ("Melee") //Not sure what this is for....
 		PC4T A 2 A_ClearTarget
 		goto Idle
 	Clear:
@@ -341,7 +344,7 @@ Actor ProxyMineBluee {
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
-		TNT1 A 1 A_Explode (150, 256, 1)
+		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
 	Death.StealthKnife:
 	Death.Energy:

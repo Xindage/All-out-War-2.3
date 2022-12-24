@@ -133,7 +133,7 @@ actor Rifle : AOWWeapon 21042 {
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		RIFL A 0 A_JumpIfNoAmmo ("AltRejected")
-		RIFL A 4 A_JumpIfInventory ("IsRifleman", 1, "AltFireFast")
+		RIFL A 4 A_JumpIfInventory ("IsRifleman", 1, "AltFireClass")
 		RIFL A 1 A_PlayWeaponSound ("grenade/fire")
 		TNT1 A 0 Radius_Quake(3,6,0,1,0)
 		RIFL A 0 offset (0, 33) bright A_FireCustomMissile("RifleGrenade")
@@ -151,10 +151,10 @@ actor Rifle : AOWWeapon 21042 {
 		RIFL AA 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		RIFL A 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		TNT1 A 0 A_PlayWeaponSound ("rifle/reload")
-		RIFL A 15
+		RIFL A 16
 		RIFL A 4 A_ReFire
 		goto Ready
-	AltFireFast:
+	AltFireClass:
 		RIFL A 1 A_PlayWeaponSound ("grenade/fire")
 		TNT1 A 0 Radius_Quake(3,6,0,1,0)
 		RIFL A 0 offset (0, 33) bright A_FireCustomMissile("RifleGrenade")
@@ -172,7 +172,7 @@ actor Rifle : AOWWeapon 21042 {
 		RIFL AA 3 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		RIFL A 2 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		TNT1 A 0 A_PlayWeaponSound ("rifle/reload")
-		RIFL A 15
+		RIFL A 12
 		RIFL A 4 A_ReFire
 		goto Ready
 	AltRejected:

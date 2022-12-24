@@ -218,7 +218,6 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("SMGMag", 60);
 		GiveInventory ("SSGShell", 2);
 		GiveInventory ("SniperBolt", 1);
-		GiveInventory ("StealthSniperBolt", 1);
 		SetWeapon ("Unarmed");
 		SetAmmoCapacity ("TimedC4Ammo", 1);
 		SetAmmoCapacity ("FragGrenadeAmmo", 1);

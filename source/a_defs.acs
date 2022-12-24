@@ -90,7 +90,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Karasawa", "Karasawa", "KarasawaAmmo", ""},
 	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},
 	{"BFG 2704", "BFG 2704", "", ""},
-	{"Stealth Sniper Rifle", "StealthSniperRifle", "StealthSniperBolt", "SniperAmmo"},
+	{"Stealth Gauss Rifle", "StealthGaussRifle", "GaussRifleAmmo", ""},
 	{"Stealth Pistol", "StealthPistol", "StealthPistolMag", "NewClipAmmo"},
 /*	
 	{"Automatic Shotgun", "AutoShotgun", "autoshellammo", "shotgunammo"},
@@ -149,7 +149,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 40, 0, 125}, // karasawa. Resell value was $125
 	{1, 250, 4, 125}, // Nail MachineGun
 	{1, 0, 0, 500}, // BFG 20704
-	{1, 1, 40, 125}, //stealth sniper rifle
+	{1, 50, 0, 200}, //stealth gauss rifle
 	{1, 12, 400, 10}, //Stealth pistol
 	
 	/*{1, 50, 8, 100}, //auto shottie
@@ -230,7 +230,7 @@ function void InitClasses (void) {
 		2, 1, 0,
 		ITEM_RIFLE, 0, 0, 0, 0, 0);
 
-	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 200, 0.8, DEP_NONE,
+	AddClass (CLASS_DoubleShotgunner, "Double Shotgunner", 250, 0.8, DEP_NONE,
 		1, ARMOD_NOCHANGE,
 		1, 1, 0,
 		ITEM_SSG, 0, 0, 0, 0, 0);
@@ -342,10 +342,10 @@ function void InitClasses (void) {
 		4, 2, CF_Warning|CF_CantPilot,
 		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
 		
-	AddClass (CLASS_StealthAssassin, "Stealth Assassin", 1200, 0.9, DEP_CENTRE,
+	AddClass (CLASS_StealthAssassin, "Stealth Assassin", 1000, 0.9, DEP_CENTRE,
 		-1, ARMOD_ENERGY,
 		2, 2, (CF_NoPistol | CF_Warning | CF_IsSniper | CF_IsStealth),
-		ITEM_STEALTHSNIPER, ITEM_STEALTHPISTOL, 0, 0, 0, 0);
+		ITEM_STEALTHGAUSS, ITEM_STEALTHPISTOL, 0, 0, 0, 0);
 
 	// Support
 	AddClass (CLASS_Engineer, "Engineer", 0, 0.8, DEP_NONE,

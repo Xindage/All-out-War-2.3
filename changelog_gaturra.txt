@@ -2,7 +2,7 @@
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/4Sp4gQUv
+Discord server          : https://discord.gg/n6xtkrJX
 
 Original Release date   : 2022/04/18 (v0.1)
 Version r221118 (2022/11/18)
@@ -90,6 +90,35 @@ Version r221210 (2022/12/06)
                           - Shock rifle altfire projectile damage radius decreased
                           - Reverted submachinegun and machinegun changes
                           - Several map fixes
+
+Version r221219 (2022/12/19)
+                          - double shotgun altfire is back
+						  - stealth assassin now uses a gauss rifle instead of a sniper
+						  - rifle grenades are a bit faster when you have the class rifleman
+						  - because aow needs more crates, fatige and class swap crates are back
+                          - chronobow projectile damage decreased
+						  - missile launcher altfire projectile now only looks for enemies in a smaller range
+						  - mastodon missile speed decreased
+						  - map fixes for aow05 aow10 and aow12.
+                          - New map aow27 (Hoth)
+Version r221220 (2022/12/20)
+						  - double shotgun altfire spread slighty decreased
+						  - grenade launcher grenades damage radius reverted (exactly as it was before)
+						  - class swap crate removed (too good for aow)
+						  - Several extra mapfixes
+                          - Killing enemies inside your own base worth more xp and credits
+                          - Mapping: repair facility now has lines tags for MCT
+						  - Fixed: purple mines on space camp
+						  - Fixed: turrets and proxy mines not working sometimes
+						  - Fixed: stealth gauss laser not dealing damage
+						  - Fixed: chemsprayer deals double damage
+Version r221221 (2022/12/21)
+                          - Stealth gauss rifle damage slighty decreased (from 70 to 65)
+						  - Fixed: enhanced selfheal healing over 150 hp
+						  - Fixed: laser from stealth gauss auto aiming at actors
+Version r221222 (2022/12/22)
+                          - Proxy mines now use the same damagetype as frag grenades (exactly as in aow r2539)
+                          - Fixed: stuck after teleporting back to base in aow09 and aow26
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *

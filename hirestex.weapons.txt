@@ -151,3 +151,37 @@ remap masrs0 masrs0x
 remap masrt0 masrt0x
 remap masru0 masru0x
 
+//stealth gauss rifle
+remap sgaba0 sgaxa0
+remap sgabb0 sgaxb0
+remap sgabc0 sgaxc0
+remap sgabd0 sgaxd0
+remap sgabe0 sgaxe0
+remap sgabf0 sgaxf0
+remap sgabg0 sgaxg0
+remap sgabh0 sgaxh0
+remap sgabi0 sgaxi0
+remap sgabj0 sgaxj0
+remap sgabk0 sgaxk0
+remap sgabl0 sgaxl0
+remap sgabm0 sgaxm0
+remap sgabn0 sgaxn0
+remap sgabo0 sgaxo0
+
+remap sgara0 sgaya0
+remap sgarb0 sgayb0
+remap sgarc0 sgayc0
+remap sgard0 sgayd0
+remap sgare0 sgaye0
+remap sgarf0 sgayf0
+remap sgarg0 sgayg0
+remap sgarh0 sgayh0
+remap sgari0 sgayi0
+remap sgarj0 sgayj0
+remap sgark0 sgayk0
+remap sgarl0 sgayl0
+remap sgarm0 sgaym0
+remap sgarn0 sgayn0
+remap sgaro0 sgayo0
+
+remap sgarx0 sgaxx0

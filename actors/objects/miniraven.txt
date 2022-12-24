@@ -265,7 +265,8 @@ actor Utility_MiniRavenBlue {
 		RAVN H 0 A_JumpIfTargetInLOS("Missile",180)
 		goto See
 	Missile:
-		CIGN A 0 A_JumpIfInTargetInventory ("IsRed", 1, 1) goto SeeWander
+		CIGN A 0 A_JumpIfInTargetInventory ("IsRed", 1, 1)
+		goto SeeWander
 		RAVN H 0 A_Jump(96,"Missile2")
 		RAVN A 0 A_PlayWeaponSound("lrm/fire")
 		RAVN A 0 A_CustomMissile("MiniRaven-LRM",48,random(-12,-16),random(-4,4),0)
@@ -300,7 +301,8 @@ actor Utility_MiniRavenBlue {
 		RAVN H 0 A_FaceTarget
 		goto See
 	Missile2:
-		CIGN A 0 A_JumpIfInTargetInventory ("IsRed", 1, 1) goto Missile2Reload
+		CIGN A 0 A_JumpIfInTargetInventory ("IsRed", 1, 1)
+		goto Missile2Reload
 		RAVN A 0 A_CustomMissile("MiniRavenAC2",48,random(-12,-16),random(-4,4),0)
 		RAVN H 0 A_FaceTarget
 		RAVN AAA 1 A_Chase("","")

@@ -387,6 +387,62 @@ script SC_CL_FXCVAR (void) CLIENTSIDE {
 }
 
 // =============================================================================
+// [Dusk] Missile launcher targeter
+script SC_CL_MISSILETARGETER (void) CLIENTSIDE {
+	if (ActivatorTID () != 3800 + intHolder[i_consoleplayer]) terminate;
+	int mytid = 3800 + intHolder[i_consoleplayer];
+	int t;
+	int team = PlayerTeam ();
+	
+	while (CheckWeapon ("MissileLauncher") && !Checkinventory ("MissileMode1") && GetActorProperty (0, APROP_Health) > 0) {
+		SetActivatorToTarget (0);
+		t = ActivatorTID ();
+		
+		// Only display the targeter if aiming at a non-stealthing enemy player.
+		if (t != mytid && t >= 3800 && t <= (3800+MAXPLAYERS) &&
+			CheckActorInventory (t, "StealthMode") != 2 &&
+			GetPlayerInfo (t-3800, PLAYERINFO_TEAM) != team) {
+			
+			// Display the targeter circle
+			SetFont ("TARGHAIR");
+			HudMessageBold (s:"a";
+				HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, -0.5, -0.5, HM_2TICS, HM_3TICS);
+			
+			// Play beep sound
+			AmbientSound ("missilelauncher/see", 127);
+			delay (4);
+		}
+		
+		SetActivator (mytid);
+		delay (1);
+	}
+
+	while (CheckWeapon ("MissileLauncher") && Checkinventory ("MissileMode1") && !Checkinventory ("LockOnTarget") && GetActorProperty (0, APROP_Health) > 0) {
+	    SetFont ("TARGHAIA");
+	    HudMessageBold (s:"a";
+	    HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, -0.5, -0.5, HM_2TICS, HM_3TICS);
+		
+		if (CheckInventory ("LockOnActive")) {
+	        SetFont ("TARGHAIB");
+	        HudMessageBold (s:"a";
+	        HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, -0.5, -0.5, HM_2TICS, HM_3TICS);
+		}
+		
+		delay (1);
+	}
+
+	while (CheckWeapon ("MissileLauncher") && Checkinventory ("MissileMode1") && Checkinventory ("LockOnTarget") && GetActorProperty (0, APROP_Health) > 0) {
+		
+	    SetFont ("TARGHAIC");
+	    HudMessageBold (s:"a";
+	    HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, -0.5, -0.5, HM_2TICS, HM_3TICS);
+
+		delay (5);
+	}
+
+}
+
+// =============================================================================
 // [Dusk] Sniper rifle zoom effect
 script SC_CL_SNIPERZOOM (void) CLIENTSIDE {
 	// Fade in

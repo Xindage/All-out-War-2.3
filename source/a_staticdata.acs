@@ -180,7 +180,7 @@ int MenuMechs[NUM_MECH_WEIGHTS][MAX_MENU_ITEMS];
 // ============================================================================
 
 // Identifiers of weapons the random weapon crate can give.
-#define MAX_RANDOMWEAPONCRATEITEMS 24
+#define MAX_RANDOMWEAPONCRATEITEMS 25
 int RandomWeaponCrateItems[MAX_RANDOMWEAPONCRATEITEMS] = {
 	ITEM_ARTILLERY,
 	ITEM_CHEMSPRAY,
@@ -207,8 +207,9 @@ int RandomWeaponCrateItems[MAX_RANDOMWEAPONCRATEITEMS] = {
 	ITEM_TIBRIFLE,
 	ITEM_COMBUSTRIFLE,
 	ITEM_TIMEGUN,
-	ITEM_Karasawa,
-// -- 24
+	ITEM_KARASAWA,
+	ITEM_STEALTHGAUSS,
+// -- 25
 };
 
 // ============================================================================

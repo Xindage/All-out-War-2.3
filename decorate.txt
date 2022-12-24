@@ -92,6 +92,7 @@
 #include "actors/weapons/timegun.txt"
 #include "actors/weapons/utilitygun.txt"
 #include "actors/weapons/bfg2704.txt"
+#include "actors/weapons/stealthgaussrifle.txt"
 #include "actors/mechs/mechbase.txt"
 #include "actors/mechs/mechflamer.txt"
 #include "actors/mechs/wolverine.txt"
@@ -149,8 +150,6 @@
 #include "actors/weapons/Lightsaber.txt"
 
 #include "actors/weapons/stealthpistol.txt"
-#include "actors/weapons/stealthsniperrifle.txt"
 
 //Goatsex - Terminals
 #include "actors/crucial/generic_terminal.txt"
-

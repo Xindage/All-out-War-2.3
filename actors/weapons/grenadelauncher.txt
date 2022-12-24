@@ -121,7 +121,7 @@ actor GrenadeGrenade {
 	Death:
 		TNT1 B 0 bright A_NoGravity
 		TNT1 B 0 bright A_Explode(148,256,1) //20% less damage than Missile Launcher due to higher RoF
-		TNT1 B 0 bright A_RadiusThrust(384,128,1) //Weeee
+		TNT1 B 0 bright A_RadiusThrust(384,256,1) //Weeee
 		TNT1 A 5 A_SpawnItemEx ("ExplosionMain")
 		stop
 	}

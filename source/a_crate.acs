@@ -264,11 +264,9 @@ function int CheckCrate (int c) {
 				!CheckInventory("TimeGun") &&
 				!CheckInventory("Karasawa");
 	case CRATE_FATIGUE:
-		return	////!CheckInventory ("PowerFatigue") && // not if the player is already fatigue'd
-				////!CheckInventory ("StealthLaserRifle") && // don't slow down stealths or blurred
-				////!CheckInventory ("Knife") && // players, the speed trail ruins the invisibility effect.
-				////!CheckInventory ("PowerInvisibility");
-				false;
+		return	!CheckInventory ("PowerFatigue") && // not if the player is already fatigue'd
+				!CheckInventory ("IsStealth") && // don't slow down stealths or blurred
+				!CheckInventory ("PowerInvisibility");
 	case CRATE_REMOTEC4:
 		return !CheckInventory ("RemoteC4"); // not if the player already has remote C4
 	case CRATE_BLURSPHERE:
@@ -655,7 +653,7 @@ script 309 (int c) {
 		CheckAndRemove ("Boomstick");
 		CheckAndRemove ("DoubleShotgun");
 		CheckAndRemove ("Rifle");
-		CheckAndRemove ("StealthSniperRifle");
+		CheckAndRemove ("StealthGaussRifle");
 		CheckAndRemove ("GaussRifle");
 		CheckAndRemove ("GrenadeLauncher");
 		CheckAndRemove ("StealthLaserRifle");
