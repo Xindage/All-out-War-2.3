@@ -182,7 +182,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
  *
  *	row 2:
  *	- armor grade (-1 - 5)
- *	- armor modifier (ARMOD_NOCHANGE, ARMOD_BULLET, ARMOD_EXPLO, ARMOD_ENERGY, ARMOD_CHEM, ARMOD_FIRE)
+ *	- armor modifier (ARMOD_NOCHANGE, ARMOD_BULLET, ARMOD_EXPLO, ARMOD_ENERGY, ARMOD_CHEM, ARMOD_FIRE, ARMOD_CRYO)
  *
  *	row 3:
  *	- frag grenades & flashbangs

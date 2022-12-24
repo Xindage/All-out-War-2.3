@@ -13,6 +13,7 @@ int ArmorWeaknesses[6] = {
 	ARMOD_BULLETPROOF, // ENERGY
 	ARMOD_ENERGY, // EXPLO
 	ARMOD_EXPLO, // BULLETPROOF
+//	ARMOD_CRYO, // ICE
 };
 
 function int GetArmorGrade (void) {
@@ -39,6 +40,7 @@ function int GetPlayerArmorModifier (int p) {
 	if (CheckActorInventory (3800 + p, "PowerExplosiveResistance")) return ARMOD_EXPLO;
 	if (CheckActorInventory (3800 + p, "PowerEnergyResistance")) return ARMOD_ENERGY;
 	if (CheckActorInventory (3800 + p, "PowerBulletProof")) return ARMOD_BULLETPROOF;
+//	if (CheckActorInventory (3800 + p, "PowerCryoResistance")) return ARMOD_CRYO;
 	return 0;
 }
 
@@ -106,6 +108,7 @@ function void SetPlayerArmorGrade (int p, int n, int mod) {
 		CheckAndRemove ("PowerExplosiveResistance");
 		CheckAndRemove ("PowerEnergyResistance");
 		CheckAndRemove ("PowerBulletProof");
+//		CheckAndRemove ("PowerCryoResistance")
 		
 		switch (mod) {
 		case ARMOD_FIRE:
@@ -123,6 +126,9 @@ function void SetPlayerArmorGrade (int p, int n, int mod) {
 		case ARMOD_BULLETPROOF:
 			GiveActorInventory (3800 + p, "BulletProof", 1);
 			break;
+//		case ARMOD_CRYO:
+//			GiveActorInventory (3800 + p, "PowerCryoResistance", 1);
+//			break;
 		}
 	}
 }
@@ -281,6 +287,9 @@ script SC_SETAIARMORGRADE (int grade, int mod)
 			case ARMOD_BULLETPROOF:
 				GiveInventory( "BulletProof", 1 );
 				break;
+//			case ARMOD_CRYO:
+//				GiveInventory( "PowerCryoResistance", 1 );
+//				break;
 		}
     }
 }

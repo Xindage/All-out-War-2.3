@@ -297,6 +297,10 @@ script SC_KILLERHEALTH (void) NET {
 		case ARMOD_EXPLO:
 			armorTypeName = "\cFexplosive resistance";
 			break;
+
+//		case ARMOD_CRYO:
+//			armorTypeName = "\cVice resistance";
+//			break;
 	}
 	
 	SetFont ("SMALLFONT");
