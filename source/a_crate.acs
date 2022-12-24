@@ -766,12 +766,14 @@ script 309 (int c) {
 		GiveInventory ("BloodRevolver", 1);
 		GiveInventory ("BloodRevolverAmmo", 3);
 		delay (1);
+		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
 		SetWeapon ("BloodRevolver");
 		break;
 	case CRATE_QUADSHOTGUN:	
 		IntelMessage (strparam(n:0, s:"\cJ got the \cAQuad Shotgun!"), true);
 		GiveInventory("Quad Shotgun", 1);
 		Delay(1);
+		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
 		SetWeapon("Quad Shotgun");
 		break;
 	case CRATE_RADAR:
@@ -846,6 +848,7 @@ script 309 (int c) {
 		IntelMessage (strparam(n:0, s:"\cJ got the \cVLightsaber!"), true);
 		GiveInventory("Lightsaber", 1);
 		Delay(1);
+		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
 		SetWeapon("Lightsaber");
 		break;
 	case CRATE_BFG2704:
@@ -853,6 +856,7 @@ script 309 (int c) {
 		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
 		Delay(1);
+		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
 		SetWeapon("BFG 2704");
 		break;
 		
