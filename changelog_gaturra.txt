@@ -2,7 +2,7 @@
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/n6xtkrJX
+Discord server          : https://discord.gg/fgxCGck9
 
 Original Release date   : 2022/04/18 (v0.1)
 Version r221118 (2022/11/18)
@@ -119,10 +119,13 @@ Version r221221 (2022/12/21)
 Version r221222 (2022/12/22)
                           - Proxy mines now use the same damagetype as frag grenades (exactly as in aow r2539)
                           - Fixed: stuck after teleporting back to base in aow09 and aow26
-Version r221224 (2022/12/24)
+Version r221225 (2022/12/25)
                           - Missile launcher altfire is a bit easier to use than before
                           - Stealth gauss now has impact damage (only on walls), by barney the dinosaur
                           - Chronobow damage increased (from 90 to 99)
+                          - New gravity crate was added
+                          - Cretes that give you weapons wont force you to switch
+                          - More mapfixes
                           - Fixed: selfheal/grenades keybinds not working sometimes
 
 ===========================================================================================================================================================
@@ -156,6 +159,7 @@ Version r221224 (2022/12/24)
 						                    - Balance -
 						  > In order to keep balance, each class will have a bonus with their main weapon:
 						      - Gunman                : better fire rate and accuracy
+						      - Double shotgunner     : faster reloading, altfire
 							  - Machinegunner         : burst fire (altfire)
 							  - Minigunner            : can spin the gatling gun without firing bullets (reload key)
 							  - Rocket soldier        : altfire and faster reloading
