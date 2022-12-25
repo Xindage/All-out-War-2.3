@@ -773,16 +773,10 @@ script 309 (int c) {
 		IntelMessage (strparam (n:0, s:"\cJ got \cAblood revolver!"), true);
 		GiveInventory ("BloodRevolver", 1);
 		GiveInventory ("BloodRevolverAmmo", 3);
-		delay (1);
-		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
-		SetWeapon ("BloodRevolver");
 		break;
 	case CRATE_QUADSHOTGUN:	
 		IntelMessage (strparam(n:0, s:"\cJ got the \cAQuad Shotgun!"), true);
 		GiveInventory("Quad Shotgun", 1);
-		Delay(1);
-		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
-		SetWeapon("Quad Shotgun");
 		break;
 	case CRATE_RADAR:
 		GiveInventory ("Radar", 1);
@@ -855,19 +849,12 @@ script 309 (int c) {
 	    ActivatorSound ("weapons/son", 127);
 		IntelMessage (strparam(n:0, s:"\cJ got the \cVLightsaber!"), true);
 		GiveInventory("Lightsaber", 1);
-		Delay(1);
-		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
-		SetWeapon("Lightsaber");
 		break;
 	case CRATE_BFG2704:
 	    ActivatorSound ("weapons/up/bfg", 127);
 		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
-		Delay(1);
-		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
-		SetWeapon("BFG 2704");
 		break;
-
 	case CRATE_GRAVITY:
 		IntelMessage (strparam(n:0, s:"\cJ activated the \cUMoon Gravity!"), true);
 		SetGravity(400.0);
@@ -898,7 +885,7 @@ Script "CRATE_SoulsphereDegeneration" (void)
 Script "CRATE_MoonGravityTimer" (void)
 {
 	gravityonce = 1;
-	SetGravity(260.0); // Halves the gravity.
+	SetGravity(300.0); // Decrease the gravity.
 	Delay(5 * MINUTETICS);
 	SetGravity(800.0); // Return to default.
 	IntelMessage (strparam(s:"\cUMoon Gravity \c-loses its effect."), true);
