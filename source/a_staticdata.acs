@@ -47,6 +47,9 @@ int NumKarasawas[2];
 // [JD] Utility Guy tracking.
 int NumUtilityGuy[2];
 
+// [Xindage] Used by Gravity Crate.
+bool Gravityonce;
+
 int RepairPadMechHPStore[MAXPLAYERS];
 
 int RepairAmounts[5] = {

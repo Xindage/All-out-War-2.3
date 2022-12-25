@@ -66,9 +66,10 @@
 #define CRATE_SOULSPHERE	42
 #define CRATE_LIGHTSABER	43
 #define CRATE_BFG2704   	44
+#define CRATE_GRAVITY   	45
 // ----
 // ----
-#define NUM_CRATES			45
+#define NUM_CRATES			46
 
 // --------------------------------------------------------------
 #define CRK_NAME		0 // Name of crate
@@ -156,6 +157,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0));
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
+	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  2, CRT_Misc,		(CRF_Announce | CRF_NoDeck));
 
 	
 }
@@ -298,6 +300,12 @@ function int CheckCrate (int c) {
 		return !CheckInventory("Lightsaber");
 	case CRATE_BFG2704:
 		return !CheckInventory("BFG 2704");
+	case CRATE_GRAVITY:
+		return	!GetConfig (CONFIG_TOURNAMENTMODE) && // not in tournament mode
+				!(gravityonce) && // not if it already had happened
+				!intHolder[i_SuddenDeath] && // Not in suddendeath
+				!(GetCVar("zeta_suddendeathtime") <= 6) && // only is SD is higher than 6 minutes
+				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 6)); // The effect should last up to 1 minute before SD*/
 	}
 	
 	return true;
@@ -859,7 +867,12 @@ script 309 (int c) {
 		if (!CheckInventory("IsStealth")) // Dont switch if stealth.
 		SetWeapon("BFG 2704");
 		break;
-		
+
+	case CRATE_GRAVITY:
+		IntelMessage (strparam(n:0, s:"\cJ activated the \cUMoon Gravity!"), true);
+		SetGravity(400.0);
+		ACS_NamedExecuteAlways("CRATE_MoonGravityTimer", 0, 0, 0, 0);
+		break;
 	}
 }
 
@@ -880,6 +893,15 @@ Script "CRATE_SoulsphereDegeneration" (void)
 		SetHealth(GetSpawnHealth());*/
 	
 	TakeInventory("CRATE_SoulsphereDummyItem", 1);
+}
+
+Script "CRATE_MoonGravityTimer" (void)
+{
+	gravityonce = 1;
+	SetGravity(260.0); // Halves the gravity.
+	Delay(5 * MINUTETICS);
+	SetGravity(800.0); // Return to default.
+	IntelMessage (strparam(s:"\cUMoon Gravity \c-loses its effect."), true);
 }
 
 // ============================================================================
