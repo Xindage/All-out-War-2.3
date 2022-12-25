@@ -130,7 +130,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 200, 0, 150}, //shock rifle
 	{1, 1, 40, 125}, //sniper rifle
 	{1, 200, 0, 125}, //plasma rifle
-	{1, 100, 0, 10}, //stealth knife
+	{1, 0, 0, 10}, //stealth knife
 	{1, 0, 0, 125}, //chainsaw
 	{1, 0, 0, 0}, //bomb pack
 	{1, 4, 0, 75}, //remote c4
