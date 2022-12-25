@@ -119,6 +119,11 @@ Version r221221 (2022/12/21)
 Version r221222 (2022/12/22)
                           - Proxy mines now use the same damagetype as frag grenades (exactly as in aow r2539)
                           - Fixed: stuck after teleporting back to base in aow09 and aow26
+Version r221224 (2022/12/24)
+                          - Missile launcher altfire is a bit easier to use than before
+                          - Stealth gauss now has impact damage (only on walls), by barney the dinosaur
+                          - Chronobow damage increased (from 90 to 99)
+                          - Fixed: selfheal/grenades keybinds not working sometimes
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *

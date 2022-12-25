@@ -39,7 +39,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		MSLR D 1 offset (-5,34)
 		MSLR D 1 offset (0,0)
 		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
-		TNT1 A 0 A_TakeInventory("LockOnActive",10)
+		TNT1 A 0 A_TakeInventory("LockOnActive",15)
 		goto ready
 	Select.Blue:
 	    MSLB D 1 offset (-90,100)
@@ -55,7 +55,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		MSLB D 1 offset (-5,34)
 		MSLB D 1 offset (0,0)
 		TNT1 A 0 A_TakeInventory("SelectAnimation",1)
-		TNT1 A 0 A_TakeInventory("LockOnActive",10)
+		TNT1 A 0 A_TakeInventory("LockOnActive",15)
 		goto ready
 	Deselect:
 	    TNT1 A 0 A_JumpIfInventory("MissileMode1", 1, "ChangeMode")
@@ -115,9 +115,9 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		Loop
     LockOnReady2:
 	    TNT1 A 0 A_PlaySound("missilelauncher/see",CHAN_WEAPON)
-	    TNT1 A 0 A_GiveInventory("LockOnActive",2)
+	    TNT1 A 0 A_GiveInventory("LockOnActive",3)
 	    MSLR D 5 Offset(8,40) A_WeaponReady (WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_JumpIfInventory("LockOnActive",10,"LockOnReady3")
+		TNT1 A 0 A_JumpIfInventory("LockOnActive",15,"LockOnReady3")
 		goto LockOnReady
     LockOnReady3:
 	    TNT1 A 0 A_JumpIfInventory("MissileMag",3,"LockOnReady4")
@@ -156,6 +156,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Altfire")
+		MSLR A 0 A_PlaySound("MissileLauncher/LockedBeep",CHAN_WEAPON)
 		MSLR DD 1 A_JumpIfCloser(1536, "Fire2")
 	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"Altfire")
@@ -180,8 +181,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Altfire")
-		MSLR A 0 A_PlaySound("MissileLauncher/LockedBeep",CHAN_WEAPON)
-		TNT1 A 0 A_TakeInventory("LockOnActive",2)
+		TNT1 A 0 A_TakeInventory("LockOnActive",5)
 		Loop
     LockOnReady.Blue:
 		TNT1 A 0 A_JumpIfCloser(1536, "LockOnReady2.Blue")
@@ -195,9 +195,9 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		Loop
     LockOnReady2.Blue:
 	    TNT1 A 0 A_PlaySound("missilelauncher/see",CHAN_WEAPON)
-	    TNT1 A 0 A_GiveInventory("LockOnActive",2)
+	    TNT1 A 0 A_GiveInventory("LockOnActive",3)
 	    MSLB D 5 Offset(8,40) A_WeaponReady (WRF_NOBOB | WRF_NOFIRE)
-		TNT1 A 0 A_JumpIfInventory("LockOnActive",10,"LockOnReady3.Blue")
+		TNT1 A 0 A_JumpIfInventory("LockOnActive",15,"LockOnReady3.Blue")
 		goto LockOnReady.Blue
     LockOnReady3.Blue:
 	    TNT1 A 0 A_JumpIfInventory("MissileMag",3,"LockOnReady4.Blue")
@@ -236,6 +236,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Altfire")
+		MSLB A 0 A_PlaySound("MissileLauncher/LockedBeep",CHAN_WEAPON)
 		MSLB DD 1 A_JumpIfCloser(1536, "Fire2.Blue")
 	    TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"Altfire")
@@ -260,8 +261,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"Altfire")
 		TNT1 A 0 A_JumpIfInventory("ActionReload",1,"Altfire")
-		MSLB A 0 A_PlaySound("MissileLauncher/LockedBeep",CHAN_WEAPON)
-		TNT1 A 0 A_TakeInventory("LockOnActive",2)
+		TNT1 A 0 A_TakeInventory("LockOnActive",5)
 		Loop
 	Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
@@ -337,7 +337,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		MSLB DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		Goto Reload.Blue
     Fire2:
-        TNT1 A 0 A_TakeInventory("LockOnActive",10)
+        TNT1 A 0 A_TakeInventory("LockOnActive",15)
 	    TNT1 A 0 A_TakeInventory("MissileMode1",1)
         TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_PlaySoundEx("missilelauncher/busrtShot",CHAN_VOICE)
@@ -389,7 +389,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		MSLR DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		Goto Reload
     Fire2.Blue:
-        TNT1 A 0 A_TakeInventory("LockOnActive",10)
+        TNT1 A 0 A_TakeInventory("LockOnActive",15)
 	    TNT1 A 0 A_TakeInventory("MissileMode1",1)
         TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_PlaySoundEx("missilelauncher/busrtShot",CHAN_VOICE)
@@ -472,7 +472,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		Goto Ready
     Altfire:
 	    TNT1 A 0
-        TNT1 A 0 A_TakeInventory("LockOnActive",10)
+        TNT1 A 0 A_TakeInventory("LockOnActive",15)
 		TNT1 A 0 A_TakeInventory("LockOnTarget",1)
 	    TNT1 A 0 A_JumpIfInventory("IsRocketSoldier",1,"ChangeMode")
 	    Goto Ready
@@ -827,5 +827,5 @@ actor MissileMag : Ammo {
 }
 
 ACTOR MissileMode1 : Inventory {Inventory.MaxAmount 1}
-Actor LockOnActive : Inventory { Inventory.MaxAmount 10 }
+Actor LockOnActive : Inventory { Inventory.MaxAmount 15 }
 ACTOR LockOnTarget : Inventory {Inventory.MaxAmount 1}

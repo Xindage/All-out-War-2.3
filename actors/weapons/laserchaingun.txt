@@ -83,6 +83,7 @@ actor LaserChaingun : AOWWeapon 21083 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		LCGR A 1 A_WeaponReady
 		Loop
 	ReadyBlue:
@@ -91,6 +92,7 @@ actor LaserChaingun : AOWWeapon 21083 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		LCGB A 1 A_WeaponReady
 		Loop
 	ReadyZoomed:
@@ -99,6 +101,7 @@ actor LaserChaingun : AOWWeapon 21083 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireOff")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireOff")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireOff")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		LCGR A 1 A_WeaponReady
 		Loop
 	ReadyZoomedBlue:
@@ -106,6 +109,7 @@ actor LaserChaingun : AOWWeapon 21083 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"AltFireOff")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"AltFireOff")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"AltFireOff")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		LCGB A 1 A_WeaponReady
 		Loop
 	Fire:

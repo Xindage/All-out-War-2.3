@@ -55,6 +55,7 @@ actor RepairGun : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		REP1 A 1 A_WeaponReady
 		loop
 	Fire:
@@ -79,6 +80,7 @@ actor RepairGun : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		REP2 A 1 A_WeaponReady
 		loop
 	DeselectEnhanced:
@@ -161,6 +163,7 @@ actor HealGun : RepairGun {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		REP4 A 1 A_WeaponReady
 		loop
 	Fire:
@@ -218,6 +221,7 @@ actor BombSquadGun : RepairGun {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		REP3 A 1 A_WeaponReady
 		Loop
 	Fire:
@@ -280,6 +284,7 @@ actor RemoverGun : RepairGun {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		REP5 A 0 A_TakeInventory("RemoverGunHeat",2)
 		REP5 AA 1 A_WeaponReady
 		Loop

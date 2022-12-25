@@ -56,11 +56,13 @@ actor TiberiumAutorifleWeak : AOWWeapon 21084 {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		E21C A 4 A_WeaponReady
 		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		E21C A 4 A_WeaponReady
 		E21C A 0 A_JumpIfInventory("TE21Burst",4,2) //Full ammo? Don't take clip plz thx
 		E21C A 0 A_JumpIfInventory("TE21CalAmmo",1,2) //Otherwise, do we have ammo? Yes? Good, go give us a shot.

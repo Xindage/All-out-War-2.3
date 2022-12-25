@@ -57,6 +57,7 @@ Actor "Quad Shotgun" : AOWWeapon {
 		TNT1 A 0 A_JumpIfInventory("ActionFlashbang",1,"UseFlashbang")
 		TNT1 A 0 A_JumpIfInventory("ActionRemoteC4",1,"UseRemoteC4")
 		TNT1 A 0 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_TakeInventory("ActionReload",1)
 		PKS3 A 1 A_WeaponReady 
 		Loop
 	Fire:
