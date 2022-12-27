@@ -1,21 +1,20 @@
 actor IsAIMarine : Inventory {}
-Actor MBase : PlayerPawn	//Basic unarmed marine.
+// [Xindage] Important note: Never use goto in the marines, just dynamic jumps. loops are ok.
+// Read more about in https://zdoom.org/wiki/Using_inheritance
+Actor MBase : PlayerPawn	// Basic unarmed marine.
 {
 
-	Speed 0					//ThrustThing and A_Recoil instead.
-	MaxDropOffHeight 63		//Gives the marines a smaller chance of falling into pits. 63, not 64.
+	Speed 0					// ThrustThing and A_Recoil instead.
+	MaxDropOffHeight 63		// Gives the marines a smaller chance of falling into pits. 63, not 64.
 	PainSound "*pain"
-	MaxStepHeight 56		//This is not too much?
-
-//-----------------------------------------------------------------------
-
+	MaxStepHeight 56		// This is not too much?
 	obituary "%o was killed by a \cadebug marine's\c- nothing."
 	Health 115
 	Radius 16
 	Height 56
 	Mass 100
 	Painchance 200
-//	MaxTargetRange 128		//For close quarter weapons.
+//	MaxTargetRange 128		// For close quarter weapons.
 	+CANPASS
 	+CANPUSHWALLS
 	+CANUSEWALLS
@@ -25,10 +24,10 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 	+SOLID
 	+SHOOTABLE
 	+QUICKTORETALIATE
-	+NODROPOFF				//In conjunction with MaxDropOffHeight.
-	+ISMONSTER				//Needed for the marines to take any projectile damage in invasion mode.
-	-COUNTKILL				//In conjunction with +ISMONSTER.
-	+NEVERFAST				//Same as above.
+	+NODROPOFF				// In conjunction with MaxDropOffHeight.
+	+ISMONSTER				// Needed for the marines to take any projectile damage in invasion mode.
+	-COUNTKILL				// In conjunction with +ISMONSTER.
+	+NEVERFAST				// Same as above.
 	//+NOTIMEFREEZE
 	+LOOKALLAROUND
 	-TELESTOMP
@@ -36,10 +35,10 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 
 	//	Translation "112:127=[0,68,181]:[0,0,0]"	//Blue
 	//	Translation "112:127=[160,0,0]:[0,0,0]"		//Red
+	//	DesignatedTeam x (0 Blue 1 Red)
 
 //AOW Base DamageFactoring-----------------------------------------------------------------------
 
-//	DesignatedTeam x (0 Blue 1 Red)
 	damagefactor "Fist", 1.0
 	damagefactor "Bullet", 1.0
 	damagefactor "Rifle", 1.0
@@ -67,19 +66,26 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //					Spawn and idle states.
 //
 //-----------------------------------------------------------------------
+// Y - yes and N - no means states that can be used by all other marines whitout issues.
+// TODO: Descrease the amount of copy paste and let all marines inherit from this marine data.
 
-	Spawn:
-		TNT1 A 0 //Dummy frame needed.
-		TNT1 A 0 A_ChangeFlag("Friendly", 0)//Execute ACS script(s) here.
+	Spawn: // N
+		TNT1 A 0 // Dummy frame needed.
+//		TNT1 A 0 A_GiveInventory("IsTeam", 1) // Give team items here
+		TNT1 A 0 A_ChangeFlag("Friendly", 0) // Execute ACS script(s) here.
+		TNT1 A 0 ACS_ExecuteAlways (993, 0, 1, ARMOD_NOCHANGE) // ACS 993 must be used by ai marines.
+		TNT1 A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
 		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
 		Stop
 
-	EnablePushablePreIdle: //Allows you to push marines if they are in your way while idling.
-		TNT1 A 0 A_ChangeFlag ("PUSHABLE", 1)
+	EnablePushablePreIdle: // Y
+	// Allows you to push marines if they are in your way while idling.
+		TNT1 A 0 A_ChangeFlag ("PUSHABLE", 1) // Allows you to push marines if they are in your way while idling.
 		TNT1 A 0 A_Jump (256, "Idle")
 		Stop
 
-	Idle: //Check if pushed, then look for enemies. If player out of sight, begin to wander. If underwater, sink down. 
+	Idle: // N
+	// Check if pushed, then look for enemies. If player out of sight, begin to wander. If underwater, sink down.
 		TNT1 A 0 A_JumpIf (momx != 0 || momy != 0, "MomentumCheck")
 
 		PLAY A 1 A_LookEx (0, 0, 0, 1200, 360, "DisablePushablePreAlternateChase")
@@ -90,12 +96,11 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_JumpIf (waterlevel == 2, "SinkDown2")
 		TNT1 A 0 A_JumpIf (waterlevel == 3, "SinkDown3")
 		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "Idle")
-		Stop
+		Loop
 
 //-----------------------------------------------------------------------
 
-	MomentumCheck:
+	MomentumCheck: // N
 		TNT1 A 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
 		PLAY A 4
 		TNT1 A 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
@@ -107,14 +112,14 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "CheckIfAnyTargetsWhilePushed")
 		Stop
 
-
-	CheckIfAnyTargetsWhilePushed: //Look for potential targets while being pushed.
+	CheckIfAnyTargetsWhilePushed: // Y
+	// Look for potential targets while being pushed.
 		TNT1 A 0 A_LookEx (0, 0, 0, 1200, 0, "DisablePushablePreAlternateChase")
 		TNT1 A 0 A_Jump (256, "Idle")
 		Stop
 
 //-----------------------------------------------------------------------
-
+// Y all
 	SinkDown1: //Ankle deep.
 		TNT1 A 0 ThrustThingZ (0, 2, 1, 1)
 		TNT1 A 0 A_Jump (256, "Idle")
@@ -137,22 +142,23 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //
 //-----------------------------------------------------------------------
 
-	See: //Simply for A_SpidRefire. Goes to "ResetTimers".
+	See: // Y
+	// Simply for A_SpidRefire. Goes to "ResetTimers".
 		TNT1 A 0 //Dummy frame needed.
 		TNT1 A 0 A_Jump (256, "ResetTimers")
 		Stop
 
-	DisablePushablePreAlternateChase:
+	DisablePushablePreAlternateChase: // Y
 		TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)
 		TNT1 A 0 A_Jump (256, "AlternateChase")
 		Stop
 
-	AlternateChase:
+	AlternateChase: // Y
 		TNT1 A 0 A_Jump (85, "ChaseForwardAndLeft", "ChaseForwardAndRight") //1/3 chance of straferunning.
 		TNT1 A 0 A_Jump (256, "ChaseForward")
 		Stop
 
-	ChaseForward:
+	ChaseForward: // N
 		PLAY A 4 A_Recoil (-6.125)
 		PLAY B 4 A_Recoil (-6.125)
 		PLAY C 4 A_Recoil (-6.125)
@@ -160,7 +166,8 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
 		Stop
 
-	ChaseForwardAndLeft: //Straferunning 28% faster.
+	ChaseForwardAndLeft: // N
+	// Straferunning 28% faster.
 		TNT1 A 0 ThrustThing (angle*256/360-38.7, 7, 0, 0)
 		PLAY A 4 A_Recoil (-0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-38.7, 7, 0, 0)
@@ -172,7 +179,7 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
 		Stop
 
-	ChaseForwardAndRight:
+	ChaseForwardAndRight: // N
 		TNT1 A 0 ThrustThing (angle*256/360+38.7, 7, 0, 0)
 		PLAY A 4 A_Recoil (-0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+38.7, 7, 0, 0)
@@ -184,112 +191,105 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
 		Stop
 
-	TurnAndAcquireTargetWhileChase: //Allows for marines to turn and acquire targets.
+	TurnAndAcquireTargetWhileChase: // Y
+	// Allows for marines to turn and acquire targets.
 		TNT1 AAAAAAAAAAAAAAAA 0 A_Chase ("", "")
 		TNT1 A 0 A_Jump (256, "CheckIfTargetInLOS")
 		Stop
 
-	CheckIfTargetInLOS: //Every PLAY A frames allows for attack or backing off. This is to make the marines animate properly.
+	CheckIfTargetInLOS: // Y
+	// Every PLAY A frames allows for attack or backing off. This is to make the marines animate properly.
 		TNT1 A 0 A_JumpIfTargetInLOS ("TargetInLOS")
 		TNT1 A 0 A_Jump (256, "CheckIfStuck")
 		Stop
 
-	TargetInLOS:
+	TargetInLOS: // Y
 		TNT1 A 0 A_JumpIf (health <= 39, 3) //If 39 health or lower, get more aggressive.
-		TNT1 A 0 A_JumpIfCloser (256, "AlternateBackOff") //The threshold of when to back off.
-		TNT1 A 0 A_Jump (random(0, 256), "CheckIfStuck") //Makes the marines less inhuman.
-		TNT1 A 0 A_JumpIfCloser (4096, "Missile") //Max target range.
+		TNT1 A 0 A_JumpIfCloser (256, "AlternateBackOff") // The threshold of when to back off.
+		TNT1 A 0 A_Jump (random(0, 256), "CheckIfStuck") // Makes the marines less inhuman.
+		TNT1 A 0 A_JumpIfCloser (4096, "Missile") // Max target range.
 		TNT1 A 0 A_Jump (256, "CheckIfStuck")
 		Stop
 
 //-----------------------------------------------------------------------
 
-	CheckIfStuck: //This state act as a "dynamic threshold timer". Checks if there is any momentum along the x- and y- axis. If false, add to the threshold timer. If true, clear the threshold timer and check if underwater instead.
+	CheckIfStuck: // Y
+	// This state act as a "dynamic threshold timer". Checks if there is any momentum along the x- and y- axis.
+	// If false, add to the threshold timer. If true, clear the threshold timer and check if underwater instead.
 		TNT1 A 0 A_JumpIf (momx != 0 || momy != 0, "NotStuck")
-		TNT1 A 0 A_Jump (256, "Stuck")
+		TNT1 A 0 A_Jump (256, "CheckIfUnderwater")
 		Stop
 
-	NotStuck:
+	NotStuck: // Y
 		TNT1 A 0 A_JumpIfInventory ("MoveBackwardsThreshold", 0, "CheckIfUnderwater")
 		TNT1 A 0 A_TakeInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwater")
 		Stop
 
-	Stuck:
+	Stuck: // Y
 		TNT1 A 0 A_JumpIf (momx == 0 && momy == 0, "AddToMoveBackWardsThresholdTimer")
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwater")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	CheckIfUnderWater:
+	CheckIfUnderWater: // Y
 		TNT1 A 0 A_JumpIf (waterlevel == 1, "Swim1")
 		TNT1 A 0 A_JumpIf (waterlevel == 2, "Swim2")
 		TNT1 A 0 A_JumpIf (waterlevel == 3, "Swim3")
-		TNT1 A 0 A_Jump (256, "AddToTimers") //If not underwater, add to the regular timers instead.
+		TNT1 A 0 A_Jump (256, "AddToTimers") // If not underwater, add to the regular timers instead.
 		Stop
 
-
-	Swim1:
+	Swim1: // Y
 		TNT1 A 0 A_JumpIf (z - floorz == 0, 2) //If non-deep water, don't swim.
 		TNT1 A 0 ThrustThingZ (0, 8, 0, 1) //Simulates jumping/swimming in water.
-		TNT1 A 0
+		PLA6 A 0
 		TNT1 A 0 A_Jump (256, "AddToTimers")
 		Stop
 
-	Swim2:
+	Swim2: // Y
 		TNT1 A 0 ThrustThingZ (0, 16, 0, 1)
 		TNT1 A 0 A_Jump (256, "AddToTimers")
 		Stop
 
-	Swim3:
+	Swim3: // Y
 		TNT1 A 0 ThrustThingZ (0, 32, 0, 1)
 		TNT1 A 0 A_Jump (256, "AddToTimers")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	AddToMoveBackWardsThresholdTimer:
+	AddToMoveBackWardsThresholdTimer: // Y
 		TNT1 A 0 A_GiveInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "CheckMoveBackWardsThresholdTimer")
 		Stop
 
-	CheckMoveBackWardsThresholdTimer:
+	CheckMoveBackWardsThresholdTimer: // Y
 		TNT1 A 0 A_JumpIfInventory ("MoveBackwardsThreshold", 1, "ClearMoveBackWardsThresholdTimer")
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwater")
 		Stop
 
-	ClearMoveBackWardsThresholdTimer:
+	ClearMoveBackWardsThresholdTimer: // Y
 		TNT1 A 0 A_TakeInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "MoveBackwardsAlternate")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	MoveBackwardsAlternate: //Same "A_Recoil" and "ThrustThing" values as in "BackOff" states, but with jumps to a different state.
+	MoveBackwardsAlternate: // Y
+	// Same "A_Recoil" and "ThrustThing" values as in "BackOff" states, but with jumps to a different state.
 		TNT1 A 0 A_Jump (256, "MoveBackwards", "MoveBackwardsAndLeft", "MoveBackwardsAndRight")
 		Stop
 
-
-	MoveBackwards:
+	MoveBackwards: // N
 		PLAY A 4 A_Recoil (6.125)
 		PLAY B 4 A_Recoil (6.125)
 		PLAY C 4 A_Recoil (6.125)
 		PLAY D 4 A_Recoil (6.125)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwards")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AddToTimers")
-		Stop
+		TNT1 A 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
 
-	MoveBackwardsAndLeft:
+	MoveBackwardsAndLeft: // N
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
 		PLAY B 4 A_Recoil (0.84)
@@ -298,14 +298,10 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
 		PLAY D 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwardsAndLeft")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AddToTimers")
-		Stop
+		TNT1 A 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
 
-	MoveBackwardsAndRight:
+	MoveBackwardsAndRight: // N
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		PLAY B 4 A_Recoil (0.84)
@@ -314,18 +310,8 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		PLAY D 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwardsAndRight")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AddToTimers")
-		Stop
-
-
-
-
-
-
+		PLA6 D 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
 
 
 //-----------------------------------------------------------------------
@@ -334,18 +320,18 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //
 //-----------------------------------------------------------------------
 
-
-	DisablePushablePreAlternateWander: //Nearly identical to chase states.
+	DisablePushablePreAlternateWander: // Y
+	// Nearly identical to chase states.
 		TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)
 		TNT1 A 0 A_Jump (256, "AlternateWander")
 		Stop
 
-	AlternateWander:
+	AlternateWander: // Y
 		TNT1 A 0 A_Jump (85, "WanderForwardAndLeft", "WanderForwardAndRight")
 		TNT1 A 0 A_Jump (256, "WanderForward")
 		Stop
 
-	WanderForward:
+	WanderForward: // N
 		PLAY A 4 A_Recoil (-6.125)
 		PLAY B 4 A_Recoil (-6.125)
 		PLAY C 4 A_Recoil (-6.125)
@@ -353,7 +339,7 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
 		Stop
 
-	WanderForwardAndLeft:
+	WanderForwardAndLeft: // N
 		TNT1 A 0 ThrustThing (angle*256/360-38.7, 7, 0, 0)
 		PLAY A 4 A_Recoil (-0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-38.7, 7, 0, 0)
@@ -365,7 +351,7 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
 		Stop
 
-	WanderForwardAndRight:
+	WanderForwardAndRight: // N
 		TNT1 A 0 ThrustThing (angle*256/360+38.7, 7, 0, 0)
 		PLAY A 4 A_Recoil (-0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+38.7, 7, 0, 0)
@@ -377,103 +363,88 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
 		Stop
 
-
-	TurnAndAcquireTargetWhileWander:
+	TurnAndAcquireTargetWhileWander: // Y
 		TNT1 AAAAAAAAAAAAAAAA 0 A_Wander
 		TNT1 A 0 A_LookEx (0, 0, 0, 1200, 0, "CheckIfTargetInLOS")
 		TNT1 A 0 A_Jump (256, "CheckIfStuckWhileWander")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	CheckIfStuckWhileWander:
+	CheckIfStuckWhileWander: // Y
 		TNT1 A 0 A_JumpIf (momx != 0 || momy != 0, "NotStuckWhileWander")
 		TNT1 A 0 A_Jump (256, "StuckWhileWander")
 		Stop
 
-	NotStuckWhileWander:
+	NotStuckWhileWander: // Y
 		TNT1 A 0 A_JumpIfInventory ("MoveBackwardsThreshold", 0, "CheckIfUnderwaterWhileWander")
 		TNT1 A 0 A_TakeInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwaterWhileWander")
 		Stop
 
-	StuckWhileWander:
+	StuckWhileWander: // Y
 		TNT1 A 0 A_JumpIf (momx == 0 && momy == 0, "AddToMoveBackWardsThresholdTimerWhileWander")
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwaterWhileWander")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	CheckIfUnderwaterWhileWander:
+	CheckIfUnderwaterWhileWander: // Y
 		TNT1 A 0 A_JumpIf (waterlevel == 1, "SwimWhileWander1")
 		TNT1 A 0 A_JumpIf (waterlevel == 2, "SwimWhileWander2")
 		TNT1 A 0 A_JumpIf (waterlevel == 3, "SwimWhileWander3")
 		TNT1 A 0 A_Jump (256, "AlternateWander")
 		Stop
 
-
-	SwimWhileWander1:
+	SwimWhileWander1: // Y
 		TNT1 A 0 A_JumpIf (z - floorz == 0, 2)
 		TNT1 A 0 ThrustThingZ (0, 8, 0, 1)
-		TNT1 A 0
+		PLA6 A 0 // ADDED DUMMY
 		TNT1 A 0 A_Jump (256, "AlternateWander")
 		Stop
 
-	SwimWhileWander2:
+	SwimWhileWander2: // Y
 		TNT1 A 0 ThrustThingZ (0, 16, 0, 1)
 		TNT1 A 0 A_Jump (256, "AlternateWander")
 		Stop
 
-	SwimWhileWander3:
+	SwimWhileWander3: // Y
 		TNT1 A 0 ThrustThingZ (0, 32, 0, 1)
 		TNT1 A 0 A_Jump (256, "AlternateWander")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	AddToMoveBackWardsThresholdTimerWhileWander:
+	AddToMoveBackWardsThresholdTimerWhileWander: // Y
 		TNT1 A 0 A_GiveInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "CheckMoveBackWardsThresholdTimerWhileWander")
 		Stop
 
-	CheckMoveBackWardsThresholdTimerWhileWander:
+	CheckMoveBackWardsThresholdTimerWhileWander: // Y
 		TNT1 A 0 A_JumpIfInventory ("MoveBackwardsThreshold", 1, "ClearMoveBackWardsThresholdTimerWhileWander")
 		TNT1 A 0 A_Jump (256, "CheckIfUnderwaterWhileWander")
 		Stop
 
-	ClearMoveBackWardsThresholdTimerWhileWander:
+	ClearMoveBackWardsThresholdTimerWhileWander: // Y
 		TNT1 A 0 A_TakeInventory ("MoveBackwardsThreshold", 1)
 		TNT1 A 0 A_Jump (256, "MoveBackwardsAlternateWhileWander")
 		Stop
 
-
 //-----------------------------------------------------------------------
 
-
-	MoveBackwardsAlternateWhileWander:
+	MoveBackwardsAlternateWhileWander: // Y
 		TNT1 A 0 A_Jump (256, "MoveBackwardsWhileWander", "MoveBackwardsAndLeftWhileWander", "MoveBackwardsAndRightWhileWander")
 		Stop
 
-
-	MoveBackwardsWhileWander:
+	MoveBackwardsWhileWander: // N
 		PLAY A 4 A_Recoil (6.125)
 		PLAY B 4 A_Recoil (6.125)
 		PLAY C 4 A_Recoil (6.125)
 		PLAY D 4 A_Recoil (6.125)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwardsWhileWander")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AlternateWander")
-		Stop
+		TNT1 A 0 A_Jump (random(128, 256), "AlternateWander")
+		Loop
 
-	MoveBackwardsAndLeftWhileWander:
+	MoveBackwardsAndLeftWhileWander: // N
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
 		PLAY B 4 A_Recoil (0.84)
@@ -482,34 +453,20 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
 		PLAY D 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwardsAndLeftWhileWander")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AlternateWander")
-		Stop
+		TNT1 A 0 A_Jump (random(128, 256), "AlternateWander")
+		Loop
 
-	MoveBackwardsAndRightWhileWander:
+	MoveBackwardsAndRightWhileWander: // N
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		PLAY B 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		PLAY C 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
-		PLAY D 4 A_Recoil (0.84)
+		PLAY C 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "MoveBackwardsAndRightWhileWander")
-		Stop
-		TNT1 A 0
-		TNT1 A 0 A_Jump (256, "AlternateWander")
-		Stop
-
-
-
-
-
-
+		TNT1 A 0 A_Jump (random(128, 256), "AlternateWander")
+		loop
 
 
 //-----------------------------------------------------------------------
@@ -518,27 +475,25 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //
 //-----------------------------------------------------------------------
 
-
-	AlternateBackOff: //Same formula as in the chase states, but only backwards movement and different jumps.
+	AlternateBackOff: // Y
+	// Same formula as in the chase states, but only backwards movement and different jumps.
 		TNT1 A 0 A_Jump (256, "BackOffBackwards", "BackOffBackwardsAndLeft", "BackOffBackwardsAndRight")
 		Stop
 
-
-	BackOffBackwards:
+	BackOffBackwards: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY A 4 A_Recoil (6.125)
 		PLAY B 4 A_Recoil (6.125)
 		PLAY C 4 A_Recoil (6.125)
 		PLAY D 4 A_Recoil (6.125)
-		TNT1 A 0 A_JumpIf (health <= 50, "Missile") //A bit desperate.
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "BackOffBackwards")
-		Stop
-		TNT1 A 0 A_SpidRefire
+		TNT1 A 0 A_JumpIf (health <= 50, "Missile") // A bit desperate.
+		TNT1 A 0 A_Jump (random(128, 256), 1)
+		Loop
+		TNT1 A 0 A_MonsterRefire (10, "ResetTimers")
 		TNT1 A 0 A_Jump (256, "Missile")
 		Stop
 
-	BackOffBackwardsAndLeft:
+	BackOffBackwardsAndLeft: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
@@ -549,14 +504,13 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		PLAY D 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
 		TNT1 A 0 A_JumpIf (health <= 50, "Missile")
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "BackOffBackwardsAndLeft")
-		Stop
-		TNT1 A 0 A_SpidRefire
+		TNT1 A 0 A_Jump (random(128, 256), 1)
+		Loop
+		TNT1 A 0 A_MonsterRefire (10, "ResetTimers")
 		TNT1 A 0 A_Jump (256, "Missile")
 		Stop
 
-	BackOffBackwardsAndRight:
+	BackOffBackwardsAndRight: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY A 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
@@ -567,24 +521,18 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		PLAY D 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		TNT1 A 0 A_JumpIf (health <= 50, "Missile")
-		TNT1 A 0 A_Jump (random(128, 256), 2)
-		TNT1 A 0 A_Jump (256, "BackOffBackwardsAndRight")
-		Stop
-		TNT1 A 0 A_SpidRefire
+		TNT1 A 0 A_Jump (random(128, 256), 1)
+		Loop
+		PLA6 D 0 A_MonsterRefire (10, "ResetTimers")
 		TNT1 A 0 A_Jump (256, "Missile")
 		Stop
 
+//-----------------------------------------------------------------------
 
-	Missile:
+	Missile: // N
 		TNT1 A 0 //Dummy frame needed.
 		TNT1 A 0 A_Jump (256, "ResetTimers")
 		Stop
-
-
-
-
-
-
 
 
 //-----------------------------------------------------------------------
@@ -593,38 +541,37 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //
 //-----------------------------------------------------------------------
 
-
-	Pain.FireSpecial:
+	Pain.FireSpecial: // Y All
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
+		Stop
 	Pain.Fire:
-        TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_FIRE)
-        TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
+		TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_FIRE)
+		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
+		Stop
 	Pain.ChemicalSpecial:
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
+		Stop
 	Pain.Chemical:
-        TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_CHEM)
+		TNT1 A 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_CHEM)
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
-
+		Stop
 	Pain:
-		TNT1 A 0
 		TNT1 A 0 A_Jump (256, "DisablePushablePreAlternatePainBackOff")
 		Stop
 		
-	DisablePushablePreAlternatePainBackOff: //If woken up by getting hurt, clear the +PUSHABLE flag.
+	DisablePushablePreAlternatePainBackOff: // Y
+	// If woken up by getting hurt, clear the +PUSHABLE flag.
 		TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)
 		TNT1 A 0 A_Jump (256, "AlternatePainBackOff")
-		Stop	
-
+		Stop
 
 //-----------------------------------------------------------------------
 
-
-	AlternatePainBackOff:
+	AlternatePainBackOff: // Y
 		TNT1 A 0 A_Jump (256, "PainBackOffBackwards", "PainBackOffBackwardsAndLeft", "PainBackOffBackwardsAndRight")
 		Stop
 
-
-	PainBackOffBackwards:
+	PainBackOffBackwards: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY G 4 A_Recoil (6.125)
 		TNT1 A 0 A_Pain
@@ -632,7 +579,7 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "CheckIfTargetInLOS") //Try to attack right back if possible.
 		Stop
 
-	PainBackOffBackwardsAndLeft:
+	PainBackOffBackwardsAndLeft: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY G 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360+166.7, 7, 0, 0)
@@ -642,7 +589,7 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "CheckIfTargetInLOS")
 		Stop
 
-	PainBackOffBackwardsAndRight:
+	PainBackOffBackwardsAndRight: // N
 		TNT1 A 0 A_FaceTarget
 		PLAY G 4 A_Recoil (0.84)
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
@@ -651,87 +598,132 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 ThrustThing (angle*256/360-166.7, 7, 0, 0)
 		TNT1 A 0 A_Jump (256, "CheckIfTargetInLOS")
 		Stop
-
 
 //-----------------------------------------------------------------------
-
+// Y for All below this line
 
 	Death:
-		PLAY H 10
-		PLAY I 10 A_PlayerScream
-		PLAY J 10 A_NoBlocking
-		PLAY KLM 10
-		PLAY N -1
+		"####" H 0 A_StopSound (0) "####" H 0 A_StopSound (4)
+		"####" H 0 A_StopSound (1) "####" H 0 A_StopSound (5)
+		"####" H 0 A_StopSound (2) "####" H 0 A_StopSound (6)
+		"####" H 0 A_StopSound (3) "####" H 0 A_StopSound (7)
+		"####" H 1 A_Scream
+		"####" I 6
+		"####" J 6 A_NoBlocking
+		"####" JJJ 0 A_SpawnItemEx ("Credits1",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,128)
+		"####" J 0 A_SpawnItemEx ("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
+		"####" K 6
+		"####" L 6 A_PlaySound ("misc/thud")
+		"####" M 6
+		"####" N -1
 		Stop
 
 	XDeath:
-		PLAY O 4
-		PLAY P 0 A_NoBlocking
-		PLAY PPP 0 A_SpawnItemEx("Credits1",random(-4,4),random(-4,4),random(32,48),random(-4,4),random(-4,4),random(4,8),0,0,128)
-		PLAY P 0 A_SpawnItemEx("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
-		PLAY P 0 A_Scream
-		PLAY P 0 A_PlaySound ("misc/gib", 7)
-		PLAY P 0 A_PlaySound ("misc/gib", 6)
-		PLAY P 4 A_SpawnItemEx ("MarineGoreExplosion")
-		PLAY Q 4 A_SpawnItemEx ("MarineGoreExplosion2")
-		PLAY R 4 A_SpawnItemEx ("MarineGoreExplosion3")
-		PLAY STU 4
-		PLAY V -1
+		"####" O 0 A_StopSound (0) "####" O 0 A_StopSound (4)
+		"####" O 0 A_StopSound (1) "####" O 0 A_StopSound (5)
+		"####" O 0 A_StopSound (2) "####" O 0 A_StopSound (6)
+		"####" O 0 A_StopSound (3) "####" O 0 A_StopSound (7)
+		"####" O 4
+		"####" P 0 A_NoBlocking
+		"####" PPP 0 A_SpawnItemEx("Credits1",random(-4,4),random(-4,4),random(32,48),random(-4,4),random(-4,4),random(4,8),0,0,128)
+		"####" P 0 A_SpawnItemEx("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
+		"####" P 0 A_Scream
+		"####" P 0 A_PlaySound ("misc/gib", 7)
+		"####" P 0 A_PlaySound ("misc/gib", 6)
+		"####" P 4 A_SpawnItemEx ("MarineGoreExplosion")
+		"####" Q 4 A_SpawnItemEx ("MarineGoreExplosion2")
+		"####" R 4 A_SpawnItemEx ("MarineGoreExplosion3")
+		"####" STUV 4
+		"####" W -1
 		stop
 
+	Death.MassDriver:
+	Death.AntiArmor:
 	Death.Explosion:
-		PLAY H 1
-		PLAY H 0 A_Jump(128,"Death")
-		goto XDeath
+		"####" H 0 ThrustThing (angle*256/360+(random(0,192)), random(20,40), 1, 0)
+		"####" H 1 ThrustThingZ (0,45,0,0)
+		"####" H 0 A_Jump (128,"Death")
+		TNT1 A 0 A_Jump (256, "XDeath")
+		Stop
 
 	Death.FireSpecial:
 	Death.Fire:
 		// stop all sound channels
-		TNT1 A 0 A_StopSound (0) TNT1 A 0 A_StopSound (4)
-		TNT1 A 0 A_StopSound (1) TNT1 A 0 A_StopSound (5)
-		TNT1 A 0 A_StopSound (2) TNT1 A 0 A_StopSound (6)
-		TNT1 A 0 A_StopSound (3) TNT1 A 0 A_StopSound (7)
-		DISR K 0 A_SpawnItemEx("BurningCorpse",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		DISR K 0 A_NoBlocking
-		PLAY N -1 A_SetTranslucent(0.0,0)
+		"####" H 0 A_StopSound (0) "####" H 0 A_StopSound (4)
+		"####" H 0 A_StopSound (1) "####" H 0 A_StopSound (5)
+		"####" H 0 A_StopSound (2) "####" H 0 A_StopSound (6)
+		"####" H 0 A_StopSound (3) "####" H 0 A_StopSound (7)
+		"####" H 0 A_SpawnItemEx ("BurningCorpse",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		"####" H 0 A_NoBlocking
+		"####" N -1 A_SetTranslucent(0.0,0)
 		stop
 
 	Death.ChemicalSpecial:
 	Death.Chemical:
 		// stop all sound channels
-		TNT1 A 0 A_StopSound (0) TNT1 A 0 A_StopSound (4)
-		TNT1 A 0 A_StopSound (1) TNT1 A 0 A_StopSound (5)
-		TNT1 A 0 A_StopSound (2) TNT1 A 0 A_StopSound (6)
-		TNT1 A 0 A_StopSound (3) TNT1 A 0 A_StopSound (7)
-		DISR K 0 A_SpawnItemEx("ChemicalCorpse",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		DISR K 0 A_NoBlocking
-		PLAY N -1 A_SetTranslucent(0.0,0)
+		"####" H 0 A_StopSound (0) "####" H 0 A_StopSound (4)
+		"####" H 0 A_StopSound (1) "####" H 0 A_StopSound (5)
+		"####" H 0 A_StopSound (2) "####" H 0 A_StopSound (6)
+		"####" H 0 A_StopSound (3) "####" H 0 A_StopSound (7)
+		"####" H 0 A_SpawnItemEx ("ChemicalCorpse",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		"####" H 0 A_NoBlocking
+		"####" N -1 A_SetTranslucent(0.0,0)
 		stop
 
+	Death.Energy:
+		// stop all sound channels
+		"####" H 0 A_StopSound (0) "####" H 0 A_StopSound (4)
+		"####" H 0 A_StopSound (1) "####" H 0 A_StopSound (5)
+		"####" H 0 A_StopSound (2) "####" H 0 A_StopSound (6)
+		"####" H 0 A_StopSound (3) "####" H 0 A_StopSound (7)
+		"####" H 0 A_PlaySound ("sndz/disintegr")
+		"####" HHH 0 A_SpawnItemEx("Credits1",random(-4,4),random(-4,4),random(32,48),random(-4,4),random(-4,4),random(4,8),0,0,128)
+		"####" H 0 A_SpawnItemEx("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
+		"####" H 0 A_SpawnItemEx ("DisintegratedCorpse",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		"####" H 0 A_NoBlocking
+		"####" N -1 A_SetTranslucent(0.0,0)
+		stop
+
+	Death.Time:
+		// stop all sound channels
+		"####" G 0 A_Stop
+		"####" G 0 A_NoGravity
+		"####" G 0 A_StopSound (0) "####" G 0 A_StopSound (4)
+		"####" G 0 A_StopSound (1) "####" G 0 A_StopSound (5)
+		"####" G 0 A_StopSound (2) "####" G 0 A_StopSound (6)
+		"####" G 0 A_StopSound (3) "####" G 0 A_StopSound (7)
+		"####" G 0 A_PlaySound("weapons/timedeath")
+		"####" GGG 0 A_SpawnItemEx("Credits1",random(-4,4),random(-4,4),random(32,48),random(-4,4),random(-4,4),random(4,8),0,0,128)
+		"####" G 0 A_SpawnItemEx("PowerupCrate",random(-4,4),random(-4,4),random(32,48),random(2,4),random(-2,2),random(2,4),0,0,230)
+		"####" G 0 A_NoBlocking
+		"####" GGGGGGGGGGGGGGGGGGGG 2 A_FadeOut(0.05)
+		"####" G -1 A_SetTranslucent(0.0,0)
+		stop
+
+	Dismiss:
+		TNT1 A 0 A_SpawnItemEx ("TeleportFog", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
+		stop
+
+//-----------------------------------------------------------------------
+// Are these ever used?
+
 	DeathWaitPreTryToRespawn:
-		PLAY N 12
-		TNT1 A 0 A_Jump (random(0, 256), "TryToRespawn")
-		TNT1 A 0 A_Jump (256, "DeathWaitPreTryToRespawn")
+		"####" N 12
+		"####" A 0 A_Jump (random(0, 256), "TryToRespawn")
+		"####" A 0 A_Jump (256, "DeathWaitPreTryToRespawn")
 		Stop
 
 	XDeathWaitPreTryToRespawn:
-		PLAY W 12
-		TNT1 A 0 A_Jump (random(0, 256), "TryToRespawn")
-		TNT1 A 0 A_Jump (256, "XDeathWaitPreTryToRespawn")
+		"####" W 12
+		"####" A 0 A_Jump (random(0, 256), "TryToRespawn")
+		"####" A 0 A_Jump (256, "XDeathWaitPreTryToRespawn")
 		Stop
 
 
 	TryToRespawn: //Try to to respawn every 2 seconds.
 		TNT1 A 0 A_Respawn (1 | 4)
 		TNT1 A 70
-		TNT1 A 0 A_Jump (256, "TryToRespawn")
-		Stop
-
-
-
-
-
-
+		Loop
 
 
 //-----------------------------------------------------------------------
@@ -740,16 +732,17 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 //
 //-----------------------------------------------------------------------
 
-
 	AddToTimers:
 		TNT1 A 0 A_GiveInventory ("ClearTarget", 1)
-		TNT1 A 0 A_CheckSight ("AddToNoPlayerInSightTimer") //No point in adding a counter if the player has been out of sight for only a few frames.
+		TNT1 A 0 A_CheckSight ("AddToNoPlayerInSightTimer")
+	// No point in adding a counter if the player has been out of sight for only a few frames.
 		
 		TNT1 A 0 A_JumpIfInventory ("NoPlayerInSight", 0, "CheckTimers")
-		TNT1 A 0 A_TakeInventory ("NoPlayerInSight", 128) //If player in sight, clear this timer. Otherwise, the marine will sometimes suddenly stop and start idling when you go around a corner.
+		TNT1 A 0 A_TakeInventory ("NoPlayerInSight", 128)
+		// If player in sight, clear this timer. Otherwise, the marine will sometimes suddenly stop and start idling when you go around a corner.
 		TNT1 A 0 A_Jump (256, "CheckTimers")
 		Stop
-	//These two act as one state.
+	// These two act as one state.
 	AddToNoPlayerInSightTimer:
 		TNT1 A 0 A_GiveInventory ("NoPlayerInSight", 1)
 		TNT1 A 0 A_Jump (256, "CheckTimers")
@@ -761,12 +754,11 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "AlternateChase")
 		Stop
 
-
 	ClearTarget:
 		TNT1 A 0 A_TakeInventory ("ClearTarget", 1)
 		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_Jump (256, "CheckTimers") //In case both of the timers have been reached, check again so that the other one will reset as well.
-		Stop
+		TNT1 A 0 A_Jump (256, "CheckTimers")
+		Stop // In case both of the timers have been reached, check again so that the other one will reset as well.
 
 	CheckIfPlayerInSight:
 		TNT1 A 0 A_TakeInventory ("NoPlayerInSight", 128)
@@ -774,20 +766,14 @@ Actor MBase : PlayerPawn	//Basic unarmed marine.
 		TNT1 A 0 A_Jump (256, "CheckTimers")
 		Stop
 
-
 //-----------------------------------------------------------------------
-
 
 	ResetTimers: //This is ONLY connected to "See", "Missile" and "Pain" states. Reset timers so that the marines don't all of sudden decide to idle in the middle of a battle.
 		TNT1 A 0 A_JumpIfInventory ("ClearTarget", 0, 4)
 		TNT1 A 0 A_TakeInventory ("ClearTarget", 2)
 		TNT1 A 0 A_JumpIfInventory ("NoPlayerInSight", 0, 2)
 		TNT1 A 0 A_TakeInventory ("NoPlayerInSight", 128)
-		TNT1 A 0
 		TNT1 A 0 A_Jump (256, "AlternateChase")
 		Stop
-	ClearTargetBlue:
-		TNT1 A 0 A_ClearTarget
-		Goto See
 	}
 }
