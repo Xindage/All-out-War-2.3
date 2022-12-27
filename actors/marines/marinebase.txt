@@ -4,6 +4,7 @@ actor IsAIMarine : Inventory {}
 Actor MBase : PlayerPawn	// Basic unarmed marine.
 {
 
+	DropItem "AmmoPack"
 	Speed 0					// ThrustThing and A_Recoil instead.
 	MaxDropOffHeight 63		// Gives the marines a smaller chance of falling into pits. 63, not 64.
 	PainSound "*pain"
