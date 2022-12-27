@@ -1,4 +1,4 @@
-Actor RedFlamerDude
+/*Actor RedFlamerDude
 {
 
 	Speed 0					//ThrustThing and A_Recoil instead.
@@ -1002,3 +1002,4 @@ Actor RedFlamerDude
 		Goto AlternateChase
 	}
 }
+*/
