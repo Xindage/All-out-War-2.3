@@ -314,7 +314,9 @@ function int CheckCrate (int c) {
 // ============================================================================
 // Script 309: actual crate script
 // [Dusk] This uses identifiers now
-script 309 (int c) {
+script 309 (int c)
+{
+	int team = PlayerTeam (); // Manual warning system requires it.
 	// Check that the crate is good - if not, find a good one.
 	while (!CheckCrate (c))
 		c = RandomCrate ();
@@ -325,13 +327,14 @@ script 309 (int c) {
 	if (netstate == NETSTATE_Server)
 		Log (n:0, s:" gets ", s:name);
 	
+	// Going to be set unused.
 	// Announce it - either to player or globally.
-	if (g_Crates_int[c][CRK_Flags] & CRF_Announce) {
+/*	if (g_Crates_int[c][CRK_Flags] & CRF_Announce) {
 		str teamname = cond (PlayerTeam() == TEAM_RED, "\cARed team\cJ", "\cNBlue team\cJ");
 		IntelMessage (strparam (s:teamname, s:" got ", s:name, s:"!"), true);
-	} else {
+	} else {*/
 		IntelMessage (strparam (s:"\c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), false);
-	}
+//	}
 	
 	// [Dusk] {9/15/12} And to his teammates
 	TeamMessage (TMSG_CRATE, c, playernumber());
@@ -339,16 +342,20 @@ script 309 (int c) {
 	// =============================================================================
 	// Give the player the effect. We use SMALLFONT by default
 	SetFont ("SMALLFONT");
-	switch (c) {
+	switch (c)
+	{
+	// Armor Upgraded. No warning.
 	case CRATE_ARMORUP:
 		LocalAmbientSound ("powerup/armr", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		AddArmor (1);
 		break;
+
+	// Base Miracle. Warning Team.
 	case CRATE_BASEMIRACLE:
 		AmbientSound ("powerup/base", 127);
 		
-		if (PlayerTeam() == TEAM_RED) {
+		if (team == TEAM_RED) {
 			if (GotBarracks[0])
 				SetActorHealth (201, GetActorSpawnHealth (201));
 			if (GotRefinery[0])
@@ -359,7 +366,7 @@ script 309 (int c) {
 				SetActorHealth (207, GetActorSpawnHealth (207));
 			if (GotObelisk[0])
 				SetActorHealth (214, GetActorSpawnHealth (214));
-		} else if (PlayerTeam() == TEAM_BLUE) {
+		} else if (team == TEAM_BLUE) {
 			if (GotBarracks[1])
 				SetActorHealth (101, GetActorSpawnHealth (101));
 			if (GotRefinery[1])
@@ -374,21 +381,29 @@ script 309 (int c) {
 		
 		SYNC_UpdateAllBuildings ();
 		break;
+
+	// Chemical Proof. No warning.
 	case CRATE_CHEMARMOR:
 		LocalAmbientSound ("powerup/chem", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		GiveInventory ("ChemicalArmor", 1);
 		break;
+
+	// Firepower Upgraded. No warning.
 	case CRATE_FIREPOWER:
 		LocalAmbientSound ("powerup/dama", 127);
 		GiveInventory ("FirepowerUpgrade", 1);
 		break;
+
+	// Bonus Credits. No warning.
 	case CRATE_BONUSCREDITS:
 		LocalAmbientSound ("powerup/cred", 127);
 		Delay (4);
 		ActivatorSound ("powerup/credsound", 127);
 		GiveCredits (intHolder[i_CreditAwardAmount]);
 		break;
+
+	// Bonus experience. No warning.
 	case CRATE_BONUSXP:
 		LocalAmbientSound ("powerup/exp",255);
 		
@@ -398,11 +413,15 @@ script 309 (int c) {
 			AddExperience (50);
 		}
 		break;
+
+	// Fire Proof. No warning.
 	case CRATE_FIREARMOR:
 		LocalAmbientSound ("powerup/fire", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		GiveInventory ("FireArmor", 1);
 		break;
+
+	// Stealth Suit. No warning.
 	case CRATE_STEALTH:
 		LocalAmbientSound ("powerup/invi", 127);
 		ActivatorSound ("powerup/invisound", 127);
@@ -418,30 +437,47 @@ script 309 (int c) {
 		delay (2 * 35);
 		IntelMessage ("\cJUse the rifle's \cKAlt-Fire\cJ\nto toggle \cUstealth!", false);
 		break;
+
+	// Iron Curtain. Warning Player and Team.
 	case CRATE_IRONCURTAIN:
 		LocalAmbientSound ("powerup/iron", 127);
 		ActivatorSound ("powerup/invisound", 127);
+
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- got \cCIron curtain!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- got \cCIron curtain!"), true);
+		IntelMessage ("\cCIron curtain!!", false);
 		
 		GiveInventory("IronCurtain",1); // [SG] reverted Iron Curtain to invul instead of 1000 hp
-		
-		IntelMessage ("\cCIron curtain!!", false);
 		break;
+
+	// Kamikaze. Warning Team.
 	case CRATE_KAMIKAZE:
 		LocalAmbientSound ("powerup/kama", 127);
 		
 		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("Some crazy ass \cARed player\cJ got\nthe \cKKamikaze Crate!!", true);
+			IntelMessage ("\cARed team: \c-Some crazy ass got the \cKKamikaze Crate!!", true);
 		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("Some crazy ass \cNBlue player\cJ got\nthe \cKKamikaze Crate!!", true);
+			IntelMessage ("\cNBlue team: \c-Some crazy ass got the \cKKamikaze Crate!!", true);
 		IntelMessage ("\cKKamikaze!", false);
 		
 		GiveInventory ("IsKamikaze", 1);
 		break;
+
+	// Plasma cannon. Warning Team.
 	case CRATE_PLASMACANNON:
 		LocalAmbientSound ("powerup/plas",255);
 		GiveItem (ITEM_PlasmaCannon, false);
 		RecountPlasma ();
+
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-Some lucky guy got the \cNPlasma cannon!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-Some lucky guy got the \cNPlasma cannon!", true);
 		break;
+
+	// Class swap. No warning.
 	case CRATE_CLASSSWAP:
 		if(checkinventory("timegun") || CheckInventory("Karasawa"))
 		{
@@ -465,23 +501,35 @@ script 309 (int c) {
 		
 		SetClass (class, SCF_NOTELEPORT | SCF_NOBEEP);
 		break;
+
+	// Speed upgraded. No warning.
 	case CRATE_SPEEDUPGRADE:
 		LocalAmbientSound ("powerup/sped", 127);
 		GiveInventory ("SpeedUpgrade", 1);
 		break;
+
+	// Credits stolen. No warning.
 	case CRATE_CREDITSSTOLEN:
 		LocalAmbientSound ("powerup/stol", 127);
 		Delay(4);
 		ActivatorSound ("powerup/stolsound", 127);
 		TakeCredits (-1, intHolder[i_CreditAwardAmount], false);
 		break;
+
+	// Time cop gun. Warning Team.
 	case CRATE_TIMEGUN:
 		LocalAmbientSound ("powerup/time", 127);
 		ActivatorSound ("misc/timewarp", 64);
 		
 		GiveInventory ("TimeGun", 1);
 		RecountTimeCops ();
+
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-Someone obtained the \cITime cop gun!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-Someone obtained the \cITime cop gun!", true);
 		break;
+
 	case CRATE_BOMB:
 		if (GetCVar ("zeta_sillythings") && PlayerCount() >= 2) {
 			// :V
@@ -546,7 +594,6 @@ script 309 (int c) {
 	case CRATE_BASECRASHER:
 		// [Dusk] Set the activator to world first. A player cannot damage his own buildings
 		// now that buildings are team-designated. Also store his team first for the check below.
-		int team = PlayerTeam ();
 		SetActivator (-1);
 		
 		AmbientSound ("weapons/rocklx", 127);
