@@ -153,3 +153,6 @@
 
 //Goatsex - Terminals
 #include "actors/crucial/generic_terminal.txt"
+
+//Dust 3 - Data
+#include "actors/dust3.txt"

@@ -1,0 +1,925 @@
+ //definition for the Czech Hedgehog tank-trap obstacle
+//this object uses true-height, so the players and monsters CAN pass over it
+actor Hedgehog 21010
+{
+  //$Title "Czech Hedgehog"
+  //$Category Obstacles
+  Radius 16
+  Height 40
+  +SOLID
+  States
+  {
+  Spawn:
+    HEDG A -1
+    Stop
+  }
+}
+
+/////////////////////////////////////////////////////////
+
+ACTOR LeafParticle
+{
+Speed 4
+Gravity 0.1
++MISSILE
++THRUACTORS
++CLIENTSIDEONLY
++DOOMBOUNCE
+BounceFactor 0.1
+    States
+    {
+    Spawn:
+	    TNT1 A 0 A_JumpIf(waterlevel > 1, "Splash")
+        XST2 ABACA 10
+        Loop
+    Death:
+
+       XST2 A 100
+        Stop
+    Splash:
+        XST2 A 100
+        Stop
+    }
+}
+
+
+
+ACTOR BushPiece1: LeafParticle
+{
+Speed 8
+Gravity 0.2
++DOOMBOUNCE
+BounceFactor 0.1
+    States
+    {
+    Spawn:
+	    TNT1 A 0 A_JumpIf(waterlevel > 1, "Splash")
+        XST3  ABCD 10
+        Loop
+    Death:
+
+       XST3 A 1000
+        Stop
+    Splash:
+        XST3 A 1000
+        Stop
+    }
+}
+
+
+ACTOR BushPiece2: BushPiece1
+{
+Speed 9
+Gravity 0.3
++DOOMBOUNCE
+BounceFactor 0.1
+    States
+    {
+    Spawn:
+	    TNT1 A 0 A_JumpIf(waterlevel > 1, "Splash")
+        XST4  ABCD 10
+        Loop
+    Death:
+
+       XST4 A 1000
+        Stop
+    Splash:
+        XST4 A 1000
+        Stop
+    }
+}
+
+ACTOR Plants1 2223
+{
+	Radius 8
+	Height 4
+	-SOLID
+	+SHOOTABLE
+	+NOBLOOD
+	Mass 99999999
+	Health 5
+	DamageFactor "Alarm", 0.0
+	damagefactor "Blood", 0.0 damagefactor "BlueBlood", 0.0 damagefactor "GreenBlood", 0.0    damagefactor "Avoid", 0.0
+	damagefactor "Shrapnel", 0.0	damagefactor "KillMe", 0.0
+	States
+	{
+	Spawn:
+		PLNT A -1
+		Stop
+	Death:
+	TNT1 A 0 A_NoBlocking
+	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_CustomMissile ("LeafParticle", 20, 0, random (0, 360), 2, random (30, 160))
+	TNT1 AAAA 0 A_CustomMissile ("BushPiece1", 20, 0, random (0, 360), 2, random (30, 160))
+	TNT1 AAAA 0 A_CustomMissile ("BushPiece2", 20, 0, random (0, 360), 2, random (30, 160))
+	Stop
+	}
+}
+
+// Tall Bush ---------------------------------------------------------------
+
+ACTOR Plants2: Plants1 2224
+{
+	States
+	{
+	Spawn:
+		PLNT B -1
+		Stop
+	}
+}
+
+ACTOR WaterDriping 2225
+{
+	Height 1
+	+NOBLOCKMAP +SPAWNCEILING +NOGRAVITY +FLOAT
+	States
+	{
+	Spawn:
+		CDRP A 20
+		CDRP BC 4
+		TNT1 A 0 A_SpawnItem("BrutalWaterDropOnFloor")
+		TNT1 D 4
+		Loop
+	}
+}
+
+
+
+
+Actor SmallTree 1277
+{
+//$Category Trees
+height 97
+radius 8
+states
+	{
+	Spawn:
+	    PLNT A 1
+		PLNT A -1
+		Stop
+	}
+}
+
+
+Actor Plant01 1278
+{
+//$Category Vegetation
+height 21
+radius 21
+-SOLID
+states
+	{
+	Spawn:
+	    PLNT B 1
+		PLNT B -1
+		Stop
+	}
+}
+
+
+
+
+
+Actor Plant02: Plant01 1290
+{
+//$Category Vegetation
+Scale 0.8
+states
+	{
+	Spawn:
+	    PLNT C 1
+		PLNT C -1
+		Stop
+	}
+}
+
+Actor Plant03: Plant01 1292
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    PLNT D 1
+		PLNT D -1
+		Stop
+	}
+}
+
+
+Actor Plant04: Plant01 1293
+{
+//$Category Vegetation
+Scale 0.8
+states
+	{
+	Spawn:
+	    PLNT E 1
+		PLNT E -1
+		Stop
+	}
+}
+
+
+Actor Plant05: Plant01 1294
+{
+//$Category Vegetation
+Scale 0.8
+states
+	{
+	Spawn:
+	    PLNT F 1
+		PLNT F -1
+		Stop
+	}
+}
+
+
+Actor Plant06: Plant01 1295
+{
+//$Category Vegetation
+Scale 0.8
+states
+	{
+	Spawn:
+	    PLNT G 1
+		PLNT G -1
+		Stop
+	}
+}
+
+Actor Plant07: Plant01 1490
+{
+//$Category Vegetation
+Scale 0.9
+states
+	{
+	Spawn:
+	    PLNT H 1
+		PLNT H -1
+		Stop
+	}
+}
+
+Actor Plant08: Plant01 1491
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    PLNT J 1
+		PLNT J -1
+		Stop
+	}
+}
+
+
+Actor Plant10: Plant01 1991
+{
+//$Category Vegetation
+Scale 0.5
+states
+	{
+	Spawn:
+	    PLNT I 1
+		PLNT I -1
+		Stop
+	}
+}
+
+Actor Plant11: Plant01 1992
+{
+//$Category Vegetation
+Scale 0.9
+states
+	{
+	Spawn:
+	    PLNT K 1
+		PLNT K -1
+		Stop
+	}
+}
+
+Actor Plant12: Plant01 1993
+{
+//$Category Vegetation
+Scale 0.9
+states
+	{
+	Spawn:
+	    PLNT L 1
+		PLNT L -1
+		Stop
+	}
+}
+
+Actor Plant12: Plant01 1994
+{
+//$Category Vegetation
+Scale 0.9
+states
+	{
+	Spawn:
+	    PLNT M 1
+		PLNT M -1
+		Stop
+	}
+}
+
+Actor Plant13: Plant01 1995
+{
+//$Category Vegetation
+Scale 0.6
+states
+	{
+	Spawn:
+	    PLNT N 1
+		PLNT N -1
+		Stop
+	}
+}
+
+
+
+Actor Grass01: Plant01 1492
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    GRSS B 1
+		GRSS B -1
+		Stop
+	}
+}
+
+
+Actor Grass02: Plant01 1493
+{
+//$Category Vegetation
+Scale 0.8
+states
+	{
+	Spawn:
+	    GRSS A 1
+		GRSS A -1
+		Stop
+	}
+}
+
+Actor Grass03: Plant01 1793
+{
+//$Category Vegetation
+Scale 0.7
+states
+	{
+	Spawn:
+	    GRSS C 1
+		GRSS C -1
+		Stop
+	}
+}
+
+Actor Grass03Big: Plant01 1193
+{
+//$Category Vegetation
+Scale 1.2
+states
+	{
+	Spawn:
+	    GRSS C 1
+		GRSS C -1
+		Stop
+	}
+}
+
+Actor Grass04: Plant01 1794
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    GRSS D 1
+		GRSS D -1
+		Stop
+	}
+}
+
+Actor Grass05: Plant01 1795
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    GRSS E 1
+		GRSS E -1
+		Stop
+	}
+}
+
+
+Actor Grass06: Plant01 1796
+{
+//$Category Vegetation
+Scale 1.0
+states
+	{
+	Spawn:
+	    GRSS F 1
+		GRSS F -1
+		Stop
+	}
+}
+
+
+/////////////////////////////////////////////
+//////////////      Trees       /////////////
+/////////////////////////////////////////////
+
+Actor Tree01: Plant01 1296
+{
+//$Category Trees
+Scale 1.0
++SOLID
+height 96
+radius 16
+states
+	{
+	Spawn:
+	    TREE A 1
+		TREE A -1
+		Stop
+	}
+}
+
+
+Actor Tree02: Tree01 1297
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE B 1
+		TREE B -1
+		Stop
+	}
+}
+
+
+Actor Tree03: Tree01 1298
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE C 1
+		TREE C -1
+		Stop
+	}
+}
+
+
+Actor Tree04: Tree01 1299
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE D 1
+		TREE D -1
+		Stop
+	}
+}
+
+Actor Tree05: Tree01 1300
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE E 1
+		TREE E -1
+		Stop
+	}
+}
+
+
+Actor DeadTree01: Tree01 1301
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE F 1
+		TREE F -1
+		Stop
+	}
+}
+
+
+Actor DeadTree02: Tree01 1302
+{
+//$Category Trees
+Scale 1.0
+states
+	{
+	Spawn:
+	    TREE G 1
+		TREE G -1
+		Stop
+	}
+}
+
+Actor bigDeadTree02: Tree01 1305
+{
+//$Category Trees
+Scale 2.0
+states
+	{
+	Spawn:
+	    TREE G 1
+		TREE G -1
+		Stop
+	}
+}
+
+Actor bigDeadTree01: Tree01 1306
+{
+//$Category Trees
+Scale 2.0
+states
+	{
+	Spawn:
+	    TREE F 1
+		TREE F -1
+		Stop
+	}
+}
+
+
+Actor DeadTree03: Tree01 1303
+{
+//$Category Trees
+Scale 1.0
+states
+	{
+	Spawn:
+	    TREE H 1
+		TREE H -1
+		Stop
+	}
+}
+
+
+Actor Cactus: Tree01 1304
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE J 1
+		TREE J -1
+		Stop
+	}
+}
+
+
+Actor TreePine: Tree01 1704
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE I 1
+		TREE I -1
+		Stop
+	}
+}
+
+Actor Tree06: Tree01 1705
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE P 1
+		TREE P -1
+		Stop
+	}
+}
+
+
+Actor TreePine2: Tree01 3705
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE R 1
+		TREE R -1
+		Stop
+	}
+}
+
+
+
+Actor TreePine3: Tree01 3706
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE Q 1
+		TREE Q -1
+		Stop
+	}
+}
+
+
+Actor TreeJoshua1: Tree01 1706
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE K 1
+		TREE K -1
+		Stop
+	}
+}
+
+Actor TreeJoshua2: Tree01 1707
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE L 1
+		TREE L -1
+		Stop
+	}
+}
+
+Actor TreeDeadPalm: Tree01 1708
+{
+//$Category Trees
+states
+	{
+	Spawn:
+	    TREE M 1
+		TREE M -1
+		Stop
+	}
+}
+
+
+Actor BigPalmTree: Plant01 1279
+{
+//$Category Trees
++SOLID
+height 120
+radius 12
+Scale 1.0
+//Scale 2.0
+states
+	{
+	Spawn:
+	    TREE O 1
+		TREE O -1
+		//PALT A 1
+		//PALT A-1
+		Stop
+	}
+}
+
+
+Actor BigPalmTree2: Plant01 1283
+{
+//$Category Trees
++SOLID
+height 120
+radius 12
+Scale 1.5
+//Scale 2.0
+states
+	{
+	Spawn:
+	    TREE W 1
+		TREE W -1
+		//PALT A 1
+		//PALT A-1
+		Stop
+	}
+}
+
+ACTOR AmbientSoundWaterFall2InsideCavern 21007
+{
+//$Category AmbientSounds
+	+NOBLOCKMAP
+	+NOGRAVITY
+	-SHOOTABLE
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("WAFALL2", 1, 1, 1)
+		TNT1 A 100
+		Loop
+
+	}
+}
+
+
+ACTOR AmbientSoundWaterFlowing 21008
+{
+//$Category AmbientSounds
+	+NOBLOCKMAP
+	+NOGRAVITY
+	-SHOOTABLE
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("WFLOW", 1, 1, 1)
+		TNT1 A 120
+		Loop
+
+	}
+}
+
+
+ACTOR AmbientSoundHeavyWind 21009
+{
+//$Category AmbientSounds
+	+NOBLOCKMAP
+	+NOGRAVITY
+	-SHOOTABLE
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("WIND1", 1, 1, 1)
+		TNT1 A 110
+		Loop
+
+	}
+}
+
+
+//=======WINTER THINGS===================
+
+
+ACTOR winterA 2073
+{
+//$Category Trees
+  Game Doom
+  Radius 20
+  Height 115
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT A -1
+    Stop
+  }
+}
+
+ACTOR winterB 2074
+{
+//$Category Trees
+  Game Doom
+  Radius 15
+  Height 90
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT B -1
+    Stop
+  }
+}
+
+ACTOR winterC 2075
+{
+//$Category Trees
+  Game Doom
+  Radius 20
+  Height 140
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT C -1
+    Stop
+  }
+}
+
+ACTOR winterD 2076
+{
+//$Category Trees
+  Game Doom
+  Radius 20
+  Height 60
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT D -1
+    Stop
+  }
+}
+
+ACTOR winterE 2077
+{
+//$Category Trees
+  Game Doom
+  Radius 10
+  Height 45
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT E -1
+    Stop
+  }
+}
+
+ACTOR winterF 2078
+{
+//$Category Trees
+  Game Doom
+  Radius 10
+  Height 110
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT F -1
+    Stop
+  }
+}
+
+ACTOR winterG 2079
+{
+//$Category Trees
+  Game Doom
+  Radius 25
+  Height 130
+  +SOLID
+  States
+  {
+  Spawn:
+    WINT G -1
+    Stop
+	}
+}
+
+ACTOR satellite 15098
+{
+//$Category Trees
+  Game Doom
+  Radius 25
+  Height 130
+  +SOLID
+  States
+  {
+  Spawn:
+    ANTE A -1
+    Stop
+	}
+}
+
+ACTOR BigSatellite 15099
+{
+//$Category Trees
+Scale 2.0
+  Game Doom
+  Radius 25
+  Height 130
+  +SOLID
+  States
+  {
+  Spawn:
+    ANTE A -1
+    Stop
+	}
+}
+
+ACTOR BiggerSatellite 16000
+{
+//$Category Trees
+Scale 3.0
+  Game Doom
+  Radius 25
+  Height 130
+  +SOLID
+  States
+  {
+  Spawn:
+    ANTE A -1
+    Stop
+	}
+}
