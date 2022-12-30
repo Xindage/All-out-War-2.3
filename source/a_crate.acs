@@ -530,6 +530,7 @@ script 309 (int c)
 			IntelMessage ("\cNBlue team: \c-Someone obtained the \cITime cop gun!", true);
 		break;
 
+	// Bomb. Warning Player and Team.
 	case CRATE_BOMB:
 		if (GetCVar ("zeta_sillythings") && PlayerCount() >= 2) {
 			// :V
@@ -545,7 +546,10 @@ script 309 (int c)
 		HudMessage(s:"BOMB CRATE!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
 		
 		SetFont ("SMALLFONT");
-		IntelMessage (strparam (n:0, s:"\c- is gonna blow!"), true);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- is gonna blow!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- is gonna blow!"), true);
 		
 		// Give the effect to the player
 		if (PlayerTeam() == TEAM_BLUE)
@@ -591,6 +595,8 @@ script 309 (int c)
 		delay (1);
 		Thing_Destroy (ActivatorTID(), 1);
 		break;
+
+	// Base crasher. Warning Team.
 	case CRATE_BASECRASHER:
 		// [Dusk] Set the activator to world first. A player cannot damage his own buildings
 		// now that buildings are team-designated. Also store his team first for the check below.
@@ -599,14 +605,14 @@ script 309 (int c)
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
 		if (team == TEAM_RED) {
-			IntelMessage ("Poor \cARed Team\cJ got a \cRBase Crasher\cJ!", true);
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase Crasher\cJ!"), true);
 			Thing_Damage(201,4000,0);
 			Thing_Damage(203,4000,0);
 			Thing_Damage(205,4000,0);
 			Thing_Damage(207,4000,0);
 			Thing_Damage(214,2500,0);
 		} else {
-			IntelMessage ("Poor \cNBlue Team\cJ got a \cRBase Crasher\cJ!", true);
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase Crasher\cJ!"), true);
 			Thing_Damage(101,4000,0);
 			Thing_Damage(103,4000,0);
 			Thing_Damage(105,4000,0);
@@ -617,6 +623,8 @@ script 309 (int c)
 		// Update the building healths to clients
 		SYNC_UpdateAllBuildings ();
 		break;
+
+	// Util gun. No warning.
 	case CRATE_UTILITYGUN:
 		GiveInventory("UtilityGun", 75);
 		ActivatorSound ("switch/pulse", 127);
@@ -624,36 +632,60 @@ script 309 (int c)
 		delay (2*35);
 		IntelMessage ("Use \cFAlt-Fire\cJ for \cNitem selection menu!", false);
 		break;
+
+	// Laser resistence. No warning.
 	case CRATE_ENERGYARMOR:
 		LocalAmbientSound ("powerup/resistlaser", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		GiveInventory ("EnergyArmor", 1);
 		break;
+
+	// Explosive Resistence. No warning.
 	case CRATE_EXPLOARMOR:
 		LocalAmbientSound("powerup/resistexplosive", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		GiveInventory ("ExplosionArmor", 1);
 		break;
+
+	// Flak jacket. No warning.
 	case CRATE_BULLETARMOR:
 		LocalAmbientSound ("powerup/resistbullet", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
 		GiveInventory ("BulletProofArmor", 1);
 		break;
+
+	// Credits stolen. Warning Team.
 	case CRATE_JUGGERNAUT:
 		GiveInventory ("JuggernautPowerup",1);
 		GiveInventory ("FlamerAmmo", 200);
 		GiveInventory ("NukeAmmo", 1);
 		ActivatorSound ("switch/lrm", 127);
+
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-Someone obtained the \cFInstant juggernaut!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-Someone obtained the \cFInstant juggernaut!", true);
 		break;
+
+	// Berserker. Warning Team.
 	case CRATE_BERSERK:
 		GiveInventory ("BerserkSwitch", 1);
 		delay (5);
 		GiveInventory ("BerserkHue", 1);
+
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-Someone went \cGBerserk!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-Someone went \cGBerserk!", true);
 		break;
+
+	// Medic Field. No warning.
 	case CRATE_MEDFIELD:
 		GiveInventory ("MedicationFieldItem", 1);
 		GiveInventory ("MedicationFieldCount", 1);
 		break;
+
+	// Team Boost. Warning Team.
 	case CRATE_TEAMBOOST:
 		// [Dusk] This crate gives 15% max health and +1 armor to all teammates now.
 		for (int k = 0; k < MAXPLAYERS; k++) {
@@ -666,8 +698,9 @@ script 309 (int c)
 				SetPlayerArmorGrade (k, 1, AGF_ADDITIVE);
 			}
 		}
-		
 		break;
+
+
 	case CRATE_CHAINSAW:
 		IntelMessage ("\cKA chainsaw! Find some meat!", false);
 		GiveInventory ("EagerBeaver", 1);
