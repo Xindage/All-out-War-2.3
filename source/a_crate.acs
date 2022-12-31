@@ -605,14 +605,14 @@ script 309 (int c)
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
 		if (team == TEAM_RED) {
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase Crasher\cJ!"), true);
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(201,4000,0);
 			Thing_Damage(203,4000,0);
 			Thing_Damage(205,4000,0);
 			Thing_Damage(207,4000,0);
 			Thing_Damage(214,2500,0);
 		} else {
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase Crasher\cJ!"), true);
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(101,4000,0);
 			Thing_Damage(103,4000,0);
 			Thing_Damage(105,4000,0);
@@ -640,7 +640,7 @@ script 309 (int c)
 		GiveInventory ("EnergyArmor", 1);
 		break;
 
-	// Explosive Resistence. No warning.
+	// Explosive resistence. No warning.
 	case CRATE_EXPLOARMOR:
 		LocalAmbientSound("powerup/resistexplosive", 127);
 		ActivatorSound ("misc/armor_pkup", 127);
@@ -654,7 +654,7 @@ script 309 (int c)
 		GiveInventory ("BulletProofArmor", 1);
 		break;
 
-	// Credits stolen. Warning Team.
+	// Instant juggernaut. Warning Team.
 	case CRATE_JUGGERNAUT:
 		GiveInventory ("JuggernautPowerup",1);
 		GiveInventory ("FlamerAmmo", 200);
@@ -698,9 +698,13 @@ script 309 (int c)
 				SetPlayerArmorGrade (k, 1, AGF_ADDITIVE);
 			}
 		}
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-get \cATeam boost!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-get \cATeam boost!", true);
 		break;
 
-
+	// Chainsaw. No warning.
 	case CRATE_CHAINSAW:
 		IntelMessage ("\cKA chainsaw! Find some meat!", false);
 		GiveInventory ("EagerBeaver", 1);
@@ -714,13 +718,26 @@ script 309 (int c)
 			
 		TakeInventory ("Unarmed", 1);
 		break;
+
+	// Marine beacon. No warning.
 	case CRATE_MARINEBEACON:
 		GiveInventory("MarineBeaconItem",1);
 		break;
+
+	// Open deck. Warning Player and Team.
 	case CRATE_OPENDECK:
 		ActivatorSound ("powerup/invisound", 127);
 		GiveInventory ("OpenDeck", 1);
 		break;
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+	// Thermal cloak. No warning.
 	case CRATE_THERMALCLOAK:
 		GiveInventory ("ThermalCloak", 1);
 		ACS_ExecuteAlways (953, 0);
@@ -728,11 +745,17 @@ script 309 (int c)
 		delay (35);
 		IntelMessage ("Turrets cannot see you for 90 seconds", false);
 		break;
+
+	// Disarm. Warning Player and Team.
 	case CRATE_DISARM:
 		SetFont ("BIGFONT");
 		HudMessage (s:"Disarm crate!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
 		
 		SetFont ("SMALLFONT");
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
 		IntelMessage ("Somebody lost all of his weapons.", true);
 		
 		// [Dusk] {11/2/12} Should this loop through the item table and
@@ -811,16 +834,25 @@ script 309 (int c)
 		delay (15);
 		ActivatorSound ("heavy/argh", 127);
 		break;
+
+	// Fatigue. No warning.
 	case CRATE_FATIGUE:
 		GiveInventory ("SpeedDowngrade", 1);
 		break;
+
+	// Remote c4. No warning.
 	case CRATE_REMOTEC4:
 		ActivatorSound ("c4/remote", 127);
 		GiveItem (ITEM_REMOTEC4, false);
 		break;
+
+	// BlurSphere. No warning.
 	case CRATE_BLURSPHERE:
 		GiveInventory ("BlurSphere", 1);
 		break;
+
+	// Random weapons. No warning.
+	// Xindage this crate should give the class bonus as well in future.
 	case CRATE_RANDOMWEAPON:
 		int RandomWeapon = -1;
 		int x, n;
@@ -846,9 +878,13 @@ script 309 (int c)
 		
 		GiveItem (RandomWeapon, false);
 		break;
+
+	// Jet pack. No warning.
 	case CRATE_JETPACK:
 		GiveItem (ITEM_JETPACK, false);
 		break;
+
+//*****************************************************************************8
 	case CRATE_REVOLVER:
 		IntelMessage (strparam (n:0, s:"\cJ got \cAblood revolver!"), true);
 		GiveInventory ("BloodRevolver", 1);
