@@ -94,9 +94,10 @@
 
 // Crate flags
 // -----------
-#define CRF_Announce		1 << 0 // announce this crate globally
-#define CRF_NoDeck			1 << 1 // effect isn't in open deck
-#define CRF_MarkedInMenu	1 << 2 // effect is listed on the menu (internal usage)
+#define CRF_NoDeck			1 << 0 // effect isn't in open deck
+#define CRF_MarkedInMenu	1 << 1 // effect is listed on the menu (internal usage)
+#define CRF_Announce_FA		1 << 2 // announce this crate globally, player and team
+#define CRF_Announce_TO		1 << 3 // announce this crate globally, team only
 
 str g_Crates_str[NUM_CRATES][NUM_CRATEKEYS_STR];
 int g_Crates_int[NUM_CRATES][NUM_CRATEKEYS_INT];
@@ -316,6 +317,7 @@ function int CheckCrate (int c) {
 // [Dusk] This uses identifiers now
 script 309 (int c)
 {
+	str flavor; // Flavor text before the crate name.
 	int team = PlayerTeam (); // Manual warning system requires it.
 	// Check that the crate is good - if not, find a good one.
 	while (!CheckCrate (c))
@@ -326,15 +328,6 @@ script 309 (int c)
 	// Log it
 	if (netstate == NETSTATE_Server)
 		Log (n:0, s:" gets ", s:name);
-	
-	// Going to be set unused.
-	// Announce it - either to player or globally.
-/*	if (g_Crates_int[c][CRK_Flags] & CRF_Announce) {
-		str teamname = cond (PlayerTeam() == TEAM_RED, "\cARed team\cJ", "\cNBlue team\cJ");
-		IntelMessage (strparam (s:teamname, s:" got ", s:name, s:"!"), true);
-	} else {*/
-		IntelMessage (strparam (s:"\c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), false);
-//	}
 	
 	// [Dusk] {9/15/12} And to his teammates
 	TeamMessage (TMSG_CRATE, c, playernumber());
@@ -884,23 +877,45 @@ script 309 (int c)
 		GiveItem (ITEM_JETPACK, false);
 		break;
 
-//*****************************************************************************8
+	// Blood revolver. Warning Player and Team.
 	case CRATE_REVOLVER:
 		IntelMessage (strparam (n:0, s:"\cJ got \cAblood revolver!"), true);
 		GiveInventory ("BloodRevolver", 1);
 		GiveInventory ("BloodRevolverAmmo", 3);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
 		break;
+
+	// Quad shotgun. Warning Player and Team.
 	case CRATE_QUADSHOTGUN:	
 		IntelMessage (strparam(n:0, s:"\cJ got the \cAQuad Shotgun!"), true);
 		GiveInventory("Quad Shotgun", 1);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
 		break;
+
+	// Radar. Warning Team.
 	case CRATE_RADAR:
 		GiveInventory ("Radar", 1);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage ("\cARed team: \c-Someone get \cDradar!", true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage ("\cNBlue team: \c-Someone get \cDradar!", true);
 		break;
+
+	// Bomb pack. Warning Player and Team.
 	case CRATE_BOMBPACK:
 		ActivatorSound ("terrorist/activate", 127);
 		IntelMessage ("\cFYou got the bomb pack! Terrorist!", false);
 		GiveInventory ("BombPackItem", 1);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- become a terrorist with a \cFbomb pack!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- become a terrorist with a \cFbomb pack!"), true);
 		break;
 	case CRATE_IMP:
 		// [Dusk] Spawns an invasion of imps in the team's base.
@@ -939,12 +954,18 @@ script 309 (int c)
 		}
 		
 		break;
+
+	// C4s. No warning.
 	case CRATE_C4:
-		for (i = 0; i < ITEM_maxGrenades; i++) {
+		for (i = 0; i < ITEM_maxGrenades; i++)
+		{
 			ActivatorSound ("c4/use", 127);
 			GiveInventory ("TimedC4", 1);
 			GiveInventory ("TimedC4Count", 1);
-			delay (15); }
+			delay (15);
+		}
+
+	// Grenades pack. No warning.
 	case CRATE_GRENADES:
 		if (!CheckInventory("FragGrenade") || !CheckInventory("Flashbang"))
 		{
@@ -956,27 +977,57 @@ script 309 (int c)
 		SetFragGrenades (ITEM_maxGrenades);
 		SetFlashbangs (ITEM_maxFlashBangs);
 		break;
+
+	// Soulsphere. No warning.
 	case CRATE_SOULSPHERE:
 		ActivatorSound("misc/p_pkup", 127);
 		GiveInventory("CRATE_SoulsphereDummyItem", 1);
 		ACS_NamedExecuteAlways("CRATE_SoulsphereDegeneration", 0, 0, 0, 0);
 		break;
+
+	// Light saber. Warning Player and Team.
 	case CRATE_LIGHTSABER:
 	    ActivatorSound ("weapons/son", 127);
-		IntelMessage (strparam(n:0, s:"\cJ got the \cVLightsaber!"), true);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- has the power in it's \cVLightsaber!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- has the power in it's \cVLightsaber!"), true);
 		GiveInventory("Lightsaber", 1);
 		break;
+
+	// BFG2704. Warning Player and Team.
 	case CRATE_BFG2704:
 	    ActivatorSound ("weapons/up/bfg", 127);
 		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- stole the \cDBFG 2704!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- stole the \cDBFG 2704!"), true);
 		break;
+
+	// Moon gravity. Warning Player and Team.
 	case CRATE_GRAVITY:
-		IntelMessage (strparam(n:0, s:"\cJ activated the \cUMoon Gravity!"), true);
 		SetGravity(400.0);
 		ACS_NamedExecuteAlways("CRATE_MoonGravityTimer", 0, 0, 0, 0);
+		if (PlayerTeam() == TEAM_RED)
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- activated the \cUMoon Gravity!"), true);
+		else if (PlayerTeam() == TEAM_BLUE)
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- activated the \cUMoon Gravity!"), true);
 		break;
 	}
+
+	// Announce it.
+	str teamname = cond (PlayerTeam() == TEAM_RED, "\cARed team: \c-", "\cNBlue team: \c-");
+	if (g_Crates_int[c][CRK_Flags] & CRF_Announce_FA) // Full Announce
+	{
+		IntelMessage (strparam (s:teamname, n:0, s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), true);
+	}
+	else if (g_Crates_int[c][CRK_Flags] & CRF_Announce_TO) // Team Only
+	{
+		IntelMessage (strparam (s:teamname, s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name, true);
+	}
+	else { IntelMessage (strparam (s:"\c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), false); }
 }
 
 Script "CRATE_SoulsphereDegeneration" (void)
