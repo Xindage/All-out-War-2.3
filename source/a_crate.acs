@@ -74,7 +74,8 @@
 // --------------------------------------------------------------
 #define CRK_NAME		0 // Name of crate
 #define CRK_COLOR		1 // Color of crate name
-#define NUM_CRATEKEYS_STR 2
+#define CRK_FLAVOR		2 // Flavor text
+#define NUM_CRATEKEYS_STR 3
 
 #define CRK_DEFINED		0 // Is it defined?
 #define CRK_WEIGHT		1 // Weight of crate, affects probability
@@ -98,6 +99,7 @@
 #define CRF_MarkedInMenu	1 << 1 // effect is listed on the menu (internal usage)
 #define CRF_Announce_FA		1 << 2 // announce this crate globally, player and team
 #define CRF_Announce_TO		1 << 3 // announce this crate globally, team only
+#define CRF_Announce		1 << 4 // Kept for testing purposes
 
 str g_Crates_str[NUM_CRATES][NUM_CRATEKEYS_STR];
 int g_Crates_int[NUM_CRATES][NUM_CRATEKEYS_INT];
@@ -110,57 +112,55 @@ function void CR_InitCrateList (void) {
 		return;
 	
 	// token, name, color, weight,
-	// type, flags
+	// type, flags, flavor
 	
 	
-	AddCrateType (CRATE_ARMORUP,		"armor upgrade",		"F", 25, CRT_Armor,		(0));
-	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0));
-	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0));
-	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(0));
-	AddCrateType (CRATE_BONUSXP,		"bonus experience",		"D", 15, CRT_Upgrade,	(0));
-	AddCrateType (CRATE_FIREARMOR,		"fire proof",			"F", 10, CRT_Armor,		(0));
-	AddCrateType (CRATE_STEALTH,		"stealth suit",			"U", 10, CRT_Upgrade,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_IRONCURTAIN,	"iron curtain",			"J", 10, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_KAMIKAZE,		"kamikaze",				"K", 10, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_PLASMACANNON,	"plasma cannon",		"N", 10, CRT_Weapon,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_CLASSSWAP,		"class swap",			"F", 10, CRT_Misc,		(0));
-	AddCrateType (CRATE_SPEEDUPGRADE,	"speed upgrade",		"D", 10, CRT_Powerup,	(0));
-	AddCrateType (CRATE_CREDITSSTOLEN,	"credits stolen",		"G", 10, CRT_Bad,		(0));
-	AddCrateType (CRATE_TIMEGUN,		"time gun",				"I", 10, CRT_Weapon,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_BOMB,			"bomb crate",			"G", 25, CRT_Bad,		(0));
-	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE));
-	AddCrateType (CRATE_UTILITYGUN,		"utility gun",			"D", 10, CRT_Weapon,	(0));
-	AddCrateType (CRATE_ENERGYARMOR,	"energy resistance",	"N", 10, CRT_Armor,		(0));
-	AddCrateType (CRATE_EXPLOARMOR,		"explosive resistance",	"F", 10, CRT_Armor,		(0));
-	AddCrateType (CRATE_BULLETARMOR,	"bulletproof vest",		"C", 10, CRT_Armor,		(0));
-	AddCrateType (CRATE_JUGGERNAUT,		"instant juggernaut",	"F",  5, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_BERSERK,		"berserk",				"G",  4, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_MEDFIELD,		"medication field",		"A", 10, CRT_Item,		(0));
-	AddCrateType (CRATE_TEAMBOOST,		"team boost",			"A",  7, CRT_Upgrade,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_CHAINSAW,		"chainsaw",				"F", 15, CRT_Weapon,	(0));
-	AddCrateType (CRATE_MARINEBEACON,	"marine beacon",		"F", 15, CRT_Item,		(0));
-	AddCrateType (CRATE_OPENDECK,		"open deck",			"J",  5, CRT_Item,		(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_THERMALCLOAK,	"thermal cloak",		"U", 10, CRT_Powerup,	(0));
-	AddCrateType (CRATE_DISARM,			"disarm crate",			"A", 10, CRT_Bad,		(0));
-	AddCrateType (CRATE_FATIGUE,		"fatigue",				"G", 10, CRT_Bad,		(0));
-	AddCrateType (CRATE_REMOTEC4,		"remote C4",			"K", 10, CRT_Weapon,	(0));
-	AddCrateType (CRATE_BLURSPHERE,		"partial invisibility",	"U", 10, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_RANDOMWEAPON,	"random weapon",		"F", 25, CRT_Weapon,	(0));
-	AddCrateType (CRATE_JETPACK,		"jetpack",				"F", 10, CRT_Item,		(0));
-	AddCrateType (CRATE_REVOLVER,		"blood revolver",		"G",  2, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_RADAR,			"radar",				"D",  10, CRT_Powerup,	(CRF_ANNOUNCE));
-	AddCrateType (CRATE_BOMBPACK,		"bomb pack",			"F",  7, CRT_Item,		(CRF_ANNOUNCE));
-	AddCrateType (CRATE_IMP,			"imp attack",			"S",  8, CRT_Bad,		(CRF_ANNOUNCE));
-	AddCrateType (CRATE_C4,				"C4",					"K", 10, CRT_Item,		(0));
-	AddCrateType (CRATE_GRENADES,		"grenade pack",			"D", 10, CRT_Item,		(0));
-	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G", 5,	 CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0));
-	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_Announce | CRF_NoDeck));
-	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  2, CRT_Misc,		(CRF_Announce | CRF_NoDeck));
-
-	
+	AddCrateType (CRATE_ARMORUP,		"armor upgrade",		"F", 25, CRT_Armor,		(CRF_NoDeck),	""); // 0
+	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_ANNOUNCE_TO | CRF_NoDeck),	"Was blessed by");
+	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0),	"");
+	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0),	"");
+	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(0),	"");
+	AddCrateType (CRATE_BONUSXP,		"bonus experience",		"D", 15, CRT_Upgrade,	(0),	"");
+	AddCrateType (CRATE_FIREARMOR,		"fire proof",			"F", 10, CRT_Armor,		(0),	"");
+	AddCrateType (CRATE_STEALTH,		"stealth suit",			"U", 10, CRT_Upgrade,	(0),	"");
+	AddCrateType (CRATE_IRONCURTAIN,	"iron curtain",			"J", 10, CRT_Powerup,	(CRF_ANNOUNCE_FA),				"got");
+	AddCrateType (CRATE_KAMIKAZE,		"kamikaze",				"K", 10, CRT_Powerup,	(CRF_ANNOUNCE_TO),				"Some crazy ass got the");
+	AddCrateType (CRATE_PLASMACANNON,	"plasma cannon",		"N", 10, CRT_Weapon,	(CRF_ANNOUNCE_TO),				"Some lucky guy got the"); // 10
+	AddCrateType (CRATE_CLASSSWAP,		"class swap",			"F", 10, CRT_Misc,		(0),	"");
+	AddCrateType (CRATE_SPEEDUPGRADE,	"speed upgrade",		"D", 10, CRT_Powerup,	(0),	"");
+	AddCrateType (CRATE_CREDITSSTOLEN,	"credits stolen",		"G", 10, CRT_Bad,		(0),	"");
+	AddCrateType (CRATE_TIMEGUN,		"time gun",				"I", 10, CRT_Weapon,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
+	AddCrateType (CRATE_BOMB,			"bomb crate",			"G", 25, CRT_Bad,		(0),	""); 					// Custon announce type.
+	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE_FA),				"messed up and activated a");
+	AddCrateType (CRATE_UTILITYGUN,		"utility gun",			"D", 10, CRT_Weapon,	(0),	"");
+	AddCrateType (CRATE_ENERGYARMOR,	"energy resistance",	"N", 10, CRT_Armor,		(0),	"");
+	AddCrateType (CRATE_EXPLOARMOR,		"explosive resistance",	"F", 10, CRT_Armor,		(0),	"");
+	AddCrateType (CRATE_BULLETARMOR,	"bulletproof vest",		"C", 10, CRT_Armor,		(0),	""); // 20
+	AddCrateType (CRATE_JUGGERNAUT,		"instant juggernaut",	"F",  5, CRT_Powerup,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
+	AddCrateType (CRATE_BERSERK,		"berserk",				"G",  4, CRT_Powerup,	(CRF_ANNOUNCE_TO),				"Someone went");
+	AddCrateType (CRATE_MEDFIELD,		"medication field",		"A", 10, CRT_Item,		(0),	"");
+	AddCrateType (CRATE_TEAMBOOST,		"team boost",			"A",  7, CRT_Upgrade,	(CRF_ANNOUNCE_TO),				"Get");
+	AddCrateType (CRATE_CHAINSAW,		"chainsaw",				"F", 15, CRT_Weapon,	(0),	"");
+	AddCrateType (CRATE_MARINEBEACON,	"marine beacon",		"F", 15, CRT_Item,		(0),	"");
+	AddCrateType (CRATE_OPENDECK,		"open deck",			"J",  5, CRT_Item,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"put his hand on the");
+	AddCrateType (CRATE_THERMALCLOAK,	"thermal cloak",		"U", 10, CRT_Powerup,	(0),	"");
+	AddCrateType (CRATE_DISARM,			"disarm crate",			"A", 10, CRT_Bad,		(CRF_ANNOUNCE_FA),				"was wiped clean by");
+	AddCrateType (CRATE_FATIGUE,		"fatigue",				"G", 10, CRT_Bad,		(0),	""); // 30
+	AddCrateType (CRATE_REMOTEC4,		"remote C4",			"K", 10, CRT_Weapon,	(0),	"");
+	AddCrateType (CRATE_BLURSPHERE,		"partial invisibility",	"U", 10, CRT_Powerup,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
+	AddCrateType (CRATE_RANDOMWEAPON,	"random weapon",		"F", 25, CRT_Weapon,	(0),	"");
+	AddCrateType (CRATE_JETPACK,		"jetpack",				"F", 10, CRT_Item,		(0),	"");
+	AddCrateType (CRATE_REVOLVER,		"blood revolver",		"G",  2, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"just got the");
+	AddCrateType (CRATE_RADAR,			"radar",				"D", 10, CRT_Powerup,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
+	AddCrateType (CRATE_BOMBPACK,		"bomb pack",			"F",  7, CRT_Item,		(CRF_ANNOUNCE_FA),				"become a terrorist with a");
+	AddCrateType (CRATE_IMP,			"imp horde",			"S",  8, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Get attacked by");
+	AddCrateType (CRATE_C4,				"C4",					"K", 10, CRT_Item,		(0),	"");
+	AddCrateType (CRATE_GRENADES,		"grenade pack",			"D", 10, CRT_Item,		(0),	""); // 40
+	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G", 5,	 CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"wields the");
+	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0),	"");
+	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
+	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
+	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  4, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
 }
 
 // ============================================================================
@@ -317,13 +317,13 @@ function int CheckCrate (int c) {
 // [Dusk] This uses identifiers now
 script 309 (int c)
 {
-	str flavor; // Flavor text before the crate name.
 	int team = PlayerTeam (); // Manual warning system requires it.
 	// Check that the crate is good - if not, find a good one.
 	while (!CheckCrate (c))
 		c = RandomCrate ();
 	
 	str name = g_Crates_str[c][CRK_NAME];
+	str flavor = g_Crates_str[c][CRK_FLAVOR];
 	
 	// Log it
 	if (netstate == NETSTATE_Server)
@@ -435,26 +435,14 @@ script 309 (int c)
 	case CRATE_IRONCURTAIN:
 		LocalAmbientSound ("powerup/iron", 127);
 		ActivatorSound ("powerup/invisound", 127);
-
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- got \cCIron curtain!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- got \cCIron curtain!"), true);
-		IntelMessage ("\cCIron curtain!!", false);
-		
+//		IntelMessage ("\cCIron curtain!!", false);
 		GiveInventory("IronCurtain",1); // [SG] reverted Iron Curtain to invul instead of 1000 hp
 		break;
 
 	// Kamikaze. Warning Team.
 	case CRATE_KAMIKAZE:
 		LocalAmbientSound ("powerup/kama", 127);
-		
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Some crazy ass got the \cKKamikaze Crate!!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Some crazy ass got the \cKKamikaze Crate!!", true);
-		IntelMessage ("\cKKamikaze!", false);
-		
+//		IntelMessage ("\cKKamikaze!", false);
 		GiveInventory ("IsKamikaze", 1);
 		break;
 
@@ -463,11 +451,6 @@ script 309 (int c)
 		LocalAmbientSound ("powerup/plas",255);
 		GiveItem (ITEM_PlasmaCannon, false);
 		RecountPlasma ();
-
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Some lucky guy got the \cNPlasma cannon!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Some lucky guy got the \cNPlasma cannon!", true);
 		break;
 
 	// Class swap. No warning.
@@ -516,11 +499,6 @@ script 309 (int c)
 		
 		GiveInventory ("TimeGun", 1);
 		RecountTimeCops ();
-
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Someone obtained the \cITime cop gun!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Someone obtained the \cITime cop gun!", true);
 		break;
 
 	// Bomb. Warning Player and Team.
@@ -598,14 +576,14 @@ script 309 (int c)
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
 		if (team == TEAM_RED) {
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
+//			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(201,4000,0);
 			Thing_Damage(203,4000,0);
 			Thing_Damage(205,4000,0);
 			Thing_Damage(207,4000,0);
 			Thing_Damage(214,2500,0);
 		} else {
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
+//			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(101,4000,0);
 			Thing_Damage(103,4000,0);
 			Thing_Damage(105,4000,0);
@@ -653,11 +631,6 @@ script 309 (int c)
 		GiveInventory ("FlamerAmmo", 200);
 		GiveInventory ("NukeAmmo", 1);
 		ActivatorSound ("switch/lrm", 127);
-
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Someone obtained the \cFInstant juggernaut!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Someone obtained the \cFInstant juggernaut!", true);
 		break;
 
 	// Berserker. Warning Team.
@@ -665,11 +638,6 @@ script 309 (int c)
 		GiveInventory ("BerserkSwitch", 1);
 		delay (5);
 		GiveInventory ("BerserkHue", 1);
-
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Someone went \cGBerserk!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Someone went \cGBerserk!", true);
 		break;
 
 	// Medic Field. No warning.
@@ -691,10 +659,6 @@ script 309 (int c)
 				SetPlayerArmorGrade (k, 1, AGF_ADDITIVE);
 			}
 		}
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-get \cATeam boost!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-get \cATeam boost!", true);
 		break;
 
 	// Chainsaw. No warning.
@@ -722,14 +686,6 @@ script 309 (int c)
 		ActivatorSound ("powerup/invisound", 127);
 		GiveInventory ("OpenDeck", 1);
 		break;
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------------------
 	// Thermal cloak. No warning.
 	case CRATE_THERMALCLOAK:
 		GiveInventory ("ThermalCloak", 1);
@@ -745,11 +701,11 @@ script 309 (int c)
 		HudMessage (s:"Disarm crate!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
 		
 		SetFont ("SMALLFONT");
-		if (PlayerTeam() == TEAM_RED)
+/*		if (PlayerTeam() == TEAM_RED)
 			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
 		else if (PlayerTeam() == TEAM_BLUE)
 			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
-		IntelMessage ("Somebody lost all of his weapons.", true);
+		IntelMessage ("Somebody lost all of his weapons.", true);*/
 		
 		// [Dusk] {11/2/12} Should this loop through the item table and
 		// remove weapons based on its information rather than relying on
@@ -839,7 +795,7 @@ script 309 (int c)
 		GiveItem (ITEM_REMOTEC4, false);
 		break;
 
-	// BlurSphere. No warning.
+	// BlurSphere. Warning team.
 	case CRATE_BLURSPHERE:
 		GiveInventory ("BlurSphere", 1);
 		break;
@@ -882,29 +838,17 @@ script 309 (int c)
 		IntelMessage (strparam (n:0, s:"\cJ got \cAblood revolver!"), true);
 		GiveInventory ("BloodRevolver", 1);
 		GiveInventory ("BloodRevolverAmmo", 3);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
 		break;
 
 	// Quad shotgun. Warning Player and Team.
 	case CRATE_QUADSHOTGUN:	
 		IntelMessage (strparam(n:0, s:"\cJ got the \cAQuad Shotgun!"), true);
 		GiveInventory("Quad Shotgun", 1);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- just got the \cAblood revolver!"), true);
 		break;
 
 	// Radar. Warning Team.
 	case CRATE_RADAR:
 		GiveInventory ("Radar", 1);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage ("\cARed team: \c-Someone get \cDradar!", true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage ("\cNBlue team: \c-Someone get \cDradar!", true);
 		break;
 
 	// Bomb pack. Warning Player and Team.
@@ -912,10 +856,6 @@ script 309 (int c)
 		ActivatorSound ("terrorist/activate", 127);
 		IntelMessage ("\cFYou got the bomb pack! Terrorist!", false);
 		GiveInventory ("BombPackItem", 1);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- become a terrorist with a \cFbomb pack!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- become a terrorist with a \cFbomb pack!"), true);
 		break;
 	case CRATE_IMP:
 		// [Dusk] Spawns an invasion of imps in the team's base.
@@ -988,10 +928,6 @@ script 309 (int c)
 	// Light saber. Warning Player and Team.
 	case CRATE_LIGHTSABER:
 	    ActivatorSound ("weapons/son", 127);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- has the power in it's \cVLightsaber!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- has the power in it's \cVLightsaber!"), true);
 		GiveInventory("Lightsaber", 1);
 		break;
 
@@ -1000,20 +936,11 @@ script 309 (int c)
 	    ActivatorSound ("weapons/up/bfg", 127);
 		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- stole the \cDBFG 2704!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- stole the \cDBFG 2704!"), true);
 		break;
 
 	// Moon gravity. Warning Player and Team.
 	case CRATE_GRAVITY:
-		SetGravity(400.0);
 		ACS_NamedExecuteAlways("CRATE_MoonGravityTimer", 0, 0, 0, 0);
-		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- activated the \cUMoon Gravity!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- activated the \cUMoon Gravity!"), true);
 		break;
 	}
 
@@ -1021,11 +948,11 @@ script 309 (int c)
 	str teamname = cond (PlayerTeam() == TEAM_RED, "\cARed team: \c-", "\cNBlue team: \c-");
 	if (g_Crates_int[c][CRK_Flags] & CRF_Announce_FA) // Full Announce
 	{
-		IntelMessage (strparam (s:teamname, n:0, s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), true);
+		IntelMessage (strparam (s:teamname, n:0, s:" ", s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), true);
 	}
 	else if (g_Crates_int[c][CRK_Flags] & CRF_Announce_TO) // Team Only
 	{
-		IntelMessage (strparam (s:teamname, s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name, true);
+		IntelMessage (strparam (s:teamname, s:flavor, s:" \c", s:g_Crates_str[c][CRK_COLOR], s:name), true);
 	}
 	else { IntelMessage (strparam (s:"\c", s:g_Crates_str[c][CRK_COLOR], s:name, s:"!"), false); }
 }
@@ -1059,7 +986,7 @@ Script "CRATE_MoonGravityTimer" (void)
 }
 
 // ============================================================================
-function void AddCrateType (int token, str name, str color, int weight, int type, int flags) {
+function void AddCrateType (int token, str name, str color, int weight, int type, int flags, str flavor) {
 	// If this happens, NUM_CRATES probably was not updated for new crates.
 	if (token < 0 || token >= NUM_CRATES)
 		FatalError3f ("Tried to define a crate effect `%s` with invalid token %d! NUM_CRATES is %d",
@@ -1072,6 +999,7 @@ function void AddCrateType (int token, str name, str color, int weight, int type
 	g_Crates_int[token][CRK_WEIGHT] = weight;
 	g_Crates_int[token][CRK_TYPE] = type;
 	g_Crates_int[token][CRK_FLAGS] = flags;
+	g_Crates_str[token][CRK_FLAVOR] = flavor;
 }
 
 // ============================================================================
