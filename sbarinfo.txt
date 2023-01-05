@@ -98,6 +98,7 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 	InInventory PowerExplosiveResistance {drawimage "a_explo", 60, -15;}
 	InInventory PowerEnergyResistance {drawimage "a_energy", 60, -15;}
 	InInventory PowerBulletProof {drawimage "a_bproof", 60, -15;}
+	InInventory PowerCryoResistance {drawimage "a_cryo", 60, -15;}
 	
 	// Armor grades
 	InInventory PowerGradeNeg1Armor {drawimage "a_graden", 60, -15;}
