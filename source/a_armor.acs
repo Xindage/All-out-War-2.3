@@ -108,7 +108,7 @@ function void SetPlayerArmorGrade (int p, int n, int mod) {
 		CheckAndRemove ("PowerExplosiveResistance");
 		CheckAndRemove ("PowerEnergyResistance");
 		CheckAndRemove ("PowerBulletProof");
-		CheckAndRemove ("PowerCryoResistance")
+		CheckAndRemove ("PowerCryoResistance");
 		
 		switch (mod) {
 		case ARMOD_FIRE:
