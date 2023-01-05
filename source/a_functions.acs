@@ -56,7 +56,7 @@ function str ArModColor (int a) {
 		case ARMOD_EXPLO: return "\cF";
 		case ARMOD_ENERGY: return "\cN";
 		case ARMOD_BULLETPROOF: return "\cU";
-//		case ARMOD_CRYO: return "\cV";
+		case ARMOD_CRYO: return "\cV";
 	}
 	
 	return "";

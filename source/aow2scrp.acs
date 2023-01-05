@@ -444,10 +444,11 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define ARMOD_EXPLO 4
 #define ARMOD_BULLETPROOF 5
 #define ARMOD_NONE 6
+#define ARMOD_CRYO 7
 #define AGF_ADDITIVE 8
 #define AGF_DONTSUBTRACT 16
 #define AGF_DONTADD 32
-//#define ARMOD_CRYO 7 // Where TF i should put it?
+
 
 // Class identifiers
 // [Xindage] 09/25/22 - Sort Class by price, it looks better in game.
