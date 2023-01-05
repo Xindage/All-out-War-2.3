@@ -99,7 +99,6 @@
 #define CRF_MarkedInMenu	1 << 1 // effect is listed on the menu (internal usage)
 #define CRF_Announce_FA		1 << 2 // announce this crate globally, player and team
 #define CRF_Announce_TO		1 << 3 // announce this crate globally, team only
-#define CRF_Announce		1 << 4 // Kept for testing purposes
 
 str g_Crates_str[NUM_CRATES][NUM_CRATEKEYS_STR];
 int g_Crates_int[NUM_CRATES][NUM_CRATEKEYS_INT];
@@ -701,11 +700,6 @@ script 309 (int c)
 		HudMessage (s:"Disarm crate!"; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_RED, 0.5, 0.45, 2.0, 1.0);
 		
 		SetFont ("SMALLFONT");
-/*		if (PlayerTeam() == TEAM_RED)
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
-		else if (PlayerTeam() == TEAM_BLUE)
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- was wiped clean by \cAdisarm crate!"), true);
-		IntelMessage ("Somebody lost all of his weapons.", true);*/
 		
 		// [Dusk] {11/2/12} Should this loop through the item table and
 		// remove weapons based on its information rather than relying on
