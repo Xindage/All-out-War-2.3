@@ -138,7 +138,7 @@ function void ClearDonateMenu (void) {
 }
 
 // [Dusk] Find the next person we could donate to.
-function void NextDonatee (void) {
+/*function void NextDonatee (void) {
 	do {
 		g_Donatee++;
 		if (g_Donatee >= MAXPLAYERS)
@@ -148,6 +148,19 @@ function void NextDonatee (void) {
 	
 	// [Dusk] {10/27/12} Store the donatee into a CVAR.
 	ConsoleCommand (strparam (s:"set __zeta_donatee ", d:g_Donatee));
+}*/
+
+function void NextDonatee (void) {
+	g_Donatee++;
+	if (g_Donatee == MAXPLAYERS)
+		g_Donatee = 0;
+
+	// Skip over players who are not in the game or are on a different team.
+	while ((GetPlayerTeam (g_Donatee) != ConsoleTeam() || g_Donatee == intHolder[i_consoleplayer]) && PlayerInGame (g_Donatee)) {
+		g_Donatee++;
+		if (g_Donatee == MAXPLAYERS)
+			g_Donatee = 0;
+	}
 }
 
 // Donations
@@ -172,7 +185,7 @@ script SC_CL_DONATE (int action) NET CLIENTSIDE {
 		g_DonationMenuOpen = !g_DonationMenuOpen;
 		
 		// [Dusk] If the player we have open right now is not valid, find another one.
-		if (GetPlayerTeam (g_Donatee) != ConsoleTeam() || g_Donatee == intHolder[i_consoleplayer])
+		if ((GetPlayerTeam (g_Donatee) != ConsoleTeam() || g_Donatee == intHolder[i_consoleplayer]) && PlayerInGame (g_Donatee))
 			NextDonatee ();
 		
 		// [Dusk] Start menu loop
