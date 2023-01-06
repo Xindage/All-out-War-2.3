@@ -928,7 +928,6 @@ script 309 (int c)
 	// BFG2704. Warning Player and Team.
 	case CRATE_BFG2704:
 	    ActivatorSound ("weapons/up/bfg", 127);
-		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
 		break;
 
