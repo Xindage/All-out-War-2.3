@@ -479,7 +479,6 @@ Actor BlueFlamerDude : MBase // Marine wielding Flamethrower
 		PFLM G 0 A_Pain
 		PFLM G 4 A_Recoil (3.675)
 		PFLM E 0 A_Jump (256, "CheckIfTargetInLOS")
-		PFLM E 0 A_Jump (256, "CheckIfTargetInLOS")
 		Stop
 
 	PainBackOffBackwardsAndLeft:
