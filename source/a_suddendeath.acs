@@ -27,7 +27,7 @@ script SC_SuddenDeathCounter OPEN
 		else if (timeUntilSuddenDeath < 6 * 35)
 	{
 		// Play eva sounds every second for the last 6 seconds before sudden death
-		for (int i = 5; i > 1); i--)
+		for (int i = 5; i > 1; i--)
 		{
 			AmbientSound (strparam (s:"eva/", d:i, s:"sec"), 127);
 			delay (35);
