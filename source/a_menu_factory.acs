@@ -62,5 +62,9 @@ script 711 (int m0, int m1) {
 // =============================================================================
 // MENU LIMIT
 script 715 (int m0, int m1) CLIENTSIDE {
-	SetResultValue (WF_CheckAvailability (MenuMechs[m0][m1]));
+    int limited = 0;
+    if (WF_CheckAvailability (MenuMechs[m0][m1]) ||
+        CheckInventory ("Credit") < Mechs_int[MenuMechs[m0][m1]][MK_COST] - CalcDiscount(Mechs_int[MenuMechs[m0][m1]][MK_COST]))
+        limited = 1;
+    SetResultValue (limited);
 }

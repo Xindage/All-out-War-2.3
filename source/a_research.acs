@@ -120,7 +120,7 @@ function bool CheckResearch (int r) {
 	}
 	
 	// Must afford it
-	if (GetCredits() < Researches_int[r][RCK_COST]) {
+	if (GetCredits() < Researches_int[r][RCK_COST] - CalcDiscount(Researches_int[r][RCK_COST])) {
 		g_Error = "You need more credits!";
 		return false;
 	}

@@ -107,7 +107,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 		HudMessage (s:classinfo; HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 4:
-		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST]);
+		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST] - CalcDiscount(Addons_int[m1][ADK_COST]));
 		HudMessage (s:"Price: \cQ$\cD", d:Addons_int[m1][ADK_COST];
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
@@ -197,9 +197,10 @@ script 713 (int m0, int m1, int y) CLIENTSIDE {
 	} 
 	else 
 	{
+		int cost = Addons_int[m1][ADK_COST];
 		if (CheckInventory (Items_Str[Addons_int[m1][ADK_ITEM]][IK_ITEM0]))
 			limited = true; // Must not have it already
-		else if (CheckInventory ("Credit") < Addons_int[m1][ADK_COST])
+		else if (CheckInventory ("Credit") < cost - CalcDiscount(cost))
 			limited = true; // Must afford it
 		else if 
 		(
