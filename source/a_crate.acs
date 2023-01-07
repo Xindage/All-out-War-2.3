@@ -1017,7 +1017,7 @@ function int RandomCrate (void) {
 // [Dusk] In order to keep crates random, keep seeding the random value. This
 // should eliminate any favoring towards effects. Before this there could be
 // for instance as much as 5-6 berserkers per game!
-script 805 open {
+script SC_INITCRATES open {
 	// Wait until crates are initialized
 	while (!g_Crates_int[0][CRK_DEFINED])
 		delay (5);

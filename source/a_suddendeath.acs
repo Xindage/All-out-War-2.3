@@ -8,14 +8,45 @@
  * of this and call it your own. Thanks!
  */
 
-script SC_SuddenDeathCounter OPEN {
+script SC_SuddenDeathCounter OPEN
+{
+	delay (35); // second before start.
+
+	int timeUntilSuddenDeath;
+	while (Timer() < GetCVAR ("zeta_suddendeathtime") * MINUTETICS) {
+	timeUntilSuddenDeath = GetCVAR ("zeta_suddendeathtime") * MINUTETICS - Timer();
+
+	if (timeUntilSuddenDeath == 5 * MINUTETICS) {
+		// Print message to all players at 5 minutes before sudden death
+		IntelMessage ("Sudden death will begin in \cg5 \c-minutes!", true);
+	}
+	else if (timeUntilSuddenDeath == MINUTETICS) {
+		// Print message to all players at 1 minute before sudden death
+		IntelMessage ("Sudden death will begin in \cg1 \c-minutes!", true);
+	}
+		else if (timeUntilSuddenDeath < 6 * 35)
+	{
+		// Play eva sounds every second for the last 6 seconds before sudden death
+		for (int i = 5; i > 1); i--)
+		{
+			AmbientSound (strparam (s:"eva/", d:i, s:"sec"), 127);
+			delay (35);
+		}
+	}
+		delay (35);
+	}
+
+  ACS_Execute (SC_SUDDENDEATH, 0);
+}
+
+/*script SC_SuddenDeathCounter OPEN {
 	delay (5);
-	
+
 	while (Timer() < GetCVAR ("zeta_suddendeathtime") * MINUTETICS)
 		delay (35);
-	
+
 	ACS_Execute (SC_SUDDENDEATH, 0);
-}
+}*/
 
 script SC_SuddenDeath (void) {
 	SetActivator (-1);

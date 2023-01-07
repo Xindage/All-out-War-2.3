@@ -105,6 +105,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ============================================================================
 // Thing IDs
 // TODO: move these to 1000+ range
+// (100 200) team | 10 Btos | X building
 #define TID_BARRACKS_BLUE 101		//1101
 #define TID_BARRACKS_RED 201		//1201
 #define TID_REFINERY_BLUE 103		//1102
@@ -153,6 +154,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Pref_FreezeCMD			802
 #libdefine SC_Pref_MenuToggle			803
 #libdefine SC_Pref_RequestFreeze		804
+#libdefine SC_Init_crates				805
 // [...]
 #libdefine SC_BombPackItem				807
 // [...]
