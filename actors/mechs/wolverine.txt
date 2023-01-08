@@ -103,7 +103,6 @@ actor WolverineSwitchPickup : CustomInventory {
 	+AUTOACTIVATE
 	inventory.pickupsound "mech/start"
 	translation "112:127=[255,255,255]:[0,0,0]"
-	scale 1.75
 	states {
 	Spawn:
 		ROB1 A -1
