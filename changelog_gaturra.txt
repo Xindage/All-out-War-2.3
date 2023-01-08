@@ -127,6 +127,25 @@ Version r221225 (2022/12/25)
                           - Cretes that give you weapons wont force you to switch
                           - More mapfixes
                           - Fixed: selfheal/grenades keybinds not working sometimes
+Version r221226 (2022/12/26)
+                          - Stealth handgun and machinegun damage slighty increased
+						  - Minor bugfixes in barney the dinosaur edits
+Version r221228 (2022/12/28)
+                          - Stealth gauss damage decrased (from 80 to 75), impact damage removed
+                          - Fixed: machinegun altfire using wrong ammo amount
+						  - Fixed: energy weapons make players disapear in death
+						  - Fixed: frame drops with the stealth gauss projectile
+Version r230107 (2023/01/07)
+                          - Rifle presision decreases when holding fire
+                          - Ammocaches now give the same ammo ammount as in aow 2.1
+                          - Karasawa can be switched quickly after using altfire
+                          - Lightsaber and melee attacks no longer use projectiles to deal damage
+                          - Submachinegun magazine capacity decreased, reload speed increased
+						  - Stealth gauss delay after fire takes a bit longer to charge
+                          - Bullet casings are slighty bigger
+                          - Fixed: lightsaber altfire doesnt reflects bullets
+						  - Fixed: missile launcher sounds are multiplied when using offensive keybinds
+						  - Fixed: double ammo on some ammo types (shotgun ammo, laser rifle ammo, smg ammo, machinegun ammo)
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *
@@ -166,6 +185,7 @@ Version r221225 (2022/12/25)
 							  - Artillery soldier     : faster reloading
 							  - Shock trooper         : altfire
 							  - Karasawa soldier      : extra altfire mode (reload key)
+							  - Stealth assassin      : can deal damage through walls
 							  - Demoliotion expert    : can deactivate remote c4 charges with the USE key
 							  - Tiberium autorifle    : better ammo capacity, 6 projectiles per altfire instead 4
 							  - Combustion auto rifle : better ammo capacity, 6 projectiles per altfire instead 4

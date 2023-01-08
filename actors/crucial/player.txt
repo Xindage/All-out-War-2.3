@@ -10,11 +10,12 @@ actor Player : DoomPlayer {
 	Player.StartItem "PistolMagazine" 16
 	Player.StartItem "StealthPistolMag" 12
 	Player.StartItem "SSGShell" 2
-	Player.StartItem "SMGMag" 60
+	Player.StartItem "SMGMag" 30
 	Player.StartItem "SniperBolt" 1
 	Player.StartItem "MachinegunMag" 45
 	Player.StartItem "ArtilleryCharge" 1
 	Player.StartItem "MissileMag" 1
+	Player.StartItem "KarasawaBurst" 5
 	player.forwardmove 0.875
 	player.sidemove 0.875
 	player.maxhealth 100

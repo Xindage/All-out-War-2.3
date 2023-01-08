@@ -1043,7 +1043,8 @@ subby/fire			  dssubby
 $volume subby/fire 0.6
 $limit				  subby/fire 0
 weapons/SMGIN         SMGMAGIN
-weapons/SMGOut        SMGMAGOU
+weapons/SMGOOUT        SMGMAGOU
+weapons/SMGSLAP        SMGBSLAP
 weapons/SMGSafty      SMGSAFTY
 weapons/SMGEmpty	  DSCLIP
 
@@ -1198,6 +1199,13 @@ weapons/railgunlaser2	    RGLASER2
 weapons/railgunlaser3	    RGLASER3
 weapons/railgunlaser4	    RGLASER4
 $random weapons/railgunlaser { weapons/railgunlaser1 weapons/railgunlaser2 weapons/railgunlaser3 weapons/railgunlaser4 }
+
+weapons/railgunimpact1	    RGIMPAC1
+weapons/railgunimpact2	    RGIMPAC2
+weapons/railgunimpact3	    RGIMPAC3
+weapons/railgunimpact4	    RGIMPAC4
+weapons/railgunimpact5	    RGIMPAC5
+$random weapons/railgunimpact { weapons/railgunimpact1 weapons/railgunimpact2 weapons/railgunimpact3 weapons/railgunimpact4 weapons/railgunimpact5 }
 
 // Plasma Cannon
 plasmacannon/fire		    plasmaca
