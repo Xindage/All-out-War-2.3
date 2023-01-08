@@ -338,7 +338,7 @@ function void InitClasses (void) {
 		ITEM_KARASAWA, ITEM_MACHINEGUN, 0, 0, 0, 0);
 
 	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.9, DEP_CENTRE,
-		2, ARMOD_NOCHANGE,
+		2, ARMOD_CRYO,
 		4, 2, CF_Warning|CF_CantPilot,
 		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
 		
