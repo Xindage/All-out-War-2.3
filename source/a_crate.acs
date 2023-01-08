@@ -302,10 +302,9 @@ function int CheckCrate (int c) {
 		return !CheckInventory("BFG 2704");
 	case CRATE_GRAVITY:
 		return	!GetConfig (CONFIG_TOURNAMENTMODE) && // not in tournament mode
-				!(gravityonce) && // not if it already had happened
+				!(gravityonce) && // Repurposed to do not happen while one is active, or too early after another
 				!intHolder[i_SuddenDeath] && // Not in suddendeath
-				!(GetCVar("zeta_suddendeathtime") <= 6) && // only is SD is higher than 6 minutes
-				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 6)); // The effect should last up to 1 minute before SD*/
+				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 5)); // The effect should last up to SD
 	}
 	
 	return true;
@@ -971,11 +970,13 @@ Script "CRATE_SoulsphereDegeneration" (void)
 
 Script "CRATE_MoonGravityTimer" (void)
 {
-	gravityonce = 1;
+	gravityonce = 1; // Repurposed to do not allow this crate happen while one is on effect
 	SetGravity(300.0); // Decrease the gravity.
-	Delay(5 * MINUTETICS);
+	Delay(3 * MINUTETICS / 2); // 1 and half minute.
 	SetGravity(800.0); // Return to default.
 	IntelMessage (strparam(s:"\cUMoon Gravity \c-loses its effect."), true);
+	Delay(3 * MINUTETICS);
+	gravityonce = 0;
 }
 
 // ============================================================================
