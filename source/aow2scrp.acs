@@ -785,3 +785,4 @@ global int 63:deathtoll;
 #include "a_timegun.acs"
 #include "a_tiberium.acs"
 #include "a_utility.acs"
+#include "a_changelog.acs"

@@ -1,0 +1,29 @@
+bool chgactive;
+script 501 (void) net clientside
+{
+    if (!chgactive)
+    {
+        chgactive = 1;
+        while (chgactive == 1)
+        {
+            int Version = 230108; // YYMMDD
+            HudMessage(s:"\cuChangelog version: \cd", d:Version, s:"\n
+\cr- \c-Rifle presision decreases when holding fire\n
+\cu- \c-Ammocaches now give the same ammo ammount as in aow 2.1\n
+\cq- \c-Karasawa can be switched quickly after using altfire\n
+\cu- \c-Lightsaber and melee attacks no longer use projectiles to deal damage\n
+\cu- \c-Submachinegun magazine capacity decreased, reload speed increased\n
+\cr- \c-Stealth gauss delay after fire takes a bit longer to charge\n
+\cu- \c-Bullet casings are slighty bigger\n
+\cq- \c-Fixed: lightsaber altfire doesnt reflects bullets\n
+\cu- \c-Fixed: missile launcher sounds are multiplied when using offensive keybinds\n
+\cr- \c-Fixed: double ammo on some ammo types on shotgun ammo, laser rifle ammo, smg ammo and machinegun ammo"
+            ; HUDMSG_FADEOUT, 801, CR_WHITE, 0.5, 0.2, 1.0, 1.0);
+            delay(35);
+        }
+    }
+    else
+    {
+        chgactive = 0;
+    }
+}
