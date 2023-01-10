@@ -92,6 +92,7 @@ actor IonCannonBeaconArmed {
 		TNT1 A 0 A_SpawnItemEx ("BlueStrike", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 1, "SuperDetonate")
 		TNT1 A 5 A_Explode (40000, 512, 1)
+		TNT1 A 25 ACS_ExecuteAlways (901, 0, 1) // stay for a while before vanishing
 		stop
 	SuperDetonate:
 		TNT1 A 0 A_CustomMissile ("IonShockwave", 0, 0,   0, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
@@ -143,6 +144,7 @@ actor NuclearStrikeBeaconArmed : IonCannonBeaconArmed {
 		TNT1 A 0 A_SpawnItemEx ("HyperNuke", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 1, "SuperDetonate")
 		TNT1 A 5 A_Explode (40000, 512, 1)
+		TNT1 A 25 ACS_ExecuteAlways (901, 0, 2) // stay for a while before vanishing
 		stop
 	SuperDetonate:
 		TNT1 A 0 A_CustomMissile ("NuclearShockwave", 0, 0,   0, (CMF_TRACKOWNER | CMF_AIMDIRECTION))
