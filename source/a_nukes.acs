@@ -176,3 +176,62 @@ script SC_CL_NukeTimeWarning (int team, int time) CLIENTSIDE {
 	Log (s:TeamColors[team], s:TeamNames[team], s:" team\c- has \cF", d:time,
 		s:" seconds\c- time to disarm the ", s:enemynukename, s:"!");
 }
+
+script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
+{
+	// Set all ints necessary
+	int i;
+	int bardistmult = 0;
+	int refdistmult = 0;
+	int resdistmult = 0;
+	int wardistmult = 0;
+	int obedistmult = 0;
+	int repdistmult = 0;
+	int damage = 1250; // max 7500 at closest range
+	int distances[6] = {256, 512, 768, 1024, 1280, 1536};
+	// BTOs are not used due it being unsupported by the CheckActorDistance function. (multiple tids)
+	if (superwt == 2)	// Nuke explosion.
+	{
+		for (i = 0; i < 6; i++)
+		{
+			if (CheckActorDistance(0, TID_BARRACKS_BLUE,	distances[i])) bardistmult++;
+			if (CheckActorDistance(0, TID_REFINERY_BLUE,	distances[i])) refdistmult++;
+			if (CheckActorDistance(0, TID_RESCENTRE_BLUE,	distances[i])) resdistmult++;
+			if (CheckActorDistance(0, TID_FACTORY_BLUE,		distances[i])) wardistmult++;
+			if (CheckActorDistance(0, TID_OBELISK_BLUE,		distances[i])) obedistmult++;
+			if (CheckActorDistance(0, TID_REPAIR_BLUE,		distances[i])) repdistmult++;
+		}
+		// is this working?
+		if (GetCVar("zeta_debug") == 1)
+		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
+		// Now damage the buildings multiplied by the distance.
+		Thing_Damage(TID_BARRACKS_BLUE,		damage * bardistmult, 0);
+		Thing_Damage(TID_REFINERY_BLUE,		damage * refdistmult, 0);
+		Thing_Damage(TID_RESCENTRE_BLUE,	damage * resdistmult, 0);
+		Thing_Damage(TID_FACTORY_BLUE,		damage * wardistmult, 0);
+		Thing_Damage(TID_OBELISK_BLUE,		damage * obedistmult, 0);
+		Thing_Damage(TID_REPAIR_BLUE,		damage * repdistmult, 0);
+	}
+	if (superwt == 1)	// Ion explosion.
+	{
+		for (i = 0; i < 6; i++)
+		{
+			if (CheckActorDistance(0, TID_BARRACKS_RED,		distances[i])) bardistmult++;
+			if (CheckActorDistance(0, TID_REFINERY_RED,		distances[i])) refdistmult++;
+			if (CheckActorDistance(0, TID_RESCENTRE_RED,	distances[i])) resdistmult++;
+			if (CheckActorDistance(0, TID_FACTORY_RED,		distances[i])) wardistmult++;
+			if (CheckActorDistance(0, TID_OBELISK_RED,		distances[i])) obedistmult++;
+			if (CheckActorDistance(0, TID_REPAIR_RED,		distances[i])) repdistmult++;
+		}
+		// is this working?
+		if (GetCVar("zeta_debug") == 1)
+		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
+		// Now damage the buildings multiplied by the distance.
+		Thing_Damage(TID_BARRACKS_RED,		damage * bardistmult, 0);
+		Thing_Damage(TID_REFINERY_RED,		damage * refdistmult, 0);
+		Thing_Damage(TID_RESCENTRE_RED,		damage * resdistmult, 0);
+		Thing_Damage(TID_FACTORY_RED,		damage * wardistmult, 0);
+		Thing_Damage(TID_OBELISK_RED,		damage * obedistmult, 0);
+		Thing_Damage(TID_REPAIR_RED,		damage * repdistmult, 0);
+	}
+}

@@ -888,6 +888,8 @@ function bool CheckActorDistance(int Source, int Target, int Range) {
 	Dist += msqr(GetActorY(Source) - GetActorY(Target) >> 16);
 	Dist += msqr(GetActorZ(Source) - GetActorZ(Target) >> 16);
 	
+	if (GetCVar("zeta_debug") == 1)
+		Log( s:"Dist is ", d:dist, s:" Squared Range is ", d:msqr( Range ));
 	if (Dist <= msqr(Range) && GetCVar("zeta_debug") == 1)
 		Log(s:"I'm close to object ",d:Target);
 	if (Dist <= msqr(Range))

@@ -185,7 +185,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ------------------------------------
 // 9** scripts
 #libdefine SC_IdentifyTarget			900
-//										901
+#libdefine SC_BeaconExplosion			901
 //										902
 #libdefine SC_SillyThings				903
 //#libdefine SC_TortoisePassenger			904

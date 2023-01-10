@@ -5,6 +5,8 @@
 // [SG] Renamed aow_ prefix to zeta_ on all CVars to avoid conflicts with the
 // existing CVars archived by ACS, so messing with the ini isn't needed
 
+// Xindage this cvar was missing
+server	int		zeta_debug			=		0;
 
 ////////////////////////////
 // Core game configuration
