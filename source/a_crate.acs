@@ -159,7 +159,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0),	"");
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
-	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  4, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
+	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  3, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
 }
 
 // ============================================================================
@@ -302,10 +302,9 @@ function int CheckCrate (int c) {
 		return !CheckInventory("BFG 2704");
 	case CRATE_GRAVITY:
 		return	!GetConfig (CONFIG_TOURNAMENTMODE) && // not in tournament mode
-				!(gravityonce) && // not if it already had happened
+				!(gravityonce) && // Repurposed to do not happen while one is active, or too early after another
 				!intHolder[i_SuddenDeath] && // Not in suddendeath
-				!(GetCVar("zeta_suddendeathtime") <= 6) && // only is SD is higher than 6 minutes
-				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 6)); // The effect should last up to 1 minute before SD*/
+				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 5)); // The effect should last up to SD
 	}
 	
 	return true;
@@ -928,7 +927,6 @@ script 309 (int c)
 	// BFG2704. Warning Player and Team.
 	case CRATE_BFG2704:
 	    ActivatorSound ("weapons/up/bfg", 127);
-		IntelMessage (strparam(n:0, s:"\cJ got the \cDBFG 2704!"), true);
 		GiveInventory("BFG 2704", 1);
 		break;
 
@@ -972,11 +970,22 @@ Script "CRATE_SoulsphereDegeneration" (void)
 
 Script "CRATE_MoonGravityTimer" (void)
 {
-	gravityonce = 1;
-	SetGravity(300.0); // Decrease the gravity.
-	Delay(5 * MINUTETICS);
-	SetGravity(800.0); // Return to default.
+	SetMusic("", 0); // silence
+	gravityonce = 1; // Repurposed to do not allow this crate happen while one is on effect
+	SetAirControl(0.333); // Allow some controil while floating
+	SetGravity(300.0); // Decrease the gravity
+	Delay(70); // Sync the music
+	SetMusic("music/danielle.mp3", 0);
+	Delay((3 * MINUTETICS / 2) - 70); // 1 and half minute
+	SetGravity(800.0); // Return to default
+	SetAirControl(0.00390625); // Ditto
 	IntelMessage (strparam(s:"\cUMoon Gravity \c-loses its effect."), true);
+	SetMusic("", 0); // silence
+	Delay(35);
+	SetMusic("*", 0); // Restore the level's default music
+	// Take a break before allowing it again
+	Delay((8 * MINUTETICS) - 35);
+	gravityonce = 0;
 }
 
 // ============================================================================

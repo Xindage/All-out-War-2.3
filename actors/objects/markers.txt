@@ -46,7 +46,6 @@ actor Utility_RavenMarker : Utility_MarkerBase
 
 actor Utility_WolfMarker : Utility_MarkerBase
 {
-  scale 1.75
   states
   {
   Spawn:

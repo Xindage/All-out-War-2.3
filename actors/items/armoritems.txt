@@ -133,6 +133,28 @@ actor BulletProofArmor : FireArmor {
 	}
 }
 
+actor CryoArmor : FireArmor {
+	tag "Ice-Resistant Armor"
+	inventory.pickupmessage "Picked up ice-resistant armor!."
+	inventory.icon "arm6icon"
+	states {
+	Use:
+		TNT1 A 0 A_JumpIfInventory ("IsMech", 1, "Use.Mech")
+		TNT1 A 0 A_JumpIfInventory ("PowerBerserk", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("IsChangingArmor", 1, "Failure")
+		TNT1 A 0 A_JumpIfInventory ("PowerCryoResistance", 1, "Failure")
+		TNT1 A 0 ACS_ExecuteAlways (920, 0, 7)
+		stop
+	Spawn:
+		ARM6 A 0
+		goto Init
+	Idle:
+		ARM6 A 6 bright
+		ARM6 B 6
+		loop
+	}
+}
+
 actor IsChangingArmor : Inventory {}
 actor CancelChangingArmor : inventory {}
 actor ArmorChangeProgress : Inventory {inventory.maxamount 175}

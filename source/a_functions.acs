@@ -56,7 +56,7 @@ function str ArModColor (int a) {
 		case ARMOD_EXPLO: return "\cF";
 		case ARMOD_ENERGY: return "\cN";
 		case ARMOD_BULLETPROOF: return "\cU";
-//		case ARMOD_CRYO: return "\cV";
+		case ARMOD_CRYO: return "\cV";
 	}
 	
 	return "";
@@ -70,7 +70,7 @@ function str ArModName (int a) {
 		case ARMOD_EXPLO: return "Flak";
 		case ARMOD_ENERGY: return "Energy";
 		case ARMOD_BULLETPROOF: return "Bullet";
-//		case ARMOD_CRYO: return "Ice";
+		case ARMOD_CRYO: return "Ice";
 	}
 	
 	return " ";
@@ -888,6 +888,8 @@ function bool CheckActorDistance(int Source, int Target, int Range) {
 	Dist += msqr(GetActorY(Source) - GetActorY(Target) >> 16);
 	Dist += msqr(GetActorZ(Source) - GetActorZ(Target) >> 16);
 	
+	if (GetCVar("zeta_debug") == 1)
+		Log( s:"Dist is ", d:dist, s:" Squared Range is ", d:msqr( Range ));
 	if (Dist <= msqr(Range) && GetCVar("zeta_debug") == 1)
 		Log(s:"I'm close to object ",d:Target);
 	if (Dist <= msqr(Range))

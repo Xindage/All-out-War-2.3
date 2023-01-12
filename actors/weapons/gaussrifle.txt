@@ -309,11 +309,11 @@ actor GaussRifle : AOWWeapon 21049 {
 		GAUS A 1 offset(0, 33) A_ZoomFactor(1)
 		TNT1 A 0 A_FireCustomMissile ("OverheatSmokeSpawner", 0, false, 8)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUS AAAAAAAA 1 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUS AAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUS AABBCCDD 1 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUS ABCD 2 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUS EEFFGGHH 1 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUS EFGH 2 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		GAUS A 4
 		goto Ready
@@ -348,11 +348,11 @@ actor GaussRifle : AOWWeapon 21049 {
 		GAUB A 1 offset(0, 33) A_ZoomFactor(1)
 		TNT1 A 0 A_FireCustomMissile ("OverheatSmokeSpawner", 0, false, 8)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUB AAAAAAAA 1 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUB AAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUB AABBCCDD 1 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUB ABCD 2 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		GAUB EEFFGGHH 1 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		GAUB EFGH 2 bright A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		GAUB A 4
 		goto Ready

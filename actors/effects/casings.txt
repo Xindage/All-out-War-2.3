@@ -5,7 +5,7 @@ actor ShellCasing {
 	+BOUNCEONACTORS
 	+FLOORCLIP
 	+CLIENTSIDEONLY
-	Scale 0.15
+	Scale 0.25
 	Radius 4
 	Height 4
 	Speed 6

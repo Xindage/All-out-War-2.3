@@ -96,6 +96,7 @@ actor FistPuff : BulletPuff {
 	-ALLOWPARTICLES
 	+PUFFONACTORS
 	DamageType "Fist"
+	Obituary "$OB_FIST"	
 	states {
 	Crash:
 		PUFF A 0 bright
@@ -134,36 +135,5 @@ actor FistWall : FistHit {
 		TNT1 A 0
 		TNT1 A 1 A_PlaySound("fist/wall")
 		stop
-	}
-}
-
-actor FistPuff2 : FastProjectile {
-	PROJECTILE
-	-RANDOMIZE
-	+FORCEXYBILLBOARD	
-	-EXTREMEDEATH
-	Radius 18
-	Height 18
-	Speed 60
-	Damage (60)	
-	RenderStyle Add
-	Alpha 0.6
-	DamageType "Fist"
-	Obituary "$OB_FIST"	
-	States {
-	Spawn:
-		TNT1 A 1 BRIGHT
-        Stop
-	Death:
-		FPUF A 3 bright A_PlaySound("fist/wall")
-		FPUF BCD 3
-		Stop
-	XDeath:
-		TNT1 A 1 bright A_PlaySound("fist/hit")
-		Stop	
-	Crash:
-		FPUF A 3 bright A_PlaySound("fist/wall")
-		FPUF BCD 3
-	    Stop				
 	}
 }

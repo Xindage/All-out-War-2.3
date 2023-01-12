@@ -138,19 +138,19 @@ function void ClearDonateMenu (void) {
 }
 
 // [Dusk] Find the next person we could donate to.
-/*function void NextDonatee (void) {
+function void NextDonatee (void) {
 	do {
 		g_Donatee++;
 		if (g_Donatee >= MAXPLAYERS)
 			g_Donatee = 0;
 	} while (GetPlayerTeam (g_Donatee) != PlayerTeam () ||
-		g_Donatee == intHolder[i_consoleplayer]);
+		g_Donatee == intHolder[i_consoleplayer] && PlayerInGame (g_Donatee) );
 	
 	// [Dusk] {10/27/12} Store the donatee into a CVAR.
 	ConsoleCommand (strparam (s:"set __zeta_donatee ", d:g_Donatee));
-}*/
+}
 
-function void NextDonatee (void) {
+/*function void NextDonatee (void) {
 	g_Donatee++;
 	if (g_Donatee == MAXPLAYERS)
 		g_Donatee = 0;
@@ -161,7 +161,7 @@ function void NextDonatee (void) {
 		if (g_Donatee == MAXPLAYERS)
 			g_Donatee = 0;
 	}
-}
+}*/
 
 // Donations
 // [Dusk] {10/27/12} Restructured this code

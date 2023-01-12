@@ -1083,6 +1083,13 @@ Graphic "A_ENERGY", 31, 17
 	Patch "A_ENERGY", 0, 0
 }
 
+Graphic "A_CRYO", 31, 17
+{
+	XScale 2.000
+	YScale 2.200
+	Patch "A_CRYO", 0, 0
+}
+
 Graphic "A_NOMOD", 31, 17
 {
 	XScale 2.000

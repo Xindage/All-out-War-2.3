@@ -73,7 +73,7 @@ OB_QUAD_SHOTGUN = "%o was blown 4 new holes by %k's quad shotgun.";
 OB_NAILMACHINEGUN = "%o was nailed by %k.";
 OB_LIGHTSABRE = "%o was defeated by the FORCE of %k 's Lightsabre! %k is becoming a true JEDI!"; 
 OB_STEALTHPISTOL = "%o was assassinated by %k's stealth pistol";
-OB_STEALTHGAUSS = "%o's body wasn't able to be identified after being cut in half by %k's stealth gauss rifle.";
+OB_STEALTHGAUSS = "%o's body wasn't able to be identified after being shot by %k's stealth gauss rifle.";
 
 // =============================================================================
 // Mech obits

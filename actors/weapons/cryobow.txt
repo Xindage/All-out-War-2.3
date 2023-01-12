@@ -172,7 +172,7 @@ actor ChronoBoltBase /* : FastProjectile */ {
 	Alpha 0.9
 	DeathSound "weapons/cryobowhit"
 	Decal "PlasmaScorchLower"
-	DamageType "Time"
+	DamageType "Ice"
 	States {
 	Spawn:
 		TNT1 A 0
