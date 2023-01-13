@@ -153,23 +153,30 @@ script 91 (void) {
 	
 	int rank = GetRank ();
 	int newhealth = GetSpawnHealth ();
-	switch (rank) {
-		case RANK_CORPORAL: newhealth = 105; break;
-		case RANK_SERGEANT: newhealth = 110; break;
-		case RANK_MASTERSGT: newhealth = 115; break;
-		case RANK_OFFICER: newhealth = 120; break;
-		case RANK_LIEUTENANT: newhealth = 125; break;
-		case RANK_CAPTAIN: newhealth = 130; break;
-		case RANK_MAJOR: newhealth = 135; break;
-		case RANK_LTCOLONEL: newhealth = 140; break;
-		case RANK_COLONEL: newhealth = 145; break;
-		case RANK_GENERAL: newhealth = 150; break;
+	int oldhealth = GetSpawnHealth ();
+	int healtharray[2][10] = {{100, 105, 105, 110, 110, 115, 115, 120, 120, 125}, {105, 110, 115, 120, 125, 130, 135, 140, 145, 150}};
+	int Arraydim = 1;
+	if (GetCVar ("zeta_rankmode") == 1) Arraydim = 0;
+	switch (rank)
+	{
+		case RANK_CORPORAL:		newhealth	= healtharray[Arraydim][0]; break;
+		case RANK_SERGEANT:		newhealth	= healtharray[Arraydim][1]; break;
+		case RANK_MASTERSGT:	newhealth	= healtharray[Arraydim][2]; break;
+		case RANK_OFFICER:		newhealth	= healtharray[Arraydim][3]; break;
+		case RANK_LIEUTENANT:	newhealth	= healtharray[Arraydim][4]; break;
+		case RANK_CAPTAIN:		newhealth	= healtharray[Arraydim][5]; break;
+		case RANK_MAJOR:		newhealth	= healtharray[Arraydim][6]; break;
+		case RANK_LTCOLONEL:	newhealth	= healtharray[Arraydim][7]; break;
+		case RANK_COLONEL:		newhealth	= healtharray[Arraydim][8]; break;
+		case RANK_GENERAL:		newhealth	= healtharray[Arraydim][9]; break;
 	}
-	
-	SetSpawnHealth (newhealth);
-	
-	if (GetHealth() < newhealth)
-		SetHealth(newhealth);
+	// Use teamboost bonus as well and them set the health based on it
+	int finalhealth = newhealth + (15 * CheckInventory("hasTeamBoost"));
+	SetSpawnHealth (finalhealth);
+
+	if (oldhealth > finalhealth && GetHealth() < finalhealth) // Just give the bonus health instead full heal.
+		HealThing(5);
+//		SetHealth(finalhealth);
 	
 	if (!CheckInventory ("HasRankUpgrades"))
 	{	
