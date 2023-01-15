@@ -293,13 +293,6 @@ actor Titan-FlamerAmmo : Ammo {
 	ammo.backpackmaxamount 800
 }
 
-actor MechRocketAmmo : Ammo {
-	inventory.amount 20
-	inventory.maxamount 240
-	ammo.backpackamount 20
-	ammo.backpackmaxamount 240
-}
-
 actor TitanShell {
 	PROJECTILE
 	-RANDOMIZE

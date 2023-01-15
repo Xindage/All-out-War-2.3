@@ -274,13 +274,6 @@ Actor PulseBallBlue : PulseBall
 	}
 }
 
-actor MechRocketAmmo : Ammo {
-	inventory.amount 10
-	inventory.maxamount 250
-	ammo.backpackamount 10
-	ammo.backpackmaxamount 250
-}
-
 actor Wolverine-MinigunAmmo : Ammo {
 	inventory.amount 10
 	inventory.maxamount 600
