@@ -11,6 +11,15 @@ episode aow01 {
 	name = "A New War"
 }
 
+episode Debug {
+	name = "Testing Map"
+}
+
+map debug "Debug" {
+	next = "aow01"
+	music = "d_aow02"
+}
+
 map aow01 "Red Zone" {
 	next = "aow02"
 	sky1 = "stsky2"
