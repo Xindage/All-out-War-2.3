@@ -84,7 +84,7 @@ actor TiberiumCrystalThrown {
 	Height 32
 	Speed 10
 	Gravity 0.75
-	DamageType "Chemical"
+	DamageType "ChemicalSpecial"
 	States {
 	Spawn:
 		TIBE A 0
@@ -112,7 +112,7 @@ actor TiberiumCrystalSitting {
 	Obituary "%o was \cDturned green\c- by %k's Tiberium crystal!"
 	Radius 16
 	Height 32
-	DamageType "Chemical"
+	DamageType "ChemicalSpecial"
 	ReactionTime 15
 	States {
 	Spawn:
