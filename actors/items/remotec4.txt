@@ -190,23 +190,32 @@ actor RemoteC4Armed : SwitchableDecoration {
 	Damage 0
 	DamageType "Explosion"
 	Obituary "$OB_REMOTEC4"
-	DamageFactor "Fist", 0.0 
-	DamageFactor "Explosion", 0.0
-	DamageFactor "Fire", 0.0
-	DamageFactor "Chemical", 0.0
-	DamageFactor "ChemicalSpecial", 0.0
-	DamageFactor "Energy", 0.0
-	DamageFactor "AntiArmor", 0.0
-	DamageFactor "Time", 0.0
-	DamageFactor "MassDriver", 0.0
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Mine", 0.0
-	DamageFactor "Monster", 0.0
-	DamageFactor "Flash", 0.0
-	DamageFactor "Bullet", 0.0
-	DamageFactor "Rifle", 0.0
-	DamageFactor "StealthKnife", 0.5
-	
+
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			1.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			1.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		0.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+
 	States {
 	Spawn:
 		RC4T A 0
@@ -254,7 +263,7 @@ actor RemoteC4Armed : SwitchableDecoration {
 		TNT1 A 0 A_SpawnItemEx ("FlameWallDecay", random(-48,48), random(-48,48), 4, 0, 0, 0, 0, SXF_TRANSFERPOINTERS, 160)
 		TNT1 A 5
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Disarm:
 		RC4T A 35 A_PlaySound ("c4/disarm")
 		RC4T A 1 A_FadeOut (0.05)

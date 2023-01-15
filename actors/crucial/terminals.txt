@@ -19,25 +19,31 @@ actor BaseTerminal {
 	DeathSound "grenade/explode"
 	DesignatedTeam 1
 	PainChance 255
-	DamageFactor "Bullet", 0.8
-	DamageFactor "Rifle", 0.8
-	DamageFactor "Explosion", 0.75
-	DamageFactor "Fire", 0.6
-	DamageFactor "Fist", 0.25 //Berserk kind of goes SMACKITY and it goes down in seconds.
-	DamageFactor "FireSpecial", 0.0
-	DamageFactor "Chemical", 0.75
-	DamageFactor "ChemicalSpecial", 0.0
-	DamageFactor "Energy", 1.0
-	DamageFactor "AntiArmor", 0.25
-	DamageFactor "Time", 1.0
-	DamageFactor "Disarm", 0.0
-	DamageFactor "Ice", 0.0 //Are you going to freeze it?
-	DamageFactor "Superweapon", 10.0
-	DamageFactor "MassDriver", 0.25
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Monster", 5.0
-	DamageFactor "Mine", 0.0 //Fuck this shit
-	DamageFactor "Deconstruction", 0.0
+
+	DamageFactor "Flash",			0.0		// Terminal dont have eyes!
+	DamageFactor "Fist",			0.25	// Berserk kind of goes SMACKITY and it goes down in seconds.
+	DamageFactor "Knife",			1.0
+	DamageFactor "Bullet",			0.8
+	DamageFactor "Rifle",			0.8
+	DamageFactor "Explosion",		0.75
+	DamageFactor "MassDriver",		0.25
+	DamageFactor "AntiArmor",		0.25
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.6
+	DamageFactor "FireSpecial",		0.6
+	DamageFactor "Chemical",		0.8		// Why?
+	DamageFactor "ChemicalSpecial",	0.8		// Ditto.
+	DamageFactor "Energy",			1.0
+	DamageFactor "Plasma",			0.75	// keep explosion damage.
+	DamageFactor "EnergyDecay",		0.5
+	DamageFactor "Ice",				0.25	// Cooling terminal. :D
+	DamageFactor "Time",			1.0
+	DamageFactor "Suicide",         1.0		// Needed?
+	DamageFactor "Superweapon",		10.0
+	DamageFactor "Disarm",			0.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			5.0
 	
 	states {
 	Spawn:

@@ -6,7 +6,7 @@ actor Utility_TurretBase {
 	damagefactor "AntiArmor", 2.5
 	damagefactor "Fire", 0.6
 	damagefactor "Chemical", 0.6
-	DamageFactor "StealthKnife", 1.5
+	DamageFactor "Knife", 1.5
 	painchance "Energy", 255
 	radius 24
 	height 56
@@ -26,7 +26,7 @@ actor Utility_TurretBase {
 	+NEVERRESPAWN
 
 	states {
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Deconstruction:
 		"----" A 2 A_PlaySound ("utility/deconstruct")
 		"----" AAAAAAAAAA 2 A_Fadeout(0.1)

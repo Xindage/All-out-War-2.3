@@ -6,23 +6,32 @@ actor BaseTerminalOutside {
 	radius 0
 	height 512
 	DesignatedTeam 1
-	DamageFactor "Fist", 0.0
-	DamageFactor "Bullet", 0.0
-	DamageFactor "Rifle", 0.0
-	DamageFactor "Fire", 0.2
-	DamageFactor "Chemical", 0.0
-	DamageFactor "ChemicalSpecial", 0.0
-	DamageFactor "Energy", 0.0
-	DamageFactor "Time", 0.0
-	DamageFactor "Disarm", 0.0
-	DamageFactor "Flash", 0.0
-	DamageFactor "Ice", 0.0
-	DamageFactor "Superweapon", 0.0
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Monster", 0.0
-	DamageFactor "Deconstruction", 0.0
-	DamageFactor "SuperWeapon", 0.0
-//	This damage "superWeapon" is broken and must be fixed.
+
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			0.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		1.0
+	DamageFactor "MassDriver",		1.0
+	DamageFactor "AntiArmor",		1.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.2
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			0.0
+	DamageFactor "Plasma",			1.0
+	DamageFactor "EnergyDecay",		1.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         1.0
+	DamageFactor "Superweapon",		1.0
+	DamageFactor "Disarm",			0.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+
 	-SOLID
 	+SHOOTABLE
 	+NOBLOOD
@@ -55,6 +64,7 @@ actor BaseTerminalOutside {
 		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], 1)
 		goto Idle
 	Pain.Fire:
+	Pain.EnergyDecay:
 		TNT1 A 0
 		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (3, 4))
 		goto Idle
@@ -64,9 +74,10 @@ actor BaseTerminalOutside {
 		TNT1 A 0
 		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (20, 40))
 		goto Idle
+	Pain.Plasma:
 	Pain.Superweapon:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], 4000)
+		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (40, 80))
 		goto Idle
 	}
 }

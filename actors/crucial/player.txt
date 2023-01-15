@@ -20,13 +20,14 @@ actor Player : DoomPlayer {
 	player.sidemove 0.875
 	player.maxhealth 100
 	
-	damagefactor "Explosion", 0.3
-	damagefactor "Mine", 0.3
 	damagefactor "Chemical", 2.0
-	damagefactor "AntiArmor", 0.1
-	damagefactor "Disarm", 0.0 
-	damagefactor "Deconstruction", 0.0
+	damagefactor "Explosion", 0.3
 	damagefactor "MassDriver", 0.3
+	damagefactor "AntiArmor", 0.1
+	damagefactor "Plasma", 0.3
+	damagefactor "Disarm", 0.0
+	damagefactor "Deconstruction", 0.0
+
 	deathsound "generic/death"
 	States {
 	Spawn:
@@ -183,12 +184,14 @@ actor Player : DoomPlayer {
 	Death.MassDriver:
 	Death.AntiArmor:
 	Death.Explosion:
+	Death.Plasma:
 		PLAY H 0 ThrustThing(angle*256/360+(random(0,192)), random(20,40), 1, 0)
 		PLAY H 1 ThrustThingZ(0,45,0,0)
 		PLAY H 0 A_Jump(128,"Death")
 		goto XDeath
 	Death.Fire:
 	Death.FireSpecial:
+	Death.EnergyDecay:
 		TNT1 AA 0 A_JumpIfInventory("IsInSpawnRoom",1,"FireAlt")
 		PLAY H 0 A_JumpIfInventory ("IsKamikaze",1,"Death.IonExplosion")
 		PLAY H 0 A_JumpIfInventory ("TimeGun", 1, "Death.Time")

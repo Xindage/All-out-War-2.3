@@ -52,26 +52,31 @@ Actor ProxyMineBase // Data used by all mines
 	Speed 0
 	Scale .2
 	Mass 0x7FFFFFFF
+
+	DamageFactor "Flash",			0.0
 	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			0.5
 	DamageFactor "Bullet",			0.0
 	DamageFactor "Rifle",			0.0
 	DamageFactor "Explosion",		0.0
-	DamageFactor "Fire",			0.0
-	DamageFactor "Chemical",		0.0
-	DamageFactor "Energy",			1.0
-	DamageFactor "Time",			0.0
-	DamageFactor "Mine",			0.0
-	DamageFactor "Superweapon",		0.0
 	DamageFactor "MassDriver",		0.0
 	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
 	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
 	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			1.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		1.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
 	DamageFactor "Disarm",			1.0
-	DamageFactor "Deconstruction",	0.0 //[JD] Prevents RemoverGun from disarming these
+	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
-	DamageFactor "Flash", 			0.0
-	DamageFactor "StealthKnife",    0.5
 //	Translation "112:127=228:246"	// Red
 //	Translation "112:127=194:207"	// Blue
 	States
@@ -113,8 +118,9 @@ Actor ProxyMineBase // Data used by all mines
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Energy:
+	Death.EnergyDecay:
 	Death.Deconstruction:
 	Death.Disarm:
 		PC4T A 18 A_PlaySound("c4/disarm")
@@ -153,6 +159,9 @@ actor ProxyMineBlue : ProxyMineBase
 	}
 }
 
+// Xindage: Originally this thing caused massdriver damage (similar to explosion) an amount of 150
+// this damage type was reduced to an amount of 70% to player resulting in 45, as rifle was doing 50
+// so this was supposed all along or not? I do changed it back to 45 now it does damage that only grade reduces.
 actor ProxyMineExplosion : ProxyMineBase {
 	PROJECTILE
 	-RANDOMIZE
@@ -160,12 +169,12 @@ actor ProxyMineExplosion : ProxyMineBase {
 	Speed 1
 	Damage 0
 	Obituary "$OB_MINE"
-	DamageType "Rifle"
+	DamageType "Mine"
 	states {
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
-		TNT1 A 1 A_Explode (50, 128, 1)
+		TNT1 A 1 A_Explode (45, 128, 1)
 		stop
 	}  
 }
@@ -213,28 +222,30 @@ Actor ProxyMineRedd {
 	Scale .2
 	Mass 0x7FFFFFFF
 
+	DamageFactor "Flash",			0.0
 	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			0.5
 	DamageFactor "Bullet",			0.0
 	DamageFactor "Rifle",			0.0
 	DamageFactor "Explosion",		0.0
-	DamageFactor "Flash",			0.0
-	DamageFactor "Fire",			0.0
-	DamageFactor "Suicide",         0.0	
-	DamageFactor "Chemical",		0.0
-	DamageFactor "Normal",          0.0	
-	DamageFactor "Energy",			1.0
-	DamageFactor "Time",			0.0
-	DamageFactor "Mine",			0.0
-	DamageFactor "Superweapon",		0.0
 	DamageFactor "MassDriver",		0.0
 	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
 	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
 	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			1.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		1.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
 	DamageFactor "Disarm",			1.0
 	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
-	DamageFactor "StealthKnife",    0.5
 	translation "112:127=228:246"
 	
 	States {
@@ -272,8 +283,9 @@ Actor ProxyMineRedd {
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Energy:
+	Death.EnergyDecay:
 	Death.Deconstruction:
 	Death.Disarm:
 		PC4T A 18 A_PlaySound("c4/disarm")
@@ -306,28 +318,30 @@ Actor ProxyMineBluee {
 	Scale .2
 	Mass 0x7FFFFFFF
 
+	DamageFactor "Flash",			0.0
 	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			0.5
+	DamageFactor "Normal",          0.0
 	DamageFactor "Bullet",			0.0
 	DamageFactor "Rifle",			0.0
 	DamageFactor "Explosion",		0.0
-	DamageFactor "Flash",			0.0
-	DamageFactor "Fire",			0.0
-	DamageFactor "Suicide",         0.0	
-	DamageFactor "Chemical",		0.0
-	DamageFactor "Normal",          0.0	
-	DamageFactor "Energy",			1.0
-	DamageFactor "Time",			0.0
-	DamageFactor "Mine",			0.0
-	DamageFactor "Superweapon",		0.0
 	DamageFactor "MassDriver",		0.0
 	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
 	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
 	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			1.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		1.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
 	DamageFactor "Disarm",			1.0
 	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
 	DamageFactor "Monster",			0.0
-	DamageFactor "StealthKnife",    0.5
 	translation "112:127=194:207"
 	
 	States {
@@ -365,8 +379,9 @@ Actor ProxyMineBluee {
         TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 1 A_Explode (50, 128, 1)
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Energy:
+	Death.EnergyDecay:
 	Death.Deconstruction:
 	Death.Disarm:
 		PC4T A 18 A_PlaySound("c4/disarm")

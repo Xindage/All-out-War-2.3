@@ -21,7 +21,7 @@ actor Step 21150 {
 	damagefactor "Disarm", 0.0
 	damagefactor "Flash", 0.0
 	damagefactor "Fist", 0.1
-	DamageFactor "StealthKnife", 1.0
+	DamageFactor "Knife", 1.0
 	tag "Step"
 	
 	states {
@@ -41,7 +41,7 @@ actor Step 21150 {
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
 		TNT1 A 1
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Deconstruction:
 		"----" A 0 A_NoBlocking
 		"----" A 2 A_PlaySound ("utility/deconstruct")
@@ -66,7 +66,7 @@ actor SandbagWall 21151 {
 	Alpha 0.0
 	DamageFactor "Energy", 1.25
 	DamageFactor "Disarm", 0.0
-	DamageFactor "StealthKnife", 1.0
+	DamageFactor "Knife", 1.0
 	Tag "Sandbag wall"
 	States {
 	Spawn:
@@ -89,7 +89,7 @@ actor SandbagWall 21151 {
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
 		TNT1 A 1
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Deconstruction:
 		"----" A 0 A_NoBlocking
 		"----" A 0 A_RemoveChildren (1)

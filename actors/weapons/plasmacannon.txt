@@ -213,7 +213,7 @@ actor PlasmaCannonBall {
 	RenderStyle Add
 	Alpha 0.75
 	DeathSound "plasmacannon/explode"
-	DamageType "Explosion"
+	DamageType "Plasma"
 	Scale 1.5
 	Translation "192:207=228:246"
 	decal "PCLightningRed"
@@ -293,7 +293,7 @@ actor PlasmaFlameDecay {
 	+NOBLOCKMAP
 	+NOGRAVITY
 	Renderstyle None
-	DamageType "Fire"
+	DamageType "EnergyDecay"
 	Obituary "$OB_FIREDECAY" // "%o burns in %k's firestorm."
 	States {
 	Spawn:

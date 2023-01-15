@@ -87,28 +87,33 @@ actor TimedC4Armed
 	Health 500
 	Mass 0x7FFFFFFF
 	DamageType "Explosion"
-	DamageFactor "Fist", 0.0 
-	DamageFactor "Fire", 0.0
-	DamageFactor "Bullet", 0.0
-	DamageFactor "Rifle", 0.0
-	DamageFactor "Explosion", 0.0
-	DamageFactor "Terrorist", 0.0
-	DamageFactor "Suicide", 0.0
-	DamageFactor "Chemical", 0.0
-	DamageFactor "Normal", 0.0
-	DamageFactor "Energy", 0.0
-	DamageFactor "Repair", 0.0
-	DamageFactor "ChemicalSpecial", 0.0
-	DamageFactor "AntiArmor", 0.0
-	DamageFactor "Time", 0.0
-	DamageFactor "Disarm", 1.2
-	DamageFactor "MassDriver", 0.0
-	DamageFactor "Mine", 0.0
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Monster", 0.0
-	DamageFactor "Deconstruction", 0.0
-	DamageFactor "Flash", 0.0
-	DamageFactor "StealthKnife", 0.5
+
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			0.5
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			0.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		0.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "Disarm",			1.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+
+	DamageFactor "Terrorist", 0.0 // Its still used?
 	obituary "%o was too close %k Timed C4."
 	
 	states {
@@ -150,7 +155,7 @@ actor TimedC4Armed
 		TNT1 A 0 a_stopsound(6)
 		TNT1 A 0 a_stopsound(7)*/
 		stop
-	Death.StealthKnife:
+	Death.Knife:
 	Death.Disarm:
 		TC4T R 35 A_PlaySound ("c4/disarm")
 		TC4T R 1 A_Fadeout (0.1) 

@@ -62,20 +62,33 @@ actor IonCannonBeaconArmed {
 	Height 8
 	Scale 0.25
 	Mass 0x7FFFFFFF
-	DamageFactor "Fist", 0.0
-	DamageFactor "Bullet", 0.0
-	DamageFactor "Rifle", 0.0
-	DamageFactor "Explosion", 0.0
-	DamageFactor "Fire", 0.0
-	DamageFactor "Chemical", 0.0
-	DamageFactor "Energy", 0.0
-	DamageFactor "AntiArmor", 0.0
-	DamageFactor "Time", 0.0
-	DamageFactor "Superweapon", 0.0
-	DamageFactor "MassDriver", 0.0
-	DamageFactor "Mechstomp", 0.0
-	DamageFactor "Monster", 0.0
-	DamageFactor "Flash", 0.0
+
+	DamageFactor "Flash",			0.0
+	DamageFactor "Fist",			0.0
+	DamageFactor "Knife",			1.0
+	DamageFactor "Bullet",			0.0
+	DamageFactor "Rifle",			0.0
+	DamageFactor "Explosion",		0.0
+	DamageFactor "MassDriver",		0.0
+	DamageFactor "AntiArmor",		0.0
+	DamageFactor "Mine",			0.0
+	DamageFactor "Fire",			0.0
+	DamageFactor "FireSpecial",		0.0
+	DamageFactor "Chemical",		0.0
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			0.0
+	DamageFactor "Plasma",			0.0
+	DamageFactor "EnergyDecay",		0.0
+	DamageFactor "Ice",				0.0
+	DamageFactor "Time",			0.0
+	DamageFactor "Suicide",         0.0
+	DamageFactor "Superweapon",		0.0
+	DamageFactor "Disarm",			1.0
+//	DamageFactor "Deconstruction",	1.0 // We have to check this. its disarming too fast
+	DamageFactor "Deconstruction",	0.14
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			0.0
+
 	Obituary "$OB_IONCANNON"
 	DamageType "Superweapon"
 	states {

@@ -1,23 +1,32 @@
 // Actors common to all mechs
 actor MechPlayer_Base : PlayerPawn {
-	damagefactor "Fist", 0.35
-	damagefactor "Bullet", 0.8
-	damagefactor "Rifle", 0.8
-	damagefactor "Explosion", 1.25
-	damagefactor "Mine", 1.25
-	damagefactor "Fire", 1.25
-	damagefactor "Chemical", 1.75
-	damagefactor "ChemicalSpecial", 0.0
-	damagefactor "Energy", 1.0
-	damagefactor "AntiArmor", 2.0
-	damagefactor "Time", 1.0
-	damagefactor "Disarm", 0.0
-	damagefactor "Deconstruction", 0.0
-	damagefactor "MassDriver", 0.9
-	damagefactor "Mechstomp", 0.0
-	damagefactor "Monster", 1.0
-	damagefactor "Falling", 12.0
+
+	DamageFactor "Flash",			0.0		// You cant blind them anyway
+	DamageFactor "Fist",			0.35
+	DamageFactor "Knife",			0.35
+	DamageFactor "Bullet",			0.8
+	DamageFactor "Rifle",			0.8
+	DamageFactor "Explosion",		1.25
+	DamageFactor "MassDriver",		0.9
+	DamageFactor "AntiArmor",		2.0
+	DamageFactor "Mine",			1.5
+	DamageFactor "Fire",			1.5
+	DamageFactor "FireSpecial",		1.5
+	DamageFactor "Chemical",		0.0		// No damage as it was on past.
+	DamageFactor "ChemicalSpecial",	0.0
+	DamageFactor "Energy",			1.25
+	DamageFactor "Plasma",			1.25
+	DamageFactor "EnergyDecay",		1.5
+	DamageFactor "Ice",				0.0		// Cant freeze
+	DamageFactor "Time",			1.0
+	DamageFactor "Disarm",			0.0
+	DamageFactor "Deconstruction",	0.0
+	DamageFactor "Mechstomp",		0.0
+	DamageFactor "Monster",			1.0
+	Damagefactor "Falling",			12.0	// Weeeeeeeeee!
+
 	maxstepheight 40
+	Gravity 1.75
 	player.jumpz 0
 	player.damagescreencolor "00 00 00"
 	player.soundclass "mech"
@@ -27,6 +36,7 @@ actor MechPlayer_Base : PlayerPawn {
 	-TELESTOMP
 	-NOBLOCKMONST
 	+NOSKIN
+	+NOICEDEATH
 	bloodtype "HHMetalHit"
 	bloodcolor "White"
 }

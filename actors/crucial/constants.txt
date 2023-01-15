@@ -1,3 +1,4 @@
+// Xindage is this even needed?
 // Armor flags
 const int ARMOD_NOCHANGE = 0;
 const int ARMOD_FIRE = 1;

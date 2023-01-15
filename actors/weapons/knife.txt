@@ -221,6 +221,6 @@ actor KnifePuff : BulletPuff {
 	-ALLOWPARTICLES
 	+PUFFONACTORS
 	alpha 0.5
-	DamageType "StealthKnife"
+	DamageType "Knife"
 	Obituary "$OB_KNIFE" 
 }

@@ -18,7 +18,7 @@ actor BurningCorpse {
 	radius 20
 	height 56
 	speed 12
-	damagetype "FireSpecial"
+	damagetype "Fire" // FireSpecial
 	painsound "player/burn"
 	states {
 	Spawn:
@@ -147,7 +147,7 @@ actor FlameFXFloor : FlameFX {
 // Green variant for chemical death
 actor ChemicalCorpse : BurningCorpse {
 	obituary "$OB_CHEMICALCORPSE" // "%o got too close to %k's radioactive corpse."
-	damagetype "ChemicalSpecial"
+	damagetype "Chemical" // ChemicalSpecial
 	states {
 	Spawn:
 		CDT1 A 0 BRIGHT

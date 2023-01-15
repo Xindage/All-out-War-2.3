@@ -13,8 +13,9 @@ actor BerserkPlayer : Player {
 	Player.SideMove 1.0
 	Player.MorphWeapon "BerserkFists"
 	Player.JumpZ 16 // Doubled jump height
-	DamageFactor "Chemical", 2.25 // AAAAHHH
-	DamageFactor "MechStomp", 0.35
+	DamageFactor "Chemical",		2.25 // AAAAHHH
+	DamageFactor "ChemicalSpecial",	2.25 // AAAAHHH
+	DamageFactor "MechStomp",		0.35
 	
 	States {
 	// The guy gibs in every death ever.
@@ -24,6 +25,8 @@ actor BerserkPlayer : Player {
 	Death.Time:
 	Death.ChemicalSpecial:
 	Death.FireSpecial:
+	Death.Energy:
+	Ice:
 		goto XDeathGo
 	}
 }
