@@ -1,24 +1,28 @@
 // =============================================================================
 // [Dusk] BOT SUPPORT
 
-#define MAX_BOTCLASSES 16
+#define MAX_BOTCLASSES 20
 int BotClasses[MAX_BOTCLASSES] = {
 	CLASS_Gunman,
-	CLASS_Minigunner,
+	CLASS_Shotgunner,
+	CLASS_Rifleman,
 	CLASS_DoubleShotgunner,
+	CLASS_MachineGunner,
+	CLASS_Minigunner,
+	CLASS_TiberiumAutorifleman,
 	CLASS_Flamer,
 	CLASS_Grenadier,
-	CLASS_GaussGunner,
-	CLASS_ChemWarrior,
-	CLASS_TiberiumAutorifleman,
-	CLASS_Artillery,
-	CLASS_ShockTrooper,
-	CLASS_Commando,
-	CLASS_LaserChaingunner,
-	CLASS_PlasmaGunner,
 	CLASS_CombustionGunner,
-	CLASS_Machinegunner,
-	CLASS_Shotgunner,
+	CLASS_Rocketeer,
+	CLASS_ChemWarrior,
+	CLASS_GaussGunner,
+	CLASS_Artillery,
+	CLASS_NailMachineGunner,
+	CLASS_LaserRifleman,
+	CLASS_ShockTrooper,
+	CLASS_PlasmaGunner,
+	CLASS_LaserChaingunner,
+	CLASS_KarasawaSoldier,
 };
 
 script SC_BotEnter ENTER {
