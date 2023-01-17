@@ -130,7 +130,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_CREDITSSTOLEN,	"credits stolen",		"G", 10, CRT_Bad,		(0),	"");
 	AddCrateType (CRATE_TIMEGUN,		"time gun",				"I", 10, CRT_Weapon,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
 	AddCrateType (CRATE_BOMB,			"bomb crate",			"G", 25, CRT_Bad,		(0),	""); 					// Custon announce type.
-	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE_FA),				"messed up and activated a");
+	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Someone messed up and activated a");
 	AddCrateType (CRATE_UTILITYGUN,		"utility gun",			"D", 10, CRT_Weapon,	(0),	"");
 	AddCrateType (CRATE_ENERGYARMOR,	"energy resistance",	"N", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_EXPLOARMOR,		"explosive resistance",	"F", 10, CRT_Armor,		(0),	"");

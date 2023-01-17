@@ -148,7 +148,7 @@ int comboArr[4][2] =
 {
 	{"\cjDouble Kill","double"},
 	{"\cdMulti Kill","multi"},
-	{"\cfUlra Kill","ultra"},
+	{"\cfUltra Kill","ultra"},
 	{"\ckMonster Kill","monster"},
 };
 
