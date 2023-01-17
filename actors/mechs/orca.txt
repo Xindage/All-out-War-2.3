@@ -13,8 +13,6 @@ actor Orca : MechPlayer_Base {
 	Player.AttackZOffset 0
 	Player.MorphWeapon "OrcaWeapons"
 	damagefactor "Falling", 4.0
-	DamageFactor "Plasma",			1.0
-	DamageFactor "EnergyDecay",		1.0
 	scale 0.5
 	+NOSKIN
 	+FLOATBOB

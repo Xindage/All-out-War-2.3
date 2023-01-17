@@ -14,8 +14,8 @@ actor MechPlayer_Base : PlayerPawn {
 	DamageFactor "FireSpecial",		1.5
 	DamageFactor "Chemical",		0.0		// No damage as it was on past.
 	DamageFactor "ChemicalSpecial",	0.0
-	DamageFactor "Energy",			1.25
-	DamageFactor "Plasma",			1.25
+	DamageFactor "Energy",			1.1		// Mechs are a little tought to plasma cannon now
+	DamageFactor "Plasma",			0.8
 	DamageFactor "EnergyDecay",		1.5
 	DamageFactor "Ice",				0.0		// Cant freeze
 	DamageFactor "Time",			1.0

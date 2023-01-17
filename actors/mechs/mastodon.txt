@@ -1,7 +1,7 @@
 // Mastodon mech
   Actor Mastodon : MechPlayer_Base
   {
-    Health 2500
+		Health 2500
 	Radius 60
 	Height 76
 	PainChance 0
@@ -14,88 +14,122 @@
 	Scale 1.5
 	States 
 	{
-	  Spawn:
-	  MDON I 0
-	  MDON A 0 SetPlayerProperty(0, 0, 3)
-	  MDON A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
-	  MDON A 0 ACS_Execute(315, 0)
-	  MDON A 0 A_GiveInventory("MechEjectButton", 1)
-	  MDON A 0 A_GiveInventory("IsMech", 1)
-	  MDON A 35
-	  MDON AAAA 35
-	  MDON A 35
-	  Loop
-	  
-	  See:
-	  TNT1 A 0 SetPlayerProperty (0, 0, 3)
-	  TNT1 A 0 A_SpawnItemEx ("MastodonStepDamageWeak", 0, 0, 4)
-	  MDON B 1 A_JumpIfHealthLower (500, "SeeDamaged")
-	  TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
-	  MDON C 1
-	  TNT1 A 0 A_SpawnItemEx ("MastodonStepDamageWeak", 0, 0, 4)
-	  MDON D 1 
-	  TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
-	  MDON A 1 
-	  TNT1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
-	  Goto Spawn
-	  
-	  SeeDamaged:
-	  TNT1 A 0 SetPlayerProperty (0, 0, 3)
-	  TNT1 A 0 A_SpawnItemEx ("MastodonStepDamageWeak", 0, 0, 4)
-	  MDON B 1
-	  TNT1 A 0 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32,32),random(-32,32),random(96,128), 0,0,3)
-	  MDON C 1 
-	  TNT1 A 0 A_SpawnItemEx ("MastodonStepDamageWeak", 0, 0, 4)
-	  MDON D 1 
-	  TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 24, 4)
-	  MDON A 1 
-	  TNT1 A 0 A_JumpIf(WaterLevel >= 1, "Drown")
-	  Goto Spawn
-	  
-	  Melee:
-	  MDON A 10 bright
-	  Goto Spawn
-	  
-	  Drown:
-	  TNT1 A 0 Thing_Damage (0, 300, 12)
-	  Goto Spawn
-	  
-	  Death:
-	  TNT1 A 0
-	  TNT1 A 0 A_JumpIfInventory("IsKamikaze",1,"Death.IonExplosion")
-	  TNT1 A 0 A_JumpIfInventory("IsBombCrate", 1, "Death.BombExplosion")
-	  Goto DeathGo
-	  
-	  DeathGo:
-	  TNT1 A 0 A_NoBlocking
-	  TNT1 A 0 A_StopSound (6)
-	  TNT1 A 0 A_StopSound (CHAN_WEAPON)
-	  MDON A 1 
-	  MDON A 1 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
-	  MDON A 10 Bright 
-	  DISR Z -1 A_SetTranslucent(0,0.0)
-	  Stop
-	  
-	  Death.IonExplosion:
-	  TNT1 A 0
-	  TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Death.NukeExplosion")
-	  TNT1 A 0 A_SpawnItemEx ("BlueStrikeKamikaze", 0, 0, 32)
-	  Goto DeathGo
-	  
-	  Death.NukeExplosion:
-	  TNT1 A 0
-	  TNT1 A 0 A_SpawnItemEx ("NukeKamikaze", 0, 0, 32)
-	  Goto DeathGo
-	  
-	  Death.BombExplosion:
-	  MDON A 0
-	  MDON A 0 A_SpawnItemEx("BombExplosion")
-	  Goto DeathGo
+	Spawn:
+		MDON I 0
+		MDON A 0 SetPlayerProperty(0, 0, 3)
+		MDON A 0 ACS_ExecuteAlways (SC_STEALTH, 0, STEALTH_FORCEOFF)
+		MDON A 0 ACS_Execute(315, 0)
+		MDON A 0 A_GiveInventory("MechEjectButton", 1)
+		MDON A 0 A_GiveInventory("IsMech", 1)
+		MDON A 35
+		MDON AAAA 35
+		MDON A 35
+		Loop
+	See:
+		TNT1 A 0 SetPlayerProperty (0, 0, 3)
+		TNT1 A 0 A_JumpIfHealthLower (500, "SeeD") // Damaged
+		TNT1 A 0 A_JumpIf(CallACS("MastodonInput", 0, 0, 0) == 1, "Seebackward")
+	SeeForward:
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON B 1
+		MDON C 1
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON D 1
+		MDON A 1
+		TNT1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		Goto Spawn
+	Seebackward:
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON B 1
+		MDON C 1
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON D 1
+		MDON A 1
+		TNT1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		Goto Spawn
+	SeeD:
+		TNT1 A 0 A_JumpIf(CallACS("MastodonInput", 0, 0, 0) == 1, "SeeDbackward")
+	SeeDForward:
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON B 1
+		TNT1 A 0 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32,32),random(-32,32),random(96,128), 0,0,3)
+		MDON C 1
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", 52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON D 1
+		MDON A 1
+		TNT1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		Goto Spawn
+	SeeDbackward:
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON B 1
+		TNT1 A 0 A_SpawnItemEx ("EjectedMechSmokePuff", random(-32,32),random(-32,32),random(96,128), 0,0,3)
+		MDON C 1
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, 32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MastodonStepDamage", -52, -32, 8)
+		TNT1 A 0 A_SpawnItemEx ("MechStepSmokePuff", 0, 0, 4)
+		MDON D 1
+		MDON A 1
+		TNT1 C 0 A_JumpIf(WaterLevel >= 1, "Drown")
+		Goto Spawn
+
+	Melee:
+		MDON A 10 bright
+		Goto Spawn
+
+	Drown:
+		TNT1 A 0 Thing_Damage (0, 300, 12)
+		Goto Spawn
+
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("IsKamikaze",1,"Death.IonExplosion")
+		TNT1 A 0 A_JumpIfInventory("IsBombCrate", 1, "Death.BombExplosion")
+		Goto DeathGo
+
+	DeathGo:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_StopSound (6)
+		TNT1 A 0 A_StopSound (CHAN_WEAPON)
+		MDON A 1
+		MDON A 1 A_SpawnItemEx ("MechExplosionSmall", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+		MDON A 10 Bright
+		DISR Z -1 A_SetTranslucent(0,0.0)
+		Stop
+
+	Death.IonExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory ("IsRed", 1, "Death.NukeExplosion")
+		TNT1 A 0 A_SpawnItemEx ("BlueStrikeKamikaze", 0, 0, 32)
+		Goto DeathGo
+
+	Death.NukeExplosion:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx ("NukeKamikaze", 0, 0, 32)
+		Goto DeathGo
+
+	Death.BombExplosion:
+		MDON A 0
+		MDON A 0 A_SpawnItemEx("BombExplosion")
+		Goto DeathGo
 	}
   }
 
 
-  Actor MastodonStepDamageWeak
+  Actor MastodonStepDamage
   {
 	RenderStyle None
 	+RANDOMIZE
@@ -113,7 +147,7 @@
 	  TNT1 A 0
 	  ROB1 D 0 Radius_Quake(2,2,0,2,0)
 	  PUFF A 0 A_SpawnItemEx("MastodonStepSound", 0, 0, 0, 0, 0, 0, 0, 128, 0)
-	  TNT1 A 10 bright A_Explode(128,160,0)
+	  TNT1 A 10 bright A_Explode(52,52,0)
 	  Stop
 	}
   }
@@ -130,7 +164,7 @@
 	{
 	  Spawn:
 	  TNT1 A 0
-	  TNT1 A 1 A_PlaySound("tanktr", 6, 0.45)
+	  TNT1 A 1 A_PlaySound("tanktr", 6, 0.25)
 	  Stop
 	}
   }

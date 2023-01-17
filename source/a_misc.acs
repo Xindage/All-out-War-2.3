@@ -393,3 +393,11 @@ Script "SC_STEALTHCHARGE" ENTER
 	Delay(5);
 	Restart;
 }
+
+// Xindage here we go with code for mastodon stomp check.
+Script "MastodonInput" (void)
+{
+	int buttons = GetPlayerInput(-1, MODINPUT_FORWARDMOVE);
+	if (buttons & BT_BACK) SetResultValue(0);
+	else SetResultValue(1);
+}
