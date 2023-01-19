@@ -32,6 +32,7 @@
 #include "actors/effects/debris.txt"
 #include "actors/effects/explosiondebris.txt"
 #include "actors/effects/particles.txt"
+#include "actors/effects/frostbite.txt"
 #include "actors/misc/decorations.txt"
 #include "actors/misc/hazards.txt"
 #include "actors/misc/shrubs.txt"

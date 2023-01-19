@@ -215,33 +215,33 @@ actor ChronoBowPower : Ammo {
 
 actor ChronoBolt1  : ChronoBoltBase {
 	Speed 30
-	health 16
-	damage (16)
+	health 20
+	damage (20)
 }
 actor ChronoBolt2 : ChronoBoltBase {
 	Speed 60
-	health 26
-	damage (26)
+	health 32
+	damage (32)
 }
 actor ChronoBolt3 : ChronoBoltBase {
 	Speed 90
-	health 36
-	damage (36)
+	health 44
+	damage (44)
 }
 actor ChronoBolt4 : ChronoBoltBase {
 	Speed 120
-	health 46
-	damage (46)
-}
-actor ChronoBolt5 : ChronoBoltBase {
-	Speed 150
 	health 56
 	damage (56)
 }
+actor ChronoBolt5 : ChronoBoltBase {
+	Speed 150
+	health 68
+	damage (68)
+}
 actor ChronoBolt6 : ChronoBoltBase {
 	Speed 180
-	health 66
-	damage (66)
+	health 80
+	damage (80)
 }
 
 actor ChronoBoltFX {
