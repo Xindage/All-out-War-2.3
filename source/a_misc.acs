@@ -54,6 +54,7 @@ script "SC_DAMAGEICE" (void)
 	int currentHealth = GetHealth();
 	int healthLost = maxHealth - currentHealth;
 	int frostbiteCount = (healthLost * 10) / maxHealth;
+	GiveInventory ("BeingFrost", 1); // This item is used to track if player is being hit multiple times by ice.
 	// First clear if you have any frostbite in effect
 	for (int x = 9; x > 1; x--)
 	{
@@ -62,7 +63,7 @@ script "SC_DAMAGEICE" (void)
 	}
 	// If player is damaged while having too much hps left at least give one frostbite effect.
 	if (frostbiteCount < 1) frostbiteCount = 1;
-	while(frostbiteCount > 0 && GetHealth() > 1 && currentHealth == GetHealth())
+	while(frostbiteCount > 0 && GetHealth() > 1 /*&& currentHealth == GetHealth()*/)
 	{
 		frostvalue = strparam(s:"frostbite", i:frostbiteCount);
 		FadeTo (0, 128, 255, frostbiteCount * 0.08, 1.0);
@@ -70,9 +71,15 @@ script "SC_DAMAGEICE" (void)
 		GiveInventory (frostvalue, 1);
 		delay(35);
 		TakeInventory (frostvalue, 1);
+		if (CheckInventory ("BeingFrost") > 1) // If it is higher than 1 player have been hit again, terminate.
+		{
+			TakeInventory ("BeingFrost", 1);
+			Terminate;
+		}
 		frostbiteCount--;
 	}
 	FadeTo (0, 0, 0, 0, 1.0);
+	TakeInventory ("BeingFrost", 255); // the script is done take all actors if somehow we have more than 1 too.
 }
 
 script SC_WEAPONCHECK OPEN {

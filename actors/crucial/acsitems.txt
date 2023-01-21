@@ -40,3 +40,6 @@ actor Experience : Inventory {
 
 actor HasRankUpgrades : Inventory {}
 actor instantNadeCast : Inventory {inventory.maxamount 1}
+
+// Used by ice data
+actor BeingFrost : Inventory {inventory.maxamount 100}
