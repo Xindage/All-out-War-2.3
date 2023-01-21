@@ -61,15 +61,17 @@
 #define CRATE_BOMBPACK		37
 #define CRATE_IMP			38
 #define CRATE_C4			39
+// ----
 #define CRATE_GRENADES		40
 #define CRATE_QUADSHOTGUN	41
 #define CRATE_SOULSPHERE	42
 #define CRATE_LIGHTSABER	43
-#define CRATE_BFG2704   	44
-#define CRATE_GRAVITY   	45
+#define CRATE_BFG2704		44
+#define CRATE_GRAVITY		45
+#define CRATE_TIMEWARP		46
 // ----
 // ----
-#define NUM_CRATES			46
+#define NUM_CRATES			47
 
 // --------------------------------------------------------------
 #define CRK_NAME		0 // Name of crate
@@ -130,7 +132,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_CREDITSSTOLEN,	"credits stolen",		"G", 10, CRT_Bad,		(0),	"");
 	AddCrateType (CRATE_TIMEGUN,		"time gun",				"I", 10, CRT_Weapon,	(CRF_ANNOUNCE_TO),				"Someone obtained the");
 	AddCrateType (CRATE_BOMB,			"bomb crate",			"G", 25, CRT_Bad,		(0),	""); 					// Custon announce type.
-	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Someone messed up and activated a");
+	AddCrateType (CRATE_BASECRASHER,	"base crasher",			"G", 10, CRT_Bad,		(0),	"");					// Custon announce type.
 	AddCrateType (CRATE_UTILITYGUN,		"utility gun",			"D", 10, CRT_Weapon,	(0),	"");
 	AddCrateType (CRATE_ENERGYARMOR,	"energy resistance",	"N", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_EXPLOARMOR,		"explosive resistance",	"F", 10, CRT_Armor,		(0),	"");
@@ -160,6 +162,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
 	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  3, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
+	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I",  8, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
 }
 
 // ============================================================================
@@ -305,6 +308,17 @@ function int CheckCrate (int c) {
 				!(gravityonce) && // Repurposed to do not happen while one is active, or too early after another
 				!intHolder[i_SuddenDeath] && // Not in suddendeath
 				!(CheckMinutes(GetCVar("zeta_suddendeathtime") - 5)); // The effect should last up to SD
+	case CRATE_TIMEWARP:
+		{
+		// Less chance for high rank too
+		if (GetRank () >= RANK_LIEUTENANT)
+			if (!random (0, 3))
+				return false;
+		return	!CheckInventory ("TimeGun") && // not if the player already has the time gun
+				!intHolder[i_SuddenDeath] && // Not in suddendeath
+				!CheckInventory ("IsStealth") && // this crate mess with player alpha and render mode
+				!CheckInventory ("PowerInvisibility");
+		}
 	}
 	
 	return true;
@@ -346,6 +360,8 @@ script 309 (int c)
 	case CRATE_BASEMIRACLE:
 		AmbientSound ("powerup/base", 127);
 		
+		// These booleans are really necessary?
+		// TODO: Heal everything, inclusind portals.
 		if (team == TEAM_RED) {
 			if (GotBarracks[0])
 				SetActorHealth (201, GetActorSpawnHealth (201));
@@ -357,6 +373,8 @@ script 309 (int c)
 				SetActorHealth (207, GetActorSpawnHealth (207));
 			if (GotObelisk[0])
 				SetActorHealth (214, GetActorSpawnHealth (214));
+			if (GotRepair[0])
+				SetActorHealth (209, GetActorSpawnHealth (114));
 		} else if (team == TEAM_BLUE) {
 			if (GotBarracks[1])
 				SetActorHealth (101, GetActorSpawnHealth (101));
@@ -368,6 +386,8 @@ script 309 (int c)
 				SetActorHealth (107, GetActorSpawnHealth (107));
 			if (GotObelisk[1])
 				SetActorHealth (114, GetActorSpawnHealth (114));
+			if (GotRepair[1])
+				SetActorHealth (109, GetActorSpawnHealth (114));
 		}
 		
 		SYNC_UpdateAllBuildings ();
@@ -574,14 +594,14 @@ script 309 (int c)
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
 		if (team == TEAM_RED) {
-//			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
+			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(201,4000,0);
 			Thing_Damage(203,4000,0);
 			Thing_Damage(205,4000,0);
 			Thing_Damage(207,4000,0);
 			Thing_Damage(214,2500,0);
 		} else {
-//			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
+			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(101,4000,0);
 			Thing_Damage(103,4000,0);
 			Thing_Damage(105,4000,0);
@@ -934,6 +954,11 @@ script 309 (int c)
 	case CRATE_GRAVITY:
 		ACS_NamedExecuteAlways("CRATE_MoonGravityTimer", 0, 0, 0, 0);
 		break;
+
+	// Time warp. Warning Team.
+	case CRATE_TIMEWARP:
+		ACS_NamedExecuteAlways("CRATE_TimeCopWarp", 0, 0, 0, 0);
+		break;
 	}
 
 	// Announce it.
@@ -986,6 +1011,40 @@ Script "CRATE_MoonGravityTimer" (void)
 	// Take a break before allowing it again
 	Delay((8 * MINUTETICS) - 35);
 	gravityonce = 0;
+}
+
+Script "CRATE_TimeCopWarp" (void)
+{
+	int x;
+	int team = PlayerTeam ();
+	//PlaySound (0, "plasmacannon/fire");
+	AmbientSound ("plasmacannon/fire", 127);
+	delay (28);
+	// A_ZoomFactor(0.700)
+	PlaySound (0, "misc/timewarp");
+	// A_SetTranslucent (0.5, 1)
+	SetActorProperty(0, APROP_RENDERSTYLE, STYLE_TRANSLUCENT);
+	SetActorProperty(0, APROP_ALPHA, 0.7);
+	GiveInventory ("TimeGunSpeed", 1);
+	for (x = 0; x < 10; x++)
+	{
+		Thing_Damage2 (0, 1, "Time");
+		delay (3);
+		if (GetHealth() < 1) terminate;
+	}
+	GiveInventory ("GoldHue", 1);
+	TakeInventory ("PowerTimeGunSpeed", 1);
+
+	// Start the teleport
+	SpawnSpotForced ("TimeGunFlareCluster", 0, 0, 0);
+	ACS_ExecuteAlways (94, 0, team, 0, 0);
+	delay (3);
+	if (GetHealth() < 1) terminate;
+	// A_SetTranslucent (1.0, 0)
+	SetActorProperty(0, APROP_RENDERSTYLE, STYLE_NORMAL);
+	SetActorProperty(0, APROP_ALPHA, 1.0);
+	SpawnSpotForced ("TimeGunFlareExplosion", 0, 0, 0);
+	PlaySound (0, "misc/timeunwarp");
 }
 
 // ============================================================================
