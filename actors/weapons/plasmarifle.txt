@@ -268,7 +268,7 @@ actor PlasmaShotBlue {
 	Alpha 0.75
 	Translation "224:247=192:207"
 	DeathSound "weapons/plasmax"
-	DamageType "Energy"
+	DamageType "Ice"
 	Decal "PulseScorch"
 	Obituary "$OB_PLASMARIFLE"
 	States {

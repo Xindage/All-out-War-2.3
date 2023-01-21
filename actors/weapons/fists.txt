@@ -95,22 +95,24 @@ actor FistPuff : BulletPuff {
 	+NOINTERACTION
 	-ALLOWPARTICLES
 	+PUFFONACTORS
+	+FORCEXYBILLBOARD
+	RenderStyle Add
+	Alpha 0.6
 	DamageType "Fist"
-	Obituary "$OB_FIST"	
+	Obituary "$OB_FIST"
 	states {
-	Crash:
-		PUFF A 0 bright
-		PUFF A 4 bright A_SpawnItem ("FistWall")
-		PUFF B 4 
-		PUFF CD 4
+	Spawn:
+		TNT1 A 0 bright
+		TNT1 A 1 bright A_SpawnItem ("FistHit")
 		stop
 	Melee:
-		PUFF A 0 bright
-		PUFF A 4 bright A_SpawnItem ("FistHit")
+		TNT1 A 0 bright
+		TNT1 A 1 bright A_SpawnItem ("FistHit")
 		stop
-	Spawn:
-		PUFF A 0 bright
-		PUFF A 4 bright A_SpawnItem ("FistHit")
+	Crash:
+		TNT1 A 0 bright
+		FPUF A 3 bright A_SpawnItem ("FistWall")
+		FPUF BCD 3
 		stop
 	}
 }

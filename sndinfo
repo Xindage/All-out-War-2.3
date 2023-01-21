@@ -1085,6 +1085,13 @@ gatling/boom2		mineexp2
 $random gatling/boom { gatling/boom1 gatling/boom2 }
 $limit gatling/boom 0
 
+gatling/AltSpinOn      gatspion
+gatling/AltSpinIdle    gatspiid
+gatling/AltSpinOff     gatspiof
+gatling/AltSpinFire    gatspifi
+$volume gatling/AltSpinFire 0.8
+$limit gatling/AltSpinFire 0
+
 //Grenade launcher
 /*
 $random				grenade/fire	{ grenade/fire1 grenade/fire2 }
