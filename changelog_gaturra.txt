@@ -2,7 +2,7 @@
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/fgxCGck9
+Discord server          : https://discord.gg/mQpv5nHp
 
 Original Release date   : 2022/04/18 (v0.1)
 Version r221118 (2022/11/18)
@@ -146,6 +146,53 @@ Version r230107 (2023/01/07)
                           - Fixed: lightsaber altfire doesnt reflects bullets
 						  - Fixed: missile launcher sounds are multiplied when using offensive keybinds
 						  - Fixed: double ammo on some ammo types (shotgun ammo, laser rifle ammo, smg ammo, machinegun ammo)
+Version r230121 (2023/01/21)
+                          - Timed C4 hitbox radius increased
+						  - Minigunner class now uses a different fire mode by barney the dinosaur
+                          - Missile launcher altfire missiles can be loaded/used individually (takes longer to load each missile)
+						  - Submachinegun and machinegun reload speed slighty increased
+						  - Submachinegun altfire accuracy increased (exactly as in aow r2539)
+						  * Ammo backpacks now give 30 machinegun/smg bullets instead 20
+						  * Machinegun and submachinegun damage increased, machinegun mag size decreased (from 45 to 30)
+						  * Handgun fire rate increased
+						  * Plasmarifle damage increased (from 15 to 25)
+						  * Fixed: hyperspeed bug related to timegun and disarm crate
+						  * Fixed: gatlingun altfire mode slows down even while using jetpack
+						  * Fixed: minor bug fixes related to missile launcher (again)
+Version r230122 (2023/01/22)
+						  - Beacons can cause damage from outside buildings.
+						  - Mechs plasma cannon resistence increased.
+						  - Plasma cannon decay can disarm mines.
+						  - Mine damage is not affected by armor type.
+						  - C4 mines and grenades now does mine damage type.
+						  - Terminals take exactly 3x damage from all sources in SD.
+						  - Cryo archer (former chrono) cost less 100 and deals more damage.
+						  - Credits per tib refined raised for the team.
+						  - Titan weapons are now improved to be a demolisher mech.
+						  - Team boost is kept when being promoted.
+						  - You gain less hp per rank. (zeta_rankmode 1)
+						  - Mastodon stomp range was reworked.
+						  - Firepower upgraded dont affect mines anymore.
+						  - Mines does not explode on its own team while being disarmed.
+						  - Wolverine pickup had its scale fixed.
+						  - Menus now properly calculate the discount.
+						  - Fixed crates duplicated announcers and improved them.
+						  - New time warp crate comes to replace fatigue as bad crate.
+						  - Harvesters cannot commit suicide with tiberium now.
+						  - Beacons being disarmed too fast with remover gun.
+						  - Plasma cannon now cause energy based damage only.
+						  - Plasma rifle causing wrong damage type.
+						  - Ammo regens now properly regen karasawa and cryobow ammo.
+						  - Adjusted grenade launcher firing when close to walls.
+						  - Added changelog in game.
+						  - Ice type damage included.
+						  - Zandronum bots can choose more classes.
+						  - Added debug map.
+						  - Moon gravity crate was completely reworked.
+						  - Mechs gravity was increased by 75%.
+						  - Burning corpses does not cause special type damage anymore.
+						  - StealthKnife damage type renamed to Knife.
+						  - aow23 (immortal kombat) Now have side alleys.
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *
