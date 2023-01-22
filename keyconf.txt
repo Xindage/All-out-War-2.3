@@ -32,6 +32,7 @@ addmenukey "Remote C4 Detonator" usedetonator
 addmenukey "Melee Attack" meleeattack
 addmenukey "Reload Weapon" reloadweapon
 addmenukey "Eject Mech" ejectmech
+addmenukey "Open Changelog" changelog
 
 defaultbind g usefraggrenade
 defaultbind f useflashbang
@@ -48,6 +49,9 @@ alias donateall "puke 984 255"
 
 alias surrender "puke 342"
 alias spectatorteleport "puke 940"
+
+// Changelog
+alias changelog "puke -501"
 
 // Weapons
 alias usefraggrenade "puke 828 0"

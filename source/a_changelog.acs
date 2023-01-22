@@ -1,10 +1,55 @@
-bool chgactive;
+// Clientside refuses to work properly...
+script 501 (void) net // clientside
+{
+    GiveInventory("ChangelogScreen", 1);
+    if (CheckInventory("ChangelogScreen") != 1) terminate;
+    while (CheckInventory("ChangelogScreen") < 2)
+    {
+            int Version = 230108; // YYMMDD
+            HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
+\cq- Titan weapons are now improved to be a demolisher mech.\n
+\cq- Team boost is kept when being promoted.\n
+\cq- Mechs plasma cannon resistence increased.\n
+\cq- Plasma cannon deals extra damage on buildings.\n
+\cq- Beacons can cause damage from outside buildings.\n
+\cq- Plasma cannon decay can disarm mines.\n
+\cq- Mine damage is not affected by armor type.\n
+\cq- C4 mines and grenades now does mine damage type.\n
+\cq- Terminals take exactly 3x damage from all sources in SD.\n
+\cr- You gain less hp per rank. (zeta_rankmode 1)\n
+\cr- Mastodon stomp range was reworked.\n
+\cj- Firepower upgraded dont affect mines anymore.\n
+\cj- Wolverine pickup had its scale fixed.\n
+\cj- Mines does not explode on its own team while being disarmed.\n
+\cj- Menus now properly calculate the discount.\n
+\cj- Fixed crates duplicated announcers and improved them.\n
+\cj- You cannot donate to spectators.\n
+\cj- Harvesters cannot commit suicide with tiberium now.\n
+\cj- Beacons being disarmed too fast with remover gun.\n
+\cj- Plasma cannon now cause energy based damage only.\n
+\cj- Plasma rifle causing wrong damage type.\n
+\ci- Added changelog in game.\n
+\ci- Ice type damage included.\n
+\ci- Zandronum bots can choose more classes.\n
+\ci- Added debug map.\n
+\ci- Moon gravity crate was completely reworked.\n
+\ci- Mechs gravity was increased by 75%.\n
+\ci- Burning corpses does not cause special type damage anymore.\n
+\ci- StealthKnife damage type renamed to Knife.\n
+\cv- aow23 (immortal kombat) Now have side alleys."
+            ; HUDMSG_FADEOUT, 801, CR_WHITE, 0.5, 0.2, 1.0, 1.0);
+            delay(35);
+    }
+    Takeinventory("ChangelogScreen", 2);
+}
+
+// Does not work!
+/*int chgactive;
 script 501 (void) net clientside
 {
-    if (!chgactive)
-    {
-        chgactive = 1;
-        while (chgactive == 1)
+    chgactive++;
+    if (chgactive != 1) { chgactive = 0; terminate; }
+       while (chgactive == 1)
         {
             int Version = 230108; // YYMMDD
             HudMessage(s:"\cuChangelog version: \cd", d:Version, s:"\n
@@ -21,9 +66,4 @@ script 501 (void) net clientside
             ; HUDMSG_FADEOUT, 801, CR_WHITE, 0.5, 0.2, 1.0, 1.0);
             delay(35);
         }
-    }
-    else
-    {
-        chgactive = 0;
-    }
-}
+}*/
