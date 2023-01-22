@@ -23,7 +23,6 @@ script 501 (void) net // clientside
 \cj- Menus now properly calculate the discount.\n
 \cj- Fixed crates duplicated announcers and improved them.\n
 \cj- New time warp crate comes to replace fatigue as bad crate.\n
-\cj- You cannot donate to spectators.\n
 \cj- Harvesters cannot commit suicide with tiberium now.\n
 \cj- Beacons being disarmed too fast with remover gun.\n
 \cj- Plasma cannon now cause energy based damage only.\n
