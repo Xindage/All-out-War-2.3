@@ -98,113 +98,59 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 A_JumpIfInventory ("InMenu", 1, "Ready")
 		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Fire.Blue")
 		TNT1 A 0 A_JumpIfNoAmmo("Empty")
-		TNT1 A 0 A_JumpIfInventory ("IsGunman", 1, "FireClass")
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBR A 1 offset (5, 37) A_SetPitch(pitch+0.2)
 		
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBR A 1 offset (6, 37) A_SetPitch(pitch+0.2)
 		
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBR A 1 offset (5, 37) A_SetPitch(pitch+0.2)
 		SUBR A 1 offset (7, 37)
 
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBR AAA 4 offset (1, 32) A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		SUBR A 2 A_ReFire
-		goto Ready
-	FireClass:
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBR A 1 offset (5, 37) A_SetPitch(pitch+0.2)
-		
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBR A 1 offset (6, 37) A_SetPitch(pitch+0.2)
-		
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBR A 1 offset (5, 37) A_SetPitch(pitch+0.2)
-		SUBR A 1 offset (7, 39)
-
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SUBR A 3 A_JumpIfInventory ("IsGunman", 1, 1)
 		SUBR AAA 3 offset (1, 32) A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		SUBR A 2 A_ReFire
 		goto Ready
 	Fire.Blue:
 	    TNT1 A 0 A_JumpIfNoAmmo("Empty.Blue")
-		TNT1 A 0 A_JumpIfInventory ("IsGunman", 1, "FireClass.Blue")
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBB A 1 offset (5, 37) A_SetPitch(pitch+0.2)
 		
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBB A 1 offset (6, 37) A_SetPitch(pitch+0.2)
 		
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
 		SUBB A 1 offset (5, 37) A_SetPitch(pitch+0.2)
 		SUBB A 1 offset (7, 39)
 		
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		SUBB AAA 4 offset (1, 32) A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		SUBB A 2 A_ReFire
-		goto Ready
-	FireClass.Blue:
-	    TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBB A 1 offset (5, 37) A_SetPitch(pitch+0.2)
-		
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBB A 1 offset (6, 37) A_SetPitch(pitch+0.2)
-		
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
-		TNT1 A 0 bright A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (1.5, 1.5, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
-		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.2)
-		SUBB A 1 offset (5, 37) A_SetPitch(pitch+0.2)
-		SUBB A 1 offset (7, 39)
-		
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		SUBB A 3 A_JumpIfInventory ("IsGunman", 1, 1)
 		SUBB AAA 3 offset (1, 32) A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		SUBB A 2 A_ReFire
 		goto Ready
@@ -218,7 +164,7 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		SUBR A 0 A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
 		TNT1 A 0 A_TakeInventory("SMGMag",1)
-		SUBR A 1 bright offset (1, 32) A_FireBullets (3.75, 3.75, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBR A 1 bright offset (1, 32) A_FireBullets (3.75, 3.75, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBR A 1 bright offset (3, 35) A_SetPitch(pitch - 0.4)
 		SUBR A 1 offset (5, 37) A_SetPitch(pitch + 0.4)
 		SUBR A 1 offset (7, 39)
@@ -231,7 +177,7 @@ actor SubMachineGun : AOWWeapon 21043 {
 		TNT1 A 0 A_PlaySound ("subby/fire", CHAN_WEAPON)
 		TNT1 A 0 A_SpawnItemEx("ShellCasing",8,8,32,random(1,3),random(0,1),random(1,3),random(45,60),128)
 		TNT1 A 0 A_TakeInventory("SMGMag",1)
-		SUBB A 1 bright offset (1, 32) A_FireBullets (3.75, 3.75, -1, 10, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
+		SUBB A 1 bright offset (1, 32) A_FireBullets (3.75, 3.75, -1, 12, "HandgunPuff",FBF_NORANDOM|FBF_USEAMMO, 2048)
 		SUBB A 1 bright offset (3, 35) A_SetPitch(pitch-0.4)
 		SUBB A 1 offset (5, 37) A_SetPitch(pitch+0.4)
 		SUBB A 1 offset (7, 39)

@@ -382,7 +382,8 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_PlaySoundEx("missilelauncher/busrtShot",CHAN_VOICE)
 		TNT1 A 0 Radius_Quake(4,3,0,1,0)
-        MSLR D 1 Bright offset (9, 43) A_FireCustomMissile("HeavyBurstMissile")
+        MSLR D 1 Bright offset (9, 43) A_FireCustomMissile("HeavyBurstMissile",0 ,0)
+		TNT1 A 0 A_TakeInventory("MissileMag",1)
 		TNT1 A 0 A_Recoil (9)
 	    MSLR D 1 Bright offset (10, 46) A_ZoomFactor(0.952)
 	    MSLR D 1 Bright offset (11, 49) A_ZoomFactor(0.934)
@@ -405,6 +406,8 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 ACS_ExecuteAlways (963, 0) // init targeter
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MSLR DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MSLR DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		Goto Reload
 	FireLockOn.Blue:
 		MSLB D 1 A_JumpIfCloser(1536, "AltFireGo.Blue")
@@ -417,7 +420,8 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         TNT1 A 0 A_GunFlash
 	    TNT1 A 0 A_PlaySoundEx("missilelauncher/busrtShot",CHAN_VOICE)
 		TNT1 A 0 Radius_Quake(4,3,0,1,0)
-        MSLB D 1 Bright offset (9, 43) A_FireCustomMissile("HeavyBurstMissileBlue")
+        MSLB D 1 Bright offset (9, 43) A_FireCustomMissile("HeavyBurstMissileBlue",0 ,0)
+		TNT1 A 0 A_TakeInventory("MissileMag",1)
 		TNT1 A 0 A_Recoil (9)
 	    MSLB D 1 Bright offset (10, 46) A_ZoomFactor(0.952)
 	    MSLB D 1 Bright offset (11, 49) A_ZoomFactor(0.934)
@@ -440,6 +444,8 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 		TNT1 A 0 ACS_ExecuteAlways (963, 0) // init targeter
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MSLB DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
+		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
+		MSLB DDDDD 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		Goto Reload.Blue
      Empty:
         MSLR D 10 A_PlaySound("weapons/empty5")
@@ -449,9 +455,9 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         TNT1 A 0 A_JumpIfInventory("MissileAmmo",1,2)
 	    TNT1 A 0
 	    Goto Ready
-		MSLR D 8 A_JumpIfInventory("IsRocketSoldier",1,1)
+		MSLR D 6 A_JumpIfInventory("IsRocketSoldier",1,1)
 		TNT1 A 0 A_PlayWeaponSound ("missilelauncher/reload")
-		MSLR EFGGHH 2
+		MSLR EFGGHHD 2
 		TNT1 A 0 A_TakeInventory("MissileAmmo",1)
 	    TNT1 A 0 A_GiveInventory("MissileMag",1)
 		TNT1 A 0 A_ReFire
@@ -464,9 +470,9 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
         TNT1 A 0 A_JumpIfInventory("MissileAmmo",1,2)
 	    TNT1 A 0
 	    Goto Ready
-		MSLB D 8 A_JumpIfInventory("IsRocketSoldier",1,1)
+		MSLB D 6 A_JumpIfInventory("IsRocketSoldier",1,1)
 		TNT1 A 0 A_PlayWeaponSound ("missilelauncher/reload")
-		MSLB EFGGHH 2
+		MSLB EFGGHHD 2
 		TNT1 A 0 A_TakeInventory("MissileAmmo",1)
 	    TNT1 A 0 A_GiveInventory("MissileMag",1)
 		TNT1 A 0 A_ReFire

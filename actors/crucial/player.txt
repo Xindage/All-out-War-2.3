@@ -12,7 +12,7 @@ actor Player : DoomPlayer {
 	Player.StartItem "SSGShell" 2
 	Player.StartItem "SMGMag" 30
 	Player.StartItem "SniperBolt" 1
-	Player.StartItem "MachinegunMag" 45
+	Player.StartItem "MachinegunMag" 30
 	Player.StartItem "ArtilleryCharge" 1
 	Player.StartItem "MissileMag" 1
 	Player.StartItem "KarasawaBurst" 5

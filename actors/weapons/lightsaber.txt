@@ -310,16 +310,16 @@ ACTOR SaberSlashPuff : BulletPuff {
     Obituary "$OB_LIGHTSABRE" 	
 	States {
 	Spawn:
-		TNT1 A 1 A_PlaySound("weapons/sclash")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclash")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitRed", 0)		
 	    Stop
 	Melee:
-		TNT1 A 1 A_PlaySound("weapons/sclash")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclash")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitRed", 0)		
 	    Stop	
 	Crash:
-		TNT1 A 1 A_PlaySound("weapons/sclashwall")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitRed", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitRed", 0)		
 	    Stop			
 	}  
 }
@@ -383,16 +383,16 @@ ACTOR SlashHitBlue: SlashHitRed {
 ACTOR SaberSlashPuffBlue : SaberSlashPuff {
 	States {
 	Spawn:
-		TNT1 A 1 A_PlaySound("weapons/sclash")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitblue", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclash")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitblue", 0)		
 	    Stop
 	Melee:
-		TNT1 A 1 A_PlaySound("weapons/sclash")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitblue", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclash")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitblue", 0)		
 	    Stop	
 	Crash:
-		TNT1 A 1 A_PlaySound("weapons/sclashwall")
-  	    TNT1 A 0 A_SpawnItem ("SlashHitblue", 0)		
+		TNT1 A 0 A_PlaySound("weapons/sclashwall")
+  	    TNT1 A 1 A_SpawnItem ("SlashHitblue", 0)		
 	    Stop			
 	}  
 }

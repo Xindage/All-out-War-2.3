@@ -10,11 +10,11 @@ actor AmmoPack : CustomInventory replaces Backpack {
 		BKPK A -1
 		stop
 	Pickup:
-		TNT1 A 0 A_GiveInventory ("NewClipAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("NewClipAmmo", 30)
 		TNT1 A 0 A_GiveInventory ("RifleAmmo", 5)
 		TNT1 A 0 A_GiveInventory ("RifleGrenadeAmmo", 1)
 		//TNT1 A 0 A_GiveInventory ("MortarAmmo", 4)
-		TNT1 A 0 A_GiveInventory ("MachineGunAmmo", 20)
+		TNT1 A 0 A_GiveInventory ("MachineGunAmmo", 30)
 		TNT1 A 0 A_GiveInventory ("LaserRifleAmmo", 10)
 		TNT1 A 0 A_GiveInventory ("FlamerAmmo", 25)
 		TNT1 A 0 A_GiveInventory ("GrenadeAmmo", 4)
@@ -39,6 +39,7 @@ actor AmmoPack : CustomInventory replaces Backpack {
 		TNT1 A 0 ACS_ExecuteAlways (814, 0, 5) // give credits
 		stop
 	}
+			TNT1 A 0 A_GiveInventory ("CryoBolt", 3)
 }
 
 // [JD] This is used for full refills only.
@@ -61,7 +62,6 @@ actor AmmoPack : CustomInventory replaces Backpack {
 			TNT1 A 0 A_GiveInventory ("LaserChaingunAmmo", 25)
 			TNT1 A 0 A_GiveInventory ("PlasmaCannonAmmo", 1)
 			TNT1 A 0 A_GiveInventory ("ShotgunAmmo", 5)
-			TNT1 A 0 A_GiveInventory ("CryoBolt", 3)
 			TNT1 A 0 A_GiveInventory ("SniperAmmo", 4)
 			TNT1 A 0 A_GiveInventory ("GeneporiumCharge",25)
 			TNT1 A 0 A_GiveInventory ("TE21CalAmmo", 20)

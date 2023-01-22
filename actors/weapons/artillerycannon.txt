@@ -139,13 +139,11 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASR A 1 offset (6, 38) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (3, 35)
 		MASR A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASR A 1 offset (0, 32)
+		MASR A 4 offset (0, 32)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASR AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASR AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		MASR A 3
 		goto Reload
 	Fire.EndBlue:
 		MASB C 1 bright offset (3, 35) A_Recoil (5)
@@ -162,13 +160,11 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASB A 1 offset (6, 38) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (3, 35)
 		MASB A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASB A 1 offset (0, 32)
+		MASB A 4 offset (0, 32)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASB AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASB AAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		MASB A 3
 		goto Reload.Blue
      Empty:
         MASR A 10 A_PlaySound("weapons/empty5")
@@ -270,13 +266,11 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASR A 1 offset (8, 40) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASR A 1 offset (4, 36)
 		MASR A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASR A 1 offset (0, 32)
+		MASR A 4 offset (0, 32)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASR AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASR AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-        MASR A 3
 		goto HeavyReload
 	AltFire.EndBlue:
 		MASB C 1 bright offset (4, 36) A_Recoil (7)
@@ -293,13 +287,11 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 		MASB A 1 offset (8, 40) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
 		MASB A 1 offset (4, 36)
 		MASB A 1 offset (0, 32) A_FireCustomMissile ("OverheatSmokeSpawner", 0, 0, 11, -2)
-		MASB A 1 offset (0, 32)
+		MASB A 4 offset (0, 32)
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASB AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
 		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
 		MASB AAAAA 2 A_JumpIfInventory("ActionMeleeAttack",1,"UseMeleeAttack")
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB | WRF_NOFIRE)
-		MASB A 3
 		goto HeavyReload.Blue
     HeavyReload:
 	    TNT1 A 0 A_TakeInventory("ActionReload",1)

@@ -262,13 +262,13 @@ actor PlasmaShotBlue {
 	Radius 12
 	Height 8
 	Scale 0.7
-	Speed 35
-	Damage (15)
+	Speed 28
+	Damage (25)
 	RenderStyle Add
 	Alpha 0.75
 	Translation "224:247=192:207"
 	DeathSound "weapons/plasmax"
-	DamageType "Ice"
+	DamageType "Energy"
 	Decal "PulseScorch"
 	Obituary "$OB_PLASMARIFLE"
 	States {
