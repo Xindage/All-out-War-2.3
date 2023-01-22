@@ -346,6 +346,13 @@ Actor LongRangeTitanMissile : LongRangeMissile
 	damage (15)
 	speed 25
 	DamageType "MassDriver"
+	States
+	{
+		Spawn:
+			TMIR AA 0 A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, 1)
+			TMIR A -1 bright
+			stop
+	}
  }
 
 Actor LongRangeTitanMissileBlue : LongRangeMissile
@@ -356,8 +363,8 @@ Actor LongRangeTitanMissileBlue : LongRangeMissile
 	States
 	{
 		Spawn:
-			MISB AA 0 A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, 1)
-			MISB A -1 bright 
+			TMIB AA 0 A_PlaySound ("ambient/rocket", CHAN_BODY, 1.0, 1)
+			TMIB A -1 bright
 			stop
 	}
  }
