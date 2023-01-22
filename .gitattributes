@@ -20,6 +20,8 @@ patches/* binary
 sound/* binary
 sprites/* binary
 textures/* binary
+# ignore docs as they uses different a diferent logic.
+doc/* binary
 
 # Ignore root files that is also binary.
 *.dat
