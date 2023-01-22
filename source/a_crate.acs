@@ -162,7 +162,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
 	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  3, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
-	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I",  8, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
+	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
 }
 
 // ============================================================================
@@ -269,9 +269,10 @@ function int CheckCrate (int c) {
 				!CheckInventory("TimeGun") &&
 				!CheckInventory("Karasawa");
 	case CRATE_FATIGUE:
-		return	!CheckInventory ("PowerFatigue") && // not if the player is already fatigue'd
-				!CheckInventory ("IsStealth") && // don't slow down stealths or blurred
-				!CheckInventory ("PowerInvisibility");
+		return false;
+//		return	!CheckInventory ("PowerFatigue") && // not if the player is already fatigue'd
+//				!CheckInventory ("IsStealth") && // don't slow down stealths or blurred
+//				!CheckInventory ("PowerInvisibility");
 	case CRATE_REMOTEC4:
 		return !CheckInventory ("RemoteC4"); // not if the player already has remote C4
 	case CRATE_BLURSPHERE:

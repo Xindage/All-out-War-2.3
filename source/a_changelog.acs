@@ -7,15 +7,14 @@ script 501 (void) net // clientside
     {
             int Version = 230108; // YYMMDD
             HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
-\cq- Titan weapons are now improved to be a demolisher mech.\n
-\cq- Team boost is kept when being promoted.\n
-\cq- Mechs plasma cannon resistence increased.\n
-\cq- Plasma cannon deals extra damage on buildings.\n
 \cq- Beacons can cause damage from outside buildings.\n
+\cq- Mechs plasma cannon resistence increased.\n
 \cq- Plasma cannon decay can disarm mines.\n
 \cq- Mine damage is not affected by armor type.\n
 \cq- C4 mines and grenades now does mine damage type.\n
 \cq- Terminals take exactly 3x damage from all sources in SD.\n
+\cq- Titan weapons are now improved to be a demolisher mech.\n
+\cq- Team boost is kept when being promoted.\n
 \cr- You gain less hp per rank. (zeta_rankmode 1)\n
 \cr- Mastodon stomp range was reworked.\n
 \cj- Firepower upgraded dont affect mines anymore.\n
@@ -23,6 +22,7 @@ script 501 (void) net // clientside
 \cj- Mines does not explode on its own team while being disarmed.\n
 \cj- Menus now properly calculate the discount.\n
 \cj- Fixed crates duplicated announcers and improved them.\n
+\cj- New time warp crate comes to replace fatigue as bad crate.\n
 \cj- You cannot donate to spectators.\n
 \cj- Harvesters cannot commit suicide with tiberium now.\n
 \cj- Beacons being disarmed too fast with remover gun.\n
