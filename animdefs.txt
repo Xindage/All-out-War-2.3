@@ -8,6 +8,9 @@ texture portalr1 range portalr9 tics 4
 texture compcg1a range compcg1g tics 4
 texture compe6a  range compe6d  tics 4
 texture fan1     range fan4     tics 3
+texture compe1a  range compe1d  tics 2
+texture compe5a  range compe5d  tics 2
+texture compe6a  range compe6d  tics 2
 
 cameratexture ct_1     128 128
 cameratexture ct_2     128 128

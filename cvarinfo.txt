@@ -64,9 +64,9 @@ server	int		zeta_nukesurpreme			=		0;
 
 // [Dusk] Tiberium amounts
 server	int		zeta_tiberium_self			=		200;
-server	int		zeta_tiberium_other			=		100;
+server	int		zeta_tiberium_other			=		125;
 server	int		zeta_tiberium_advself		=		350;
-server	int		zeta_tiberium_advother		=		300;
+server	int		zeta_tiberium_advother		=		350;
 server	int		zeta_tiberium_stack         =       5;
 server	int		zeta_tiberium_maxstacks     =       15;
 																

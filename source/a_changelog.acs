@@ -13,6 +13,8 @@ script 501 (void) net // clientside
 \cq- Mine damage is not affected by armor type.\n
 \cq- C4 mines and grenades now does mine damage type.\n
 \cq- Terminals take exactly 3x damage from all sources in SD.\n
+\cq- Cryo archer (former chrono) cost less 100 and deals more damage.\n
+\cq- Credits per tib refined raised for the team.\n
 \cq- Titan weapons are now improved to be a demolisher mech.\n
 \cq- Team boost is kept when being promoted.\n
 \cr- You gain less hp per rank. (zeta_rankmode 1)\n
