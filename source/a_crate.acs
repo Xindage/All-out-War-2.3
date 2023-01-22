@@ -317,6 +317,7 @@ function int CheckCrate (int c) {
 				return false;
 		return	!CheckInventory ("TimeGun") && // not if the player already has the time gun
 				!intHolder[i_SuddenDeath] && // Not in suddendeath
+				!CheckInventory ("IsMech") && // NO!
 				!CheckInventory ("IsStealth") && // this crate mess with player alpha and render mode
 				!CheckInventory ("PowerInvisibility");
 		}

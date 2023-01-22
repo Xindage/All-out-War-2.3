@@ -1043,7 +1043,7 @@ subby/fire			  dssubby
 $volume subby/fire 0.6
 $limit				  subby/fire 0
 weapons/SMGIN         SMGMAGIN
-weapons/SMGOOUT        SMGMAGOU
+weapons/SMGOUT        SMGMAGOU
 weapons/SMGSLAP        SMGBSLAP
 weapons/SMGSafty      SMGSAFTY
 weapons/SMGEmpty	  DSCLIP
