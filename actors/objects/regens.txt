@@ -10,6 +10,7 @@ actor Utility_GlobalMedicCacheRed {
 	damagefactor "Bullet", 0.5
 	damagefactor "Rifle", 0.5
 	damagefactor "Explosion", 0.75
+	Damagefactor "Plasma", 0.75
 	damagefactor "Fire", 0.6
 	damagefactor "Chemical", 0.75
 	damagefactor "Energy", 1.0

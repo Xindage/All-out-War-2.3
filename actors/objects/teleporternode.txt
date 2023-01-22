@@ -27,6 +27,7 @@ actor TeleporterNodeBlue {
 	damagefactor "MechExplosion", 2.5
 	damagefactor "Fire", 0.6
 	damagefactor "Chemical", 0.6
+	Damagefactor "Plasma", 1.10
 
 	states {
 	Spawn:

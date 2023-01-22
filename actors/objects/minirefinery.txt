@@ -44,6 +44,7 @@ actor Utility_MiniRefCacheRed {
 	DamageFactor "Deconstruction",	1.0
 	DamageFactor "Mechstomp", 0.0
 	DamageFactor "Monster", 0.0
+	Damagefactor "Plasma", 0.75
 	States {
 	Spawn:
 		MREF AA 0 Thing_ChangeTID(0,900)

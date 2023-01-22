@@ -1,11 +1,12 @@
 actor Utility_TurretBase {
-	damagefactor "Disarm", 0.0
-	damagefactor "Fist", 0.5
-	damagefactor "Mechstomp", 0.0
-	damagefactor "Explosion", 1.5
-	damagefactor "AntiArmor", 2.5
-	damagefactor "Fire", 0.6
-	damagefactor "Chemical", 0.6
+	DamageFactor "Disarm", 0.0
+	DamageFactor "Fist", 0.5
+	Damagefactor "Mechstomp", 0.0
+	Damagefactor "Explosion", 1.5
+	Damagefactor "AntiArmor", 2.5
+	Damagefactor "Plasma", 1.5
+	Damagefactor "Fire", 0.6
+	Damagefactor "Chemical", 0.6
 	DamageFactor "Knife", 1.5
 	painchance "Energy", 255
 	radius 24
