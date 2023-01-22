@@ -4,6 +4,7 @@ actor RazorWire {
 	+SHOOTABLE
 	+NOBLOOD
 	+NODAMAGETHRUST
+	+NOICEDEATH
 	Health 400
 	Radius 32
 	Height 32
@@ -16,6 +17,7 @@ actor RazorWire {
 	DamageFactor "Disarm", 0.0
 	DamageFactor "Mechstomp", 0.0
 	DamageFactor "Knife", 1.0
+	DamageFactor "Ice", 0.0
 	Tag "Razor wire (red)"
 	states {
 	Spawn:

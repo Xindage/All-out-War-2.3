@@ -12,6 +12,7 @@ actor CacheBase : SwitchableDecoration {
 	scale 0.65
 	mass 0x7FFFFFFF
 	damagefactor "Disarm", 0.0
+	DamageFactor "Ice", 0.0
 	tag "Cache"
 	states {
 	Spawn:

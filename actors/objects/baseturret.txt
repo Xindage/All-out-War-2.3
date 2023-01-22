@@ -8,6 +8,7 @@ actor Utility_TurretBase {
 	Damagefactor "Fire", 0.6
 	Damagefactor "Chemical", 0.6
 	DamageFactor "Knife", 1.5
+	DamageFactor "Ice", 0.0
 	painchance "Energy", 255
 	radius 24
 	height 56

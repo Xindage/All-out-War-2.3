@@ -22,6 +22,7 @@ actor Step 21150 {
 	damagefactor "Flash", 0.0
 	damagefactor "Fist", 0.1
 	DamageFactor "Knife", 1.0
+	DamageFactor "Ice", 0.0
 	tag "Step"
 	
 	states {
@@ -67,6 +68,7 @@ actor SandbagWall 21151 {
 	DamageFactor "Energy", 1.25
 	DamageFactor "Disarm", 0.0
 	DamageFactor "Knife", 1.0
+	DamageFactor "Ice", 0.0
 	Tag "Sandbag wall"
 	States {
 	Spawn:

@@ -5,6 +5,7 @@ actor Utility_GlobalMedicCacheRed {
 	+NOBLOOD +DONTGIB
 	+NOICEDEATH +NOGRAVITY
 	+ISMONSTER +QUICKTORETALIATE
+	+NOICEDEATH
 	DesignatedTeam 1
 	damagefactor "Fist", 0.2
 	damagefactor "Bullet", 0.5
@@ -21,6 +22,7 @@ actor Utility_GlobalMedicCacheRed {
 	damagefactor "MassDriver", 0.75
 	damagefactor "Mechstomp", 0.0
 	damagefactor "Monster", 0.0
+	DamageFactor "Ice", 0.1
 	radius 8
 	height 64
 	speed 100 // used for base hud!
