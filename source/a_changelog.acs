@@ -18,8 +18,8 @@ script 501 (void) net // clientside
 \cr- You gain less hp per rank. (zeta_rankmode 1)\n
 \cr- Mastodon stomp range was reworked.\n
 \cj- Firepower upgraded dont affect mines anymore.\n
-\cj- Wolverine pickup had its scale fixed.\n
 \cj- Mines does not explode on its own team while being disarmed.\n
+\cj- Wolverine pickup had its scale fixed.\n
 \cj- Menus now properly calculate the discount.\n
 \cj- Fixed crates duplicated announcers and improved them.\n
 \cj- New time warp crate comes to replace fatigue as bad crate.\n
@@ -28,6 +28,7 @@ script 501 (void) net // clientside
 \cj- Beacons being disarmed too fast with remover gun.\n
 \cj- Plasma cannon now cause energy based damage only.\n
 \cj- Plasma rifle causing wrong damage type.\n
+\cj- Ammo regens now properly regen karasawa and cryobow ammo.\n
 \ci- Added changelog in game.\n
 \ci- Ice type damage included.\n
 \ci- Zandronum bots can choose more classes.\n
