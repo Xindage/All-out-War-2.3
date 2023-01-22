@@ -24,7 +24,7 @@ actor AmmoPack : CustomInventory replaces Backpack {
 		TNT1 A 0 A_GiveInventory ("LaserChaingunAmmo", 25)
 		TNT1 A 0 A_GiveInventory ("PlasmaCannonAmmo", 1)
 		TNT1 A 0 A_GiveInventory ("ShotgunAmmo", 5)
-		TNT1 A 0 A_GiveInventory ("ChronoBolt", 3) // [TT] Changed chryo to chrono
+		TNT1 A 0 A_GiveInventory ("CryoBolt", 3)
 		TNT1 A 0 A_GiveInventory ("SniperAmmo", 4)
 		TNT1 A 0 A_GiveInventory ("GeneporiumCharge",25)
 		TNT1 A 0 A_GiveInventory ("TE21CalAmmo", 20)
@@ -61,7 +61,7 @@ actor AmmoPack : CustomInventory replaces Backpack {
 			TNT1 A 0 A_GiveInventory ("LaserChaingunAmmo", 25)
 			TNT1 A 0 A_GiveInventory ("PlasmaCannonAmmo", 1)
 			TNT1 A 0 A_GiveInventory ("ShotgunAmmo", 5)
-			TNT1 A 0 A_GiveInventory ("ChronoBolt", 3) // [TT] Changed chryo to chrono
+			TNT1 A 0 A_GiveInventory ("CryoBolt", 3)
 			TNT1 A 0 A_GiveInventory ("SniperAmmo", 4)
 			TNT1 A 0 A_GiveInventory ("GeneporiumCharge",25)
 			TNT1 A 0 A_GiveInventory ("TE21CalAmmo", 20)

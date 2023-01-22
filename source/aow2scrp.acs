@@ -483,8 +483,8 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine CLASS_PlasmaGunner			21	// 600
 #libdefine CLASS_LaserChaingunner		22	// 600
 #libdefine CLASS_KarasawaSoldier		23	// 800
-#libdefine CLASS_ChronoArcher			24	// 1000
-#libdefine CLASS_StealthAssassin		25	// 1200
+#libdefine CLASS_CryoArcher				24	// 900
+#libdefine CLASS_StealthAssassin		25	// 1000
 // Support
 #libdefine CLASS_Engineer				26	// Free
 #libdefine CLASS_Technician				27	// 200

@@ -3,19 +3,19 @@
 // [SG] Cryo Bow charges considerably faster, and its "Time" damage projectiles ignore armor.
 // However, the blast radius has been reduced somewhat, and the class moves 5% slower.
 
-actor ChronoBow : AOWWeapon {
+actor CryoBow : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
     Weapon.BobStyle Alpha
-	Weapon.AmmoType "ChronoBolt"
+	Weapon.AmmoType "CryoBolt"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 10
 	Weapon.SelectionOrder 1
 	Weapon.AmmoType2 "ChronoBowPower"
 	Weapon.AmmoUse2 0
 	Weapon.AmmoGive2 0
-	Inventory.PickupMessage "You got the chrono bow!"
+	Inventory.PickupMessage "You got the cryo bow!"
 	Weapon.UpSound "weapons/up/chrono"
 	Obituary "$OB_CHRONOBOW"
 	DropItem "CryoBow"

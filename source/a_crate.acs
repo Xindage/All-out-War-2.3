@@ -760,7 +760,7 @@ script 309 (int c)
 		CheckAndRemove ("CombustionAutorifle");
 		CheckAndRemove ("CombustionAutorifleWeak");
 		CheckAndRemove ("TimeGun");
-		CheckAndRemove ("ChronoBow");
+		CheckAndRemove ("CryoBow");
 		CheckAndRemove ("Quad Shotgun");
 		CheckAndRemove ("Nail-Machine Gun");
 		CheckAndRemove ("Lightsaber");

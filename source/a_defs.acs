@@ -86,7 +86,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},
 	{"Combustion Autorifle (weak)", "CombustionAutorifleWeak", "FA21CalAmmo", ""},
 	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperBolt", "SniperAmmo"},
-	{"Chrono Bow", "ChronoBow", "ChronoBolt", ""},
+	{"Cryo Bow", "CryoBow", "CryoBolt", ""},
 	{"Karasawa", "Karasawa", "KarasawaAmmo", "KarasawaBurst"},
 	{"Nail-Machine Gun", "Nail-Machine Gun", "Nails", "NailBombs"},
 	{"BFG 2704", "BFG 2704", "", ""},
@@ -145,7 +145,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 120, 0, 125}, //combustion autorifle
 	{1, 120, 0, 75}, //combustion autorifle (weak)
 	{1, 1, 40, 125}, //sniper rifle(weak)
-	{1, 25, 0, 300}, //chrono bow
+	{1, 25, 0, 300}, //cryo bow
 	{1, 40, 5, 125}, // karasawa. Resell value was $125
 	{1, 250, 4, 125}, // Nail MachineGun
 	{1, 0, 0, 500}, // BFG 20704
@@ -337,10 +337,10 @@ function void InitClasses (void) {
 		2, 1, 0,
 		ITEM_KARASAWA, ITEM_MACHINEGUN, 0, 0, 0, 0);
 
-	AddClass (CLASS_ChronoArcher, "Chrono Archer", 1000, 0.9, DEP_CENTRE,
+	AddClass (CLASS_CryoArcher, "Cryo Archer", 900, 0.85, DEP_CENTRE,
 		2, ARMOD_CRYO,
-		4, 2, CF_Warning|CF_CantPilot,
-		ITEM_CRYOBOW, ITEM_MACHINEGUN, 0, 0, 0, 0);
+		2, 1, CF_CantPilot,
+		ITEM_CRYOBOW, ITEM_SHOTGUN, 0, 0, 0, 0);
 		
 	AddClass (CLASS_StealthAssassin, "Stealth Assassin", 1000, 0.9, DEP_CENTRE,
 		-1, ARMOD_ENERGY,

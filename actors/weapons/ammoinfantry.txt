@@ -324,7 +324,7 @@ actor TimeGunAmmo : Ammo {
 	}
 }
 
-actor ChronoBolt : Ammo {
+actor CryoBolt : Ammo {
 	+IGNORESKILL
 	Inventory.Amount 2
 	Inventory.MaxAmount 25

@@ -11,7 +11,7 @@ setslot 3 Boomstick DoubleShotgun AutoShotgun "Quad Shotgun"
 setslot 4 SubMachineGun MachineGun GatlingGun JumpjetGatlingGun "Nail-Machine Gun"
 setslot 5 GrenadeLauncher MissileLauncher ArtilleryCannon MortarLauncher
 setslot 6 LaserChaingun GaussRifle ShockRifle PlasmaGun StealthLaserRifle Karasawa "StealthGaussRifle"
-setslot 7 UtilityGun ChronoBow TimeGun PlasmaCannon "BFG 2704"
+setslot 7 UtilityGun CryoBow TimeGun PlasmaCannon "BFG 2704"
 setslot 8 Flamer CombustionAutorifleWeak CombustionAutorifle ChemicalSprayer TiberiumAutorifleWeak TiberiumAutorifle
 
 // =============================================================================
