@@ -301,7 +301,7 @@ actor TitanShell {
 	height 10
 	Scale 0.85
 	speed 150
-	damage (60)
+	damage (30)
 	deathsound "80mm/explosion"
 	obituary "$OB_TITAN"
 	damagetype "MassDriver"
@@ -319,10 +319,9 @@ actor TitanShell {
 		TNT1 A 0 A_StopSound (CHAN_BODY)
 		TNT1 AA 0 A_SpawnItemEx ("FlameDecayStrong", random(-32,32), random(-32,32), 4)
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMainLarge")
-		TNT1 A 1 bright A_Explode(32,32,0)
-		TNT1 A 1 bright A_Explode(32,32,0)
-		TNT1 A 1 bright A_Explode(32,32,0)
-		TNT1 A 1 bright A_Explode(32,32,0)
+		TNT1 A 1 bright A_Explode(16,32,0)
+		TNT1 A 1 bright A_Explode(16,32,0)
+		TNT1 A 1 bright A_Explode(32,64,0)
 		TNT1 A 1 bright A_Explode(32,64,0)
 		TNT1 A 5 bright A_Explode(64,192,0)
 		stop
@@ -344,14 +343,14 @@ Actor TitanShellBlue : TitanShell
 
 Actor LongRangeTitanMissile : LongRangeMissile
  {
-	damage (20)
+	damage (15)
 	speed 25
 	DamageType "MassDriver"
  }
 
 Actor LongRangeTitanMissileBlue : LongRangeMissile
  {
-	damage (20)
+	damage (15)
 	speed 25
 	DamageType "MassDriver"
 	States

@@ -220,28 +220,28 @@ actor ChronoBolt1  : ChronoBoltBase {
 }
 actor ChronoBolt2 : ChronoBoltBase {
 	Speed 60
-	health 32
-	damage (32)
+	health 28
+	damage (28)
 }
 actor ChronoBolt3 : ChronoBoltBase {
 	Speed 90
-	health 44
-	damage (44)
+	health 36
+	damage (36)
 }
 actor ChronoBolt4 : ChronoBoltBase {
 	Speed 120
-	health 56
-	damage (56)
+	health 44
+	damage (44)
 }
 actor ChronoBolt5 : ChronoBoltBase {
 	Speed 150
-	health 68
-	damage (68)
+	health 52
+	damage (52)
 }
 actor ChronoBolt6 : ChronoBoltBase {
 	Speed 180
-	health 80
-	damage (80)
+	health 60
+	damage (60)
 }
 
 actor ChronoBoltFX {

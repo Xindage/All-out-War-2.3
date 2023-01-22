@@ -5,7 +5,7 @@ script 501 (void) net // clientside
     if (CheckInventory("ChangelogScreen") != 1) terminate;
     while (CheckInventory("ChangelogScreen") < 2)
     {
-            int Version = 230108; // YYMMDD
+            int Version = 230122; // YYMMDD
             HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
 \cq- Beacons can cause damage from outside buildings.\n
 \cq- Mechs plasma cannon resistence increased.\n
