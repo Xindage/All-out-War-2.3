@@ -49,6 +49,8 @@ script SC_DAMAGEOVERTIME (int type) {
 
 script "SC_DAMAGEICE" (void)
 {
+	// If player has ice resistence he should not be slowed.
+	if (CheckInventory ("CryoResistance")) terminate;
 	int frostvalue;
 	int maxHealth = GetSpawnHealth();
 	int currentHealth = GetHealth();
