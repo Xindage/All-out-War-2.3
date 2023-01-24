@@ -187,7 +187,9 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 	int wardistmult = 0;
 	int obedistmult = 0;
 	int repdistmult = 0;
-	int damage = 1250; // max 7500 at closest range
+	int damage = 1250;	// max 7500 at closest range with extra based on the building hit
+						// 20% for WAR and REf
+						// 10% for BAR and RES
 	int distances[6] = {256, 512, 768, 1024, 1280, 1536};
 	// BTOs are not used due it being unsupported by the CheckActorDistance function. (multiple tids)
 	if (superwt == 2)	// Nuke explosion.
@@ -205,10 +207,10 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
 		// Now damage the buildings multiplied by the distance.
-		Thing_Damage(TID_BARRACKS_BLUE,		damage * bardistmult, 0);
-		Thing_Damage(TID_REFINERY_BLUE,		damage * refdistmult, 0);
-		Thing_Damage(TID_RESCENTRE_BLUE,	damage * resdistmult, 0);
-		Thing_Damage(TID_FACTORY_BLUE,		damage * wardistmult, 0);
+		Thing_Damage(TID_BARRACKS_BLUE,		damage * bardistmult * 1.10, 0);
+		Thing_Damage(TID_REFINERY_BLUE,		damage * refdistmult * 1.20, 0);
+		Thing_Damage(TID_RESCENTRE_BLUE,	damage * resdistmult * 1.10, 0);
+		Thing_Damage(TID_FACTORY_BLUE,		damage * wardistmult * 1.20, 0);
 		Thing_Damage(TID_OBELISK_BLUE,		damage * obedistmult, 0);
 		Thing_Damage(TID_REPAIR_BLUE,		damage * repdistmult, 0);
 	}
@@ -227,10 +229,10 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
 		// Now damage the buildings multiplied by the distance.
-		Thing_Damage(TID_BARRACKS_RED,		damage * bardistmult, 0);
-		Thing_Damage(TID_REFINERY_RED,		damage * refdistmult, 0);
-		Thing_Damage(TID_RESCENTRE_RED,		damage * resdistmult, 0);
-		Thing_Damage(TID_FACTORY_RED,		damage * wardistmult, 0);
+		Thing_Damage(TID_BARRACKS_RED,		damage * bardistmult * 1.10, 0);
+		Thing_Damage(TID_REFINERY_RED,		damage * refdistmult * 1.20, 0);
+		Thing_Damage(TID_RESCENTRE_RED,		damage * resdistmult * 1.10, 0);
+		Thing_Damage(TID_FACTORY_RED,		damage * wardistmult * 1.20, 0);
 		Thing_Damage(TID_OBELISK_RED,		damage * obedistmult, 0);
 		Thing_Damage(TID_REPAIR_RED,		damage * repdistmult, 0);
 	}
