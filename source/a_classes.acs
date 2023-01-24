@@ -450,10 +450,15 @@ function int SetClass (int id, int scflags) {
 	if (id == CLASS_ARTILLERY)
 		GiveInventory ("IsArtillerySoldier", 1);
 
+	// Tag the shock trooper so it can shot electric balls
 	if (id == CLASS_ShockTrooper) {
 		ActivatorSound("misc/volt", 255);
 		GiveInventory ("IsShockTrooper", 1);
 		}
+
+	// Tag the cryo archer so it can load the bow faster
+	if (id == CLASS_CryoArcher)
+		GiveInventory ("IsCryoArcher", 1);
 
 	// Tag the karasawa soldier so he has extra fire modes
 	if (id == CLASS_KarasawaSoldier)

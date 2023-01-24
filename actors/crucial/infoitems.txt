@@ -35,6 +35,7 @@ actor IsMinigunner : Inventory {}
 actor IsRocketSoldier : Inventory {}
 actor IsDemoExpert : Inventory {}
 actor IsShockTrooper : Inventory {}
+actor IsCryoArcher : Inventory {}
 actor IsKarasawaSoldier : Inventory {}
 
 // [SP] This item is used to determine whether a util can build turrets in his base.
