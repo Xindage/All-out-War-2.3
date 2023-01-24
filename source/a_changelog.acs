@@ -13,7 +13,7 @@ script 501 (void) net // clientside
 \cq- Mine damage is not affected by armor type.\n
 \cq- C4 mines and grenades now does mine damage type.\n
 \cq- Terminals take exactly 3x damage from all sources in SD.\n
-\cq- Cryo archer (former chrono) cost less 100 and deals more damage.\n
+\cq- Cryo archer (former chrono) cost less 100.\n
 \cq- Credits per tib refined raised for the team.\n
 \cq- Titan weapons are now improved to be a demolisher mech.\n
 \cq- Team boost is kept when being promoted.\n
@@ -21,6 +21,7 @@ script 501 (void) net // clientside
 \cr- Mastodon stomp range was reworked.\n
 \cj- Firepower upgraded dont affect mines anymore.\n
 \cj- Mines does not explode on its own team while being disarmed.\n
+\cj- Madcat Wont hurt himself or team building anymore.\n
 \cj- Wolverine pickup had its scale fixed.\n
 \cj- Menus now properly calculate the discount.\n
 \cj- Fixed crates duplicated announcers and improved them.\n

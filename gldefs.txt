@@ -1151,21 +1151,26 @@ Color 1.0 1.0 1.0
 Size 150
 }
 
-/* [TT] Deprecated
-object ShockCannonBallRed
+Pointlight PPCBALLRED
 {
-	frame PPCX { light PPCBALL }
+Color 1.0 0.35 0.35
+Size 100
 }
 
-object ShockCannonBallBlue
+Pointlight PPCBALLBOOMRED
 {
-	frame PPCX { light PPCBALL }
+Color 1.0 0.35 0.35
+Size 150
 }
-*/
 
 object ShockCannonBallImpact
 {
 	frame PPCX { light PPCBALL }
+}
+
+object ShockCannonBallImpactRed
+{
+	frame PPCR { light PPCBALLRED }
 }
 
 flickerlight GizmoBlue
