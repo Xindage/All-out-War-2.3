@@ -17,7 +17,7 @@ actor CryoBow : AOWWeapon {
 	Weapon.AmmoGive2 0
 	Inventory.PickupMessage "You got the cryo bow!"
 	Weapon.UpSound "weapons/up/chrono"
-	Obituary "$OB_CHRONOBOW"
+	Obituary "$OB_CRYOBOW"
 	DropItem "CryoBow"
 	Tag "CryoBow"
 	States {
