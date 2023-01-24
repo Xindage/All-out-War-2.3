@@ -8,15 +8,17 @@ script 501 (void) net // clientside
             int Version = 230122; // YYMMDD
             HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
 \cq- Beacons can cause damage from outside buildings.\n
-\cq- Mechs plasma cannon resistence increased.\n
+\cq- Mechs plasma cannon resistance increased.\n
 \cq- Plasma cannon decay can disarm mines.\n
 \cq- Mine damage is not affected by armor type.\n
 \cq- C4 mines and grenades now does mine damage type.\n
-\cq- Terminals take exactly 3x damage from all sources in SD.\n
 \cq- Cryo archer (former chrono) cost less 100.\n
 \cq- Credits per tib refined raised for the team.\n
 \cq- Titan weapons are now improved to be a demolisher mech.\n
 \cq- Team boost is kept when being promoted.\n
+\cr- Cryo resistance is immune to ice slow.\n
+\cr- Ice share the same weakness as bullet.\n
+\cr- Ice and bullet do extra damage to each other.\n
 \cr- You gain less hp per rank. (zeta_rankmode 1)\n
 \cr- Mastodon stomp range was reworked.\n
 \cj- Firepower upgraded dont affect mines anymore.\n
