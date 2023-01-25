@@ -5,194 +5,46 @@ Author                  : Gaturra (discord: Gaturra#8745)
 Discord server          : https://discord.gg/mQpv5nHp
 
 Original Release date   : 2022/04/18 (v0.1)
-Version r221118 (2022/11/18)
-                          - Karasawa spread mode now affects primary fire too
-                          - Burning/chemical corpses move faster
-						  - Fire remains from projectiles now does more damage
-                          - Artillery cannon altfire deals more damage fire damage
-                          - Rebalanced price and health in some mechs
-                          - Added missile launcher altfire for rocket soldier and commando class
-						  - Added double shotgun altfire for the double shotgunner class
-                          - BFG 2704, Plasma cannon and Timegun can now be sold
-                          - Melee attack damage increased
-                          - Stealth trooper speed slighty decreased
-                          - Players drop its grenade on death if he's holding an active one.
-                          - Fixed: blue missiles from missile launcher doesnt have any lights
-						  - Fixed: unable to pickup frag/flashbang grenades after running out of ammo
-						  - Fixed: disarm crate doesnt remove frag/flashbang ammo
-						  - Fixed: getting damaged by laser/fire/chem removes flashbang blindness
-						  - Fixed: selling chainsaw doesnt give you back your fists
-						  - Fixed: artillery cannon pickup doesnt give ammo
-						  - Fixed: wrong radius damage on fire and chemical remains
-						  - Fixed: Mastodon alt-fire now dont blow up mines and remotes c4s.
-Version r221120 (2022/11/20)
-                          - Double shotgun changes were reverted (including removed altfire and switching before reloading)
-                          - Missile launcher altfire is now more user friendly
-                          - New buildings in Aow01 (Aow Zone)
-                          - 3D mode conversion alongside QOL changes in Aow08 (Floating city)
-                          - 3D mode conversion alongside changes by k4r4t3k4n4k4s on aow11 (Waste plant)
-                          - New map Aow26 (All out war)
-                          - Fixed: mechs max hp
-						  - Fixed: homing missiles vertical velocity
-						  - Fixed: Misc fixes Aow03 (Oasis)
-						  - Fixed: You can now refine in aow24 (Convulsion of the Nature)
-						  - Fixed: Misc Fix by goatsex on aow25 (Cross Fire)
-						  - Fixed: Restored lost music for aow17 18 and 19 (Mining site, Disk defrag and hell's march)
-Version r221127 (2022/11/27)
-                          - Machinegun altfire spread slighty decreased (from 3 to 2.5)
-						  - Experience required per rank has changed in the same way as AOW 2.1
-						  - Some rewards by rank have changed (submachinegun at 1500 exp, ehnahced selfheal at 400 and repairgun at the last rank)
-                          - Mastodon and lancer damage smoke no longer appears when they still have a lot of health
-                          - Chemical/fire decay damage decreased (from 12 to 8)
-                          - Jet tropper class now have gatling gun instead machinegun as main weapon
-                          - Texture fixes and improvements on AOW01, AOW15 and AOW26
-                          - Missile launcher altfire has been nerfed (less max turn angle and speed)
-                          - credit pickup sounds now differ from chat sounds
-                          - Fixed: double shotgun price reverted to 200
-						  - Fixed: desync on missile launcher homing missiles
-						  - Fixed: missile launcher crosshair visibility
-						  - Fixed: players getting 30k credits randomly
-Version r221203 (2022/12/03)
-                          - Handgun is back
-                          - Added stealth assassin class
-                          - Selfheal gets upgraded at officer and general ranks
-                          - Blood revolver is now automatically removed when no ammo left
-						  - Stealth weapons no longer needs to be selected in order to recharge stealth ammo
-						  - Stealth ammo is shown on hud instead as secondary ammo
-						  - Some rewards by rank have changed, submachinegun at 500 exp (SERGEANT), fast selfheal at 1500 exp (OFFICER) and repairgun at 4000 exp (LT COLONEL)
-						  - Several map changes.
-						  - Fixed: Grenade drop on death now happen in fire, chem and energy death. (no drop in time death intentional)
-						  - Fixed: Cant eject instant juggernaut as soon you active it (must wait).
-						  - Fixed: Timecop cannot be healed while boosting to prevent exploit.
-Version r221204 (2022/12/04)
-                          - Submachinegun and machinegun reload faster when having their respective class
-                          - Handgun and stealth pistol damage slighty decreased
-                          - Rifle grenades amount increased from 4 to 6
-						  - Rifle recoil is stronger when not having the class Rifleman
-                          - Stealth pistol magazine decreased from 16 to 12, damage slighty decreased
-						  - Stealh assassin class no longer uses bullet proof
-						  - Stealth sniper now uses a hitscan projectile
-						  - Machinegun altfire spread slighty decreased, delay increased
-						  - Fixed: wrong obituary on stealth sniper and stealth pistol
-						  - Fixed: Powerup crates now appear on automap
-						  - Fixed: homing missiles not able to hit enemies using crouch
-Version r221206 (2022/12/06)
-                          - Shock rifle altfire projectile damage radius decreased
-                          - Stealth sniper damage decreased (from 90 to 75)
-                          - Gatlinggun damage slighty decreased (from 6 to 5 as it was before)
-						  - Rifle random recoil removed
-						  - Fixed: wrong speed on chemical shot projectile
-						  - Fixed: chem/fire decay doing too much damage (now deals the same damage as before)
-						  - Fixed: missing gatling gun pickup sprite
-
-Version r221210 (2022/12/06)
-						  - Tiberium system was completely reworked from the ground
-                          - Shock rifle altfire projectile damage radius decreased
-                          - Reverted submachinegun and machinegun changes
-                          - Several map fixes
-
-Version r221219 (2022/12/19)
-                          - double shotgun altfire is back
-						  - stealth assassin now uses a gauss rifle instead of a sniper
-						  - rifle grenades are a bit faster when you have the class rifleman
-						  - because aow needs more crates, fatige and class swap crates are back
-                          - chronobow projectile damage decreased
-						  - missile launcher altfire projectile now only looks for enemies in a smaller range
-						  - mastodon missile speed decreased
-						  - map fixes for aow05 aow10 and aow12.
-                          - New map aow27 (Hoth)
-Version r221220 (2022/12/20)
-						  - double shotgun altfire spread slighty decreased
-						  - grenade launcher grenades damage radius reverted (exactly as it was before)
-						  - class swap crate removed (too good for aow)
-						  - Several extra mapfixes
-                          - Killing enemies inside your own base worth more xp and credits
-                          - Mapping: repair facility now has lines tags for MCT
-						  - Fixed: purple mines on space camp
-						  - Fixed: turrets and proxy mines not working sometimes
-						  - Fixed: stealth gauss laser not dealing damage
-						  - Fixed: chemsprayer deals double damage
-Version r221221 (2022/12/21)
-                          - Stealth gauss rifle damage slighty decreased (from 70 to 65)
-						  - Fixed: enhanced selfheal healing over 150 hp
-						  - Fixed: laser from stealth gauss auto aiming at actors
-Version r221222 (2022/12/22)
-                          - Proxy mines now use the same damagetype as frag grenades (exactly as in aow r2539)
-                          - Fixed: stuck after teleporting back to base in aow09 and aow26
-Version r221225 (2022/12/25)
-                          - Missile launcher altfire is a bit easier to use than before
-                          - Stealth gauss now has impact damage (only on walls), by barney the dinosaur
-                          - Chronobow damage increased (from 90 to 99)
-                          - New gravity crate was added
-                          - Cretes that give you weapons wont force you to switch
-                          - More mapfixes
-                          - Fixed: selfheal/grenades keybinds not working sometimes
-Version r221226 (2022/12/26)
-                          - Stealth handgun and machinegun damage slighty increased
-						  - Minor bugfixes in barney the dinosaur edits
-Version r221228 (2022/12/28)
-                          - Stealth gauss damage decrased (from 80 to 75), impact damage removed
-                          - Fixed: machinegun altfire using wrong ammo amount
-						  - Fixed: energy weapons make players disapear in death
-						  - Fixed: frame drops with the stealth gauss projectile
-Version r230107 (2023/01/07)
-                          - Rifle presision decreases when holding fire
-                          - Ammocaches now give the same ammo ammount as in aow 2.1
-                          - Karasawa can be switched quickly after using altfire
-                          - Lightsaber and melee attacks no longer use projectiles to deal damage
-                          - Submachinegun magazine capacity decreased, reload speed increased
-						  - Stealth gauss delay after fire takes a bit longer to charge
-                          - Bullet casings are slighty bigger
-                          - Fixed: lightsaber altfire doesnt reflects bullets
-						  - Fixed: missile launcher sounds are multiplied when using offensive keybinds
-						  - Fixed: double ammo on some ammo types (shotgun ammo, laser rifle ammo, smg ammo, machinegun ammo)
-Version r230121 (2023/01/21)
-                          - Timed C4 hitbox radius increased
-						  - Minigunner class now uses a different fire mode by barney the dinosaur
-                          - Missile launcher altfire missiles can be loaded/used individually (takes longer to load each missile)
-						  - Submachinegun and machinegun reload speed slighty increased
-						  - Submachinegun altfire accuracy increased (exactly as in aow r2539)
-						  * Ammo backpacks now give 30 machinegun/smg bullets instead 20
-						  * Machinegun and submachinegun damage increased, machinegun mag size decreased (from 45 to 30)
-						  * Handgun fire rate increased
-						  * Plasmarifle damage increased (from 15 to 25)
-						  * Fixed: hyperspeed bug related to timegun and disarm crate
-						  * Fixed: gatlingun altfire mode slows down even while using jetpack
-						  * Fixed: minor bug fixes related to missile launcher (again)
-Version r230122 (2023/01/22)
-						  - Beacons can cause damage from outside buildings.
-						  - Mechs plasma cannon resistence increased.
-						  - Plasma cannon decay can disarm mines.
-						  - Mine damage is not affected by armor type.
-						  - C4 mines and grenades now does mine damage type.
-						  - Terminals take exactly 3x damage from all sources in SD.
-						  - Cryo archer (former chrono) cost less 100 and deals more damage.
-						  - Credits per tib refined raised for the team.
-						  - Titan weapons are now improved to be a demolisher mech.
-						  - Team boost is kept when being promoted.
-						  - You gain less hp per rank. (zeta_rankmode 1)
-						  - Mastodon stomp range was reworked.
-						  - Firepower upgraded dont affect mines anymore.
-						  - Mines does not explode on its own team while being disarmed.
-						  - Wolverine pickup had its scale fixed.
-						  - Menus now properly calculate the discount.
-						  - Fixed crates duplicated announcers and improved them.
-						  - New time warp crate comes to replace fatigue as bad crate.
-						  - Harvesters cannot commit suicide with tiberium now.
-						  - Beacons being disarmed too fast with remover gun.
-						  - Plasma cannon now cause energy based damage only.
-						  - Plasma rifle causing wrong damage type.
-						  - Ammo regens now properly regen karasawa and cryobow ammo.
-						  - Adjusted grenade launcher firing when close to walls.
-						  - Added changelog in game.
-						  - Ice type damage included.
-						  - Zandronum bots can choose more classes.
-						  - Added debug map.
-						  - Moon gravity crate was completely reworked.
-						  - Mechs gravity was increased by 75%.
-						  - Burning corpses does not cause special type damage anymore.
-						  - StealthKnife damage type renamed to Knife.
-						  - aow23 (immortal kombat) Now have side alleys.
+For older changelogs please look out for old 2.3 releases or in the github website.
+Version r230124 (2023/01/24)
+					- Beacons can cause damage from outside buildings.
+					- Mechs plasma cannon resistance increased.
+					- Plasma cannon decay can disarm mines.
+					- Mine damage is not affected by armor type.
+					- C4 mines and grenades now does mine damage type.
+					- Cryo archer (former chrono) cost less 100.
+					- Cryo Bow is dropable.
+					- Credits per tib refined raised for the team.
+					- Titan weapons are now improved to be a demolisher mech.
+					- Team boost is kept when being promoted.
+					- Cryo resistance is immune to ice slow.
+					- Non class cryobow charge and reload slower.
+					- Cryo bow can hurt the user if you hit a wall too close.
+					- You gain less hp per rank. (zeta_rankmode 1)
+					- Mastodon stomp range was reworked.
+					- Firepower upgraded dont affect mines anymore.
+					- Mines does not explode on its own team while being disarmed.\
+					- Madcat Wont hurt himself or team building anymore.
+					- Wolverine pickup had its scale fixed.
+					- Menus now properly calculate the discount.
+					- Fixed crates duplicated announcers and improved them.
+					- New time warp crate comes to replace fatigue as bad crate.
+					- Harvesters cannot commit suicide with tiberium now.
+					- Beacons being disarmed too fast with remover gun.
+					- Plasma cannon now cause energy based damage only.
+					- Plasma rifle causing wrong damage type.
+					- Ammo regens now properly regen karasawa and cryobow ammo.
+					- Adjusted grenade launcher firing when close to walls.
+					- Added changelog in game.
+					- Ice type damage included.
+					- Ice armor weakness is only bullets.
+					- Zandronum bots can choose more classes.
+					- Added debug map.
+					- Moon gravity crate was completely reworked.
+					- Mechs gravity was increased by 75%.
+					- Burning corpses does not cause special type damage anymore.
+					- StealthKnife damage type renamed to Knife.
+					- aow23 (immortal kombat) Now have side alleys."
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *
@@ -232,6 +84,7 @@ Version r230122 (2023/01/22)
 							  - Artillery soldier     : faster reloading
 							  - Shock trooper         : altfire
 							  - Karasawa soldier      : extra altfire mode (reload key)
+							  - Cryo Archer           : Charge and reload the weapon faster
 							  - Stealth assassin      : can deal damage through walls
 							  - Demoliotion expert    : can deactivate remote c4 charges with the USE key
 							  - Tiberium autorifle    : better ammo capacity, 6 projectiles per altfire instead 4
