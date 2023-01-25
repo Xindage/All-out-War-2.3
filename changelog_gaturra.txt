@@ -23,7 +23,7 @@ Version r230124 (2023/01/24)
 					- You gain less hp per rank. (zeta_rankmode 1)
 					- Mastodon stomp range was reworked.
 					- Firepower upgraded dont affect mines anymore.
-					- Mines does not explode on its own team while being disarmed.\
+					- Mines does not explode on its own team while being disarmed.
 					- Madcat Wont hurt himself or team building anymore.
 					- Wolverine pickup had its scale fixed.
 					- Menus now properly calculate the discount.
@@ -44,7 +44,7 @@ Version r230124 (2023/01/24)
 					- Mechs gravity was increased by 75%.
 					- Burning corpses does not cause special type damage anymore.
 					- StealthKnife damage type renamed to Knife.
-					- aow23 (immortal kombat) Now have side alleys."
+					- aow23 (immortal kombat) Now have side alleys.
 
 ===========================================================================================================================================================
 * What is new about the tiberium system *
