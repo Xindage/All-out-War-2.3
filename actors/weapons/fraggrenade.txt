@@ -205,7 +205,7 @@ actor FragGrenadeThrown {
 	Scale 0.22
 	Gravity 0.6
 	BounceFactor 0.5
-	DamageType "Rifle"
+	DamageType "Mine"
 	States {
 	Spawn:
 		FRGX ABCDEFGHABB 5

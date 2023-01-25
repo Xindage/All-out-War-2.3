@@ -127,7 +127,7 @@ function void SetPlayerArmorGrade (int p, int n, int mod) {
 			GiveActorInventory (3800 + p, "BulletProof", 1);
 			break;
 		case ARMOD_CRYO:
-			GiveActorInventory (3800 + p, "PowerCryoResistance", 1);
+			GiveActorInventory (3800 + p, "CryoResistance", 1);
 			break;
 		}
 	}
@@ -288,7 +288,7 @@ script SC_SETAIARMORGRADE (int grade, int mod)
 				GiveInventory( "BulletProof", 1 );
 				break;
 			case ARMOD_CRYO:
-				GiveInventory( "PowerCryoResistance", 1 );
+				GiveInventory( "CryoResistance", 1 );
 				break;
 		}
     }

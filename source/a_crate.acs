@@ -117,7 +117,7 @@ function void CR_InitCrateList (void) {
 	
 	
 	AddCrateType (CRATE_ARMORUP,		"armor upgrade",		"F", 25, CRT_Armor,		(CRF_NoDeck),	""); // 0
-	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_ANNOUNCE_TO | CRF_NoDeck),	"Was blessed by");
+	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_NoDeck),	"");			// Custon announce type.
 	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0),	"");
 	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(0),	"");
@@ -358,13 +358,14 @@ script 309 (int c)
 		AddArmor (1);
 		break;
 
-	// Base Miracle. Warning Team.
+	// Base Miracle. Custom Warning
 	case CRATE_BASEMIRACLE:
 		AmbientSound ("powerup/base", 127);
 		
 		// These booleans are really necessary?
-		// TODO: Heal everything, inclusind portals.
+		// TODO: Heal everything, includind portals.
 		if (team == TEAM_RED) {
+			IntelMessage (strparam(s:("\cARed team: \c- was blessed with a \cDbase miracle\cJ!"), true);
 			if (GotBarracks[0])
 				SetActorHealth (201, GetActorSpawnHealth (201));
 			if (GotRefinery[0])
@@ -378,6 +379,7 @@ script 309 (int c)
 			if (GotRepair[0])
 				SetActorHealth (209, GetActorSpawnHealth (114));
 		} else if (team == TEAM_BLUE) {
+			IntelMessage (strparam(s:("\cNBlue team: \c- was blessed with a \cDbase miracle\cJ!"), true);
 			if (GotBarracks[1])
 				SetActorHealth (101, GetActorSpawnHealth (101));
 			if (GotRefinery[1])

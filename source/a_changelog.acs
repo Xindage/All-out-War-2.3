@@ -1,10 +1,11 @@
 // Clientside refuses to work properly...
-script 501 (void) net // clientside
+// Switched to a timed version, since it's less likely to cause issues.'
+script 501 (void) net clientside
 {
-    GiveInventory("ChangelogScreen", 1);
-    if (CheckInventory("ChangelogScreen") != 1) terminate;
-    while (CheckInventory("ChangelogScreen") < 2)
-    {
+//    GiveInventory("ChangelogScreen", 1);
+//    if (CheckInventory("ChangelogScreen") != 1) terminate;
+//    while (CheckInventory("ChangelogScreen") < 2)
+//    {
             int Version = 230124; // YYMMDD
             HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
 \cq- Beacons can cause damage from outside buildings.\n
@@ -18,9 +19,8 @@ script 501 (void) net // clientside
 \cq- Titan weapons are now improved to be a demolisher mech.\n
 \cq- Team boost is kept when being promoted.\n
 \cr- Cryo resistance is immune to ice slow.\n
-\cr- Ice share the same weakness as bullet.\n
-\cr- Ice and bullet do extra damage to each other.\n
 \cr- Non class cryobow charge and reload slower.\n
+\cr- Cryo bow can hurt the user if you hit a wall too close.\n
 \cr- You gain less hp per rank. (zeta_rankmode 1)\n
 \cr- Mastodon stomp range was reworked.\n
 \cj- Firepower upgraded dont affect mines anymore.\n
@@ -38,6 +38,7 @@ script 501 (void) net // clientside
 \cj- Adjusted grenade launcher firing when close to walls.\n
 \ci- Added changelog in game.\n
 \ci- Ice type damage included.\n
+\ci- Ice armor weakness is only bullets.\n
 \ci- Zandronum bots can choose more classes.\n
 \ci- Added debug map.\n
 \ci- Moon gravity crate was completely reworked.\n
@@ -45,10 +46,10 @@ script 501 (void) net // clientside
 \ci- Burning corpses does not cause special type damage anymore.\n
 \ci- StealthKnife damage type renamed to Knife.\n
 \cv- aow23 (immortal kombat) Now have side alleys."
-            ; HUDMSG_FADEOUT, 801, CR_WHITE, 0.5, 0.2, 1.0, 1.0);
-            delay(35);
-    }
-    Takeinventory("ChangelogScreen", 2);
+            ; HUDMSG_PLAIN, 801, CR_WHITE, 0.5, 0.2, 10.0);
+//            delay(35);
+//    }
+//    Takeinventory("ChangelogScreen", 2);
 }
 
 // Does not work!
