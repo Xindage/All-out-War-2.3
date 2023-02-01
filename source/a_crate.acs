@@ -365,7 +365,7 @@ script 309 (int c)
 		// These booleans are really necessary?
 		// TODO: Heal everything, includind portals.
 		if (team == TEAM_RED) {
-			IntelMessage (strparam(s:("\cARed team: \c- was blessed with a \cDbase miracle\cJ!"), true);
+			IntelMessage ("\cARed team: \c- was blessed with a \cDbase miracle\cJ!", true);
 			if (GotBarracks[0])
 				SetActorHealth (201, GetActorSpawnHealth (201));
 			if (GotRefinery[0])
@@ -379,7 +379,7 @@ script 309 (int c)
 			if (GotRepair[0])
 				SetActorHealth (209, GetActorSpawnHealth (114));
 		} else if (team == TEAM_BLUE) {
-			IntelMessage (strparam(s:("\cNBlue team: \c- was blessed with a \cDbase miracle\cJ!"), true);
+			IntelMessage ("\cNBlue team: \c- was blessed with a \cDbase miracle\cJ!", true);
 			if (GotBarracks[1])
 				SetActorHealth (101, GetActorSpawnHealth (101));
 			if (GotRefinery[1])

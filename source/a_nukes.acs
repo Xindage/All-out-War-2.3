@@ -207,12 +207,12 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
 		// Now damage the buildings multiplied by the distance.
-		Thing_Damage(TID_BARRACKS_BLUE,		damage * bardistmult * 1.10, 0);
-		Thing_Damage(TID_REFINERY_BLUE,		damage * refdistmult * 1.20, 0);
-		Thing_Damage(TID_RESCENTRE_BLUE,	damage * resdistmult * 1.10, 0);
-		Thing_Damage(TID_FACTORY_BLUE,		damage * wardistmult * 1.20, 0);
-		Thing_Damage(TID_OBELISK_BLUE,		damage * obedistmult, 0);
-		Thing_Damage(TID_REPAIR_BLUE,		damage * repdistmult, 0);
+		Thing_Damage(TID_BARRACKS_BLUE,		bardistmult * FixedMul (damage , 1.10), 0);
+		Thing_Damage(TID_REFINERY_BLUE,		refdistmult * FixedMul (damage , 1.20), 0);
+		Thing_Damage(TID_RESCENTRE_BLUE,	resdistmult * FixedMul (damage , 1.10), 0);
+		Thing_Damage(TID_FACTORY_BLUE,		wardistmult * FixedMul (damage , 1.20), 0);
+		Thing_Damage(TID_OBELISK_BLUE,		obedistmult * damage, 0);
+		Thing_Damage(TID_REPAIR_BLUE,		repdistmult * damage, 0);
 	}
 	if (superwt == 1)	// Ion explosion.
 	{
@@ -229,11 +229,11 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
 		// Now damage the buildings multiplied by the distance.
-		Thing_Damage(TID_BARRACKS_RED,		damage * bardistmult * 1.10, 0);
-		Thing_Damage(TID_REFINERY_RED,		damage * refdistmult * 1.20, 0);
-		Thing_Damage(TID_RESCENTRE_RED,		damage * resdistmult * 1.10, 0);
-		Thing_Damage(TID_FACTORY_RED,		damage * wardistmult * 1.20, 0);
-		Thing_Damage(TID_OBELISK_RED,		damage * obedistmult, 0);
-		Thing_Damage(TID_REPAIR_RED,		damage * repdistmult, 0);
+		Thing_Damage(TID_BARRACKS_RED,		bardistmult * FixedMul (damage , 1.10), 0);
+		Thing_Damage(TID_REFINERY_RED,		refdistmult * FixedMul (damage , 1.20), 0);
+		Thing_Damage(TID_RESCENTRE_RED,		resdistmult * FixedMul (damage , 1.10), 0);
+		Thing_Damage(TID_FACTORY_RED,		wardistmult * FixedMul (damage , 1.20), 0);
+		Thing_Damage(TID_OBELISK_RED,		obedistmult * damage, 0);
+		Thing_Damage(TID_REPAIR_RED,		repdistmult * damage, 0);
 	}
 }

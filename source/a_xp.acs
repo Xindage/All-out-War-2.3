@@ -174,9 +174,9 @@ script 91 (void) {
 	int finalhealth = newhealth + (15 * CheckInventory("hasTeamBoost"));
 	SetSpawnHealth (finalhealth);
 
-	if (oldhealth > finalhealth && GetHealth() < finalhealth) // Just give the bonus health instead full heal.
-		HealThing(5);
-//		SetHealth(finalhealth);
+	if (/*oldhealth > finalhealth &&*/ GetHealth() < finalhealth)
+//		HealThing(5);
+		SetHealth(finalhealth);
 	
 	if (!CheckInventory ("HasRankUpgrades"))
 	{	
