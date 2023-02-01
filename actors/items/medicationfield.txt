@@ -55,6 +55,7 @@ actor MedicationField {
 	+NOBLOOD
 	+NOCLIP
 	+ISMONSTER
+	+NOICEDEATH
 	Radius 16
 	Height 44
 	Health 150
@@ -63,6 +64,7 @@ actor MedicationField {
 	Obituary "$OB_HEALRAD"
 	DamageFactor "Disarm", 0.0
 	DamageFactor "Mechstomp", 0.0
+	DamageFactor "Ice", 0.0
 	States {
 	Spawn: 
 		HRAD ABCDE 6 // Unfold
