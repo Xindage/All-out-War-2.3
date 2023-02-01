@@ -1,0 +1,114 @@
+// Select sounds
+weapons/up/fragnade			weapup00
+weapons/up/flashbang		weapup00
+weapons/up/fists			weapup00
+weapons/up/remotec4			weapup00
+weapons/up/repair			weapup01
+weapons/up/pistol			weapup02
+weapons/up/shotgun			weapup03
+weapons/up/gatling			weapup04
+weapons/up/artil			weapup05
+weapons/up/rocket			weapup05
+weapons/up/plasmagun		weapup06
+weapons/up/karasawa			weapup06
+weapons/up/bfg				weapup07
+weapons/up/laserrifle		weapup08
+weapons/up/flamer			weapup09
+weapons/up/chem				weapup09
+weapons/up/sniper			weapup10
+weapons/up/revolver			weapup11
+weapons/up/chrono			weapup12
+weapons/up/laserchaingun	weapup13
+weapons/up/ssg				weapup14
+weapons/up/rifle			weapup15
+weapons/up/timegun			weapup16
+weapons/up/utilgun			weapup17
+weapons/up/machinegun		weapup18
+weapons/up/plasmacannon		weapup19
+weapons/up/gauss			weapup20
+weapons/up/smg				weapup21
+weapons/up/shockrifle		weapup22
+weapons/up/nadelauncher		weapup23
+weapons/up/tibrifle			weapup24
+weapons/up/combrifle		weapup24
+// Undefined ups
+Weapons/KnifeSelect	DSKNFEUP
+Bazooka/Select bazo_s
+Gauss/Select		gauss_s
+
+//____________________\\
+// ++Weapons sounds++ \\
+//--------------------\\
+
+// --Repair Guns--
+repairgun/fire		repairgn
+
+// --Unarmed--
+fist/wall			dspunchw
+fist/hit			dspunch
+weapons/gswing      dsswing
+
+$limit				fist/wall		0
+$limit				fist/hit		0
+
+// --EagerBeaver/Chainsaw--
+// NOT DEFINED!
+
+// Knife
+weapons/knifehit3		dsknhit3
+weapons/knifehit4		dsknhit4
+
+// --Lightsaber--
+ZSaber/key         ZSABKEY
+weapons/son        dssabreu
+weapons/sidle      dssabrei
+weapons/sshield    dssabshl
+weapons/sattack1   dssabfl1
+weapons/sattack2   dssabfl2
+weapons/sclashwall dssabhwl
+
+saberswing1 dssabf31
+saberswing2 dssabf32
+saberswing3 dssabf33
+saberswing4 dssabf34
+saberswing5 dssabf35
+$random weapons/sattack3 { saberswing1 saberswing2 saberswing3 saberswing4 saberswing5 }
+
+saberhtw1 dssabht1
+saberhtw2 dssabht2
+saberhtw3 dssabht3
+$random weapons/sclash { saberhtw1 saberhtw2 saberhtw3 }
+
+// --Grenades/flash--
+// Frag
+frag/pinpull		pinpull
+frag/throw			throw
+$random				Weapons/fragbounce {FragBounce1 FragBounce2 FragBounce3 FragBounce4 FragBounce5 FragBounce6}
+FragBounce1			FRAGBNC1
+FragBounce2			FRAGBNC2
+FragBounce3			FRAGBNC3
+FragBounce4			FRAGBNC4
+FragBounce5			FRAGBNC5
+FragBounce6			FRAGBNC6
+
+// Flash
+flash/flashthrow	flshthrw
+flash/flashbounce	flshbnce
+$random				flash/flash { flash/flash1 flash/flash2 flash/flash3 }
+flash/flash1		flshexp1
+flash/flash2		flshexp2
+flash/flash3		flshexp3
+
+
+
+
+
+// ds201's knife
+Weapons/KnifeSlash	DSKNIFED
+Weapons/KnifeSwing	DSKNIFE1
+
+// Shell casing
+$random weapons/shotgunshells {weapons/Shell1 weapons/Shell2 weapons/Shell3}
+weapons/shell1			     SHELLS1
+weapons/shell2			     SHELLS2
+weapons/shell3			     SHELLS3
