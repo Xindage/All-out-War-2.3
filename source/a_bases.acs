@@ -64,10 +64,12 @@ function void AwardBuildingDamage (int what, int team) {
 			Team_GivePoints (PlayerTeam (), points, false);
 		}
 		// Award his team with charges, unless if its sudden death.
-		if (intHolder[i_SuddenDeath]) terminate;
-		int charges = (damagescored / 2) >> 16;
-		if (RepairCharges[PlayerTeam()] + charges >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
-		else RepairCharges[PlayerTeam()] += charges;
+		if (!intHolder[i_SuddenDeath])
+		{
+			int charges = (damagescored / 2) >> 16;
+			if (RepairCharges[PlayerTeam()] + charges >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
+			else RepairCharges[PlayerTeam()] += charges;
+		}
 	}
 }
 
