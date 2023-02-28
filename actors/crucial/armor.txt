@@ -295,29 +295,29 @@ actor PowerSpawnInvulnerability : PowerInvulnerable {}
 actor SuddenDeathVulnerability : PermanentPowerup {Powerup.Type "SuddenDeathVulnerability"}
 actor PowerSuddenDeathVulnerability : PowerProtection {
 // It's a power protection so it does not change terminal original resistences.
-	DamageFactor "Fist",			4.0
-	DamageFactor "Knife",			4.0
-	DamageFactor "Bullet",			4.0
-	DamageFactor "Rifle",			4.0
-	DamageFactor "Explosion",		2.5
-	DamageFactor "MassDriver",		2.5
-	DamageFactor "AntiArmor",		2.5
-	DamageFactor "Mine",			4.0
-	DamageFactor "Fire",			4.0
-	DamageFactor "FireSpecial",		4.0
-	DamageFactor "Chemical",		4.0
-	DamageFactor "ChemicalSpecial",	4.0
-	DamageFactor "Energy",			4.0
-	DamageFactor "Plasma",			2.5
-	DamageFactor "EnergyDecay",		2.5
-	DamageFactor "Ice",				4.0
-	DamageFactor "Time",			4.0
-	DamageFactor "Suicide",         4.0
-	DamageFactor "Superweapon",		4.0
-	DamageFactor "Disarm",			4.0
-	DamageFactor "Deconstruction",	4.0
-	DamageFactor "Mechstomp",		4.0
-	DamageFactor "Monster",			4.0
+	DamageFactor "Fist",			2.0
+	DamageFactor "Knife",			2.0
+	DamageFactor "Bullet",			2.0
+	DamageFactor "Rifle",			2.0
+	DamageFactor "Explosion",		1.5
+	DamageFactor "MassDriver",		1.5
+	DamageFactor "AntiArmor",		1.5
+	DamageFactor "Mine",			2.0
+	DamageFactor "Fire",			2.0
+	DamageFactor "FireSpecial",		2.0
+	DamageFactor "Chemical",		2.0
+	DamageFactor "ChemicalSpecial",	2.0
+	DamageFactor "Energy",			2.0
+	DamageFactor "Plasma",			1.5
+	DamageFactor "EnergyDecay",		1.5
+	DamageFactor "Ice",				2.0
+	DamageFactor "Time",			2.0
+	DamageFactor "Suicide",         2.0
+	DamageFactor "Superweapon",		2.0
+	DamageFactor "Disarm",			2.0
+	DamageFactor "Deconstruction",	2.0
+	DamageFactor "Mechstomp",		2.0
+	DamageFactor "Monster",			2.0
 }
 // =============================================================================
 actor PowerGrade0DamagePower : PowerDamage {

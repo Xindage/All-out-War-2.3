@@ -41,9 +41,6 @@ int NumPlasmaCannons[3];
 // [SP] Time Cop tracking
 int NumTimeCops[2];
 
-// [JD] Karasawa tracking.
-int NumKarasawas[2];
-
 // [JD] Utility Guy tracking.
 int NumUtilityGuy[2];
 
@@ -52,13 +49,9 @@ bool Gravityonce;
 
 int RepairPadMechHPStore[MAXPLAYERS];
 
-int RepairAmounts[5] = {
-	0,
-	10,
-	14,
-	17,
-	20
-						};
+// Set the charges     {0 BLUE         , 1 RED          };
+int RepairCharges[2] = {BATTERY_CHARGES, BATTERY_CHARGES};
+int RepairAmounts[5] = {0, 10, 14, 17, 20};
 
 //bool GuidedMissile[MAXPLAYERS];
 
@@ -150,14 +143,10 @@ int Repairing_int[MAX_BUILDINGS * 2][MAXPLAYERS + 1];
 #define CONFIG_CREDITCAP				16	// Credit cap
 #define CONFIG_SANDBAGS					17	// Are sandbags allowed?
 #define CONFIG_LIGHTMECHS				18	// Light mechs only?
-#define CONFIG_MAXKARASAWAS				19 	// Max Karasawas per team.
-#define CONFIG_MAXUTILITYGUY			20
-/*#define CONFIG_ENHANCEDC4_BLUE			18	// Does blue team have enhanced C4?
-#define CONFIG_ENHANCEDC4_RED			19	// -- red*/
-// ----
+#define CONFIG_MAXUTILITYGUY			19
 // 2022/10/11 Xindage - CONFIG_3DBUILDINGS should be temporary until all maps get it by default
-#define CONFIG_3DBUILDINGS				21	// Buildings uses 3d sectors?
-#define MAX_CONFIG						22
+#define CONFIG_3DBUILDINGS				20	// Buildings uses 3d sectors?
+#define MAX_CONFIG						21
 int Config[MAX_CONFIG][2];
 
 // Snapshot stuff

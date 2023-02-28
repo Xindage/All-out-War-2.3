@@ -67,8 +67,13 @@ script 650 (int amount, int repairtype, int turret) {
 		if (repairtype != REPAIRTYPE_REPAIR)
 			terminate;
 		
-		// No repairing of main buildings in sudden death
+/*		// No repairing of main buildings in sudden death
 		if (intHolder[i_SuddenDeath] && tid < 900)
+			terminate;*/
+
+		// Cant repair with a empty battery if the target object is:
+		// Bar Ref Res War Obe
+		if (RepairCharges[team] < 10 && (what < 4 || what == 5))
 			terminate;
 		
 		if (!Repairing_int[what * 2][pn])
@@ -99,6 +104,17 @@ script 650 (int amount, int repairtype, int turret) {
 			newhp = GetSpawnHealth();
 		
 		SetHealth (newhp);
+		// Take the charges away when repairing main buildings
+		if (what < 4 || what == 5)
+			{
+			RepairCharges[team] -= RepairAmounts[numRepairers];
+			// Dont go negative please!
+			if (RepairCharges[team] < 1) RepairCharges[team] = 0;
+			}
+
+		// Debug
+		HudMessageBold(s: "Team id: ", d: team, s:" And the battery amount: ", d: RepairCharges[team];
+		HUDMSG_PLAIN, 1009, CR_WHITE, 0.5, 0.5, 1.0);
 		
 		// Save the current health.
 		RecordedBuildingHealths[what*2 + team] = GetHealth ();
@@ -267,4 +283,98 @@ script SC_RepairHUD (void) CLIENTSIDE {
 	SetFont ("SMALLFONT");
 	HudMessageBold (s:nc, n:0, s:"\n", s:c, d:hp, s:" / ", d:shp;
 		HUDMSG_FADEOUT, 2000, 0, 0.5, 0.4, 1.0, 0.5);
+}
+
+/*script SC_RepairHUD (void) CLIENTSIDE {
+	if (PlayerNumber() != intHolder[i_consoleplayer])
+		terminate;
+
+	int tid = ActivatorTID();
+	int origid = ActivatorTID ();
+	int myteam = PlayerTeam ();
+	str nc = cond (myteam == TEAM_BLUE, "\cH", "\cG");
+
+	// No target, break out.
+	if (tid == origid)
+		terminate;
+
+	int what = -1;
+	int tteam = -1;
+
+	for (int i = 0; i < MAX_BUILDINGS * 2; i++) {
+		if (tid == BaseTIDs[i]) {
+			what = i / 2;
+			tteam = i % 2;
+		}
+	}
+
+	if (what != -1 && tteam == myteam) {
+		// Target is a terminal, display its health
+		int shp = GetSpawnHealth ();
+		int hp = GetHealth ();
+		str c = FractionColor (hp, shp);
+		SetFont ("SMALLFONT");
+		HudMessageBold (s:nc, n:0, s:"\n", s:c, d:hp, s:" / ", d:shp;
+			HUDMSG_FADEOUT, 2000, 0, 0.5, 0.4, 1.0, 0.5);
+	}
+
+	else if (PlayerNumber() != -1 && PlayerTeam () == myteam) {
+		// Target is a player, display its health
+		int shp = GetSpawnHealth ();
+		int hp = GetHealth ();
+		str c = FractionColor (hp, shp);
+		SetFont ("SMALLFONT");
+		HudMessageBold (s:nc, n:0, s:"\n", s:c, d:hp, s:" / ", d:shp;
+			HUDMSG_FADEOUT, 2000, 0, 0.5, 0.4, 1.0, 0.5);
+	} else {
+		// Target is not a player or a terminal on the same team
+		terminate;
+	}
+}*/
+
+
+
+Script "SC_BatteryRegeneration" OPEN
+{
+	int bp;		// Blue Points
+	int btotal;	// Blue Total
+	int rp;		// Red Points
+	int rtotal;	// Red Total
+
+	While (!intHolder[i_SuddenDeath])
+	{
+		bp = 75;
+		rp = 75;
+		if (GotRepair[1]) bp += 25;
+		if (GotRepair[0]) rp += 25;
+		btotal = (16 /*GetCVAR("zeta_batteryregen")*/ * bp) / 100;
+		rtotal = (16 /*GetCVAR("zeta_batteryregen")*/ * rp) / 100;
+		if (RepairCharges[0] + btotal >= BATTERY_MAX) RepairCharges[0] = BATTERY_MAX;
+		else RepairCharges[0] += btotal;
+		if (RepairCharges[1] + rtotal >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
+		else RepairCharges[1] += rtotal;
+//		HudMessageBold(s: "rtotal ", d: rtotal, s:"\nbtotal ", d: btotal;
+//		HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
+		// Send the info to clientside hud.
+		int btc = RepairCharges[0];
+		int rtc = RepairCharges[1];
+		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
+		Delay (35 * 5);
+
+	}
+	While (intHolder[i_SuddenDeath])
+	{
+		// When sudden death start battery get drained instead of filled
+		// if(GetCVAR("zeta_batterydegeneration") == 0) terminate; // Server can set it off.
+		if (RepairCharges[0] - 320 <= 0) RepairCharges[0] = 0;
+		else RepairCharges[0] -= 320;
+		if (RepairCharges[1] - 320 <= 0) RepairCharges[1] = 0;
+		else RepairCharges[1] -= 320;
+		// terminate when both teams are empty
+		if (RepairCharges[0] < 1 && RepairCharges[1] < 1) terminate;
+		btc = RepairCharges[0];
+		rtc = RepairCharges[1];
+		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
+		delay(35 * 5); // Should be 1 per sec but that can rush the sync so much.
+	}
 }

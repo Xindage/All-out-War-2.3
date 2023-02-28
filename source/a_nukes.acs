@@ -206,6 +206,7 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		// is this working?
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
+		SetActivator(0, AAPTR_MASTER);
 		// Now damage the buildings multiplied by the distance.
 		Thing_Damage(TID_BARRACKS_BLUE,		bardistmult * FixedMul (damage , 1.10), 0);
 		Thing_Damage(TID_REFINERY_BLUE,		refdistmult * FixedMul (damage , 1.20), 0);
@@ -228,6 +229,7 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 		// is this working?
 		if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
+		SetActivator(0, AAPTR_MASTER);
 		// Now damage the buildings multiplied by the distance.
 		Thing_Damage(TID_BARRACKS_RED,		bardistmult * FixedMul (damage , 1.10), 0);
 		Thing_Damage(TID_REFINERY_RED,		refdistmult * FixedMul (damage , 1.20), 0);

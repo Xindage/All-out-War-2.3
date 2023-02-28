@@ -174,30 +174,6 @@ function void RecountTimeCops (void) {
 }
 // ============================================================================
 
-// ============================================================================
-// [JD] Refresh the Karasawa limit
-function void RecountKarasawas (void)
-{
-	NumKarasawas[0] = 0;
-	NumKarasawas[1] = 0;
-	
-	for (int i = 0; i < MAXPLAYERS; i++)
-	{
-		if (!PlayerInGame(i))
-			continue;
-		
-		if (CheckActorInventory(3800 + i, "Karasawa"))
-		{
-			if (GetPlayerInfo(i, PLAYERINFO_TEAM) == TEAM_RED)
-				NumKarasawas[0]++;
-			
-			else if (GetPlayerInfo(i, PLAYERINFO_TEAM) == TEAM_BLUE)
-				NumKarasawas[1]++;
-		}
-	}
-}
-// ============================================================================
-
 function void RecountUtilityGuy (void)
 {
 	NumUtilityGuy[0] = 0;

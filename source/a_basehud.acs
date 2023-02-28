@@ -15,8 +15,13 @@ function void CL_DisplayBuildingHud (void) {
 	// team base HUD a bit up or it will overlap with the red one
 	if (GetCVar ("vid_defheight") <= 400)
 		bluey = 0.36;
+
+	// Get batteries colors
+	str bb = FractionColor (RepairCharges[0], BATTERY_MAX);
+	str rb = FractionColor (RepairCharges[1], BATTERY_MAX);
 	
-	HudMessageBold (s:getBuildingColor (101), s:"Barracks\cc: ",
+	HudMessageBold (s:"Battery \cc[ ", s:bb, d:RepairCharges[0], s:" \cc]\n",
+		s:getBuildingColor (101), s:"Barracks\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (101)), d:GetActorSpeed (101), s:"\cc%\n",
 		s:getBuildingColor (103), s:"Refinery\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (103)), d:GetActorSpeed (103), s:"\cc%\n",
@@ -39,8 +44,10 @@ function void CL_DisplayBuildingHud (void) {
 		s:ColorCodeHealth(PortalHealth (TID_TELENODE_BLUE2)), d:PortalHealth (TID_TELENODE_BLUE2), s:"\cc%";
 		HUDMSG_PLAIN, 8850, CR_BLUE, 0.012, bluey, 0.0);
 	
+	// added extra 1 \n for battery slot.
 	HudMessageBold (
-		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:"Battery \cc[ ", s:rb, d:RepairCharges[1], s:" \cc]\n",
 		s:getBuildingColor (201), s:"Barracks\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (201)), d:GetActorSpeed (201), s:"\cc%\n",
 		s:getBuildingColor (203), s:"Refinery\cc: ",

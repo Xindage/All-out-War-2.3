@@ -36,31 +36,38 @@ function void AwardBuildingDamage (int what, int team) {
 	RecordedBuildingHealths[what*2 + team] = GetHealth ();
 	
 	SetActivatorToTarget (0); // target: building -> player
-	
-	// The amount of points given is dependant on the health of the victim building.
-	int damagescored = (lasthealth - health) << 16;
-	int ratio = SCORE_MAX_RATIO - FixedMul ((SCORE_MAX_RATIO - SCORE_MIN_RATIO), ((health<<16) / spawnhealth));
-	damagescored = FixedMul (damagescored, ratio);
-	int points;
-	
-	// Calculate points. Remainder goes to unawarded damage counter
-	if (damagescored >= 0) {
-		UnawardedDamage[PlayerNumber ()] += damagescored;
-		points = (UnawardedDamage[PlayerNumber ()] / SCORE_DENOMINATOR) >> 16;
-	}
-	
-	UnawardedDamage[PlayerNumber ()] = FixedMod (UnawardedDamage[PlayerNumber ()], SCORE_DENOMINATOR<<16);
-	
-	/*
-	print4f ("\cF%f \ch%f \cD%d \cG%f",
-		ratio, damagescored, points, UnawardedDamage[PlayerNumber ()]);
-	*/
-	
-	// Award the player
-	if (points > 0) {
-		AddExperience (points * 25);
-		GiveCredits (points * 60);
-		Team_GivePoints (PlayerTeam (), points, false);
+	// If player is attacking his own building via team damage dont give anything.
+	if (team != PlayerTeam())
+	{
+		// The amount of points given is dependant on the health of the victim building.
+		int damagescored = (lasthealth - health) << 16;
+		int ratio = SCORE_MAX_RATIO - FixedMul ((SCORE_MAX_RATIO - SCORE_MIN_RATIO), ((health<<16) / spawnhealth));
+		damagescored = FixedMul (damagescored, ratio);
+		int points;
+
+		// Calculate points. Remainder goes to unawarded damage counter
+		if (damagescored >= 0) {
+			UnawardedDamage[PlayerNumber ()] += damagescored;
+			points = (UnawardedDamage[PlayerNumber ()] / SCORE_DENOMINATOR) >> 16;
+		}
+
+		UnawardedDamage[PlayerNumber ()] = FixedMod (UnawardedDamage[PlayerNumber ()], SCORE_DENOMINATOR<<16);
+
+		/*
+		print4f ("\cF%f \ch%f \cD%d \cG%f",
+			ratio, damagescored, points, UnawardedDamage[PlayerNumber ()]);
+		*/
+		// Award the player
+		if (points > 0) {
+			AddExperience (points * 25);
+			GiveCredits (points * 60);
+			Team_GivePoints (PlayerTeam (), points, false);
+		}
+		// Award his team with charges, unless if its sudden death.
+		if (intHolder[i_SuddenDeath]) terminate;
+		int charges = (damagescored / 2) >> 16;
+		if (RepairCharges[PlayerTeam()] + charges >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
+		else RepairCharges[PlayerTeam()] += charges;
 	}
 }
 
