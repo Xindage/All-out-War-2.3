@@ -126,7 +126,6 @@ actor TitanWeapons : AOWWeapon {
 	Obituary "$OB_TITAN"
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	weapon.preferredskin "TitanMech"
 	States {
 	Ready:
 		MHUD C 1 A_WeaponReady

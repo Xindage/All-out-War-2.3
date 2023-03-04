@@ -341,7 +341,6 @@ script SC_SERVERSETTINGS OPEN
 	// [JD] Check to see if we use all the mechs or only the light ones.
 	SetConfig(CONFIG_LIGHTMECHS, ThingCountName("CONFIG_LightMechsOnly", 0));
 	SetConfig(CONFIG_MAXUTILITYGUY, GetCvar("zeta_maxutilityguy"));
-	SetConfig(CONFIG_MAXKARASAWAS, GetCvar("zeta_maxkarasawasperteam"));
 
 	// 2022/10/11 Xindage - Check if the map uses 3d buildings.
 	SetConfig(CONFIG_3DBUILDINGS, ThingCountName("CONFIG_buildingsIs3D", 0));

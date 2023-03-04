@@ -123,7 +123,6 @@ actor WolverineWeapons : AOWWeapon {
 	Obituary "%o was overwhelmed by %k's Wolverine."
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	weapon.preferredskin "WolverineMech"
 	States {
 	Ready:
 		MHUD A 1 A_WeaponReady

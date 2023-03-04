@@ -75,7 +75,7 @@ server	int		zeta_tickets				=		75;
 
 // [SP] Time (in minutes) before sudden death.
 // [Dusk] changed default to 45, -1 means immediate
-server	int		zeta_suddendeathtime		=		45;
+server	int		zeta_suddendeathtime		=		30;
 	
 // [Dusk] Sudden death degeneration
 server	int		zeta_degeneration			=		0;

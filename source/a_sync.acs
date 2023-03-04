@@ -23,7 +23,12 @@ function void SYNC_UpdateBuildingHealth (int what, int team) {
 	
 	// Calculate the percentage
 	int perc = 0;
-	
+
+	// Execute charges counts for both teams.
+	int btc = RepairCharges[0];
+	int rtc = RepairCharges[1];
+	ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
+
 	if (exists)
 		perc = GetActorHealth (tid) * 99 / GetActorSpawnHealth (tid) + 1;
 	
@@ -42,6 +47,19 @@ function void SYNC_UpdateBuildingHealth (int what, int team) {
 // [Dusk] Note: This script doubles as the updatehud CCMD
 script SC_CL_UPDATEHUD (void) NET CLIENTSIDE
 	UpdateHUD ();
+
+// Xindage update battery at clintside as well, similar to how tickets works.
+script SC_CL_SYNCCHARGES (int btc, int rtc) CLIENTSIDE {
+	// Tickets can't be negative
+	if (btc < 0) btc = 0;
+	if (rtc < 0) rtc = 0;
+
+	RepairCharges[0] = btc;
+	RepairCharges[1] = rtc;
+
+	// Update the HUD.
+	CL_DisplayBuildingHud ();
+}
 
 // ============================================================================
 // Configuration

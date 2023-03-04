@@ -86,6 +86,11 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define HP_PORTAL 3000
 
 // ============================================================================
+// Team battery, part of team Hud alongside with the buildings
+#define BATTERY_CHARGES 35000	// 35k worth of hp to be repaired seems fair?
+#define BATTERY_MAX 35000
+
+// ============================================================================
 // Building identifiers
 #define BUILDING_ALL -1
 #define BUILDING_BARRACKS 0
@@ -181,6 +186,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
+#libdefine SC_CL_SYNCCHARGES			890
 
 // ------------------------------------
 // 9** scripts
@@ -758,7 +764,7 @@ global int 63:deathtoll;
 #include "a_donate.acs"
 #include "a_hud.acs"
 #include "a_jetpack.acs"
-#include "a_karasawa.acs"
+// #include "a_karasawa.acs"
 #include "a_mechs.acs"
 #include "a_menu.acs"
 #include "a_menu_util.acs"

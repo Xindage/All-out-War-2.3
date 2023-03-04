@@ -158,7 +158,6 @@ actor JuggernautWeapons : AOWWeapon {
 	obituary "$OB_JUGGERNAUT" // %o was ground to bits by %k's Juggernaut MKII.
 	weapon.selectionorder 1
 	weapon.kickback 150
-	Weapon.PreferredSkin "Juggernaut"
 	states {
 	Ready:
 		MHUD A 0 A_StopSound (CHAN_WEAPON)

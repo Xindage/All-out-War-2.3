@@ -266,7 +266,6 @@ function int SetClass (int id, int scflags) {
 		
 		ACS_ExecuteAlways (97, 0);
 		RecountTimeCops ();
-		RecountKarasawas();
 		RecountUtilityGuy();
 		return true;
 	}

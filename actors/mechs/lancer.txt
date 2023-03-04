@@ -175,7 +175,6 @@ actor LancerWeapons : AOWWeapon {
 	Obituary "%o was destroyed by %k's Lancer."
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	weapon.preferredskin "LancerMech"
 	States {
 	Ready:
 		MHUD A 1 A_WeaponReady
