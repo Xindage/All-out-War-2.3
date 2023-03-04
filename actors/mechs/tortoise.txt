@@ -127,7 +127,6 @@ actor TortoiseWeapons : AOWWeapon {
 	Weapon.AmmoType2 "Tortoise-GrenadeAmmo"
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	Weapon.PreferredSkin "Tortoise"
 	states {
 	Ready:
 		MHUD A 1 A_WeaponReady
@@ -212,7 +211,6 @@ Actor tortoiseImpactGrenadesDelay : PowerDamage
 	Obituary "$OB_TORTOISE"
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	Weapon.PreferredSkin "Tortoise"
 	states {
 	Ready:
 		MHUD A 1 A_WeaponReady
@@ -264,7 +262,6 @@ Actor tortoiseImpactGrenadesDelay : PowerDamage
 	Obituary "$OB_TORTOISE"
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	Weapon.PreferredSkin "Tortoise"
 	states {
 	Ready:
 		MHUD A 1 A_WeaponReady

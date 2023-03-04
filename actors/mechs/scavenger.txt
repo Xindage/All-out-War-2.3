@@ -223,7 +223,6 @@ actor ScavengerWeapons : AOWWeapon {
 	obituary "%o couldn't stop %k's Scavenger."
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	weapon.preferredskin "Scavenger"
 	states {
 	Ready:
 		MHUD A 1 A_WeaponReady

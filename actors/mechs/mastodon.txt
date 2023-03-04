@@ -208,7 +208,6 @@ actor MastodonSwitch2 : PermanentPowerup {Powerup.Type "Mastodon2"}
 	-NOAUTOAIM
 	+WEAPON.CHEATNOTWEAPON
 	+WEAPON.DONTBOB
-	Weapon.Preferredskin "MastodonMech"
 	Weapon.AmmoType "DonRocketAmmo"
 	Weapon.AmmoType2 "DonFireAmmo"
 	States
