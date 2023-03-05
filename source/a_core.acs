@@ -491,7 +491,7 @@ script SC_CL_PLAYERENTER ENTER CLIENTSIDE {
 		// This is running a beta version
 		HudMessage (s:"This is a beta release, bear in mind that\n",
 			s:"everything might not be working properly!\n\n",
-			s:"If you do experience bugs/glitches be sure to contact Gaturra";
+			s:"If you do experience bugs/glitches be sure to contact Xindage";
 			HUDMSG_FADEINOUT|HUDMSG_LOG, IntroMsgID+1, CR_GOLD, 0.5, y, 7.0, 0.5, 1.0);
 		y += 0.25;
 	}
