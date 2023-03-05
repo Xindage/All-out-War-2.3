@@ -1021,8 +1021,8 @@ Script "CRATE_TimeCopWarp" (void)
 {
 	int x;
 	int team = PlayerTeam ();
-	//PlaySound (0, "plasmacannon/fire");
-	AmbientSound ("plasmacannon/fire", 127);
+	PlaySound (0, "plasmacannon/fire");
+	//AmbientSound ("plasmacannon/fire", 127);
 	delay (28);
 	// A_ZoomFactor(0.700)
 	PlaySound (0, "misc/timewarp");

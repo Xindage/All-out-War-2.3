@@ -44,8 +44,8 @@ script SC_SuddenDeath (void) {
 	// Big notice
 	SetFont ("BIGFONT");
 	str message = (GetCVar ("zeta_ticketmode")) ?
-	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!" :
-	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nEvery death counts!";
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nEvery death counts!" :
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!";
 
 	HudMessageBold (s:message; HUDMSG_FADEOUT, 15001, CR_YELLOW, INTEL_XPOS, 0.25, 7.0, 1.0);
 	

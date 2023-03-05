@@ -111,10 +111,10 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // Thing IDs
 // TODO: move these to 1000+ range
 // (100 200) team | 10 Btos | X building
-#define TID_BARRACKS_BLUE		100		//1101
-#define TID_BARBTOS_BLUE		101		//1111
-#define TID_BARRACKS_RED		200		//1201
-#define TID_BARBTOS_RED			201		//1211
+#define TID_BARRACKS_BLUE		101		//1101
+#define TID_BARBTOS_BLUE		100		//1111
+#define TID_BARRACKS_RED		201		//1201
+#define TID_BARBTOS_RED			200		//1211
 #define TID_REFINERY_BLUE		103		//1102
 #define TID_REFBTOS_BLUE		102		//1112
 #define TID_REFINERY_RED		203		//1202
