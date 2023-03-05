@@ -2,7 +2,7 @@
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
 Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/mQpv5nHp
+Discord server          : https://discord.gg/Y36tp5D8
 
 Original Release date   : 2022/04/18 (v0.1)
 For older changelogs please look out for old 2.3 releases or in the github website.
