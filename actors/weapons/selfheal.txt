@@ -106,3 +106,14 @@ actor SpentSyringe {
 Actor selfHealCoolDownItem : Inventory { Inventory.MaxAmount 1 }
 actor FastSelfHeal : Inventory {}
 actor EnhancedSelfHeal : Inventory {}
+
+actor adrenalineshoot: PowerupGiver
+{
+	inventory.maxamount 0
+	powerup.type "pumpup"
+	powerup.duration 35
+	+AUTOACTIVATE
+}
+
+actor pumpup : PowerSpeed
+{speed 1.15 +POWERSPEED.NOTRAIL}

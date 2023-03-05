@@ -213,7 +213,7 @@ script SC_SelfHealHealth (void) {
 	//HealThing (SELFHEALHEALTH / 2);
 
 	// [Gaturra] with enhancedselfheal you get 50 instantly.
-	if (CheckInventory ("EnhancedSelfheal")) {
+/*	if (CheckInventory ("EnhancedSelfheal")) {
 	    SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH));
 	    if (GetHealth() >= GetSpawnHealth())
 	    {
@@ -221,10 +221,13 @@ script SC_SelfHealHealth (void) {
 		    terminate;
 	    }
 		terminate;
-	}
+	}*/
 
 	// [JD] Had to rewrite this because Self Heal wouldn't work passed 100 HP.
 	SetActorProperty(0, APROP_HEALTH, GetHealth() + (SELFHEALHEALTH / 2));
+	// [Xindage] Changed the instant health by extra speed on injection for 1 second.
+	// TODO: Allow this syringe to kill part of the frost bite effect.
+	if (CheckInventory ("EnhancedSelfheal")) GiveInventory ("adrenalineshoot", 1);
 	if (GetHealth() >= GetSpawnHealth())
 	{
 		SetActorProperty(0, APROP_HEALTH, GetSpawnHealth());

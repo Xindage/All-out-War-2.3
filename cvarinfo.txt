@@ -11,7 +11,7 @@ server	int		zeta_debug			=		0;
 ////////////////////////////
 // Core game configuration
 ////////////////////////////
-server	int		zeta_rankmode				=		0;
+server	int		zeta_rankmode				=		1;  // Gain less hp per rank up.
 
 server	int		zeta_tournamentode			=		0;
 
