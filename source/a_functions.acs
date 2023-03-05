@@ -204,7 +204,7 @@ function void RecountPlasma (void) {
 // This sets tickets to given values, and ends the game if ticket
 // loss is detected.
 function void TakeTickets (int team, int count) {
-	if (!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool])
+	if ((!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool]) || !GetCVar ("zeta_ticketmode"))
 		return;
 	
 	int delta;
@@ -236,7 +236,7 @@ function void TakeTickets (int team, int count) {
 // ============================================================================
 function void SetTickets (int team, int count) {
 	// Don't set tickets if they are not used.
-	if (!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool])
+	if ((!intHolder[i_SuddenDeath] && !intHolder[i_TicketPool]) || !GetCVar ("zeta_ticketmode"))
 		return;
 	
 	Tickets[team] = count;

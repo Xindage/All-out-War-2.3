@@ -45,7 +45,7 @@ script SC_GAMEINIT OPEN {
 	}
 	
 	// If we have ticket pool active, set the initial tickets now.
-	if (intHolder[i_TicketPool]) {
+	if (intHolder[i_TicketPool] || GetCVar ("zeta_ticketmode")) {
 		SetTickets (TEAM_Blue, GetCVAR ("zeta_tickets"));
 		SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
 	}
