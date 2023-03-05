@@ -16,6 +16,7 @@ script 501 (void) net clientside
 \cq- Battery regenerate slowly.\n
 \cq- Anything aside the five main buildings cost no energy to repair.\n
 \cr- Losing repair facility decreases the amount battery regeneration.\n
+\cr- Frostbite effect duration decreased.\n
 \cr- You cant repair the main buildings whitout having charges.\n
 \cr- Battery lost its charges faster during sudden death.\n
 \ci- Lives were removed in sudden death.\n
