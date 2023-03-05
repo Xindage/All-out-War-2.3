@@ -106,7 +106,8 @@ actor TerminalExplosion {
 
 actor BarracksTerminalBlue : BaseTerminalBlue 21100 {
 	Tag "Blue Barracks Terminal"
-	Health 18000
+//	Health 18000
+	Health 20000
 	States {
 	Spawn:
 		TNT1 A 0
@@ -140,7 +141,8 @@ actor RefineryTerminalBlue : BaseTerminalBlue 21102 {
 
 actor PowerPlantTerminalBlue : BaseTerminalBlue 21103 {
 	Tag "Blue Research Centre Terminal"
-	Health 18000
+//	Health 18000
+	Health 20000
 	States {
 	Spawn:
 		TNT1 A 0
@@ -174,7 +176,8 @@ actor WarFactoryTerminalBlue : BaseTerminalBlue 21104 {
 
 actor ObeliskTerminalBlue : BaseTerminalBlue 21111 {
 	Tag "Blue Obelisk Terminal"
-	Health 13500
+//	Health 13500
+	Health 17500
 	States {
 	Spawn:
 		TNT1 A 0
@@ -194,7 +197,8 @@ actor ObeliskTerminalBlue : BaseTerminalBlue 21111 {
 
 actor BarracksTerminalRed : BaseTerminal 21105 {
 	Tag "Red Barracks Terminal"
-	Health 18000
+	Health 20000
+//	Health 18000
 	States {
 	Spawn:
 		TNT1 A 0
@@ -228,7 +232,8 @@ actor RefineryTerminalRed : BaseTerminal 21106 {
 
 actor PowerPlantTerminalRed : BaseTerminal 21107 {
 	Tag "Red Research Centre Terminal"
-	Health 18000
+	Health 20000
+//	Health 18000
 	States {
 	Spawn:
 		TNT1 A 0
@@ -262,7 +267,8 @@ actor WarFactoryTerminalRed : BaseTerminal 21108 {
 
 actor ObeliskTerminalRed : BaseTerminal 21112 {
 	Tag "Red Obelisk Terminal"
-	Health 13500
+	Health 17500
+//	Health 13500
 	States {
 	Spawn:
 		TNT1 A 0

@@ -79,6 +79,11 @@ script SC_SuddenDeath (void) {
 		}
 	}
 	
+	int HP_BARRACKS = 18000;
+	int HP_REFINERY = 27000;
+	int HP_PLANT = 18000;
+	int HP_FACTORY = 27000;
+	int HP_OBELISK = 13500;
 	int ticker = 0;
 	int i;
 	while (1) {

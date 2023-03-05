@@ -73,8 +73,10 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define HM_4TICS 7489 // (4/35) << 16
 #define HM_5TICS 9362 // (5/35) << 16
 
+// [Xindage] seems like that these definitions are ONLY used by degeneration code
 // ============================================================================
 // Building healths.. should use spawn healths instead of 
+/*
 #define HP_BARRACKS 18000
 #define HP_REFINERY 27000
 #define HP_PLANT 18000
@@ -83,12 +85,12 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define HP_OBELISK 13500
 #define HP_MINIREF 5850
 #define HP_REGENS 9000
-#define HP_PORTAL 3000
+#define HP_PORTAL 3000*/
 
 // ============================================================================
 // Team battery, part of team Hud alongside with the buildings
-#define BATTERY_CHARGES 35000	// 35k worth of hp to be repaired seems fair?
-#define BATTERY_MAX 35000
+#define BATTERY_CHARGES 50000
+#define BATTERY_MAX 50000
 
 // ============================================================================
 // Building identifiers
