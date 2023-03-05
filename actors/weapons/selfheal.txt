@@ -115,5 +115,5 @@ actor adrenalineshoot: PowerupGiver
 	+AUTOACTIVATE
 }
 
-actor pumpup : PowerSpeed
+actor powerpumpup : PowerSpeed
 {speed 1.15 +POWERSPEED.NOTRAIL}
