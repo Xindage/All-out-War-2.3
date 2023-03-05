@@ -3,7 +3,7 @@
 actor frostbite1 : PowerupGiver {
 	inventory.maxamount 0
 	powerup.type "FreezeSlow1"
-	powerup.duration 35
+	powerup.duration 20
 	+AUTOACTIVATE
 }
 
