@@ -188,6 +188,12 @@ script SC_CCMD_SELLWEAPON (void) NET {
 		GenericError ("You can't sell a mech!");
 		terminate;
 	}
+
+	// Can't sell timecop while in use.'
+	if (CheckInventory ("IsTeleporting") || CheckInventory ("PowerTimeGunSpeed")) {
+		GenericError ("A superior force prevent you of doing that!");
+		terminate;
+}
 	
 	// Try find the meta index of the weapon
 	for (int id = 1; id < MAX_ITEMS; id++)
