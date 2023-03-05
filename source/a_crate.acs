@@ -594,7 +594,7 @@ script 309 (int c)
 		// [Dusk] Set the activator to world first. A player cannot damage his own buildings
 		// now that buildings are team-designated. Also store his team first for the check below.
 		SetActivator (-1);
-		
+		int charges = 14000;
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
 		if (team == TEAM_RED) {
@@ -604,6 +604,8 @@ script 309 (int c)
 			Thing_Damage(205,4000,0);
 			Thing_Damage(207,4000,0);
 			Thing_Damage(214,2500,0);
+			if (RepairCharges[1] + charges >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
+			else RepairCharges[1] += charges;
 		} else {
 			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
 			Thing_Damage(101,4000,0);
@@ -611,6 +613,8 @@ script 309 (int c)
 			Thing_Damage(105,4000,0);
 			Thing_Damage(107,4000,0);
 			Thing_Damage(114,2500,0);
+			if (RepairCharges[0] + charges >= BATTERY_MAX) RepairCharges[0] = BATTERY_MAX;
+			else RepairCharges[0] += charges;
 		}
 		
 		// Update the building healths to clients

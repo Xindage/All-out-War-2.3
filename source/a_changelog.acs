@@ -11,9 +11,10 @@ script 501 (void) net clientside
 \ci- Battery reapair system introduced as experimental feature.\n
 \cq- Buildings take only double damage during sudden death instead of quad.\n
 \cq- Nukes had its damage increased when when used outside.\n
-\cq- Barrack, Rescearch Centre and Obelisk had their health increased.\n
+\cq- Barracks, Rescearch Centre and Obelisk had their health increased.\n
 \cq- Charge for battery is gained by attacking buildings.\n
 \cq- Battery regenerate slowly.\n
+\cq- Base crasher return few charges to the affected team.\n
 \cq- Anything aside the five main buildings cost no energy to repair.\n
 \cr- Losing repair facility decreases the amount battery regeneration.\n
 \cr- Frostbite effect duration decreased.\n
