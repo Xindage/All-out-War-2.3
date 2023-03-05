@@ -5,6 +5,7 @@ actor frostbite1 : PowerupGiver {
 	powerup.type "FreezeSlow1"
 	powerup.duration 20
 	+AUTOACTIVATE
+	+POWERSPEED.NOTRAIL
 }
 
 actor frostbite2 : frostbite1 {powerup.type "FreezeSlow2"}
