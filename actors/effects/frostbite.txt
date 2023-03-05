@@ -5,7 +5,6 @@ actor frostbite1 : PowerupGiver {
 	powerup.type "FreezeSlow1"
 	powerup.duration 20
 	+AUTOACTIVATE
-	+POWERSPEED.NOTRAIL
 }
 
 actor frostbite2 : frostbite1 {powerup.type "FreezeSlow2"}
@@ -17,15 +16,15 @@ actor frostbite7 : frostbite1 {powerup.type "FreezeSlow7"}
 actor frostbite8 : frostbite1 {powerup.type "FreezeSlow8"}
 actor frostbite9 : frostbite1 {powerup.type "FreezeSlow9"}
 
-actor PowerFreezeSlow1 : PowerSpeed {speed 0.9}
-actor PowerFreezeSlow2 : PowerSpeed {speed 0.8}
-actor PowerFreezeSlow3 : PowerSpeed {speed 0.7}
-actor PowerFreezeSlow4 : PowerSpeed {speed 0.6}
-actor PowerFreezeSlow5 : PowerSpeed {speed 0.5}
-actor PowerFreezeSlow6 : PowerSpeed {speed 0.4}
-actor PowerFreezeSlow7 : PowerSpeed {speed 0.3}
-actor PowerFreezeSlow8 : PowerSpeed {speed 0.2}
-actor PowerFreezeSlow9 : PowerSpeed {speed 0.1}
+actor PowerFreezeSlow1 : PowerSpeed {speed 0.9 +POWERSPEED.NOTRAIL}
+actor PowerFreezeSlow2 : PowerFreezeSlow1 {speed 0.8}
+actor PowerFreezeSlow3 : PowerFreezeSlow1 {speed 0.7}
+actor PowerFreezeSlow4 : PowerFreezeSlow1 {speed 0.6}
+actor PowerFreezeSlow5 : PowerFreezeSlow1 {speed 0.5}
+actor PowerFreezeSlow6 : PowerFreezeSlow1 {speed 0.4}
+actor PowerFreezeSlow7 : PowerFreezeSlow1 {speed 0.3}
+actor PowerFreezeSlow8 : PowerFreezeSlow1 {speed 0.2}
+actor PowerFreezeSlow9 : PowerFreezeSlow1 {speed 0.1}
 
 // This item should prevent the script overlapping each other.
 actor IsFrosted : Inventory {Inventory.MaxAmount 1}
