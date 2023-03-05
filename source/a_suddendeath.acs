@@ -10,103 +10,48 @@
 
 script SC_SuddenDeathCounter OPEN
 {
-	delay (35); // second before start.
-
 	int timeUntilSuddenDeath;
-	while (Timer() < GetCVAR ("zeta_suddendeathtime") * MINUTETICS) {
-	timeUntilSuddenDeath = GetCVAR ("zeta_suddendeathtime") * MINUTETICS - Timer();
-
-	if (timeUntilSuddenDeath == 5 * MINUTETICS) {
-		// Print message to all players at 5 minutes before sudden death
-		IntelMessage ("Sudden death will begin in \cg5 \c-minutes!", true);
-	}
-	else if (timeUntilSuddenDeath == MINUTETICS) {
-		// Print message to all players at 1 minute before sudden death
-		IntelMessage ("Sudden death will begin in \cg1 \c-minutes!", true);
-	}
-		else if (timeUntilSuddenDeath < 6 * 35)
-	{
-		// Play eva sounds every second for the last 6 seconds before sudden death
-		for (int i = 5; i > 0; i--)
-		{
-			AmbientSound (strparam (s:"eva/", d:i, s:"sec"), 127);
-			delay (35);
-		}
-	}
-		delay (35);
-	}
-
-  ACS_Execute (SC_SUDDENDEATH, 0);
-}
-
-/*script SC_SuddenDeathCounter OPEN {
-	delay (5);
-
+	delay (35); // second before start.
 	while (Timer() < GetCVAR ("zeta_suddendeathtime") * MINUTETICS)
+	{
+		timeUntilSuddenDeath = GetCVAR ("zeta_suddendeathtime") * MINUTETICS - Timer();
+		if (timeUntilSuddenDeath == 5 * MINUTETICS) {
+			// Print message to all players at 5 minutes before sudden death
+			IntelMessage ("Sudden death will begin in \cg5 \c-minutes!", true);
+		}
+		else if (timeUntilSuddenDeath == MINUTETICS) {
+			// Print message to all players at 1 minute before sudden death
+			IntelMessage ("Sudden death will begin in \cg1 \c-minutes!", true);
+		}
 		delay (35);
-
+	}
 	ACS_Execute (SC_SUDDENDEATH, 0);
-}*/
+}
 
 script SC_SuddenDeath (void) {
 	SetActivator (-1);
 	intHolder[i_SuddenDeath] = true;
-	
-	GiveActorInventory (100, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (101, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (102, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (103, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (104, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (105, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (106, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (107, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (108, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (114, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (115, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (200, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (201, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (202, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (203, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (204, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (205, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (206, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (207, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (208, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (214, "SuddenDeathVulnerability", 1);
-	GiveActorInventory (215, "SuddenDeathVulnerability", 1);
-	if (Timer() > 5*35 + 10) {
-		if (random (0, 1))
-			SetMusic ("razor-ub");
-		else
-			SetMusic ("razorub2");
-	}
-	
+	str mus = random (0, 1) ? "razor-ub" : "razorub2";
+	SetMusic (mus);
+	Log (s:"=== Sudden Death begins ===");
+	// Give Vulnerability to all main buildings and its BTOs.
+	for (int i = 0; i < 20; i++) {GiveActorInventory(SDVulnerabilityArray[i], "SuddenDeathVulnerability", 1);}
 	// [Dusk] Allow maps to take action on sudden death
 	CallEvent (ACTION_SUDDENDEATH, 0);
-	
-	Log (s:"=== Sudden Death begins ===");
-	
 	// If not in tournament mode, give everybody beacons
-	if (!intHolder[i_TournamentMode])
-		GiveToAll ("BeaconItem", 1);
+	if (!intHolder[i_TournamentMode]) GiveToAll ("BeaconItem", 1);
 	
 	// Big notice
 	SetFont ("BIGFONT");
-	if (!intHolder[i_TicketPool])
-	{
-		HudMessageBold (s:"\cgSUDDEN DEATH!\n\nNo more repairs can be done\nEvery death counts!";
-			HUDMSG_FADEOUT, 15001, CR_YELLOW,
-			INTEL_XPOS, 0.25, 7.0, 1.0);
+	str message = (GetCVar = ("zeta_ticketmode")) ?
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!" :
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nEvery death counts!";
+
+	HudMessageBold (s:message; HUDMSG_FADEOUT, 15001, CR_YELLOW, INTEL_XPOS, 0.25, 7.0, 1.0);
 	}
 	
-	else
-	{
-		HudMessageBold (s:"\cgSUDDEN DEATH!\n\nNo more repairs can be done!";
-			HUDMSG_FADEOUT, 15001, CR_YELLOW,
-			INTEL_XPOS, 0.25, 7.0, 1.0);
-	}
-	
-	// Begin degeneration if its set
+	// [Xindage] We really need it now?
+	// Begin degeneration if its set.
 	int degeneration = GetCVar ("zeta_degeneration");
 	if (degeneration) {
 		SetFont("BIGFONT");
@@ -115,20 +60,24 @@ script SC_SuddenDeath (void) {
 			INTEL_XPOS, 0.45, 7.0, 1.0);
 	}
 	
-	// If ticket pool was not active in regular play, activate it now
-	if (!intHolder[i_TicketPool]) {
-		SetTickets (TEAM_BLUE, GetCVAR ("zeta_tickets"));
-		SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
-	}
-	
-	// [JD] If Either team's tickets are above 75 when SD hits, set them to 75.
-	else
+	if (GetCVar = ("zeta_ticketmode")) // Check if ticket mode is on.
 	{
-		if (Tickets[TEAM_BLUE] > 75)
-			SetTickets(TEAM_BLUE, 75);
-		
-		if (Tickets[TEAM_RED] > 75)
-			SetTickets(TEAM_RED, 75);
+		// If ticket pool was not active in regular play, activate it now
+		if (!intHolder[i_TicketPool]) {
+			SetTickets (TEAM_BLUE, GetCVAR ("zeta_tickets"));
+			SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
+		}
+
+		// [Xindage] This should check for the zeta_tickets to know the actual ticket amount, why it's abitrary?
+		// [JD] If Either team's tickets are above 75 when SD hits, set them to 75.
+		else
+		{
+			if (Tickets[TEAM_BLUE] > 75)
+				SetTickets(TEAM_BLUE, 75);
+
+			if (Tickets[TEAM_RED] > 75)
+				SetTickets(TEAM_RED, 75);
+		}
 	}
 	
 	int ticker = 0;
