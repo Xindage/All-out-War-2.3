@@ -21,7 +21,12 @@ if [ "$COMPILE_ONLY" = true ]; then
   echo "Cleaning old code data only."
   rm OUTPUT/aow2.3_code_r*
 
-  acc source/aow2scrp.acs acs/aow2scrp.o
+  # Compile the acs.
+  if ! acc source/aow2scrp.acs acs/aow2scrp.o; then
+      echo "ACS compilation failed!"
+      exit 1
+  fi
+  echo "ACS source was compiled successfully!"
   zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt keyconf.txt changelog_gaturra.txt gldefs.txt language.txt loadacs.txt teaminfo.txt acs/* source/* actors/* credits/*
 
 else
@@ -36,7 +41,10 @@ zip -Ar0 OUTPUT/aow2.3_data_r$vardate.pk3 animdefs.txt colormap.dat dbigfont.lmp
 # Here is compressed all the actors and acs from the source into the file.
 echo "Generating code package."
 # Compile the acs.
-acc source/aow2scrp.acs acs/aow2scrp.o
+if ! acc source/aow2scrp.acs acs/aow2scrp.o; then
+    echo "ACS compilation failed!"
+    exit 1
+fi
 echo "ACS source was compiled successfully!"
 zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt keyconf.txt changelog_gaturra.txt gldefs.txt language.txt loadacs.txt teaminfo.txt acs/* source/* actors/* credits/*
 

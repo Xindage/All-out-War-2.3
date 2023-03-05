@@ -35,7 +35,7 @@ script SC_SuddenDeath (void) {
 	SetMusic (mus);
 	Log (s:"=== Sudden Death begins ===");
 	// Give Vulnerability to all main buildings and its BTOs.
-	for (int i = 0; i < 20; i++) {GiveActorInventory(SDVulnerabilityArray[i], "SuddenDeathVulnerability", 1);}
+	for (int x = 0; x < 20; x++) {GiveActorInventory(SDVulnerabilityArray[x], "SuddenDeathVulnerability", 1);}
 	// [Dusk] Allow maps to take action on sudden death
 	CallEvent (ACTION_SUDDENDEATH, 0);
 	// If not in tournament mode, give everybody beacons
@@ -43,12 +43,11 @@ script SC_SuddenDeath (void) {
 	
 	// Big notice
 	SetFont ("BIGFONT");
-	str message = (GetCVar = ("zeta_ticketmode")) ?
+	str message = (GetCVar ("zeta_ticketmode")) ?
 	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!" :
 	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nEvery death counts!";
 
 	HudMessageBold (s:message; HUDMSG_FADEOUT, 15001, CR_YELLOW, INTEL_XPOS, 0.25, 7.0, 1.0);
-	}
 	
 	// [Xindage] We really need it now?
 	// Begin degeneration if its set.
@@ -60,7 +59,7 @@ script SC_SuddenDeath (void) {
 			INTEL_XPOS, 0.45, 7.0, 1.0);
 	}
 	
-	if (GetCVar = ("zeta_ticketmode")) // Check if ticket mode is on.
+	if (GetCVar ("zeta_ticketmode")) // Check if ticket mode is on.
 	{
 		// If ticket pool was not active in regular play, activate it now
 		if (!intHolder[i_TicketPool]) {
