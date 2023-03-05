@@ -10,6 +10,7 @@ script 501 (void) net clientside
             HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
 \ci- Battery reapair system introduced as experimental feature.\n
 \cq- Buildings take only double damage during sudden death instead of quad.\n
+\cq- Nukes had its damage increased when when used outside.\n
 \cq- Barrack, Rescearch Centre and Obelisk had their health increased.\n
 \cq- Charge for battery is gained by attacking buildings.\n
 \cq- Battery regenerate slowly.\n
