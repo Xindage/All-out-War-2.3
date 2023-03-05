@@ -213,7 +213,7 @@ script 823 (int check, int team) {
 	SetResultValue (0);
 	int tid = GetTargetInfo (TARGETINFO_TID);
 	
-	if (intHolder[i_SuddenDeath] && tid < 900) {
+/*	if (intHolder[i_SuddenDeath] && tid < 900) {
 		// It's sudden death. We can't repair here, so
 		// transform into a klaxon turret instead!
 		// SetActorState (0, "NoLongerMrNiceGuy");
@@ -223,7 +223,7 @@ script 823 (int check, int team) {
 		// that it should replace itself.
 		GiveInventory ("SDReplace", 1);
 		terminate;
-	}
+	}*/
 	
 	// Find terminal info
 	int what = -1;
@@ -247,6 +247,9 @@ script 823 (int check, int team) {
 		SetResultValue (1);
 		terminate;
 	}
+
+	if (RepairCharges[team] < 10 && (what < 4 || what == 5))
+		terminate;
 	
 	// Heal the terminal
 	int hp = GetActorHealth (tid);
@@ -254,6 +257,14 @@ script 823 (int check, int team) {
 	if (hp >= GetActorSpawnHealth (tid)) terminate;
 	if (newhp >= GetActorSpawnHealth (tid)) newhp = GetActorSpawnHealth(tid);
 	SetActorHealth (tid, newhp);
+
+	// Take the charges away when repairing main buildings
+	if (what < 4 || what == 5)
+		{
+		RepairCharges[team] -= RepairAmounts[1];
+		// Dont go negative please!
+		if (RepairCharges[team] < 1) RepairCharges[team] = 0;
+		}
 	
 	// Update the building health to the clients
 	SYNC_UpdateBuildingHealth (what, tteam);
