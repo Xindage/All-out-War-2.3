@@ -63,6 +63,8 @@ actor BaseTerminal {
 	Pain:
 		goto Spawn
 	Death:
+		goto MainDeath
+	MainDeath:
 		TNT1 A 5 A_Scream
 		TNT1 A 5 A_Scream
 		TNT1 A 0 bright A_PlayWeaponSound("weapons/rocklx")
@@ -104,6 +106,7 @@ actor TerminalExplosion {
 	}
 }
 
+// [Xindage] Thing_SetSpecial is limited to do its use with the new a_bases.acs code, now the acs is call upon death.
 actor BarracksTerminalBlue : BaseTerminalBlue 21100 {
 	Tag "Blue Barracks Terminal"
 //	Health 18000
@@ -111,14 +114,16 @@ actor BarracksTerminalBlue : BaseTerminalBlue 21100 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 101)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 101, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_BARRACKS_BLUE)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_BARRACKS, TEAM_BLUE)
-		TNT1 A 0 ACS_Execute(97,0,1,1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_BARRACKS, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_BARRACKS, TEAM_BLUE)
 		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_BARRACKS, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
@@ -126,16 +131,18 @@ actor RefineryTerminalBlue : BaseTerminalBlue 21102 {
 	Tag "Blue Refinery Terminal"
 	Health 27000
 	States {
-	Spawn:
+		Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 103)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 102, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_REFINERY_BLUE)
 		goto SpawnDone
 	Pain:
-		TNT1 A 0 
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_REFINERY, TEAM_BLUE)
-		TNT1 A 0 ACS_Execute(97,0,2,1)
-		goto Idle
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_REFINERY, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_REFINERY, TEAM_BLUE)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_REFINERY, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
@@ -146,14 +153,16 @@ actor PowerPlantTerminalBlue : BaseTerminalBlue 21103 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 105)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 103, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_RESCENTRE_BLUE)
 		goto SpawnDone
 	Pain:
-		TNT1 A 0 
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_RESCENTRE, TEAM_BLUE)
-		TNT1 A 0 ACS_Execute(97,0,3,1)
-		goto Idle
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_RESCENTRE, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_RESCENTRE, TEAM_BLUE)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_RESCENTRE, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
@@ -163,14 +172,16 @@ actor WarFactoryTerminalBlue : BaseTerminalBlue 21104 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 107)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 104, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_FACTORY_BLUE)
 		goto SpawnDone
 	Pain:
-		TNT1 A 0 
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_FACTORY, TEAM_BLUE)
-		TNT1 A 0 ACS_Execute(97,0,4,1)
-		goto Idle
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_FACTORY, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_FACTORY, TEAM_BLUE)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_FACTORY, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
@@ -181,17 +192,16 @@ actor ObeliskTerminalBlue : BaseTerminalBlue 21111 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 114)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 114, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_OBELISK_BLUE)
 		goto SpawnDone
-	Pain.Chemical:
-	Pain.Fire:
-		goto Pain+1
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_OBELISK, TEAM_BLUE)
-		TNT1 A 0 ACS_Execute(97,0,6,1)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_OBELISK, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_OBELISK, TEAM_BLUE)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_OBELISK, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
@@ -202,14 +212,16 @@ actor BarracksTerminalRed : BaseTerminal 21105 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 201)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 201, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_BARRACKS_RED)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_BARRACKS, TEAM_RED)
-		TNT1 A 0 ACS_Execute(97, 0, 1)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_BARRACKS, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_BARRACKS, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_BARRACKS, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -219,14 +231,16 @@ actor RefineryTerminalRed : BaseTerminal 21106 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 203)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 202, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_REFINERY_RED)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_REFINERY, TEAM_RED)
-		TNT1 A 0 ACS_Execute (97, 0, 2)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_REFINERY, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_REFINERY, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_REFINERY, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -237,14 +251,16 @@ actor PowerPlantTerminalRed : BaseTerminal 21107 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 205)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 203, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_RESCENTRE_RED)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_RESCENTRE, TEAM_RED)
-		TNT1 A 0 ACS_Execute (97, 0, 3)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_RESCENTRE, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_RESCENTRE, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_RESCENTRE, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -252,16 +268,18 @@ actor WarFactoryTerminalRed : BaseTerminal 21108 {
 	Tag "Red War Factory Terminal"
 	Health 27000
 	States {
-	Spawn:
+		Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 207)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 204, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_FACTORY_RED)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_FACTORY, TEAM_RED)
-		TNT1 A 0 ACS_Execute(97, 0, 4)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_FACTORY, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_FACTORY, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_FACTORY, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -272,14 +290,16 @@ actor ObeliskTerminalRed : BaseTerminal 21112 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 214)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 214, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_OBELISK_RED)
 		goto SpawnDone
 	Pain:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_OBELISK, TEAM_RED)
-		TNT1 A 0 ACS_Execute(97,0,6,0)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_OBELISK, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_OBELISK, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_OBELISK, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -294,13 +314,16 @@ actor RepairTerminalRed : BaseTerminal 21110 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 209)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 205, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_REPAIR_RED)
 		goto SpawnDone
 	Pain:
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_REPAIR, TEAM_RED)
-		TNT1 A 0 
-		goto Idle
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_REPAIR, TEAM_RED)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_REPAIR, TEAM_RED)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_REPAIR, TEAM_RED)
+		goto MainDeath
 	}
 }
 
@@ -314,13 +337,16 @@ actor RepairTerminalBlue : BaseTerminalBlue 21109 {
 	States {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 Thing_ChangeTID (0, 109)
-		TNT1 A 0 Thing_SetSpecial (0, 80, 105, 0, 0)
+		TNT1 A 0 Thing_ChangeTID (0, TID_REPAIR_BLUE)
 		goto SpawnDone
 	Pain:
-		TNT1 A 0 ACS_ExecuteAlways (930, 0, BUILDING_REPAIR, TEAM_BLUE)
 		TNT1 A 0
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_REPAIR, TEAM_BLUE)
+		TNT1 A 0 ACS_Execute (SC_STRUCTUREPAIN, 0, BUILDING_REPAIR, TEAM_BLUE)
+		goto Spawn
+	Death:
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREFALL, 0, BUILDING_REPAIR, TEAM_BLUE)
+		goto MainDeath
 	}
 }
 
