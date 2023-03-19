@@ -22,10 +22,10 @@ script SC_BUILDINGDAMAGE (void) {
 #define SCORE_MAX_RATIO 1.5
 #define SCORE_DENOMINATOR 450
 function void AwardBuildingDamage (int what, int team) {
-	int tid = BaseTIDs[what*2 + team];
+	int tid = MainTIDs[team][what];
 	SetActivator (tid);
 	
-	int lasthealth = RecordedBuildingHealths[what*2 + team];
+	int lasthealth = RecordedBuildingHealths[team][what]
 	int health = GetHealth ();
 	int spawnhealth = GetSpawnHealth ();
 	
@@ -33,7 +33,7 @@ function void AwardBuildingDamage (int what, int team) {
 		health = 0;
 	
 	// Save the current health now.
-	RecordedBuildingHealths[what*2 + team] = GetHealth ();
+	RecordedBuildingHealths[team][what] = GetHealth ();
 	
 	SetActivatorToTarget (0); // target: building -> player
 	// If player is attacking his own building via team damage dont give anything.
@@ -73,8 +73,186 @@ function void AwardBuildingDamage (int what, int team) {
 	}
 }
 
-// [SG] Building deaths now award tickets to the opposite team
+// [Xindage] Merge all the buiding death in a single script.
+script "SC_structurefall" (int team, int what, int silent)
+{
+	str name;
+	switch (what) {
+		case 0:
+			GotBarracks[team] = false;
+			name = "Barracks";
+			CallEvent (ACTION_DESTROY_BARRACKS, TEAM_BLUE);
+			break;
+		case 1:
+			GotRefinery[team] = false;
+			name = "Refinery";
+			CallEvent (ACTION_DESTROY_REFINERY, TEAM_BLUE);
+			break;
+		case 2:
+			GotPlant[team] = false;
+			name = "Research Centre";
+			CallEvent (ACTION_DESTROY_PLANT, TEAM_BLUE);
+			break;
+		case 3:
+			GotFactory[team] = false;
+			name = "War Factory";
+			CallEvent (ACTION_DESTROY_FACTORY, TEAM_BLUE);
+			break;
+		case 4:
+			GotRepair[team] = false;
+			name = "Repair Facility";
+			CallEvent (ACTION_DESTROY_REPAIR, team);
+			break;
+		case 5:
+			GotObelisk[team] = false;
+			name = "Obelisk";
+			CallEvent (ACTION_DESTROY_OBELISK, team);
+			break;
+		default:
+			// TODO: Add error handler.
+			break;
+        }
+	if (what == 5)	// Repair faility only.
+	{
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team() + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
+	}
+	else // All others
+	{
+		SetFont("BIGFONT");
+		HudMessageBold(s:"The ", s:TeamColors[team() + 2], s:TeamNames[team], s:" ", s:name, s:" \cd has been destroyed!!";
+		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
+		ACS_ExecuteAlways(99, 0, team);
+	}
+	Log(n:0, s:" destroys "	s:TeamNames[team], s:" " s:name, s:".");
+	Thing_Destroy				(MainTIDs[team][what],0);
+	Thing_Destroy				(BTOsTIDs[team][what],0);
+	AwardBuildingDestruction	(team, false);
+	AwardBuildingDamage			(what, team);
+	SYNC_UpdateBuildingHealth	(what, team);
+	delay(12); // Give some time before deleting those.
+	Thing_Remove				(MainTIDs[team][what],0);
+	Thing_Remove				(BTOsTIDs[team][what],0);
+}
 
+// Just to help handling the "events"
+script "SC_SFSpecial" (int team, int what)
+{
+	// [Xindage] Having to support legacy mode is a p-
+	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS))
+	{
+		// 0 - 5 is Blue team, 6 and higher is Red.
+		int legacynum = team ? 6 : 0;
+		int legwhat = legacynum + what;
+		switch (legwhat)
+		{
+			case 0:
+				SetLineTexture(1,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(1,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (1);
+				break;
+			case 1:
+				SetLineTexture(5,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(5,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (5);
+				break;
+			case 2:
+				SetLineTexture(7,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(3,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
+				SetLineTexture(7,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(3,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
+				ReddenSector (7);
+				break;
+			case 3:
+				SetLineTexture(9,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(9,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (9);
+				ReddenSector (10);
+				break;
+			case 4:
+				ReddenSector (13);
+				ReddenSector (14);
+				break;
+			case 5:
+				ReddenSector (19);
+				SetLineTexture(11,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(11,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				break;
+			case 6:
+				SetLineTexture(2,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(2,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (3);
+				break;
+			case 7:
+				SetLineTexture(6,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(6,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (6);
+				break;
+			case 8:
+				SetLineTexture(8,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(4,SIDE_FRONT,TEXTURE_MIDDLE,"MCT3");
+				SetLineTexture(8,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(4,SIDE_BACK,TEXTURE_MIDDLE,"MCT3");
+				ReddenSector (8);
+				break;
+			case 9:
+				SetLineTexture(10,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(10,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				ReddenSector (11);
+				ReddenSector (12);
+				break;
+			case 10:
+				ReddenSector (15);
+				ReddenSector (16);
+				break;
+			case 11:
+				ReddenSector (20);
+				SetLineTexture(12,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
+				SetLineTexture(12,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				break;
+		}
+	}
+	else
+	{
+		// 3D mode
+		// Blue is 100 - Red is 200, simple.
+		int tnb = team ? 100+(what*10) : 200+(what*10);
+		// tnb stand for team nunber & building.
+		// "what" multiplied by 10 tells the structures tags.
+		// Do what is default in every building:
+		for (int id = 0 + tnb; id < 10 + tnb; id++)
+			{
+			ReddenSector(tnb);
+			}
+		SetLineTexture(0 + tnb, SIDE_FRONT,	TEXTURE_MIDDLE, "MCT6");
+		SetLineTexture(1 + tnb, SIDE_FRONT,	TEXTURE_BOTTOM, "MCT6");
+		SetLineTexture(9 + tnb, SIDE_BACK,	TEXTURE_MIDDLE, "-");
+		SetLineTexture(9 + tnb, SIDE_FRONT,	TEXTURE_MIDDLE, "-");
+		switch (what) // Switch handle special lines ids only.
+		{
+			case 1:
+				// REF
+				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERREF1");
+				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERREF1");
+				break;
+			case 2:
+				// RES
+				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERRES1");
+				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERRES1");
+				break;
+			case 3:
+				// WAR
+				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERWAR1");
+				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERWAR1");
+				break;
+			case 4:
+				ChangeFloor(9 + tnb, "MCT6");
+				break;
+		}
+	}
+}
+/*
+// [SG] Building deaths now award tickets to the opposite team
 //---------------------------BLUE BARRACKS DEATH
 script 101 (VOID)
 {
@@ -558,10 +736,6 @@ script 205 (VOID)
 	}
 	
 	// SetActorProperty(209,APROP_Health,0);
-	
-	/*SetFont("BIGFONT");
-	HudMessageBold(s:"The \cgRed Repair Facility\cd has been destroyed!!";
-		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);*/
 	CallEvent (ACTION_DESTROY_REPAIR, TEAM_RED);
 	
 	SYNC_UpdateBuildingHealth (BUILDING_REPAIR, TEAM_RED);
@@ -613,7 +787,7 @@ script 214 (VOID)
 	
 	if(intHolder[i_SuddenDeath] || GetCVar ("zeta_ticketmode") || intHolder[i_TicketPool])
 		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_obelisk"));
-}
+}*/
 
 script 97 (int Structure, int Team) {
 	// stfu during degeneration
