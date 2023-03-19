@@ -1,5 +1,4 @@
-// Xindage is this even needed?
-// Armor flags
+// Armor flags (its missing cryo)
 const int ARMOD_NOCHANGE = 0;
 const int ARMOD_FIRE = 1;
 const int ARMOD_CHEM = 2;
@@ -28,15 +27,39 @@ const int BUILDING_HEALTHREGEN = 7;
 const int BUILDING_AMMOREGEN = 8;
 const int BUILDING_PORTAL = 9;
 
+// Buildings TID
+const int TID_BARRACKS_BLUE		 = 1101;	// Blue Buildings
+const int TID_REFINERY_BLUE		 = 1102;
+const int TID_RESCENTRE_BLUE	 = 1103;
+const int TID_FACTORY_BLUE		 = 1104;
+const int TID_OBELISK_BLUE		 = 1105;
+const int TID_REPAIR_BLUE		 = 1106;
+const int TID_HEALTHREGEN_BLUE	 = 1107;
+const int TID_AMMOREGEN_BLUE	 = 1108;
+const int TID_MINIREF_BLUE		 = 1109;
+const int TID_BARRACKS_RED		 = 1201;	// Red Buildings
+const int TID_REFINERY_RED		 = 1202;
+const int TID_RESCENTRE_RED		 = 1203;
+const int TID_FACTORY_RED		 = 1204;
+const int TID_OBELISK_RED		 = 1205;
+const int TID_REPAIR_RED		 = 1206;
+const int TID_HEALTHREGEN_RED	 = 1207;
+const int TID_AMMOREGEN_RED		 = 1208;
+const int TID_MINIREF_RED		 = 1209;
+
 // Script numbers
 const int SC_SuperNukeCheck = 824;
 const int SC_PushAngle = 825;
 const int SC_PopAngle = 826;
 const int SC_InitMonster = 827;
+const int SC_STRUCTUREFALL = 832;
+const int SC_SFSPECIAL = 833;
+const int SC_STRUCTUREPAIN = 834;
 const int SC_SillyThings = 903;
 const int SC_WEAPONFIRECHECK = 913;
 const int SC_TortoiseEject = 904;
 const int SC_BeaconInventory = 924;
+const int SC_BUILDINGDAMAGE = 830;
 const int SC_MARINE_INIT = 938;
 const int SC_MARINE_COMPENSATION = 939;
 const int SC_TELENODE_TIDREQUEST = 935;
