@@ -371,7 +371,7 @@ script SC_PLAYERRESPAWN RESPAWN
 		GiveInventory("IsFemale",1);
 	}
 	
-	ACS_ExecuteAlways (97, 0);
+//	ACS_ExecuteAlways (97, 0); // Again building pain announce call here, why?
 	
 	if (!CheckWeapon ("Unarmed"))
 		SetWeapon ("Unarmed");

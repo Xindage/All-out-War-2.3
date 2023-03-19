@@ -264,7 +264,7 @@ function int SetClass (int id, int scflags) {
 			TeamMessage (TMSG_RESIGN, 0, playernumber());
 		}
 		
-		ACS_ExecuteAlways (97, 0);
+//		ACS_ExecuteAlways (97, 0); // Why building pain announce is beign called here wtf?
 		RecountTimeCops ();
 		RecountUtilityGuy();
 		return true;
