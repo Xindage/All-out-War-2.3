@@ -109,47 +109,47 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ----
 #define MAX_BUILDINGS 11
 
+// [Xindage] Well sorted ID.
 // ============================================================================
 // Thing IDs
-// TODO: move these to 1000+ range
 // (100 200) team | 10 Btos | X building
-#define TID_BARRACKS_BLUE		101		//1101
-#define TID_BARBTOS_BLUE		100		//1111
-#define TID_BARRACKS_RED		201		//1201
-#define TID_BARBTOS_RED			200		//1211
-#define TID_REFINERY_BLUE		103		//1102
-#define TID_REFBTOS_BLUE		102		//1112
-#define TID_REFINERY_RED		203		//1202
-#define TID_REFBTOS_RED			202		//1212
-#define TID_RESCENTRE_BLUE		105		//1103
-#define TID_RESBTOS_BLUE		104		//1113
-#define TID_RESCENTRE_RED		205		//1203
-#define TID_RESBTOS_RED			204		//1213
-#define TID_FACTORY_BLUE		107		//1104
-#define TID_FACBTOS_BLUE		106		//1114
-#define TID_FACTORY_RED			207		//1204
-#define TID_FACBTOS_RED			206		//1214
-#define TID_OBELISK_BLUE		114		//1105
-#define TID_OBEBTOS_BLUE		115		//1115
-#define TID_OBELISK_RED			214		//1205
-#define TID_OBEBTOS_RED			215		//1215
-#define TID_REPAIR_BLUE			109		//1106
-#define TID_REPBTOS_BLUE		110		//1116
-#define TID_REPAIR_RED			209		//1206
-#define TID_REPBTOS_RED			210		//1216
-#define TID_HEALTHREGEN_BLUE	903		//1107
-#define TID_HEALTHREGEN_RED		902		//1207
-#define TID_AMMOREGEN_BLUE		905		//1108
-#define TID_AMMOREGEN_RED		904		//1208
-#define TID_MINIREF_BLUE		901		//1109
-#define TID_MINIREF_RED			900		//1209
+#define TID_BARRACKS_BLUE		1101	// Blue Buildings
+#define TID_REFINERY_BLUE		1102
+#define TID_RESCENTRE_BLUE		1103
+#define TID_FACTORY_BLUE		1104
+#define TID_OBELISK_BLUE		1105
+#define TID_REPAIR_BLUE			1106
+#define TID_HEALTHREGEN_BLUE	1107
+#define TID_AMMOREGEN_BLUE		1108
+#define TID_MINIREF_BLUE		1109
+#define TID_BARRACKS_RED		1201	// Red Buildings
+#define TID_REFINERY_RED		1202
+#define TID_RESCENTRE_RED		1203
+#define TID_FACTORY_RED			1204
+#define TID_OBELISK_RED			1205
+#define TID_REPAIR_RED			1206
+#define TID_HEALTHREGEN_RED		1207
+#define TID_AMMOREGEN_RED		1208
+#define TID_MINIREF_RED			1209
+#define TID_BARBTOS_BLUE		1111	// Blue BTOs
+#define TID_REFBTOS_BLUE		1112
+#define TID_RESBTOS_BLUE		1113
+#define TID_FACBTOS_BLUE		1114
+#define TID_OBEBTOS_BLUE		1115
+#define TID_REPBTOS_BLUE		1116
+#define TID_BARBTOS_RED			1211	// Red BTOs
+#define TID_REFBTOS_RED			1212
+#define TID_RESBTOS_RED			1213
+#define TID_FACBTOS_RED			1214
+#define TID_OBEBTOS_RED			1215
+#define TID_REPBTOS_RED			1216
 
+// TODO: move these to 1000+ range
 #define TID_TIBERIUM 402			//1000
 #define TID_CRATE 1300				//1001
 #define TID_CRATESPOT_START 410		//1002
 // 410 - 442 We reall need 32 spots?
 #define TID_CRATESPOT_END 442		//1034
-
 #define TID_TELENODE_BLUE1			1500
 #define TID_TELENODE_BLUE2			1501
 #define TID_TELENODE_RED1			1502
