@@ -197,6 +197,8 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_JuggArmorHelp				829
 #libdefine SC_CheckC4Timer				830
 #libdefine SC_CheckC4Placement			831
+#libdefine SC_Structurefall				832
+#libdefine SC_SFSpecial					833
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889

@@ -25,7 +25,7 @@ function void AwardBuildingDamage (int what, int team) {
 	int tid = MainTIDs[team][what];
 	SetActivator (tid);
 	
-	int lasthealth = RecordedBuildingHealths[team][what]
+	int lasthealth = RecordedBuildingHealths[team][what];
 	int health = GetHealth ();
 	int spawnhealth = GetSpawnHealth ();
 	
@@ -74,7 +74,7 @@ function void AwardBuildingDamage (int what, int team) {
 }
 
 // [Xindage] Merge all the buiding death in a single script.
-script "SC_structurefall" (int team, int what, int silent)
+script SC_STRUCTUREFALL (int team, int what, int silent)
 {
 	str name;
 	switch (what) {
@@ -115,28 +115,29 @@ script "SC_structurefall" (int team, int what, int silent)
 	if (what == 5)	// Repair faility only.
 	{
 		SetFont ("SMALLFONT");
-		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team() + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
+		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
 	}
 	else // All others
 	{
 		SetFont("BIGFONT");
-		HudMessageBold(s:"The ", s:TeamColors[team() + 2], s:TeamNames[team], s:" ", s:name, s:" \cd has been destroyed!!";
+		HudMessageBold(s:"The ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd has been destroyed!!";
 		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
 		ACS_ExecuteAlways(99, 0, team);
 	}
-	Log(n:0, s:" destroys "	s:TeamNames[team], s:" " s:name, s:".");
+	Log(n:0, s:" destroys ", s:TeamNames[team], s:" ", s:name, s:".");
+	ACS_ExecuteAlways			(SC_SFSPECIAL, 0, team, what);
 	Thing_Destroy				(MainTIDs[team][what],0);
 	Thing_Destroy				(BTOsTIDs[team][what],0);
 	AwardBuildingDestruction	(team, false);
 	AwardBuildingDamage			(what, team);
 	SYNC_UpdateBuildingHealth	(what, team);
 	delay(12); // Give some time before deleting those.
-	Thing_Remove				(MainTIDs[team][what],0);
-	Thing_Remove				(BTOsTIDs[team][what],0);
+	Thing_Remove				(MainTIDs[team][what]);
+	Thing_Remove				(BTOsTIDs[team][what]);
 }
 
 // Just to help handling the "events"
-script "SC_SFSpecial" (int team, int what)
+script SC_SFSPECIAL (int team, int what)
 {
 	// [Xindage] Having to support legacy mode is a p-
 	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS))
