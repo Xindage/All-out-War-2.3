@@ -74,7 +74,7 @@ function void AwardBuildingDamage (int what, int team) {
 }
 
 // [Xindage] Merge all the buiding death in a single script.
-script SC_STRUCTUREFALL (int team, int what, int silent)
+script SC_STRUCTUREFALL (int what, int team)
 {
 	str name;
 	switch (what) {
@@ -125,19 +125,19 @@ script SC_STRUCTUREFALL (int team, int what, int silent)
 		ACS_ExecuteAlways(99, 0, team);
 	}
 	Log(n:0, s:" destroys ", s:TeamNames[team], s:" ", s:name, s:".");
-	ACS_ExecuteAlways			(SC_SFSPECIAL, 0, team, what);
+	ACS_ExecuteAlways			(SC_SFSPECIAL, 0, what, team);
 	Thing_Destroy				(MainTIDs[team][what],0);
 	Thing_Destroy				(BTOsTIDs[team][what],0);
 	AwardBuildingDestruction	(team, false);
 	AwardBuildingDamage			(what, team);
 	SYNC_UpdateBuildingHealth	(what, team);
-	delay(12); // Give some time before deleting those.
+	delay(40); // It's 40 tics to the terminals finish its death sequence.
 	Thing_Remove				(MainTIDs[team][what]);
 	Thing_Remove				(BTOsTIDs[team][what]);
 }
 
 // Just to help handling the "events"
-script SC_SFSPECIAL (int team, int what)
+script SC_SFSPECIAL (int what, int team)
 {
 	// [Xindage] Having to support legacy mode is a p-
 	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS))
@@ -790,30 +790,31 @@ script 214 (VOID)
 		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_obelisk"));
 }*/
 
-script 97 (int Structure, int Team) {
+// [Xindade] I believe that code can be improved.
+script SC_STRUCTUREPAIN (int Structure, int Team) {
 	// stfu during degeneration
 	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate;
 	
 	if ( Timer() > intHolder[i_LastAttackMessage]+35*15 ) {
-		if(Structure == 1 && Team == 0)
+		if(Structure == 0 && Team == 0)
 			AmbientSound("red/barracks",255);
-		if(Structure == 2 && Team == 0)
+		if(Structure == 1 && Team == 0)
 			AmbientSound("red/refinery",255);
-		if(Structure == 3 && Team == 0)
+		if(Structure == 2 && Team == 0)
 			AmbientSound("red/powerplant",255);
-		if(Structure == 4 && Team == 0)
+		if(Structure == 3 && Team == 0)
 			AmbientSound("red/factory",255);
-		if(Structure == 6 && Team == 0)
+		if(Structure == 5 && Team == 0)
 			AmbientSound("red/obelisk",255);
-		if(Structure == 1 && Team == 1)
+		if(Structure == 0 && Team == 1)
 			AmbientSound("blue/barracks",255);
-		if(Structure == 2 && Team == 1)
+		if(Structure == 1 && Team == 1)
 			AmbientSound("blue/refinery",255);
-		if(Structure == 3 && Team == 1)
+		if(Structure == 2 && Team == 1)
 			AmbientSound("blue/powerplant",255);
-		if(Structure == 4 && Team == 1)
+		if(Structure == 3 && Team == 1)
 			AmbientSound("blue/factory",255);
-		if(Structure == 6 && Team == 1)
+		if(Structure == 5 && Team == 1)
 			AmbientSound("blue/obelisk",255);
 		intHolder[i_LastAttackMessage] = Timer();
 	}
