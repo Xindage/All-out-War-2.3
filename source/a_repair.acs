@@ -117,7 +117,7 @@ script 650 (int amount, int repairtype, int turret) {
 		// HUDMSG_PLAIN, 1009, CR_WHITE, 0.5, 0.5, 1.0);
 		
 		// Save the current health.
-		RecordedBuildingHealths[what*2 + team] = GetHealth ();
+		RecordedBuildingHealths[team][what] = GetHealth ();
 		
 		// REPAIR AWARDS
 		// Activator -> repair guy

@@ -66,8 +66,11 @@ script SC_GAMEINIT OPEN {
 	}
 	
 	// Record initial building healths
-	for (i = 0; i < MAX_BUILDINGS * 2; i++)
-		RecordedBuildingHealths[i] = GetActorSpawnHealth (BaseTIDs[i]);
+	for (i = 0; i < MAX_BUILDINGS; i++)
+	{
+		RecordedBuildingHealths[0][i] = GetActorSpawnHealth (MainTIDs[0][i]);
+		RecordedBuildingHealths[1][i] = GetActorSpawnHealth (MainTIDs[1][i]);
+	}
 	
 	// Build various data tables
 	InitClasses();

@@ -100,7 +100,7 @@ int SDVulnerabilityArray[20] = {
 	TID_OBELISK_BLUE,TID_OBEBTOS_BLUE,TID_OBELISK_RED,TID_OBEBTOS_RED
 };
 
-int RecordedBuildingHealths[MAX_BUILDINGS * 2];
+int RecordedBuildingHealths[2][MAX_BUILDINGS];
 int UnawardedDamage[MAXPLAYERS];
 
 str TeamNames[2] = {"Blue", "Red"};
