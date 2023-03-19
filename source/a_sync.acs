@@ -18,7 +18,7 @@ function void SYNC_UpdateAllBuildings (void) {
 
 // Updates a building health value to the client
 function void SYNC_UpdateBuildingHealth (int what, int team) {
-	int tid = BaseTIDs[what*2 + team];
+	int tid = MainTIDs[team][what];
 	int exists = ThingCount (T_NONE, tid);
 	
 	// Calculate the percentage
