@@ -67,6 +67,7 @@ function void AwardBuildingDamage (int what, int team) {
 // [Xindage] Merge all the buiding death in a single script.
 script SC_STRUCTUREFALL (int what, int team)
 {
+	SetActivatorToTarget (0);
 	str name;
 	switch (what) {
 		case 0:
