@@ -23,23 +23,23 @@ function void CL_DisplayBuildingHud (void) {
 	// [Xindage] Fetch on the global array.
 	HudMessageBold (
 		s:"Battery \cc[ ", s:bb, d:RepairCharges[0], s:" \cc]\n",
-		s:getBuildingColor(MainTIDs[0][0]), s:"Barracks\cc: ",
+		s:getBuildingColor(0, 0), s:"Barracks\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][0])), d:GetActorSpeed(MainTIDs[0][0]), s:"\cc%\n",
-		s:getBuildingColor(MainTIDs[0][1]), s:"Refinery\cc: ",
+		s:getBuildingColor(0, 1), s:"Refinery\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][1])), d:GetActorSpeed(MainTIDs[0][1]), s:"\cc%\n",
-		s:getBuildingColor(MainTIDs[0][2]), s:"Research Centre\cc: ",
+		s:getBuildingColor(0, 2), s:"Research Centre\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][2])), d:GetActorSpeed(MainTIDs[0][2]), s:"\cc%\n",
-		s:getBuildingColor(MainTIDs[0][3]), s:"War Factory\cc: ",
+		s:getBuildingColor(0, 3), s:"War Factory\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][3])), d:GetActorSpeed(MainTIDs[0][3]), s:"\cc%\n",
-		s:getBuildingColor(MainTIDs[0][4]), s:"Obelisk of Light\cc: ",
-		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][4])), d:GetActorSpeed(MainTIDs[0][4]), s:"\cc%\n",
-		s:getBuildingColorGreen(MainTIDs[0][5]), s:"++", s:getBuildingColor(MainTIDs[0][5]), s:"Repair Facility\cc: ",
+		s:getBuildingColor(0, 5), s:"Obelisk of Light\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][5])), d:GetActorSpeed(MainTIDs[0][5]), s:"\cc%\n",
-		s:getBuildingColorGreen(MainTIDs[0][6]), s:"++", s:getBuildingColor(MainTIDs[0][6]), s:"HP Regen\cc: ",
+		s:getBuildingColorGreen(MainTIDs[0][4]), s:"++", s:getBuildingColor(0, 4), s:"Repair Facility\cc: ",
+		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][4])), d:GetActorSpeed(MainTIDs[0][4]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][6]), s:"++", s:getBuildingColor(0, 6), s:"HP Regen\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][6])), d:GetActorSpeed(MainTIDs[0][6]), s:"\cc%\n",
-		s:getBuildingColorGreen(MainTIDs[0][7]), s:"++", s:getBuildingColor(MainTIDs[0][7]), s:"Ammo Regen\cc: ",
+		s:getBuildingColorGreen(MainTIDs[0][7]), s:"++", s:getBuildingColor(0, 7), s:"Ammo Regen\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][7])), d:GetActorSpeed(MainTIDs[0][7]), s:"\cc%\n",
-		s:getBuildingColorGreen(MainTIDs[0][8]), s:"++", s:getBuildingColor(MainTIDs[0][8]), s:"Mini Refinery\cc: ",
+		s:getBuildingColorGreen(MainTIDs[0][8]), s:"++", s:getBuildingColor(0, 8), s:"Mini Refinery\cc: ",
 		s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][8])), d:GetActorSpeed(MainTIDs[0][8]), s:"\cc%\n",
 		s:PortalLinkColor (TEAM_BLUE, 0), s:"++", s:PortalLinkColor (TEAM_BLUE, 1), s:"Teleporter\cc: ",
 		s:ColorCodeHealth(PortalHealth (MainTIDs[0][9])), d:PortalHealth (MainTIDs[0][9]), s:"\cc% / ",
@@ -49,23 +49,23 @@ function void CL_DisplayBuildingHud (void) {
 	HudMessageBold (
 		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
 		s:"Battery \cc[ ", s:rb, d:RepairCharges[1], s:" \cc]\n",
-		s:getBuildingColor (MainTIDs[1][0]), s:"Barracks\cc: ",
+		s:getBuildingColor (1, 0), s:"Barracks\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][0])), d:GetActorSpeed (MainTIDs[1][0]), s:"\cc%\n",
-		s:getBuildingColor (MainTIDs[1][1]), s:"Refinery\cc: ",
+		s:getBuildingColor (1, 1), s:"Refinery\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][1])), d:GetActorSpeed (MainTIDs[1][1]), s:"\cc%\n",
-		s:getBuildingColor (MainTIDs[1][2]), s:"Research Centre\cc: ",
+		s:getBuildingColor (1, 2), s:"Research Centre\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][2])), d:GetActorSpeed (MainTIDs[1][2]), s:"\cc%\n",
-		s:getBuildingColor (MainTIDs[1][3]), s:"War Factory\cc: ",
+		s:getBuildingColor (1, 3), s:"War Factory\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][3])), d:GetActorSpeed (MainTIDs[1][3]), s:"\cc%\n",
-		s:getBuildingColor (MainTIDs[1][4]), s:"Obelisk of Light\cc: ",
-		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][4])), d:GetActorSpeed (MainTIDs[1][4]), s:"\cc%\n",
-		s:getBuildingColorGreen (MainTIDs[1][5]), s:"++", s:getBuildingColor (MainTIDs[1][5]), s:"Repair Facility\cc: ",
+		s:getBuildingColor (1, 5), s:"Obelisk of Light\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][5])), d:GetActorSpeed (MainTIDs[1][5]), s:"\cc%\n",
-		s:getBuildingColorGreen (MainTIDs[1][6]), s:"++", s:getBuildingColor (MainTIDs[1][6]), s:"HP Regen\cc: ",
+		s:getBuildingColorGreen (MainTIDs[1][4]), s:"++", s:getBuildingColor (1, 4), s:"Repair Facility\cc: ",
+		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][4])), d:GetActorSpeed (MainTIDs[1][4]), s:"\cc%\n",
+		s:getBuildingColorGreen (MainTIDs[1][6]), s:"++", s:getBuildingColor (1, 6), s:"HP Regen\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][6])), d:GetActorSpeed (MainTIDs[1][6]), s:"\cc%\n",
-		s:getBuildingColorGreen (MainTIDs[1][7]), s:"++", s:getBuildingColor (MainTIDs[1][7]), s:"Ammo Regen\cc: ",
+		s:getBuildingColorGreen (MainTIDs[1][7]), s:"++", s:getBuildingColor (1, 7), s:"Ammo Regen\cc: ",
 		s:ColorCodeHealth (GetActorSpeed (MainTIDs[1][7])), d:GetActorSpeed (MainTIDs[1][7]), s:"\cc%\n",
-		s:getBuildingColorGreen(MainTIDs[1][8]), s:"++", s:getBuildingColor (MainTIDs[1][8]), s:"Mini Refinery\cc: ",
+		s:getBuildingColorGreen(MainTIDs[1][8]), s:"++", s:getBuildingColor (1, 8), s:"Mini Refinery\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][8])), d:GetActorSpeed (MainTIDs[1][8]), s:"\cc%\n",
 		s:PortalLinkColor (TEAM_RED, 0), s:"++", s:PortalLinkColor (TEAM_RED, 1), s:"Teleporter\cc: ",
 		s:ColorCodeHealth(PortalHealth (MainTIDs[1][9])), d:PortalHealth (MainTIDs[1][9]), s:"\cc% / ",
@@ -132,9 +132,9 @@ function str ColorCodeHealth(int Percentage)
 	return "\cM";
 }
 
-function str getBuildingColor (int tid) {
-	if (GetActorSpeed (tid) > 0) {
-		if (tid <= 199 || (tid >= 900 && tid % 2 == 1))
+function str getBuildingColor (int team, int target) {
+	if (GetActorSpeed (MainTIDs[team][target]) > 0) {
+		if (!team)
 			return "\cH";
 		else
 			return "\cG";
