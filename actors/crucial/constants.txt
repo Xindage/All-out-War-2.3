@@ -47,18 +47,18 @@ const int TID_HEALTHREGEN_RED	 = 1207;
 const int TID_AMMOREGEN_RED		 = 1208;
 const int TID_MINIREF_RED		 = 1209;
 // Buildings BTOs - Other objects may use these as well, for example obelisk eye.
-#define TID_BARBTOS_BLUE		 = 1111:	// Blue BTOs
-#define TID_REFBTOS_BLUE		 = 1112:
-#define TID_RESBTOS_BLUE		 = 1113:
-#define TID_FACBTOS_BLUE		 = 1114:
-#define TID_OBEBTOS_BLUE		 = 1115:
-#define TID_REPBTOS_BLUE		 = 1116:
-#define TID_BARBTOS_RED			 = 1211:	// Red BTOs
-#define TID_REFBTOS_RED			 = 1212:
-#define TID_RESBTOS_RED			 = 1213:
-#define TID_FACBTOS_RED			 = 1214:
-#define TID_OBEBTOS_RED			 = 1215:
-#define TID_REPBTOS_RED			 = 1216:
+const int TID_BARBTOS_BLUE		 = 1111:	// Blue BTOs
+const int TID_REFBTOS_BLUE		 = 1112:
+const int TID_RESBTOS_BLUE		 = 1113:
+const int TID_FACBTOS_BLUE		 = 1114:
+const int TID_OBEBTOS_BLUE		 = 1115:
+const int TID_REPBTOS_BLUE		 = 1116:
+const int TID_BARBTOS_RED		 = 1211:	// Red BTOs
+const int TID_REFBTOS_RED		 = 1212:
+const int TID_RESBTOS_RED		 = 1213:
+const int TID_FACBTOS_RED		 = 1214:
+const int TID_OBEBTOS_RED		 = 1215:
+const int TID_REPBTOS_RED		 = 1216:
 
 // Script numbers
 const int SC_SuperNukeCheck = 824;
