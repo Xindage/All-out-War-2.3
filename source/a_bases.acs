@@ -1,16 +1,7 @@
 // A building is hit!
-script SC_BUILDINGDAMAGE (void) {
-	int what, team, found;
-	for (int i = 0; i < MAX_BUILDINGS * 2 && !found; i++) {
-		if (ActivatorTID() == BaseTIDs[i]) {
-			what = i / 2;
-			team = i % 2;
-			found = true;
-		}
-	}
-	
-	if (!found)
-		terminate;
+script SC_BUILDINGDAMAGE (int what, int team) {
+	if (ActivatorTID() == MainTIDs[team][what]) {}
+	else terminate;
 	
 	AwardBuildingDamage (what, team);
 	
@@ -112,7 +103,7 @@ script SC_STRUCTUREFALL (int what, int team)
 			// TODO: Add error handler.
 			break;
         }
-	if (what == 5)	// Repair faility only.
+	if (what == 4)	// Repair faility only.
 	{
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
@@ -217,7 +208,7 @@ script SC_SFSPECIAL (int what, int team)
 	{
 		// 3D mode
 		// Blue is 100 - Red is 200, simple.
-		int tnb = team ? 100+(what*10) : 200+(what*10);
+		int tnb = team ? 200+(what*10) : 100+(what*10);
 		// tnb stand for team nunber & building.
 		// "what" multiplied by 10 tells the structures tags.
 		// Do what is default in every building:
@@ -225,6 +216,7 @@ script SC_SFSPECIAL (int what, int team)
 			{
 			ReddenSector(tnb);
 			}
+			PrintBold(i:tnb);
 		SetLineTexture(0 + tnb, SIDE_FRONT,	TEXTURE_MIDDLE, "MCT6");
 		SetLineTexture(1 + tnb, SIDE_FRONT,	TEXTURE_BOTTOM, "MCT6");
 		SetLineTexture(9 + tnb, SIDE_BACK,	TEXTURE_MIDDLE, "-");
