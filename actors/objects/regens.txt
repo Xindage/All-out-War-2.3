@@ -35,7 +35,7 @@ actor Utility_GlobalMedicCacheRed {
 	
 	states {
 	Spawn:
-		CACH AA 0 Thing_ChangeTID(0, 902)
+		CACH AA 0 Thing_ChangeTID(0, TID_HEALTHREGEN_RED)
 		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
 		CACH A 0 A_SetTranslucent(1.0,0)
 		CACH A -1 A_Gravity // wait until the script approves the cache.
@@ -75,7 +75,7 @@ actor Utility_GlobalMedicCacheBlue : Utility_GlobalMedicCacheRed {
 	DesignatedTeam 0
 	States {
 	Spawn:
-		CACH AA 0 Thing_ChangeTID(0, 903)
+		CACH AA 0 Thing_ChangeTID(0, TID_HEALTHREGEN_BLUE)
 		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
 		CACH A 0 A_SetTranslucent(1.0,0)
 		CACH A -1 A_Gravity
@@ -91,7 +91,7 @@ ACTOR Utility_GlobalAmmoCacheRed : Utility_GlobalMedicCacheRed {
 	tag "Red Ammo Regenerator"
 	States {
 	Spawn:
-		CACH AA 0 Thing_ChangeTID(0, 904)
+		CACH AA 0 Thing_ChangeTID(0, TID_AMMOREGEN_RED)
 		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
 		CACH A 0 A_SetTranslucent(1.0,0)
 		CACH A -1 A_Gravity // wait until the script approves the cache.
@@ -118,7 +118,7 @@ ACTOR Utility_GlobalAmmoCacheBlue : Utility_GlobalAmmoCacheRed  {
 	DesignatedTeam 0
 	States {
 	Spawn:
-		CACH AA 0 Thing_ChangeTID(0, 905)
+		CACH AA 0 Thing_ChangeTID(0, TID_AMMOREGEN_BLUE)
 		CACH AAAAAAAAAA 3 A_FadeIn(0.1)
 		CACH A 0 A_SetTranslucent(1.0,0)
 		CACH A -1 A_Gravity
