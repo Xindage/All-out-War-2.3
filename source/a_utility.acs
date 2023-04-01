@@ -395,6 +395,8 @@ script 345 (int Type, int Team)
 }
 
 //Check if it's not at limit
+// [Xindage] There's a big gross hack happening with team nunber here...
+// TODO: Fix the team, this could be decorate sided...'
 script 346 (int Type, int Team) {
 	SetResultValue(1);
 	switch (Type) {
@@ -409,7 +411,7 @@ script 346 (int Type, int Team) {
 		break;
 	case 3:
 		// if (MiniRefinery[Team]) SetResultValue (0);
-		if (ThingCount (T_NONE, MainTIDs[team][6]) != 0) SetResultValue (0);
+		if (ThingCount (T_NONE, MainTIDs[1-team][6]) != 0) SetResultValue (0);
 		break;
 	case 4:
 		if (GlobalMedic[Team]) SetResultValue (0);
@@ -903,21 +905,21 @@ function int PF_CheckLimits (int def) {
 		break;*/
 	case PF_MINIREFINERY:
 		// Mini-refinery
-		if (ThingCount (T_NONE, BaseTIDs[2*BUILDING_MINIREF + ct])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][8])) {
 			g_Error = "You already have a mini-refinery!";
 			return 0;
 		}
 		break;
 	case PF_GLOBALHEALTHREGEN:
 		// Health regen
-		if (ThingCount (T_NONE, BaseTIDs[2*BUILDING_HEALTHREGEN + ct])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][6])) {
 			g_Error = "You already have a health regenerator!";
 			return 0;
 		}
 		break;
 	case PF_GLOBALAMMOREGEN:
 		// Ammo regen
-		if (ThingCount (T_NONE, BaseTIDs[2*BUILDING_AMMOREGEN + ct])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][7])) {
 			g_Error = "You already have an ammo regenerator!";
 			return 0;
 		}

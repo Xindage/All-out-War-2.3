@@ -102,7 +102,7 @@ function int CheckBarracks (int Team) {
 // ============================================================================
 // [Dusk] Research Centre check
 function int CheckPlant (int Team) {
-	return (GotPlant[Team] || IsAdmin[PlayerNumber()]);
+	return (GotResearch[Team] || IsAdmin[PlayerNumber()]);
 }
 
 // ============================================================================
@@ -331,7 +331,7 @@ function int CheckBaseCrasher (int team)
 		if( (GotRefinery[0]) && (GetActorHealth(TID_REFINERY_BLUE) < GetActorSpawnHealth(TID_REFINERY_BLUE) / 2) )
 			return 0;
 		
-		if( (GotPlant[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 2 / 5) )
+		if( (GotResearch[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 2 / 5) )
 			return 0;
 		
 		if( (GotFactory[0]) && (GetActorHealth(TID_FACTORY_BLUE) < GetActorSpawnHealth(TID_FACTORY_BLUE) * 2 / 5) )
@@ -349,7 +349,7 @@ function int CheckBaseCrasher (int team)
 		if( (GotRefinery[1]) && (GetActorHealth(TID_REFINERY_RED) < GetActorSpawnHealth(TID_REFINERY_RED) / 2) )
 			return 0;
 		
-		if( (GotPlant[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 2 / 5) )
+		if( (GotResearch[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 2 / 5) )
 			return 0;
 		
 		if( (GotFactory[1]) && (GetActorHealth(TID_FACTORY_RED) < GetActorSpawnHealth(TID_FACTORY_RED) * 2 / 5) )
@@ -375,7 +375,7 @@ function int CheckBaseMiracle (int team)
 		if( (GotRefinery[0]) && (GetActorHealth(TID_REFINERY_BLUE) < GetActorSpawnHealth(TID_REFINERY_BLUE) * 99 / 100) )
 			return 1;
 		
-		if( (GotPlant[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 99 / 100) )
+		if( (GotResearch[0]) && (GetActorHealth(TID_RESCENTRE_BLUE) < GetActorSpawnHealth(TID_RESCENTRE_BLUE) * 99 / 100) )
 			return 1;
 		
 		if( (GotFactory[0]) && (GetActorHealth(TID_FACTORY_BLUE) < GetActorSpawnHealth(TID_FACTORY_BLUE) * 99 / 100) )
@@ -393,7 +393,7 @@ function int CheckBaseMiracle (int team)
 		if( (GotRefinery[1]) && (GetActorHealth(TID_REFINERY_RED) < GetActorSpawnHealth(TID_REFINERY_RED) * 99 / 100) )
 			return 1;
 		
-		if( (GotPlant[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 99 / 100) )
+		if( (GotResearch[1]) && (GetActorHealth(TID_RESCENTRE_RED) < GetActorSpawnHealth(TID_RESCENTRE_RED) * 99 / 100) )
 			return 1;
 		
 		if( (GotFactory[1]) && (GetActorHealth(TID_FACTORY_RED) < GetActorSpawnHealth(TID_FACTORY_RED) * 99 / 100) )
@@ -948,7 +948,7 @@ function int CalcBaseLeft (int team) {
 	return GotBarracks[team] +
 		GotFactory[team] +
 		GotObelisk[team] +
-		GotPlant[team] +
+		GotResearch[team] +
 		GotRefinery[team];
 }
 

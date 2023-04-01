@@ -81,7 +81,7 @@ script SC_STRUCTUREFALL (int what, int team)
 			CallEvent (ACTION_DESTROY_REFINERY, TEAM_BLUE);
 			break;
 		case 2:
-			GotPlant[team] = false;
+			GotResearch[team] = false;
 			name = "Research Centre";
 			CallEvent (ACTION_DESTROY_PLANT, TEAM_BLUE);
 			break;
@@ -341,7 +341,7 @@ script 103 (void) {
 	Thing_Remove(104);
 	Thing_Destroy(105,0);
 	ACS_ExecuteAlways(99, 0, TEAM_BLUE);
-	GotPlant[TEAM_BLUE] = False;
+	GotResearch[TEAM_BLUE] = False;
 
 	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(7,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
@@ -611,7 +611,7 @@ script 203 (VOID)
 	Thing_Destroy(204,0);
 	Thing_Destroy(205,0);
 	ACS_ExecuteAlways(99, 0, TEAM_RED);
-	GotPlant[TEAM_RED] = False;
+	GotResearch[TEAM_RED] = False;
 
 	if (!CheckMapFlags (MAPF_NoDefEvents) && !GetConfig(CONFIG_3DBUILDINGS)) {
 		SetLineTexture(8,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");

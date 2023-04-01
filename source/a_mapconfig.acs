@@ -44,6 +44,15 @@ function void SetMapProperty (int prop, int val) {
 	MapConfig[prop] = val;
 }
 
+/*	// [Dusk] These maps are too small to have portals.
+	// TODO: move this to map scripts
+	switch (GetLevelInfo (LEVELINFO_LEVELNUM)) {
+	case 2:
+	case 3:
+		intHolder[i_UseTeleporterNodes] = 0;
+		break;
+	}*/
+
 // =============================================================================
 // Convienence functions
 function void SetMapFlags (int mask) {

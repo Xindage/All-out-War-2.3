@@ -22,9 +22,9 @@ const int BUILDING_RESCENTRE = 2;
 const int BUILDING_FACTORY = 3;
 const int BUILDING_REPAIR = 4;
 const int BUILDING_OBELISK = 5;
-const int BUILDING_MINIREF = 6;
-const int BUILDING_HEALTHREGEN = 7;
-const int BUILDING_AMMOREGEN = 8;
+const int BUILDING_HEALTHREGEN = 6;
+const int BUILDING_AMMOREGEN = 7;
+const int BUILDING_MINIREF = 8;
 const int BUILDING_PORTAL = 9;
 
 // Buildings TID

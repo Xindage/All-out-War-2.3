@@ -370,7 +370,7 @@ script 309 (int c)
 				SetActorHealth (201, GetActorSpawnHealth (201));
 			if (GotRefinery[0])
 				SetActorHealth (203, GetActorSpawnHealth (203));
-			if (GotPlant[0])
+			if (GotResearch[0])
 				SetActorHealth (205, GetActorSpawnHealth (205));
 			if (GotFactory[0])
 				SetActorHealth (207, GetActorSpawnHealth (207));
@@ -384,7 +384,7 @@ script 309 (int c)
 				SetActorHealth (101, GetActorSpawnHealth (101));
 			if (GotRefinery[1])
 				SetActorHealth (103, GetActorSpawnHealth (103));
-			if (GotPlant[1])
+			if (GotResearch[1])
 				SetActorHealth (105, GetActorSpawnHealth (105));
 			if (GotFactory[1])
 				SetActorHealth (107, GetActorSpawnHealth (107));

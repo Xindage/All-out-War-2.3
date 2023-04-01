@@ -126,7 +126,7 @@ Script SC_GIVECREDITS (int amount, int i) {
 
 function int CalcCreditFlow (int team) {
 	int p = 25;
-	if (GotPlant[team])
+	if (GotResearch[team])
 		p += 25;
 	if (GotRefinery[team])
 		p += 50;

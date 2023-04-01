@@ -101,9 +101,9 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define BUILDING_FACTORY 3
 #define BUILDING_REPAIR 4
 #define BUILDING_OBELISK 5
-#define BUILDING_MINIREF 6
-#define BUILDING_HEALTHREGEN 7
-#define BUILDING_AMMOREGEN 8
+#define BUILDING_HEALTHREGEN 6
+#define BUILDING_AMMOREGEN 7
+#define BUILDING_MINIREF 8
 #define BUILDING_PORTAL1 9
 #define BUILDING_PORTAL2 10
 // ----
