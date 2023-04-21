@@ -134,7 +134,7 @@ script 650 (int amount, int repairtype, int turret) {
 		
 		// Every 10 count, give him some cash and exp
 		if (!(RepairBonus[pn] % 10)) {
-			GiveCredits (intHolder[i_CreditRepairAmount]);
+			GiveCredits (GetCVAR("zeta_repairbonus"));
 			AddExperience (2 + !(RepairBonus[pn] % 20));
 		}
 		
@@ -186,7 +186,7 @@ script 650 (int amount, int repairtype, int turret) {
 		if (!CheckInventory ("PowerNoHealXP"))
 		{
 			SetActivator (3800+pn);
-			if (MedicBonus[pn] < intHolder[i_MedicBonusNeed])
+			if (MedicBonus[pn] < GetCVAR ("zeta_medicbonusneed"))
 			{
 				MedicBonus[pn] += bonus;
 			}
@@ -199,7 +199,7 @@ script 650 (int amount, int repairtype, int turret) {
 			}
 			
 			if (!(MedicBonus[pn] % 6))
-				GiveCredits (intHolder[i_CreditRepairAmount]);
+				GiveCredits (GetCVAR("zeta_repairbonus"));
 		}
 	}
 }

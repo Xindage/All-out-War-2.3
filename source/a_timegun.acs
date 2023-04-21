@@ -33,7 +33,7 @@ script SC_TIMEGUN (int action, int type) {
 			bonus = 2;
 		
 		int pn = PlayerNumber ();
-		if (MedicBonus[pn] < intHolder[i_MedicBonusNeed]) {
+		if (MedicBonus[pn] < GetCVAR ("zeta_medicbonusneed")) {
 			MedicBonus[pn] += 40 * bonus;
 		} else {
 			MedicBonus[pn] = 0;

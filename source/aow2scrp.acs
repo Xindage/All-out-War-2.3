@@ -713,26 +713,26 @@ int intHolder[256] =
 #define i_UseTeleporterNodes 3
 #define i_consoleplayer 4
 #define i_consoledead 5
-#define i_CreditFragAward 6
-#define i_CreditAwardTime 7
-#define i_CreditAwardAmount 8
-#define i_CreditRepairAmount 9
+// #define i_CreditFragAward 6
+// #define i_CreditAwardTime 7
+// #define i_CreditAwardAmount 8
+// #define i_CreditRepairAmount 9
 #define i_SuddenDeath 10
-#define i_TicketPool 11
+// #define i_TicketPool 11
 #define i_StartingTickets 12
-#define i_TournamentMode 13
-#define i_BeaconPurchaseDelay 14
+// #define i_TournamentMode 13
+// #define i_BeaconPurchaseDelay 14
 #define i_RedBeaconTime 15
 #define i_BlueBeaconTime 16
 #define i_gameover 17
 #define i_LastAttackMessage 18
 #define i_InterpolatorActive 19
-#define i_MedicBonusNeed 20
+// #define i_MedicBonusNeed 20
 #define i_g_CreditDelta 21
 #define i_MenuFrozen 22
 #define i_GotSnapshot 23
 #define i_g_CrateSeed 24
-#define i_PlasmaCooldownTime 25
+// #define i_PlasmaCooldownTime 25
 
 str MenuName;
 // [Dusk] Network state

@@ -284,7 +284,7 @@ function void BuyAddon (int id) {
 		}
 		
 		// Check cooldown
-		int time = (intHolder[i_BeaconPurchaseDelay] - (Timer() - LastPurchasedBeacon[PlayerTeam()]) / 35);
+		int time = ((GetCVAR("zeta_nukepurchasedelay") * 60) - (Timer() - LastPurchasedBeacon[PlayerTeam()]) / 35);
 		if (time > 0) {
 			int mins = intHolder[i_BlueBeaconTime]/60 - Timer()/(35*60);
 			int secs = 59 - (Timer()/35)%60;

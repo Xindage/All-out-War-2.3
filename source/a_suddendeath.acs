@@ -39,7 +39,7 @@ script SC_SuddenDeath (void) {
 	// [Dusk] Allow maps to take action on sudden death
 	CallEvent (ACTION_SUDDENDEATH, 0);
 	// If not in tournament mode, give everybody beacons
-	if (!intHolder[i_TournamentMode]) GiveToAll ("BeaconItem", 1);
+	if (!GetCVAR("zeta_tournamentmode")) GiveToAll ("BeaconItem", 1);
 	
 	// Big notice
 	SetFont ("BIGFONT");
@@ -62,7 +62,7 @@ script SC_SuddenDeath (void) {
 	if (GetCVar ("zeta_ticketmode")) // Check if ticket mode is on.
 	{
 		// If ticket pool was not active in regular play, activate it now
-		if (!intHolder[i_TicketPool]) {
+		if (!GetCVAR("zeta_ticketpool")) {
 			SetTickets (TEAM_BLUE, GetCVAR ("zeta_tickets"));
 			SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
 		}

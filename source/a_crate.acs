@@ -415,7 +415,7 @@ script 309 (int c)
 		LocalAmbientSound ("powerup/cred", 127);
 		Delay (4);
 		ActivatorSound ("powerup/credsound", 127);
-		GiveCredits (intHolder[i_CreditAwardAmount]);
+		GiveCredits (GetCVAR("zeta_bonusamount"));
 		break;
 
 	// Bonus experience. No warning.
@@ -511,7 +511,7 @@ script 309 (int c)
 		LocalAmbientSound ("powerup/stol", 127);
 		Delay(4);
 		ActivatorSound ("powerup/stolsound", 127);
-		TakeCredits (-1, intHolder[i_CreditAwardAmount], false);
+		TakeCredits (-1, GetCVAR("zeta_bonusamount"), false);
 		break;
 
 	// Time cop gun. Warning Team.

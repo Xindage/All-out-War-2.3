@@ -30,7 +30,7 @@ script SC_DEATH DEATH {
 	
 	// Activate Plasma Cannon cooldown, if player had one
 	if (CheckInventory ("PlasmaCannon"))
-		PlasmaCooldown[PlayerNumber()] = Timer() + intHolder[i_PlasmaCooldownTime];
+		PlasmaCooldown[PlayerNumber()] = Timer() + (GetCVAR("zeta_plasmacooldown") * MINUTETICS);
 	
 	// How much is this thing worth?
 	// Xindage 2022/10/17 - three mechs was missing from the list: Mastodon, tortoise and lancer.
@@ -116,7 +116,7 @@ script SC_DEATH DEATH {
 			if (IsInEnemyBase) extra = 1.5;
 
 			GivePoints ((2*points * extra) >> 16 );
-			GiveCredits(( intHolder[i_CreditFragAward] * extra ) >> 16 );
+			GiveCredits((GetCVAR("zeta_creditfrag") * extra ) >> 16 );
 			AddExperience((50 * extra) >> 16 );
 			
 			delay (5);

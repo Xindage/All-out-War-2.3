@@ -45,7 +45,7 @@ script SC_GAMEINIT OPEN {
 	}
 	
 	// If we have ticket pool active, set the initial tickets now.
-	if (intHolder[i_TicketPool] || GetCVar ("zeta_ticketmode")) {
+	if (GetCVAR("zeta_ticketpool") || GetCVar ("zeta_ticketmode")) {
 		SetTickets (TEAM_Blue, GetCVAR ("zeta_tickets"));
 		SetTickets (TEAM_RED, GetCVAR ("zeta_tickets"));
 	}
@@ -238,138 +238,22 @@ script SC_SERVERSETTINGS OPEN
 	// [JD] Prevents players from dropping their weapons on-command
 	if (!GetCVAR("sv_nodrop"))
 		ConsoleCommand("sv_nodrop 1");
-		
-	/*if (!GetCVAR("sv_noidentifytarget"))
-		ConsoleCommand("sv_noidentifytarget 1");*/
-	
-	// [SG] With these moved to CVarInfo, this is no longer needed
-	/*
-	
-	// TODO: Send these commentaries to cvarinfo as well.
-	// ==================================
-	// CUSTOM CVARS
-	// w/ sanity checks
-	if (!GetCVAR ("zeta_credflow")) ConsoleCommand ("set zeta_credflow 4");
-	if (GetCVAR ("zeta_startcredits") <= 0) ConsoleCommand ("set zeta_startcredits 300");
-	if (GetCVAR ("zeta_creditfrag") <= 0) ConsoleCommand ("set zeta_creditfrag 50");	
-	if (GetCVAR ("zeta_bonusamount") <= 0) ConsoleCommand ("set zeta_bonusamount 300");	
-	if (GetCVAR ("zeta_bonustime") <= 0) ConsoleCommand ("set zeta_bonustime 5");
-	if (GetCVAR ("zeta_medicbonusneed") <= 0) ConsoleCommand ("set zeta_medicbonusneed 175");
-	if (GetCVAR ("zeta_repairbonus") <= 0) ConsoleCommand ("set zeta_repairbonus 1");	
-	if (GetCVAR ("zeta_juggernautlimit") <= 0) ConsoleCommand ("set zeta_juggernautlimit 2");
-	if (GetCVAR ("zeta_ticketpool") <= 0)
-		ConsoleCommand ("set zeta_ticketpool 0");
-	//[SP]How long you can stay on a team before you are never switched.
-	if (GetCVAR ("zeta_teamstaytime") <= 0) ConsoleCommand("set zeta_teamstaytime 2");
-	
-	if (GetCVAR ("zeta_tickets") <= 0)
-		ConsoleCommand ("set zeta_tickets 75");
-	
-	// Plasma Cannon initial delay
-	if (!GetCVAR ("zeta_plasmapurchasedelay")) ConsoleCommand("set zeta_plasmapurchasedelay 5");
-	//[SP]Maximum number of plasma cannons per team. (Set to -1 for unlimited)
-	if (!GetCVAR ("zeta_maxcannonsperteam")) ConsoleCommand("set zeta_maxcannonsperteam 4");
-	// [Dusk] Time (in minutes) to determine plasma cannon cooldown. Use -1 to disable
-	if (!GetCVAR ("zeta_plasmacooldown")) ConsoleCommand("set zeta_plasmacooldown 3");
-	
-	//[SP]How long you have to wait to buy a new superweapon beacon. (Minutes) (Set to -1 to disable wait)
-	if (!GetCVAR ("zeta_nukepurchasedelay"))ConsoleCommand("set zeta_nukepurchasedelay 5");
-	
-	// [SP]Maximum number of time cops per team. (Set to -1 for unlimited)
-	if (!GetCVAR ("zeta_maxtimecopsperteam")) ConsoleCommand("set zeta_maxtimecopsperteam 1");
-	
-	// [Dusk] How many minutes until +1 Timed C4 can be purchased. (-1 to disable)
-	if (!GetCVAR ("zeta_c4delay")) ConsoleCommand("set zeta_c4delay 5");
-	
-	//[SP] Time (in minutes) before sudden death.
-	// [Dusk] changed default to 45, -1 means immediate
-	if (GetCVAR ("zeta_suddendeathtime") == 0)
-		ConsoleCommand("set zeta_suddendeathtime 45");
-	
-	// [Dusk] Sudden death degeneration
-	if (GetCVAR ("zeta_degeneration") <= 0)
-		ConsoleCommand("set zeta_degeneration 0");
-	if (GetCVAR ("zeta_degenerationinterval") <= 0)
-		ConsoleCommand("set zeta_degenerationinterval 10");
-	
-	if (GetCVAR ("zeta_tournamentmode") <= 0)
-		ConsoleCommand("set zeta_tournamentmode 0");
-	if (GetCVAR ("zeta_disablemechs") <= 0)
-		ConsoleCommand("set zeta_disablemechs 0");
-	if (GetCVAR ("zeta_surrendermode") <= 0)
-		ConsoleCommand("set zeta_surrendermode 0");
-	
-	// [Dusk] Tiberium amounts
-	if (!GetCVAR ("zeta_tiberium_self"))
-		ConsoleCommand ("set zeta_tiberium_self 225");
-	if (!GetCVAR ("zeta_tiberium_other"))
-		ConsoleCommand ("set zeta_tiberium_other 75");
-	if (!GetCVAR ("zeta_tiberium_advperc"))
-		ConsoleCommand ("set zeta_tiberium_advperc 300");
-	
-	// [Dusk] Alternate experience mode. In altexp, exp needs are lowered
-	// to a third, but experience is reset upon death.
-	if (GetCVAR ("zeta_altexp") <= 0)
-		ConsoleCommand ("set zeta_altexp 0");
-	
-	// [Dusk] {9/6/12} Maximum amount of credits a player can possess.
-	//     0 = infinite (well, as infinite as integers go..)
-	// [Dusk] {1/16/13} Cap at 30k because of networking issues. The HUD
-	// overflows otherwise. If this cap is to be increased, the networking
-	// will have to be increased to something.. hackier.
-	if (GetCVAR ("zeta_creditcap") == 0 || GetCVAR ("zeta_creditcap") > 30000)
-		ConsoleCommand ("set zeta_creditcap 30000");
-	
-	// [Dusk] {9/10/12} Server config for absolutely no mechs
-	if (GetCVAR ("zeta_nomechs") <= 0)
-		ConsoleCommand ("set zeta_nomechs 0");
-	
-	// [Dusk] {9/10/12} Server config for no radar. Safety measure
-	// in case the radar breaks up and bad things happen.
-	if (GetCVAR ("zeta_noradar") <= 0)
-		ConsoleCommand ("set zeta_noradar 0");
-	
-	// [Dusk] {10/26/12} If true, the team switcher is disabled.
-	if (GetCVAR ("zeta_noteamswitcher") <= 0)
-		ConsoleCommand ("set zeta_noteamswitcher 0");
-	
-	// [Dusk] {10/27/12} If true, players do not get spawn invulnerability upon respawn
-	if (GetCVAR ("zeta_nospawninvul") <= 0)
-		ConsoleCommand ("set zeta_nospawninvul 0");
-	
-	// [Dusk] {11/2/12} Toggle disconnect donate (donation of all money upon disconnect)
-	if (GetCVAR ("zeta_nodisconnectdonate") <= 0)
-		ConsoleCommand ("set zeta_nodisconnectdonate 0");
-	
-	// [Dusk] {11/19/12} How many seconds must the player be in game until they can donate?
-	if (GetCVAR ("zeta_donatewait") == 0)
-		ConsoleCommand ("set zeta_donatewait 0");
-	
-	// [Dusk] {1/16/13} How many seconds does a beacon take to detonate?
-	if (GetCVAR ("zeta_nukecountdown") <= 0)
-		ConsoleCommand ("set zeta_nukecountdown 60");
-	
-	// [Dusk] {2/16/13} Use more powerful nukes? These ones have half the health but
-	// come with a DEVASTATING blast that can easily obliterate MULTIPLE buildings.
-	if (GetCVar ("zeta_nukesurpreme") <= 0)
-		ConsoleCommand ("set zeta_nukesurpreme 0");
-		
-	*/
 	
 	// [Cata] Set air control so ladders are not glitchy.
 	if(getcvar("sv_aircontrol") == 0) ConsoleCommand ("sv_aircontrol 0.00390625");
 	if(getcvar("sv_nocrouch") == 1) ConsoleCommand ("sv_nocrouch false");
-	
+
 	// TODO: get rid of these variables and replace with direct GetCVAR calls
-	intHolder[i_CreditFragAward] = GetCVAR("zeta_creditfrag");
-	intHolder[i_CreditAwardTime] = GetCVAR("zeta_bonustime");
-	intHolder[i_CreditAwardAmount] = GetCVAR("zeta_bonusamount");
-	intHolder[i_CreditRepairAmount] = GetCVAR("zeta_repairbonus");
-	intHolder[i_TicketPool] = GetCVAR("zeta_ticketpool");
-	intHolder[i_TournamentMode] = GetCVAR("zeta_tournamentmode");
-	intHolder[i_BeaconPurchaseDelay] = GetCVAR("zeta_nukepurchasedelay") * 60;
-	intHolder[i_PlasmaCooldownTime] = GetCVAR("zeta_plasmacooldown") * MINUTETICS;
-	intHolder[i_MedicBonusNeed] = GetCVAR ("zeta_medicbonusneed");
+	// [Xindage] Done, But there's others intholders around.'
+//	intHolder[i_CreditFragAward] = GetCVAR("zeta_creditfrag");
+//	intHolder[i_CreditAwardTime] = GetCVAR("zeta_bonustime");
+//	intHolder[i_CreditAwardAmount] = GetCVAR("zeta_bonusamount");
+//	intHolder[i_CreditRepairAmount] = GetCVAR("zeta_repairbonus");
+//	intHolder[i_TicketPool] = GetCVAR("zeta_ticketpool");
+//	intHolder[i_TournamentMode] = GetCVAR("zeta_tournamentmode");
+//	intHolder[i_BeaconPurchaseDelay] = GetCVAR("zeta_nukepurchasedelay") * MINUTETICS;
+//	intHolder[i_PlasmaCooldownTime] = GetCVAR("zeta_plasmacooldown") * MINUTETICS;
+//	intHolder[i_MedicBonusNeed] = GetCVAR ("zeta_medicbonusneed");
 	
 	// ======================================================================
 	// [Dusk] Synchronized configurations!
