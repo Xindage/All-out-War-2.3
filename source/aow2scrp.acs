@@ -683,28 +683,28 @@ int intHolder[256] =
 	1, //useteleporternodes
 	-1, //consoleplayer
 	0,
+	0,	// Unused - i_CreditFragAward
+	0,	// Unused - i_CreditAwardTime
+	0,	// Unused - i_CreditAwardAmount
+	0,	// Unused - i_CreditRepairAmount
 	0,
+	0,	// Unused - i_TicketPool
 	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+	0,	// Unused - i_TournamentMode
+	0,	// Unused - i_TicketPool
 	300, //RedBeaconTime
 	300, //BlueBeaconTime
 	0,
 	0,
 	0,
 	0,
+	0,	// Unused - i_MedicBonusNeed
 	0,
 	0,
 	0,
 	0,
-	0,
-	
-	0 // end
+	0	// Unused - i_PlasmaCooldownTime
+// Variables End.
 };
 
 #define i_Developer 0
@@ -760,7 +760,7 @@ global int 63:deathtoll;
 #include "a_utildefs.acs"
 #include "a_armor.acs"
 #include "a_items.acs"
-#include "a_mapconfig.acs"
+//#include "a_mapconfig.acs"
 #include "a_classes.acs"
 #include "a_functions.acs"
 #include "a_sync.acs"

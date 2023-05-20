@@ -167,6 +167,9 @@ int Repairing_int[MAX_BUILDINGS * 2][MAXPLAYERS + 1];
 // 2022/10/11 Xindage - CONFIG_3DBUILDINGS should be temporary until all maps get it by default
 #define CONFIG_3DBUILDINGS				20	// Buildings uses 3d sectors?
 #define MAX_CONFIG						21
+// NOTE: Config and intholder are almost the same thing with a single difference,
+//       config allow it be checked per team, intholder is for a single value.
+//       Some intholders can be moved to here as well since it's per team.
 int Config[MAX_CONFIG][2];
 
 // Snapshot stuff

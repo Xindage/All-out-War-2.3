@@ -56,7 +56,7 @@ script SC_GAMEINIT OPEN {
 	
 	// [Xindage] Some sanity checks and debug info should be done before the cleanup
 	// so if the map is missing buildings we can make sure if its intentional.
-	// First check if we are offline, bedug should not be printed online.
+	// First check if we are offline, this bedug should not be printed online.
 	if (netstate == NETSTATE_Offline)
 	{
 		str pair[2][MAX_BUILDINGS];
@@ -205,56 +205,27 @@ function void SetConfig (int key, str val) {
 // Server settings
 script SC_SERVERSETTINGS OPEN 
 {
+	// NOTE: We really need to check every CVAR? why not just set it and be over with it?
 	// ==================================
-	// DMFLAGS
-	if (!GetCVAR ("sv_weapondrop"))
-		ConsoleCommand ("sv_weapondrop 1");
-	
-	if (!GetCVAR ("sv_itemrespawn"))
-		ConsoleCommand ("sv_itemrespawn 1");
-	
-	if (!GetCVAR ("compat_limited_airmovement"))
-		ConsoleCommand ("compat_limited_airmovement 1");
-	
-	// [Dusk] sv_nofov is true to eliminate gauss sniping
-	if (!GetCVAR ("sv_nofov"))
-		ConsoleCommand ("sv_nofov 1");
-	
-	// [Dusk] Enforce no pointlimit until game is considered over. However, the pointlimit
-	// is also used to end the game when needed.
+	// DMFLAGS - These are enforced at every map start to prevent wrong behaviours.
+	// ==================================
+	if (GetCVAR  ("sv_nojump")) 					ConsoleCommand ("sv_nojump 0");
+	if (GetCVAR  ("sv_nocrouch"))					ConsoleCommand ("sv_nocrouch 0");
+	if (!GetCVAR ("sv_allowjump")) 					ConsoleCommand ("sv_allowjump 1");
+	if (!GetCVAR ("sv_allowcrouch"))				ConsoleCommand ("sv_allowcrouch 1");
+	if (!GetCVAR ("sv_weapondrop"))					ConsoleCommand ("sv_weapondrop 1");
+	if (!GetCVAR ("sv_nodrop"))						ConsoleCommand ("sv_nodrop 1"); // Prevents dropping weapons on-command.
+	if (!GetCVAR ("sv_itemrespawn"))				ConsoleCommand ("sv_itemrespawn 1");
+	if (!GetCVAR ("compat_limited_airmovement"))	ConsoleCommand ("compat_limited_airmovement 1");
+	if (GetCVAR  ("sv_nomedals"))					ConsoleCommand ("sv_nomedals 0");
+	if (GetCVAR  ("sv_nomonsters"))					ConsoleCommand ("sv_nomonsters 0");
+	if (!GetCVAR ("sv_nofov"))						ConsoleCommand ("sv_nofov 1"); // Eliminate gauss sniping
+	if (GetCVAR  ("sv_weaponstay"))					ConsoleCommand ("sv_weaponstay 0");
+	if (getcvar  ("sv_aircontrol") == 0)			ConsoleCommand ("sv_aircontrol 0.00390625"); // Make ladders not glitchy.
 	if (!intHolder[i_gameover] && GetCVAR ("pointlimit") != 0)
-		ConsoleCommand ("pointlimit 0");
-	
-	// [Dusk] Weapon stay must be disabled to prevent infinite weapons
-	if (GetCVAR ("sv_weaponstay"))
-		ConsoleCommand ("sv_weaponstay 0");
-	
-	if (GetCVAR ("sv_nomedals"))
-		ConsoleCommand ("sv_nomedals 0");
-		
-	if (GetCVAR("sv_nomonsters"))
-		ConsoleCommand("sv_nomonsters 0");
-	
-	// [JD] Prevents players from dropping their weapons on-command
-	if (!GetCVAR("sv_nodrop"))
-		ConsoleCommand("sv_nodrop 1");
-	
-	// [Cata] Set air control so ladders are not glitchy.
-	if(getcvar("sv_aircontrol") == 0) ConsoleCommand ("sv_aircontrol 0.00390625");
-	if(getcvar("sv_nocrouch") == 1) ConsoleCommand ("sv_nocrouch false");
+		ConsoleCommand ("pointlimit 0"); // No pointlimit until game is considered over.
+		// Its necessary to check if the game is over if round just started?
 
-	// TODO: get rid of these variables and replace with direct GetCVAR calls
-	// [Xindage] Done, But there's others intholders around.'
-//	intHolder[i_CreditFragAward] = GetCVAR("zeta_creditfrag");
-//	intHolder[i_CreditAwardTime] = GetCVAR("zeta_bonustime");
-//	intHolder[i_CreditAwardAmount] = GetCVAR("zeta_bonusamount");
-//	intHolder[i_CreditRepairAmount] = GetCVAR("zeta_repairbonus");
-//	intHolder[i_TicketPool] = GetCVAR("zeta_ticketpool");
-//	intHolder[i_TournamentMode] = GetCVAR("zeta_tournamentmode");
-//	intHolder[i_BeaconPurchaseDelay] = GetCVAR("zeta_nukepurchasedelay") * MINUTETICS;
-//	intHolder[i_PlasmaCooldownTime] = GetCVAR("zeta_plasmacooldown") * MINUTETICS;
-//	intHolder[i_MedicBonusNeed] = GetCVAR ("zeta_medicbonusneed");
-	
 	// ======================================================================
 	// [Dusk] Synchronized configurations!
 	SetConfig (CONFIG_ALTEXP, GetCVAR ("zeta_altexp"));
