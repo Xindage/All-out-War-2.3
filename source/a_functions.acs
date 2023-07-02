@@ -509,14 +509,14 @@ function void GenericError (str text) {
 }
 
 // ============================================================================
-script 806 (int text) {
+script SC_TARGETMESSAGE (int text) {
 	SetActivatorToTarget (0);
 	SetFont ("BIGFONT");
 	HudMessage (s:text; HUDMSG_FADEOUT, 240+PlayerNumber(), CR_Untranslated, 0.5, 0.45, 2.0, 1.0);
 }
 
 function void TargetMessage (str text) {
-	ACS_ExecuteAlways (806, 0, text);
+	ACS_ExecuteAlways (SC_TARGETMESSAGE, 0, text);
 }
 
 // ============================================================================
@@ -781,7 +781,7 @@ script SC_CONSOLEPLAYERDISTANCE (int max) {
 
 // ============================================================================
 // [Dusk] {12/17/12} Get class name by TID
-script 811 (int tid) {
+script SC_GETCLASSNAME (int tid) {
 	str name;
 	
 	if (!SetActivator (tid)) // was not found
@@ -795,7 +795,7 @@ script 811 (int tid) {
 }
 
 function str GetActorClass_X (int tid) {
-	return ACS_ExecuteWithResult (811, tid);
+	return ACS_ExecuteWithResult (SC_GETCLASSNAME, tid);
 }
 
 // ============================================================================

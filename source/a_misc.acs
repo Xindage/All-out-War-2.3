@@ -358,7 +358,8 @@ script SC_BERSERKSOUND (void) {
 }
 
 // [Dusk] Imp spawner spawns an imp
-script 808 (void) {
+// [Xindage] Is that even used?
+script SC_SpawnImp (void) {
 	int tid = TemporaryTID ();
 	int imps = SpawnSpot ("DoomImp", 0, tid, 0);
 	if (imps) {

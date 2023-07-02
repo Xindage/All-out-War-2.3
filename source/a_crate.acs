@@ -1159,7 +1159,7 @@ script SC_CL_BOMBCRATEFX (void) CLIENTSIDE {
 // [Dusk] Randomized crate spots
 // ============================================================================
 // Assigns a TID for a crate spot.
-script 810 (void) {
+script SC_RANDOMIZECRATESPOTS (void) {
 	int i;
 	for (i = TID_CRATESPOT_START; i <= TID_CRATESPOT_END; i++) {
 		if (!ThingCount (0, i))
@@ -1188,7 +1188,7 @@ function int CountCrateSpots (void) {
 
 // ============================================================================
 // Governs crate spawning
-script 812 OPEN {
+script SC_CRATECONTROL OPEN {
 	// Give some time for the crate spots to initialize.
 	delay (1);
 	

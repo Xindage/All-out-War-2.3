@@ -174,10 +174,13 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Pref_MenuToggle			803
 #libdefine SC_Pref_RequestFreeze		804
 #libdefine SC_Init_crates				805
+#libdefine SC_TargetMessage				806
 #libdefine SC_BombPackItem				807
-// [...]
+#libdefine SC_SpawnImp					808 // ???????
 #libdefine SC_HUDDaemon					809
-// [...]
+#libdefine SC_RandomizeCrateSpots		810
+#libdefine SC_GetclassName				811
+#libdefine SC_CrateControl				812
 #libdefine SC_AOWVersionInfo			813
 #libdefine SC_GiveCredits				815
 #libdefine SC_SelfHealHealth			816
