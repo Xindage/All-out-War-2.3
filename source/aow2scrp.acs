@@ -173,7 +173,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Pref_FreezeCMD			802
 #libdefine SC_Pref_MenuToggle			803
 #libdefine SC_Pref_RequestFreeze		804
-//#libdefine SC_Init_crates				805
+#libdefine SC_Init_crates				805
 #libdefine SC_BombPackItem				807
 // [...]
 #libdefine SC_HUDDaemon					809
@@ -720,7 +720,7 @@ int intHolder[256] =
 #define i_SuddenDeath 10
 // #define i_TicketPool 11
 #define i_StartingTickets 12
-// #define i_TournamentMode 13
+#define i_TournamentMode 13
 // #define i_BeaconPurchaseDelay 14
 #define i_RedBeaconTime 15
 #define i_BlueBeaconTime 16
@@ -760,7 +760,7 @@ global int 63:deathtoll;
 #include "a_utildefs.acs"
 #include "a_armor.acs"
 #include "a_items.acs"
-//#include "a_mapconfig.acs"
+#include "a_mapconfig.acs"
 #include "a_classes.acs"
 #include "a_functions.acs"
 #include "a_sync.acs"
