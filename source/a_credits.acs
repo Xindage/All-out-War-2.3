@@ -177,13 +177,10 @@ script 330 (int amount) {
 
 // CREDIT BONUS
 Script 326 OPEN {
-	while (GetCVAR("zeta_bonustime" <= 0)
-		delay (5 * 35);
-	
-	delay (GetCVAR("zeta_bonustime" * MINUTETICS);
+	while (GetCVAR("zeta_bonustime") <= 0)	delay (5 * 35);
+	delay (GetCVAR("zeta_bonustime") * MINUTETICS);
 	
 	GiveCreditsBold (GetCVAR("zeta_bonusamount"));
-	
 	AmbientSound ("powerup/credsound", 127);
 	SetFont ("SMALLFONT");
 	IntelMessage (strparam (s:"Credit bonus! You all get \cQ$\cD", d:GetCVAR("zeta_bonusamount"), s:"\cJ!"), true);
