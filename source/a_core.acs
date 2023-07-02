@@ -283,7 +283,7 @@ script SC_PLAYERRESPAWN RESPAWN
 	SetInventory ("IsAdmin", IsAdmin[PlayerNumber()]);
 	
 	// [Cata] Set player health for consistency.
-	acs_executealways(91, 0, 0, 0, 0);
+	ACS_ExecuteAlways(SC_PLAYERCHECKRANK, 0, 0, 0, 0);
 	delay(5);
 	SetHealth (GetSpawnHealth ());
 }

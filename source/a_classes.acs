@@ -472,7 +472,7 @@ function int SetClass (int id, int scflags) {
 	SetWeapon (Items_str[Classes_int[id][CK_ITEM0]][IK_ITEM0]);
 	
 	// Check for rank for possible upgrades
-	ACS_ExecuteAlways (91, 0);
+	ACS_ExecuteAlways (SC_PLAYERCHECKRANK, 0);
 	
 	// Send the player to field unless undesired
 	if (!(scflags & SCF_NOTELEPORT)) {

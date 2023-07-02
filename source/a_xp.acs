@@ -2,7 +2,9 @@
 //               EXPERIENCE
 // --------------------------------------------------
 
-//Experience add
+// Experience add
+// TODO: Merge all these AddExperienced into a single Function.
+// There is too much functions already.
 function void AddExperience (int XP) {
 	DoAddExperience (XP, false);
 }
@@ -42,7 +44,7 @@ function void DoAddExperience (int XP, int forcemessage) {
 	if (Experience[PlayerNumber ()] >= expneed) {
 		LocalAmbientSound ("game/rank", 127);
 		IntelMessage (strparam (s:"You have ranked up to \cD", s:RankTitles[GetRank ()], s:"!"), false);
-		ACS_ExecuteAlways (91, 0);
+		ACS_ExecuteAlways (SC_PLAYERCHECKRANK, 0);
 		
 		TeamMessage (TMSG_RANKUP, GetRank(), playernumber());
 		Log (n:0, s:"\c- ranks up to ", s:RankTitles[GetRank ()]);
@@ -146,7 +148,7 @@ function str GetRankPic (int p) {
 }
 
 //Rank awards/checks
-script 91 (void) {
+script SC_PLAYERCHECKRANK (void) {
 	if (CheckInventory("IsMech") ||
 	    CheckInventory("PowerBerserk"))
 		terminate;
@@ -221,7 +223,7 @@ script 91 (void) {
 	}
 }
 
-//Just add experience.
+// Just add experience.
 Script 318 (VOID)
 {
 	for (int i = 0; i < 5; i++) {
@@ -240,7 +242,7 @@ script 324 (int n) {
 	}
 }
 
-//Bonuses for disarming C4.
+// Bonuses for disarming C4.
 Script 328 (int team) {
 	if (PlayerNumber() == -1 || !PlayerInGame (PlayerNumber()) || PlayerTeam() == team)
 		terminate;
@@ -250,7 +252,8 @@ Script 328 (int team) {
 	LocalAmbientSound ("c4/use", 127);
 }
 
-//Bonuses for disarming Beacon.
+// Bonuses for disarming Beacon.
+// TODO: Why not AddExperience?
 Script 350 (int team) {
 	if (team == PlayerTeam()) terminate;
 	
