@@ -174,8 +174,6 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Pref_MenuToggle			803
 #libdefine SC_Pref_RequestFreeze		804
 //#libdefine SC_Init_crates				805
-#libdefine SC_PlayerCheckRank			806
-// [...]
 #libdefine SC_BombPackItem				807
 // [...]
 #libdefine SC_HUDDaemon					809
@@ -201,6 +199,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_StructureFall				832
 #libdefine SC_SFSpecial					833
 #libdefine SC_StructurePain				834
+#libdefine SC_PlayerCheckRank			835
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
