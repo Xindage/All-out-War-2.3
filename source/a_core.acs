@@ -414,7 +414,8 @@ script SC_CL_PLAYERENTER ENTER CLIENTSIDE {
 }
 
 // [Dusk] Dummy script, maps call this :/
-script 92 (void) {}
+// [Xindage] Lets comment it out for a while, what could go wrong :3
+// script 92 (void) {}
 
 // [Dusk]
 script SC_CL_PLAYERDISCONNECT (int gone) DISCONNECT CLIENTSIDE {
