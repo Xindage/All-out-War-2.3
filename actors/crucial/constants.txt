@@ -68,6 +68,7 @@ const int SC_InitMonster = 827;
 const int SC_STRUCTUREFALL = 832;
 const int SC_SFSPECIAL = 833;
 const int SC_STRUCTUREPAIN = 834;
+const int SC_STRUCTUREBTODAMAGE = 836
 const int SC_SillyThings = 903;
 const int SC_WEAPONFIRECHECK = 913;
 const int SC_TortoiseEject = 904;
@@ -83,6 +84,7 @@ const int SC_MARINE_DEATH = 968;
 const int SC_SETPITCH = 979;
 const int SC_DAMAGEOVERTIME = 974;
 const int SC_STEALTH = 975;
+
 
 const int STEALTH_ON = 0;
 const int STEALTH_OFF = 1;

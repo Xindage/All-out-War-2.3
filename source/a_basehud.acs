@@ -1,4 +1,5 @@
 // BUILDING HUD FUNCTIONALITY
+// Some functions could be merged to save functions count, but its necessary to see how it works with zeta_cl_confonthud
 function void CL_DisplayBuildingHud (void) {
 	SetHUDFont ();
 	

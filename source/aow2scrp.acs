@@ -203,6 +203,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_SFSpecial					833
 #libdefine SC_StructurePain				834
 #libdefine SC_PlayerCheckRank			835
+#libdefine SC_StructureBTODamage		836
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
@@ -212,7 +213,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // 9** scripts
 #libdefine SC_IdentifyTarget			900
 #libdefine SC_BeaconExplosion			901
-//										902
+#libdefine SC_SFAnnounce				902
 #libdefine SC_SillyThings				903
 //#libdefine SC_TortoisePassenger			904
 #libdefine SC_WeaponCheck				905

@@ -114,7 +114,7 @@ script SC_STRUCTUREFALL (int what, int team)
 		SetFont("BIGFONT");
 		HudMessageBold(s:"The ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd has been destroyed!!";
 		HUDMSG_FADEOUT, 0, CR_Green, 0.5, 0.7, 2.0, 1.0);
-		ACS_ExecuteAlways(99, 0, team);
+		ACS_ExecuteAlways(SC_SFANNOUNCE, 0, team);
 	}
 	Log(n:0, s:" destroys ", s:TeamNames[team], s:" ", s:name, s:".");
 	ACS_ExecuteAlways			(SC_SFSPECIAL, 0, what, team);
@@ -126,6 +126,15 @@ script SC_STRUCTUREFALL (int what, int team)
 	delay(40); // It's 40 tics to the terminals finish its death sequence.
 	Thing_Remove				(MainTIDs[team][what]);
 	Thing_Remove				(BTOsTIDs[team][what]);
+}
+
+// [Xindage] Keep this clientsided. Also removed NET, clients has no reason to manualy call it.
+script SC_SFANNOUNCE (int team) CLIENTSIDE
+{
+	if (team == TEAM_RED)
+		{AmbientSound("red/destroyed",255);		AmbientSound("red/destroyed",255);}
+	else // Blue
+		{AmbientSound("blue/destroyed",255);	AmbientSound("blue/destroyed",255);}
 }
 
 // Just to help handling the "events"
@@ -813,20 +822,10 @@ script SC_STRUCTUREPAIN (int Structure, int Team) {
 	}
 }
 
-script 99 (int team) NET CLIENTSIDE {
-	if (team == TEAM_RED) {
-		AmbientSound("red/destroyed",255);
-		AmbientSound("red/destroyed",255);
-	} else {
-		AmbientSound("blue/destroyed",255);
-		AmbientSound("blue/destroyed",255);
-	}
-}
-
 // =============================================================================
 // [Dusk] BTOs call this to cause external damage, this way the attacker is
 // properly rewarded for the damage done.
-script 652 (int tid, int damage) {
+script SC_STRUCTUREBTODAMAGE (int tid, int damage) {
 	SetActivatorToTarget (0);
 	Thing_Damage (tid, damage, 0);
 }

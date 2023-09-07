@@ -61,24 +61,24 @@ actor BaseTerminalOutside {
 		stop
 	Pain:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], 1)
+		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], 1)
 		goto Idle
 	Pain.Fire:
 	Pain.EnergyDecay:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (3, 4))
+		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (3, 4))
 		goto Idle
 	Pain.Plasma:
 	Pain.MassDriver:
 	Pain.Explosion:
 	Pain.AntiArmor:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (20, 40))
+		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (20, 40))
 		goto Idle
 
 	Pain.Superweapon:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (652, 0, args[0], random (40, 80))
+		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (40, 80))
 		goto Idle
 	}
 }
