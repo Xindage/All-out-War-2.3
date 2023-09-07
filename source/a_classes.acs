@@ -504,12 +504,22 @@ function int SetClass (int id, int scflags) {
  * remains of that old copy/paste nightmare :)
  * These now just call the menu.
  */
-// {9/10/12} Script 20 is NET w/ extra checks so it can be called from console.
-script 20 (void) NET {
+
+// [Xindage] 07/09/23 Script 20 copy paste, into aow2scrp.acs to be defined for a while.
+script SC_CL_MENUCALL (void) NET
+{
 	if (PlayerInGame (PlayerNumber ()) && CheckInventory ("IsInSpawnRoom"))
 		ActivateMenu (MENU_PURCHASE);
 }
 
+// [Xindage] 07/09/23 TODO: Rework the terminal numbers to have just only one and all of these should be safely removed.
+// It just exist for compatibility with omega dated maps, should be reworked someday.
+// {9/10/12} Script 20 is NET w/ extra checks so it can be called from console.
+script 20 (void) NET
+{
+	if (PlayerInGame (PlayerNumber ()) && CheckInventory ("IsInSpawnRoom"))
+		ActivateMenu (MENU_PURCHASE);
+}
 script 21 (void) ActivateMenu (MENU_PURCHASE);
 script 22 (void) ActivateMenu (MENU_PURCHASE);
 script 23 (void) ActivateMenu (MENU_PURCHASE);
