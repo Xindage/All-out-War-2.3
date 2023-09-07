@@ -136,7 +136,7 @@ script SC_ADMIN_CLIENT (int Arg1, int Arg2, int Arg3) NET
 		break;
 	case 3:
 		// Activate crate
-		ACS_ExecuteAlways (309, 0, Arg2, Arg3);
+		ACS_ExecuteAlways (SC_CRATEEFFECT, 0, Arg2, Arg3);
 		break;
 	case 4:
 	case 5:

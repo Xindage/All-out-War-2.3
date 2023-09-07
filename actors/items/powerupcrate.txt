@@ -32,7 +32,7 @@ actor PowerupCrate : CustomInventory 21411 {
 		UCRT A 6
 		loop
 	Pickup:
-		TNT1 A 0 ACS_ExecuteAlways (309, 0, -1)
+		TNT1 A 0 ACS_ExecuteAlways (SC_CRATEEFFECT, 0, -1)
 		stop
 	}
 }

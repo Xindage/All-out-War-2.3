@@ -33,7 +33,7 @@ script SC_OPENDECK (int action) {
 		// Player activates chooser
 		Log (n:0, s:" activates Open Deck.");
 		TakeInventory("OpenDeck", 1);
-		ACS_ExecuteAlways (309, 0, CheckInventory ("CrateChooserRotation"));
+		ACS_ExecuteAlways (SC_CRATEEFFECT, 0, CheckInventory ("CrateChooserRotation"));
 		ActivatorSound ("powerup/basic", 127);
 		break;
 	}

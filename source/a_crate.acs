@@ -329,7 +329,7 @@ function int CheckCrate (int c) {
 // ============================================================================
 // Script 309: actual crate script
 // [Dusk] This uses identifiers now
-script 309 (int c)
+script SC_CRATEEFFECT (int c)
 {
 	int team = PlayerTeam (); // Manual warning system requires it.
 	// Check that the crate is good - if not, find a good one.
@@ -480,7 +480,7 @@ script 309 (int c)
 		if(checkinventory("timegun") || CheckInventory("Karasawa"))
 		{
 			delay(1);
-			acs_executealways(309, 0, random(0, 10));
+			acs_executealways(SC_CRATEEFFECT, 0, random(0, 10));
 			terminate;
 		}
 		
