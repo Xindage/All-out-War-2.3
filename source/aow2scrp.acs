@@ -204,7 +204,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_StructurePain				834
 #libdefine SC_PlayerCheckRank			835
 #libdefine SC_StructureBTODamage		836
-//libdefine								837
+#libdefine SC_CreditBonus				837
 #libdefine SC_CL_MenuCall				838
 #libdefine SC_CrateEffect				839
 // [...]
