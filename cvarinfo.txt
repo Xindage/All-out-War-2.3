@@ -172,3 +172,5 @@ user	int		zeta_cl_fullteamlog			=		0;
 	
 // [Dusk] {10/27/12} How much to donate?
 user	int		zeta_cl_donateamount		=		100;
+
+user	int		toggle_names		=		1;

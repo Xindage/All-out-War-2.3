@@ -33,11 +33,13 @@ addmenukey "Melee Attack" meleeattack
 addmenukey "Reload Weapon" reloadweapon
 addmenukey "Eject Mech" ejectmech
 addmenukey "Open Changelog" changelog
+addmenukey "Switch Tophead Names" showplayersnames
 
 defaultbind g usefraggrenade
 defaultbind f useflashbang
 defaultbind q meleeattack
 defaultbind r reloadweapon
+defaultbind b showplayersnames
 
 // =============================================================================
 // ALIAS CCMDS
@@ -88,6 +90,8 @@ alias aow_preferences "puke -803"
 
 // Version information
 alias aow_versioninfo "puke -813"
+
+alias showplayersnames "puke -1008"
 
 // =============================================================================
 // RCON ADMIN COMMANDS

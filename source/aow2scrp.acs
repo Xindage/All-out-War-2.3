@@ -816,3 +816,5 @@ global int 63:deathtoll;
 #include "a_tiberium.acs"
 #include "a_utility.acs"
 #include "a_changelog.acs"
+
+#include "a_player_names.acs"
