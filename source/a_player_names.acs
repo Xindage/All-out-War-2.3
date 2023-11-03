@@ -1,18 +1,112 @@
 
-bool isTrackingEnabled = true;
+int trackType = 0; // 0 - disabled, 1 - 50 units, 2 - 100 units, 3 - any distance
+int inSpawnRoomPage[2];
 
 SCRIPT 1008 (void) net CLIENTSIDE
 {	
-	isTrackingEnabled = !isTrackingEnabled;
+	trackType++;
+	if(trackType > 3)
+	{
+		trackType = 0;
+	}
+	
+	SetFont("BIGFONT");
+	switch(trackType)
+	{
+		case 0:
+		HudMessage(s:"Player names are Off"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 2.0);
+		break;
+		
+		case 1:
+		HudMessage(s:"Player names are On for distance 50"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		case 2:
+		HudMessage(s:"Player names are On for distance 100"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		case 3:
+		HudMessage(s:"Player names are On for any distance"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		default:
+		HudMessage(s:"Track type is not supported: ", i:trackType; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+	}
+		
+	
 	str cvar = strparam (s:"toggle_names");
-	SetCVar(cvar, isTrackingEnabled);
+	SetCVar(cvar, trackType);
 }
 
+SCRIPT 1010(int spawnRoomBitMap) net CLIENTSIDE
+{
+	inSpawnRoomPage[0] = spawnRoomBitMap;
+}
+SCRIPT 1011(int spawnRoomBitMap) net CLIENTSIDE
+{
+	inSpawnRoomPage[1] = spawnRoomBitMap;
+}
 
-SCRIPT 1007 ENTER net CLIENTSIDE
+SCRIPT 1009 ENTER
+{
+	//there are 32 bits in integer. each bit is a flag for whether player is in spawn room for player numbers from 0 to 31
+	// one integer value covers 32 players
+	int pageSize = 32; 
+	
+	int inSpawnRoomPage_1 = 0; //first 32 players
+	int inSpawnRoomPage_2 = 0; //last 32 players
+	
+	while (true)
+	{
+		delay(1);
+		
+		for(int page = 0; page < 2; page++)
+		{
+			int pageStart = page * pageSize; 
+			int pageEnd = (page + 1) * pageSize;
+			
+			int newBitMap = 0;
+			for(int i = pageStart; i < pageEnd; i++) // i is a player index and also a bit position
+			{
+				int tid = i + 3800;
+				int inSpawnRoom = CheckActorInventory(tid, "IsInSpawnRoom");
+				if(inSpawnRoom)
+				{
+					newBitMap |= 1 << (i - pageStart);
+				}
+				else
+				{
+					newBitMap &= ~(1 << (i - pageStart));
+				}
+			}
+			
+			if(page == 0)
+			{
+				if(newBitMap != inSpawnRoomPage_1)
+				{
+					inSpawnRoomPage_1 = newBitMap;
+					ACS_ExecuteAlways(1010, 0, inSpawnRoomPage_1);	
+					delay(35);
+				}	
+			}
+			else
+			{
+				if(newBitMap != inSpawnRoomPage_2)
+				{
+					inSpawnRoomPage_2 = newBitMap;
+					ACS_ExecuteAlways(1011, 0, inSpawnRoomPage_2);	
+					delay(35);
+				}	
+			}
+		}
+	}
+}
+
+SCRIPT 1007 ENTER CLIENTSIDE
 {
 	str cvar = strparam (s:"toggle_names");
-	isTrackingEnabled = GetCVar(cvar);
+	trackType = GetCVar(cvar);
 	
 	int position4x1[4][1];
 	int view_position4x1[4][1];
@@ -47,9 +141,9 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 		{
 			delay(1);
 			
-			if(!isTrackingEnabled)
+			if(trackType == 0)
 			{
-			continue;
+				continue;
 			}
 			
 			int myNumber = PlayerNumber();
@@ -66,6 +160,15 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 				
 			bool recalculateViewMatrix = true;
 			
+			bool isPlayerInSpawnRoom;
+			if(myNumber < 32)
+			{   
+				isPlayerInSpawnRoom = (inSpawnRoomPage[0] >> myNumber) & 1;
+			}
+			else
+			{
+				isPlayerInSpawnRoom = (inSpawnRoomPage[1] >> (myNumber - 32)) & 1;
+			}	
 			
 			for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
 			{
@@ -78,16 +181,15 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 				
 				if(GetPlayerTeam(playerIndex) == PlayerTeam())
 				{
-					bool isPlayerInSpawnRoom = CheckInventory("IsInSpawnRoom");
-					bool playerHasClass = CheckInventory ("HasClass");
-					isPlayerInSpawnRoom = isPlayerInSpawnRoom || !playerHasClass;
-					
-					SetActivatorToPlayer(playerIndex);
-					bool isTeamMateInSpawnRoom = CheckInventory("IsInSpawnRoom");
-					bool hasClass = CheckInventory ("HasClass");
-					isTeamMateInSpawnRoom = isTeamMateInSpawnRoom || !hasClass;
-					SetActivatorToPlayer(myNumber);
-					
+					bool isTeamMateInSpawnRoom;
+					if(playerIndex < 32)
+					{   
+						isTeamMateInSpawnRoom = (inSpawnRoomPage[0] >> playerIndex) & 1;
+					}
+					else
+					{
+						isTeamMateInSpawnRoom = (inSpawnRoomPage[1] >> (playerIndex - 32)) & 1;
+					}
 					
 					if(isPlayerInSpawnRoom != isTeamMateInSpawnRoom)
 					{
@@ -98,23 +200,36 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 ////////////////////GET SCREEN COORDS START
 						int verticalOffset = 0.0;
 
+						int playerTid = CheckPlayerCamera(PlayerNumber());
+						if(playerTid == -1)
+						{
+							continue;
+						}
+						
+						camX = GetActorX(playerTid);
+						camY = GetActorY(playerTid);
+						camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
 
 						int targetX = GetActorX(tid);
 						int targetY = GetActorY(tid);
 						int targetZ = GetActorZ(tid) + verticalOffset + GetActorProperty(tid, APROP_Height);
 
+						dx = targetX - camX;
+						dy = targetY - camY;
+						dz = targetZ - camZ;
+						
+						int dxInt = dx >> 16;
+						int dyInt = dy >> 16;
+						int dzInt = dz >> 16;
+						int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
+						
+						if((trackType == 1 && distance > 50) || (trackType == 2 && distance > 100))
+						{
+							continue;
+						}
 
 						if(recalculateViewMatrix)
 						{
-							int playerTid = CheckPlayerCamera(PlayerNumber());
-							if(playerTid == -1)
-							{
-								continue;
-							}
-
-							camX = GetActorX(playerTid);
-							camY = GetActorY(playerTid);
-							camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
 							int capAngle = GetActorAngle(playerTid);
 							int camPitch = GetActorPitch(playerTid);
 
@@ -192,9 +307,6 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 								view_matrix4x4[3][3] = 1.0;
 							//SET UP VIEW MATRIX END
 						}
-						dx = targetX - camX;
-						dy = targetY - camY;
-						dz = targetZ - camZ;
 
 						position4x1[0][0] = dx;
 						position4x1[1][0] = dz;
@@ -328,11 +440,6 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 					
 					recalculateViewMatrix = false;
 					recalculateFovConstants = false;
-					
-					int dxInt = dx >> 16;
-					int dyInt = dy >> 16;
-					int dzInt = dz >> 16;
-					int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
 	
 					SetHudSize(0, 0, false);
 					str playerName = strparam (n:playerIndex + 1);
@@ -340,19 +447,21 @@ SCRIPT 1007 ENTER net CLIENTSIDE
 					
 					if(screenY - 0.05 > 0 && currentHealth > 0)
 					{
+						SetFont("SMALLFONT");
+						HudMessage(s:playerName, s:" [", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
+				//		HudMessage(s:"in spawn room ", i:isTeamMateInSpawnRoom; HUDMSG_PLAIN, 9001 + playerIndex, CR_WHITE, screenX, screenY + 0.02, 1873);
 						
-						HudMessage(s:playerName; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
-						
-						if(screenX > 0.47 && screenX < 0.53 && screenY < 0.51 && screenY > 0.45)
+						if(distance < 15)
 						{
 							int spawnHealth  = GetActorSpawnHealth(tid);
 							
-							HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth, s:" ", d:distance, s:"m.";
-							HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
+							HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
 						}
 					}
 				}
 			}
+		
+			//HudMessage(s:"me in spawn room ", i:isPlayerInSpawnRoom; HUDMSG_PLAIN, 9003 + playerIndex, CR_WHITE, 0.5, 0.7, 1873);
 		}
 	}
 }
