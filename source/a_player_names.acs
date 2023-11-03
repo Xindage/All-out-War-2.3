@@ -1,0 +1,467 @@
+
+int trackType = 0; // 0 - disabled, 1 - 50 units, 2 - 100 units, 3 - any distance
+int inSpawnRoomPage[2];
+
+SCRIPT 1008 (void) net CLIENTSIDE
+{	
+	trackType++;
+	if(trackType > 3)
+	{
+		trackType = 0;
+	}
+	
+	SetFont("BIGFONT");
+	switch(trackType)
+	{
+		case 0:
+		HudMessage(s:"Player names are Off"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 2.0);
+		break;
+		
+		case 1:
+		HudMessage(s:"Player names are On for distance 50"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		case 2:
+		HudMessage(s:"Player names are On for distance 100"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		case 3:
+		HudMessage(s:"Player names are On for any distance"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+		
+		default:
+		HudMessage(s:"Track type is not supported: ", i:trackType; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		break;
+	}
+		
+	
+	str cvar = strparam (s:"toggle_names");
+	SetCVar(cvar, trackType);
+}
+
+SCRIPT 1010(int spawnRoomBitMap) net CLIENTSIDE
+{
+	inSpawnRoomPage[0] = spawnRoomBitMap;
+}
+SCRIPT 1011(int spawnRoomBitMap) net CLIENTSIDE
+{
+	inSpawnRoomPage[1] = spawnRoomBitMap;
+}
+
+SCRIPT 1009 ENTER
+{
+	//there are 32 bits in integer. each bit is a flag for whether player is in spawn room for player numbers from 0 to 31
+	// one integer value covers 32 players
+	int pageSize = 32; 
+	
+	int inSpawnRoomPage_1 = 0; //first 32 players
+	int inSpawnRoomPage_2 = 0; //last 32 players
+	
+	while (true)
+	{
+		delay(1);
+		
+		for(int page = 0; page < 2; page++)
+		{
+			int pageStart = page * pageSize; 
+			int pageEnd = (page + 1) * pageSize;
+			
+			int newBitMap = 0;
+			for(int i = pageStart; i < pageEnd; i++) // i is a player index and also a bit position
+			{
+				int tid = i + 3800;
+				int inSpawnRoom = CheckActorInventory(tid, "IsInSpawnRoom");
+				if(inSpawnRoom)
+				{
+					newBitMap |= 1 << (i - pageStart);
+				}
+				else
+				{
+					newBitMap &= ~(1 << (i - pageStart));
+				}
+			}
+			
+			if(page == 0)
+			{
+				if(newBitMap != inSpawnRoomPage_1)
+				{
+					inSpawnRoomPage_1 = newBitMap;
+					ACS_ExecuteAlways(1010, 0, inSpawnRoomPage_1);	
+					delay(35);
+				}	
+			}
+			else
+			{
+				if(newBitMap != inSpawnRoomPage_2)
+				{
+					inSpawnRoomPage_2 = newBitMap;
+					ACS_ExecuteAlways(1011, 0, inSpawnRoomPage_2);	
+					delay(35);
+				}	
+			}
+		}
+	}
+}
+
+SCRIPT 1007 ENTER CLIENTSIDE
+{
+	str cvar = strparam (s:"toggle_names");
+	trackType = GetCVar(cvar);
+	
+	int position4x1[4][1];
+	int view_position4x1[4][1];
+	int view_matrix4x4[4][4];
+
+	int a_3x1[3][1];
+	int b_3x1[3][1];
+	int c_3x1[3][1];
+
+	int screenX; //from 0 to 1
+	int screenY; //from 0 to 1
+
+	int dx;
+	int dy;
+	int dz;
+
+	int camX;
+	int camY;
+	int camZ;
+
+	int BC_H;
+	int BC_V;
+
+
+	int prevFovRatio = 1.0;
+		
+	while (true)
+	{
+		bool recalculateFovConstants = true;
+		
+		for(int tick = 0; tick < 35; tick++)
+		{
+			delay(1);
+			
+			if(trackType == 0)
+			{
+				continue;
+			}
+			
+			int myNumber = PlayerNumber();
+			
+			int fovRatio = FixedDiv(GetPlayerInfo(myNumber, PLAYERINFO_FOV), GetPlayerInfo(myNumber, PLAYERINFO_DESIREDFOV));
+			
+			if(fovRatio != prevFovRatio)
+			{
+				prevFovRatio = fovRatio;
+				recalculateFovConstants = true;
+			}
+			
+			int myTid = myNumber + 3800;
+				
+			bool recalculateViewMatrix = true;
+			
+			bool isPlayerInSpawnRoom;
+			if(myNumber < 32)
+			{   
+				isPlayerInSpawnRoom = (inSpawnRoomPage[0] >> myNumber) & 1;
+			}
+			else
+			{
+				isPlayerInSpawnRoom = (inSpawnRoomPage[1] >> (myNumber - 32)) & 1;
+			}	
+			
+			for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+			{
+				int tid = playerIndex + 3800;
+				
+				if(!PlayerInGame(playerIndex) || playerIndex == myNumber)
+				{
+					continue;
+				}
+				
+				if(GetPlayerTeam(playerIndex) == PlayerTeam())
+				{
+					bool isTeamMateInSpawnRoom;
+					if(playerIndex < 32)
+					{   
+						isTeamMateInSpawnRoom = (inSpawnRoomPage[0] >> playerIndex) & 1;
+					}
+					else
+					{
+						isTeamMateInSpawnRoom = (inSpawnRoomPage[1] >> (playerIndex - 32)) & 1;
+					}
+					
+					if(isPlayerInSpawnRoom != isTeamMateInSpawnRoom)
+					{
+						continue;
+					}
+					
+					
+////////////////////GET SCREEN COORDS START
+						int verticalOffset = 0.0;
+
+						int playerTid = CheckPlayerCamera(PlayerNumber());
+						if(playerTid == -1)
+						{
+							continue;
+						}
+						
+						camX = GetActorX(playerTid);
+						camY = GetActorY(playerTid);
+						camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
+
+						int targetX = GetActorX(tid);
+						int targetY = GetActorY(tid);
+						int targetZ = GetActorZ(tid) + verticalOffset + GetActorProperty(tid, APROP_Height);
+
+						dx = targetX - camX;
+						dy = targetY - camY;
+						dz = targetZ - camZ;
+						
+						int dxInt = dx >> 16;
+						int dyInt = dy >> 16;
+						int dzInt = dz >> 16;
+						int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
+						
+						if((trackType == 1 && distance > 50) || (trackType == 2 && distance > 100))
+						{
+							continue;
+						}
+
+						if(recalculateViewMatrix)
+						{
+							int capAngle = GetActorAngle(playerTid);
+							int camPitch = GetActorPitch(playerTid);
+
+							//camera forward vector
+							int fx = FixedMul(cos(capAngle),cos(camPitch));
+							int fy = FixedMul(sin(capAngle),cos(camPitch));
+							int fz = cos(0.25 + camPitch);
+
+							//camera forward
+							a_3x1[0][0] = fx;
+							a_3x1[1][0] = fy;
+							a_3x1[2][0] = fz;
+
+
+							//world up vector
+							b_3x1[0][0] = 0;
+							b_3x1[1][0] = 0;
+							b_3x1[2][0] = 1.0;
+
+							//CROSS CAMERA FORWARD AND WORLD UP START
+								c_3x1[0][0] = FixedMul(b_3x1[1][0], a_3x1[2][0]) - FixedMul(a_3x1[1][0], b_3x1[2][0]);
+								c_3x1[1][0] = FixedMul(a_3x1[0][0], b_3x1[2][0]) - FixedMul(b_3x1[0][0], a_3x1[2][0]);
+								c_3x1[2][0] = FixedMul(b_3x1[0][0], a_3x1[1][0]) - FixedMul(a_3x1[0][0], b_3x1[1][0]);
+
+								int magnitude = FixedSqrt(
+								FixedMul(c_3x1[0][0], c_3x1[0][0]) +
+								FixedMul(c_3x1[1][0], c_3x1[1][0]) +
+								FixedMul(c_3x1[2][0], c_3x1[2][0]));
+								
+								//normalize
+								c_3x1[0][0] = FixedDiv(c_3x1[0][0], magnitude);
+								c_3x1[1][0] = FixedDiv(c_3x1[1][0], magnitude);
+								c_3x1[2][0] = FixedDiv(c_3x1[2][0], magnitude);
+							//CROSS CAMERA FORWARD AND WORLD UP END
+							
+							//camera right vector
+							int rx = -c_3x1[0][0];
+							int ry = -c_3x1[1][0];
+							int rz = -c_3x1[2][0];
+
+							b_3x1[0][0] = rx;
+							b_3x1[1][0] = ry;
+							b_3x1[2][0] = rz;
+
+							//CROSS CAMERA FORWARD AND CAMERA RIGHT START
+								c_3x1[0][0] = FixedMul(b_3x1[1][0], a_3x1[2][0]) - FixedMul(a_3x1[1][0], b_3x1[2][0]);
+								c_3x1[1][0] = FixedMul(a_3x1[0][0], b_3x1[2][0]) - FixedMul(b_3x1[0][0], a_3x1[2][0]);
+								c_3x1[2][0] = FixedMul(b_3x1[0][0], a_3x1[1][0]) - FixedMul(a_3x1[0][0], b_3x1[1][0]);
+							//CROSS CAMERA FORWARD AND CAMERA RIGHT END
+
+							//camera up vector
+							int ux = c_3x1[0][0];
+							int uy = c_3x1[1][0];
+							int uz = c_3x1[2][0];
+
+							//SET UP WORLD TO CAMERA VIEW MATRIX START
+								view_matrix4x4[0][0] = rx;
+								view_matrix4x4[1][0] = ux;
+								view_matrix4x4[2][0] = fx;
+								view_matrix4x4[3][0] = 0.0;
+
+								view_matrix4x4[0][1] = rz;
+								view_matrix4x4[1][1] = uz;
+								view_matrix4x4[2][1] = fz;
+								view_matrix4x4[3][1] = 0.0;
+
+								view_matrix4x4[0][2] = ry;
+								view_matrix4x4[1][2] = uy;
+								view_matrix4x4[2][2] = fy;
+								view_matrix4x4[3][2] = 0.0;
+
+								view_matrix4x4[0][3] = 0.0;
+								view_matrix4x4[1][3] = 0.0;
+								view_matrix4x4[2][3] = 0.0;
+								view_matrix4x4[3][3] = 1.0;
+							//SET UP VIEW MATRIX END
+						}
+
+						position4x1[0][0] = dx;
+						position4x1[1][0] = dz;
+						position4x1[2][0] = dy;
+						position4x1[3][0] = 1.0;
+
+						//MATRIX MULTIPLICATION START
+							int matrix_m = 4;
+							int matrix_n = 4;
+							int matrix_p = 1;
+							
+							for (int i = 0; i < matrix_m; i++)
+							{
+								for (int j = 0; j < matrix_p; j++)
+								{
+									view_position4x1[i][j] = 0;
+									for (int k = 0; k < matrix_n; k++)
+									{
+										view_position4x1[i][j] += FixedMul(view_matrix4x4[i][k], position4x1[k][j]);
+									}
+								}
+							}
+						//MATRIX MULTIPLICATION END
+
+						int viewY = view_position4x1[0][0];
+						int viewX = view_position4x1[2][0];
+						int viewZ = view_position4x1[1][0];
+						
+						//PROJECT CAMERA VIEW TO SCREEN START
+							//let's assume height and width of the screen is 2.
+							// top view of camera projection.  BC represen right half of the screen
+							// A - is a virtual point behind the screen.
+							// B - middle point of the screen. Exact matches player camera position
+							// C - right border of the screen.
+							// AB = 1
+							// BC = tan(BAC) * AB
+							//     B       C
+							//      _______
+							//     |      /
+							//     |     /
+							//     |    /
+							//     |   /
+							//     |  /
+							//     | /
+							//     |/ - half of fov angle between AB and AC
+							//     A -virtual point behind the screen
+
+							//if target is backwards, just make it slightly in front - in such case we would observ it on screen side 
+							//which hints as is target to the left or to the right
+							if(viewX <= 0)
+							{
+								viewX = 1.0;
+							}
+
+
+							int AB = 1.0;
+
+							if(recalculateFovConstants)
+							{
+								int BAC_H = FixedMul(0.147, fovRatio);
+								int sin_BAC_H = sin(BAC_H);
+								int cos_BAC_H = cos(BAC_H);
+								int tan_BAC_H = FixedDiv(sin_BAC_H, cos_BAC_H);
+								BC_H = FixedMul(tan_BAC_H, AB); //horizontal half screen size
+
+
+								int BAC_V = FixedMul(0.0897, fovRatio);
+								int sin_BAC_V = sin(BAC_V);
+								int cos_BAC_V = cos(BAC_V);
+								int tan_BAC_V = FixedDiv(sin_BAC_V, cos_BAC_V);
+								BC_V = FixedMul(tan_BAC_V, AB); //vertical half screen size
+							}
+
+							int projectedScreenX = viewY;
+							int projectedScreenY = viewZ;
+
+							int projectedRatio = FixedDiv(projectedScreenY, projectedScreenX); // y = projY/ProjX * X
+
+							int borderX;
+							int borderY;
+
+							if(projectedScreenX <= 0)
+							{
+								borderX = -BC_H;
+							}
+							else
+							{
+								borderX = BC_H;
+							}
+							borderY = FixedMul(projectedRatio, borderX);
+
+							if(borderY > BC_V || borderY < -BC_V)
+							{
+								if(borderY > 0)
+								{
+									borderY = BC_V;
+								}
+								else
+								{
+									borderY = -BC_V;
+								}
+								borderX = FixedDiv(borderY, projectedRatio);
+							}
+
+							int projectedScreenMaxDistance = VectorLength(borderX, borderY);
+
+							int projectedDistance = VectorLength(viewY, viewZ);
+							int projectedAngleTan = FixedDiv(projectedDistance, viewX);
+							int projectedScreenDistance = FixedMul(projectedAngleTan, AB);
+
+							if(projectedScreenDistance > projectedScreenMaxDistance)
+							{
+								projectedScreenDistance = projectedScreenMaxDistance;
+							}
+
+							int borderPoinNormalX = FixedDiv(borderX, projectedScreenMaxDistance);
+							int borderPoinNormalY = FixedDiv(borderY, projectedScreenMaxDistance);
+
+
+							borderPoinNormalX =  FixedDiv(borderPoinNormalX, BC_H);
+							borderPoinNormalY =  FixedDiv(borderPoinNormalY, BC_V);
+
+							screenX = FixedMul(borderPoinNormalX, projectedScreenDistance);
+							screenY = FixedMul(borderPoinNormalY, projectedScreenDistance);
+
+							screenX =  FixedDiv(screenX + 1.0, 2.0);
+							screenY =  1.0 - FixedDiv(screenY + 1.0, 2.0);
+						//PROJECT CAMERA VIEW TO SCREEN END
+////////////////////GET SCREEN COORDS END
+					
+					
+					recalculateViewMatrix = false;
+					recalculateFovConstants = false;
+	
+					SetHudSize(0, 0, false);
+					str playerName = strparam (n:playerIndex + 1);
+					int currentHealth  = GetActorHealth(tid);
+					
+					if(screenY - 0.05 > 0 && currentHealth > 0)
+					{
+						SetFont("SMALLFONT");
+						HudMessage(s:playerName, s:" [", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
+				//		HudMessage(s:"in spawn room ", i:isTeamMateInSpawnRoom; HUDMSG_PLAIN, 9001 + playerIndex, CR_WHITE, screenX, screenY + 0.02, 1873);
+						
+						if(distance < 15)
+						{
+							int spawnHealth  = GetActorSpawnHealth(tid);
+							
+							HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
+						}
+					}
+				}
+			}
+		
+			//HudMessage(s:"me in spawn room ", i:isPlayerInSpawnRoom; HUDMSG_PLAIN, 9003 + playerIndex, CR_WHITE, 0.5, 0.7, 1873);
+		}
+	}
+}
