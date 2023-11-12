@@ -90,3 +90,25 @@ Actor HHMetalHit : SparkPuff
 		Stop
 	}
 }
+
+Actor HitscanPuff : BulletPuff
+{
+	+HITTRACER
+	+HITTARGET
+	+NOBLOOD
+	+PUFFGETSOWNER
+
+	+PUFFONACTORS
+	+ALWAYSPUFF
+
+	+NOBLOCKMAP
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 1
+		Death: 
+			TNT1 A 1 ACS_ExecuteAlways (1021, 0) //S_SPOT_ACTOR_PUFF
+		Stop
+	}
+}
