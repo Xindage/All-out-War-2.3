@@ -1,17 +1,55 @@
+// VARIABLES
+int ALL_VARS[20][100][4];
 
-int trackType = 0; // 0 - disabled, 1 - 50 units, 2 - 100 units, 3 - any distance
-int inSpawnRoomPage[2];
+#define VIEW_MATRIX_4x4 0 //float array[4][4]
+#define VECTOR_A_3x1 1 //float array[4]
+#define VECTOR_B_3x1 2 //float array[4]
+#define VECTOR_C_3x1 3 //float array[4]
+#define PREV_FOV_RATIO 4 //float
+#define RESULT_SCREEN_X 5 //float
+#define RESULT_SCREEN_Y 6 //float
+#define PROJECTION_BC_H 7 //float
+#define PROJECTION_BC_V 8 //float
+#define SPAWN_ROOM_1 9 //bitmap
+#define SPAWN_ROOM_2 10 //bitmap
 
-SCRIPT 1008 (void) net CLIENTSIDE
+#define RESULT_DISTANCE 11 //int
+#define TRACKING_TYPE 12 //int 0 - disabled, 1 - 50 units, 2 - 100 units, 3 - any distance
+#define SPOTTED_ACTOR 13 // int array[100]
+#define SPOTTED_ACTOR_TIME 14 // int array[100]
+#define SPOT_PROCESS_DIRTY 15 // bool
+#define SPOTTED_ACTOR_CLIENT 16 // int array[100]
+
+// SCRIPTS
+#define S_IS_IN_SPAWNROOM 1010
+#define S_CROSS 1011
+#define S_NORMALIZE 1012
+#define S_PROJECTION 1013
+#define S_SWITCH_TRACKING_TYPE 1014
+#define S_SET_SPAWN_PAGE_1 1015
+#define S_SET_SPAWN_PAGE_2 1016
+#define S_SPWAN_ROOM_CHECK 1017
+#define S_SPOT_ACTOR 1018
+#define S_SPOT_ACTOR_CLIENT 1019
+#define S_DRAW_NAMES 1020
+#define S_SPOT_ACTOR_PUFF 1021
+#define S_SPOT_TIMEOUT_CHECK 1022
+#define S_UNSPOT_ACTOR_CLIENT 1023
+
+//CONST
+#define SPOT_DURATION_TIC 350 // int  10 seconds
+
+
+SCRIPT S_SWITCH_TRACKING_TYPE (void) net CLIENTSIDE
 {	
-	trackType++;
-	if(trackType > 3)
+	ALL_VARS[TRACKING_TYPE][0][0]++;
+	if(ALL_VARS[TRACKING_TYPE][0][0] > 3)
 	{
-		trackType = 0;
+		ALL_VARS[TRACKING_TYPE][0][0] = 0;
 	}
 	
 	SetFont("BIGFONT");
-	switch(trackType)
+	switch(ALL_VARS[TRACKING_TYPE][0][0])
 	{
 		case 0:
 		HudMessage(s:"Player names are Off"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 2.0);
@@ -30,25 +68,295 @@ SCRIPT 1008 (void) net CLIENTSIDE
 		break;
 		
 		default:
-		HudMessage(s:"Track type is not supported: ", i:trackType; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+		HudMessage(s:"Track type is not supported: ", i:ALL_VARS[TRACKING_TYPE][0][0]; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
 		break;
 	}
 		
 	
 	str cvar = strparam (s:"toggle_names");
-	SetCVar(cvar, trackType);
+	SetCVar(cvar, ALL_VARS[TRACKING_TYPE][0][0]);
 }
 
-SCRIPT 1010(int spawnRoomBitMap) net CLIENTSIDE
+SCRIPT S_SET_SPAWN_PAGE_1(int spawnRoomBitMap) CLIENTSIDE
 {
-	inSpawnRoomPage[0] = spawnRoomBitMap;
+	ALL_VARS[SPAWN_ROOM_1][0][0] = spawnRoomBitMap;
 }
-SCRIPT 1011(int spawnRoomBitMap) net CLIENTSIDE
+SCRIPT S_SET_SPAWN_PAGE_2(int spawnRoomBitMap) CLIENTSIDE
 {
-	inSpawnRoomPage[1] = spawnRoomBitMap;
+	ALL_VARS[SPAWN_ROOM_2][0][0] = spawnRoomBitMap;
 }
 
-SCRIPT 1009 ENTER
+SCRIPT S_UNSPOT_ACTOR_CLIENT(int actorIndex) CLIENTSIDE
+{
+	ALL_VARS[SPOTTED_ACTOR_CLIENT][actorIndex][0] = 0;
+}
+
+SCRIPT S_SPOT_ACTOR_CLIENT(int actorIndex, int sp_tid) CLIENTSIDE
+{
+	ALL_VARS[SPOTTED_ACTOR_CLIENT][actorIndex][0] = sp_tid;
+}
+
+SCRIPT S_SPOT_ACTOR (void) NET //trys to spot player at sight
+{
+	int originalTid = ActivatorTID();
+	int originalPlayerNumber = originalTid - 3800;
+	int pTeam = GetPlayerTeam(originalPlayerNumber);
+	
+	int capAngle = GetActorAngle(originalTid);
+	int camPitch = GetActorPitch(originalTid);
+	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 2048.0);
+}
+
+
+SCRIPT S_SPOT_TIMEOUT_CHECK OPEN
+{
+	while(true)
+	{
+		delay(1);
+		
+		for(int i = 0; i < 100; i++)
+		{
+			int TID = ALL_VARS[SPOTTED_ACTOR][i][0];
+			if(TID == -1)
+			{
+				continue;
+			}
+			
+			bool needToUnspot = false;
+			bool isPlayer = TID >= 3800 && TID < 3800 + MAXPLAYERS;
+			
+			if(isPlayer)
+			{
+				int inGame = PlayerInGame(i);
+				if(!inGame)
+				{
+					needToUnspot = true;	
+				}
+			}
+			else // turret, c4, nuke/ion
+			{
+				bool isUsed = IsTIDUsed(TID);
+				if(!isUsed)
+				{
+					needToUnspot = true;	
+				}
+			}
+			
+			//actor is present now check the timeout
+			if(!needToUnspot)
+			{
+				int spotTime = ALL_VARS[SPOTTED_ACTOR_TIME][i][0];
+				needToUnspot = timer() - spotTime > SPOT_DURATION_TIC;
+			}
+			
+			
+			if(needToUnspot)
+			{
+				ALL_VARS[SPOTTED_ACTOR][i][0] = 0;		
+				bool needToBreakOuter = false;
+				
+				for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+				{
+					delay(1);
+					
+					if(ALL_VARS[SPOT_PROCESS_DIRTY][0][0])
+					{
+						ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = false;
+						needToBreakOuter = true;
+						break;
+					}
+					ExecuteClientScript(S_UNSPOT_ACTOR_CLIENT, playerIndex, i);
+				}	
+				
+				if(needToBreakOuter)
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
+SCRIPT S_SPOT_ACTOR_PUFF (void)
+{
+	int playerTID = GetActorProperty(0, APROP_TargetTID);
+	int targetTID = GetActorProperty(0, APROP_TRACERTID);
+	
+	int playerIndex = playerTID - 3800;
+	int pTeam = GetPlayerTeam(playerIndex);
+	
+	int targetTeam = -1;
+	
+	bool isTargetPlayer = targetTID >= 3800 && targetTID < 3800 + MAXPLAYERS;
+	if(isTargetPlayer)
+	{
+		int taregtIndex = targetTID - 3800;	
+		targetTeam = GetPlayerTeam(taregtIndex);
+	}
+	else
+	{
+		str actorName = GetActorClass(targetTID);
+		if(actorName == "TimedC4ArmedBlue")
+		{
+			targetTeam = 0;
+		}
+		if(actorName == "TimedC4Armed")
+		{
+			targetTeam = 1;
+		}
+		
+		if(actorName == "NuclearStrikeBeaconArmed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "IonCannonBeaconArmed")
+		{
+			targetTeam = 0;
+		}
+		
+		
+		if(actorName == "Utility_GunTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_GunTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_ChemTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_ChemTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_FlameTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_FlameTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_PrecisionTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_PrecisionTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_ArtilleryTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_ArtilleryTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_RepairGunTurretRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_RepairGunTurretBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_KlaxonRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_KlaxonBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_MiniRavenRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_MiniRavenBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "Utility_MiniRavenRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "Utility_MiniRavenBlue")
+		{
+			targetTeam = 0;
+		}
+		
+		if(actorName == "TeleporterNodeRed")
+		{
+			targetTeam = 1;
+		}
+		if(actorName == "TeleporterNodeBlue")
+		{
+			targetTeam = 0;
+		}
+	}
+	
+	
+	if(targetTeam == -1)
+	{
+		terminate;
+	}
+	
+	if(pTeam == targetTeam)
+	{
+		terminate;
+	}
+	//printbold(s:"attackerTID: ", i:attackerTID, s:"  targetTID: ", i:targetTID);
+	
+	//check if already spottedTID
+	bool alreadySpotted = false;
+	for(int i = 0; i < 100; i++)
+	{
+		if(ALL_VARS[SPOTTED_ACTOR][i][0] == targetTID)
+		{
+			ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = true;
+			ALL_VARS[SPOTTED_ACTOR_TIME][i][0] = timer();
+			alreadySpotted = true;
+			break;
+		}
+	}
+	
+	if(alreadySpotted)
+	{
+		terminate;
+	}
+	
+	//spot
+	for(i = 0; i < 100; i++)
+	{
+		if(ALL_VARS[SPOTTED_ACTOR][i][0] == 0)
+		{
+			ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = true;
+			ALL_VARS[SPOTTED_ACTOR][i][0] = targetTID;
+			ALL_VARS[SPOTTED_ACTOR_TIME][i][0] = timer();
+			
+			for(playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+			{
+				delay(1);
+				ExecuteClientScript(S_SPOT_ACTOR_CLIENT, playerIndex, targetTID);
+			}
+			break;
+		}
+	}
+}
+
+//tracks whether players are in spawnroom or not
+SCRIPT S_SPWAN_ROOM_CHECK OPEN 
 {
 	//there are 32 bits in integer. each bit is a flag for whether player is in spawn room for player numbers from 0 to 31
 	// one integer value covers 32 players
@@ -86,8 +394,16 @@ SCRIPT 1009 ENTER
 				if(newBitMap != inSpawnRoomPage_1)
 				{
 					inSpawnRoomPage_1 = newBitMap;
-					ACS_ExecuteAlways(1010, 0, inSpawnRoomPage_1);	
-					delay(35);
+					
+					for(i = 0; i < MAXPLAYERS; i++)
+					{
+						if(!PlayerInGame(i))
+						{
+							continue;
+						}
+						delay(1);
+						ExecuteClientScript(S_SET_SPAWN_PAGE_1, i, inSpawnRoomPage_1);	
+					}
 				}	
 			}
 			else
@@ -95,373 +411,382 @@ SCRIPT 1009 ENTER
 				if(newBitMap != inSpawnRoomPage_2)
 				{
 					inSpawnRoomPage_2 = newBitMap;
-					ACS_ExecuteAlways(1011, 0, inSpawnRoomPage_2);	
-					delay(35);
+					for(i = 0; i < MAXPLAYERS; i++)
+					{
+						if(!PlayerInGame(i))
+						{
+							continue;
+						}
+						delay(1);
+						ExecuteClientScript(S_SET_SPAWN_PAGE_2, i, inSpawnRoomPage_2);
+					}
 				}	
 			}
 		}
 	}
 }
 
-SCRIPT 1007 ENTER CLIENTSIDE
+
+SCRIPT S_DRAW_NAMES ENTER CLIENTSIDE
 {
 	str cvar = strparam (s:"toggle_names");
-	trackType = GetCVar(cvar);
+	ALL_VARS[TRACKING_TYPE][0][0] = GetCVar(cvar);
 	
-	int position4x1[4][1];
-	int view_position4x1[4][1];
-	int view_matrix4x4[4][4];
-
-	int a_3x1[3][1];
-	int b_3x1[3][1];
-	int c_3x1[3][1];
-
-	int screenX; //from 0 to 1
-	int screenY; //from 0 to 1
-
-	int dx;
-	int dy;
-	int dz;
-
-	int camX;
-	int camY;
-	int camZ;
-
-	int BC_H;
-	int BC_V;
-
-
-	int prevFovRatio = 1.0;
+	int myNumber = PlayerNumber();
+	int myTid = myNumber + 3800;
 		
 	while (true)
 	{
-		bool recalculateFovConstants = true;
-		
-		for(int tick = 0; tick < 35; tick++)
+		delay(1);
+		if(ALL_VARS[TRACKING_TYPE][0][0] == 0)
 		{
-			delay(1);
-			
-			if(trackType == 0)
+			continue;
+		}
+		
+		bool recalculateViewMatrix = true;
+		
+		bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(S_IS_IN_SPAWNROOM, myNumber);	
+		
+		for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+		{	
+			if(!PlayerInGame(playerIndex) || playerIndex == myNumber)
 			{
 				continue;
 			}
 			
-			int myNumber = PlayerNumber();
-			
-			int fovRatio = FixedDiv(GetPlayerInfo(myNumber, PLAYERINFO_FOV), GetPlayerInfo(myNumber, PLAYERINFO_DESIREDFOV));
-			
-			if(fovRatio != prevFovRatio)
+			if(GetPlayerTeam(playerIndex) != PlayerTeam())
 			{
-				prevFovRatio = fovRatio;
-				recalculateFovConstants = true;
+				continue;
 			}
 			
-			int myTid = myNumber + 3800;
-				
-			bool recalculateViewMatrix = true;
+			bool isTeamMateInSpawnRoom = ACS_ExecuteWithResult(S_IS_IN_SPAWNROOM, playerIndex);
 			
-			bool isPlayerInSpawnRoom;
-			if(myNumber < 32)
-			{   
-				isPlayerInSpawnRoom = (inSpawnRoomPage[0] >> myNumber) & 1;
-			}
-			else
+			if(isPlayerInSpawnRoom != isTeamMateInSpawnRoom)
 			{
-				isPlayerInSpawnRoom = (inSpawnRoomPage[1] >> (myNumber - 32)) & 1;
+				continue;
 			}	
 			
-			for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+            int playerTID = playerIndex + 3800;
+			
+            bool isSuccess = ACS_ExecuteWithResult(S_PROJECTION, recalculateViewMatrix, playerTID);
+            if(!isSuccess)
+            {
+                continue;
+            }
+            recalculateViewMatrix = false; //that's how we recalculate it once per frame
+
+			SetHudSize(0, 0, false);
+			str playerName = strparam (n:playerIndex + 1);
+			int currentHealth = GetActorHealth(playerTID);
+			
+			int screenX = ALL_VARS[RESULT_SCREEN_X][0][0];
+			int screenY = ALL_VARS[RESULT_SCREEN_Y][0][0];
+			int distance = ALL_VARS[RESULT_DISTANCE][0][0];
+			
+			if(currentHealth > 0) //screenY - 0.005 > 0  do we need it?
 			{
-				int tid = playerIndex + 3800;
+				SetFont("SMALLFONT");
+				HudMessage(s:playerName, s:" [", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
 				
-				if(!PlayerInGame(playerIndex) || playerIndex == myNumber)
+				if(distance < 15)
 				{
-					continue;
-				}
-				
-				if(GetPlayerTeam(playerIndex) == PlayerTeam())
-				{
-					bool isTeamMateInSpawnRoom;
-					if(playerIndex < 32)
-					{   
-						isTeamMateInSpawnRoom = (inSpawnRoomPage[0] >> playerIndex) & 1;
-					}
-					else
-					{
-						isTeamMateInSpawnRoom = (inSpawnRoomPage[1] >> (playerIndex - 32)) & 1;
-					}
-					
-					if(isPlayerInSpawnRoom != isTeamMateInSpawnRoom)
-					{
-						continue;
-					}
-					
-					
-////////////////////GET SCREEN COORDS START
-						int verticalOffset = 0.0;
-
-						int playerTid = CheckPlayerCamera(PlayerNumber());
-						if(playerTid == -1)
-						{
-							continue;
-						}
-						
-						camX = GetActorX(playerTid);
-						camY = GetActorY(playerTid);
-						camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
-
-						int targetX = GetActorX(tid);
-						int targetY = GetActorY(tid);
-						int targetZ = GetActorZ(tid) + verticalOffset + GetActorProperty(tid, APROP_Height);
-
-						dx = targetX - camX;
-						dy = targetY - camY;
-						dz = targetZ - camZ;
-						
-						int dxInt = dx >> 16;
-						int dyInt = dy >> 16;
-						int dzInt = dz >> 16;
-						int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
-						
-						if((trackType == 1 && distance > 50) || (trackType == 2 && distance > 100))
-						{
-							continue;
-						}
-
-						if(recalculateViewMatrix)
-						{
-							int capAngle = GetActorAngle(playerTid);
-							int camPitch = GetActorPitch(playerTid);
-
-							//camera forward vector
-							int fx = FixedMul(cos(capAngle),cos(camPitch));
-							int fy = FixedMul(sin(capAngle),cos(camPitch));
-							int fz = cos(0.25 + camPitch);
-
-							//camera forward
-							a_3x1[0][0] = fx;
-							a_3x1[1][0] = fy;
-							a_3x1[2][0] = fz;
-
-
-							//world up vector
-							b_3x1[0][0] = 0;
-							b_3x1[1][0] = 0;
-							b_3x1[2][0] = 1.0;
-
-							//CROSS CAMERA FORWARD AND WORLD UP START
-								c_3x1[0][0] = FixedMul(b_3x1[1][0], a_3x1[2][0]) - FixedMul(a_3x1[1][0], b_3x1[2][0]);
-								c_3x1[1][0] = FixedMul(a_3x1[0][0], b_3x1[2][0]) - FixedMul(b_3x1[0][0], a_3x1[2][0]);
-								c_3x1[2][0] = FixedMul(b_3x1[0][0], a_3x1[1][0]) - FixedMul(a_3x1[0][0], b_3x1[1][0]);
-
-								int magnitude = FixedSqrt(
-								FixedMul(c_3x1[0][0], c_3x1[0][0]) +
-								FixedMul(c_3x1[1][0], c_3x1[1][0]) +
-								FixedMul(c_3x1[2][0], c_3x1[2][0]));
-								
-								//normalize
-								c_3x1[0][0] = FixedDiv(c_3x1[0][0], magnitude);
-								c_3x1[1][0] = FixedDiv(c_3x1[1][0], magnitude);
-								c_3x1[2][0] = FixedDiv(c_3x1[2][0], magnitude);
-							//CROSS CAMERA FORWARD AND WORLD UP END
-							
-							//camera right vector
-							int rx = -c_3x1[0][0];
-							int ry = -c_3x1[1][0];
-							int rz = -c_3x1[2][0];
-
-							b_3x1[0][0] = rx;
-							b_3x1[1][0] = ry;
-							b_3x1[2][0] = rz;
-
-							//CROSS CAMERA FORWARD AND CAMERA RIGHT START
-								c_3x1[0][0] = FixedMul(b_3x1[1][0], a_3x1[2][0]) - FixedMul(a_3x1[1][0], b_3x1[2][0]);
-								c_3x1[1][0] = FixedMul(a_3x1[0][0], b_3x1[2][0]) - FixedMul(b_3x1[0][0], a_3x1[2][0]);
-								c_3x1[2][0] = FixedMul(b_3x1[0][0], a_3x1[1][0]) - FixedMul(a_3x1[0][0], b_3x1[1][0]);
-							//CROSS CAMERA FORWARD AND CAMERA RIGHT END
-
-							//camera up vector
-							int ux = c_3x1[0][0];
-							int uy = c_3x1[1][0];
-							int uz = c_3x1[2][0];
-
-							//SET UP WORLD TO CAMERA VIEW MATRIX START
-								view_matrix4x4[0][0] = rx;
-								view_matrix4x4[1][0] = ux;
-								view_matrix4x4[2][0] = fx;
-								view_matrix4x4[3][0] = 0.0;
-
-								view_matrix4x4[0][1] = rz;
-								view_matrix4x4[1][1] = uz;
-								view_matrix4x4[2][1] = fz;
-								view_matrix4x4[3][1] = 0.0;
-
-								view_matrix4x4[0][2] = ry;
-								view_matrix4x4[1][2] = uy;
-								view_matrix4x4[2][2] = fy;
-								view_matrix4x4[3][2] = 0.0;
-
-								view_matrix4x4[0][3] = 0.0;
-								view_matrix4x4[1][3] = 0.0;
-								view_matrix4x4[2][3] = 0.0;
-								view_matrix4x4[3][3] = 1.0;
-							//SET UP VIEW MATRIX END
-						}
-
-						position4x1[0][0] = dx;
-						position4x1[1][0] = dz;
-						position4x1[2][0] = dy;
-						position4x1[3][0] = 1.0;
-
-						//MATRIX MULTIPLICATION START
-							int matrix_m = 4;
-							int matrix_n = 4;
-							int matrix_p = 1;
-							
-							for (int i = 0; i < matrix_m; i++)
-							{
-								for (int j = 0; j < matrix_p; j++)
-								{
-									view_position4x1[i][j] = 0;
-									for (int k = 0; k < matrix_n; k++)
-									{
-										view_position4x1[i][j] += FixedMul(view_matrix4x4[i][k], position4x1[k][j]);
-									}
-								}
-							}
-						//MATRIX MULTIPLICATION END
-
-						int viewY = view_position4x1[0][0];
-						int viewX = view_position4x1[2][0];
-						int viewZ = view_position4x1[1][0];
-						
-						//PROJECT CAMERA VIEW TO SCREEN START
-							//let's assume height and width of the screen is 2.
-							// top view of camera projection.  BC represen right half of the screen
-							// A - is a virtual point behind the screen.
-							// B - middle point of the screen. Exact matches player camera position
-							// C - right border of the screen.
-							// AB = 1
-							// BC = tan(BAC) * AB
-							//     B       C
-							//      _______
-							//     |      /
-							//     |     /
-							//     |    /
-							//     |   /
-							//     |  /
-							//     | /
-							//     |/ - half of fov angle between AB and AC
-							//     A -virtual point behind the screen
-
-							//if target is backwards, just make it slightly in front - in such case we would observ it on screen side 
-							//which hints as is target to the left or to the right
-							if(viewX <= 0)
-							{
-								viewX = 1.0;
-							}
-
-
-							int AB = 1.0;
-
-							if(recalculateFovConstants)
-							{
-								int BAC_H = FixedMul(0.147, fovRatio);
-								int sin_BAC_H = sin(BAC_H);
-								int cos_BAC_H = cos(BAC_H);
-								int tan_BAC_H = FixedDiv(sin_BAC_H, cos_BAC_H);
-								BC_H = FixedMul(tan_BAC_H, AB); //horizontal half screen size
-
-
-								int BAC_V = FixedMul(0.0897, fovRatio);
-								int sin_BAC_V = sin(BAC_V);
-								int cos_BAC_V = cos(BAC_V);
-								int tan_BAC_V = FixedDiv(sin_BAC_V, cos_BAC_V);
-								BC_V = FixedMul(tan_BAC_V, AB); //vertical half screen size
-							}
-
-							int projectedScreenX = viewY;
-							int projectedScreenY = viewZ;
-
-							int projectedRatio = FixedDiv(projectedScreenY, projectedScreenX); // y = projY/ProjX * X
-
-							int borderX;
-							int borderY;
-
-							if(projectedScreenX <= 0)
-							{
-								borderX = -BC_H;
-							}
-							else
-							{
-								borderX = BC_H;
-							}
-							borderY = FixedMul(projectedRatio, borderX);
-
-							if(borderY > BC_V || borderY < -BC_V)
-							{
-								if(borderY > 0)
-								{
-									borderY = BC_V;
-								}
-								else
-								{
-									borderY = -BC_V;
-								}
-								borderX = FixedDiv(borderY, projectedRatio);
-							}
-
-							int projectedScreenMaxDistance = VectorLength(borderX, borderY);
-
-							int projectedDistance = VectorLength(viewY, viewZ);
-							int projectedAngleTan = FixedDiv(projectedDistance, viewX);
-							int projectedScreenDistance = FixedMul(projectedAngleTan, AB);
-
-							if(projectedScreenDistance > projectedScreenMaxDistance)
-							{
-								projectedScreenDistance = projectedScreenMaxDistance;
-							}
-
-							int borderPoinNormalX = FixedDiv(borderX, projectedScreenMaxDistance);
-							int borderPoinNormalY = FixedDiv(borderY, projectedScreenMaxDistance);
-
-
-							borderPoinNormalX =  FixedDiv(borderPoinNormalX, BC_H);
-							borderPoinNormalY =  FixedDiv(borderPoinNormalY, BC_V);
-
-							screenX = FixedMul(borderPoinNormalX, projectedScreenDistance);
-							screenY = FixedMul(borderPoinNormalY, projectedScreenDistance);
-
-							screenX =  FixedDiv(screenX + 1.0, 2.0);
-							screenY =  1.0 - FixedDiv(screenY + 1.0, 2.0);
-						//PROJECT CAMERA VIEW TO SCREEN END
-////////////////////GET SCREEN COORDS END
-					
-					
-					recalculateViewMatrix = false;
-					recalculateFovConstants = false;
-	
-					SetHudSize(0, 0, false);
-					str playerName = strparam (n:playerIndex + 1);
-					int currentHealth  = GetActorHealth(tid);
-					
-					if(screenY - 0.05 > 0 && currentHealth > 0)
-					{
-						SetFont("SMALLFONT");
-						HudMessage(s:playerName, s:" [", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
-				//		HudMessage(s:"in spawn room ", i:isTeamMateInSpawnRoom; HUDMSG_PLAIN, 9001 + playerIndex, CR_WHITE, screenX, screenY + 0.02, 1873);
-						
-						if(distance < 15)
-						{
-							int spawnHealth  = GetActorSpawnHealth(tid);
-							
-							HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
-						}
-					}
+					int spawnHealth = GetActorSpawnHealth(playerTID);
+					HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
 				}
 			}
-		
-			//HudMessage(s:"me in spawn room ", i:isPlayerInSpawnRoom; HUDMSG_PLAIN, 9003 + playerIndex, CR_WHITE, 0.5, 0.7, 1873);
 		}
 	}
+}
+
+
+SCRIPT S_IS_IN_SPAWNROOM (int myNumber) CLIENTSIDE
+{
+    int isPlayerInSpawnRoom;
+	if(myNumber < 32)
+	{   
+		isPlayerInSpawnRoom = (ALL_VARS[SPAWN_ROOM_1][0][0] >> myNumber) & 1;
+	}
+	else
+	{
+		isPlayerInSpawnRoom = (ALL_VARS[SPAWN_ROOM_2][0][0] >> (myNumber - 32)) & 1;
+	}
+
+    SetResultValue(isPlayerInSpawnRoom);
+}
+
+
+//performes cross multiplication VECTOR_A_3x1 and VECTOR_B_3x1. puts result in VECTOR_C_3x1
+SCRIPT S_CROSS (void) CLIENTSIDE
+{
+	ALL_VARS[VECTOR_C_3x1][0][0] = 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][1][0], ALL_VARS[VECTOR_A_3x1][2][0]) - 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][1][0], ALL_VARS[VECTOR_B_3x1][2][0]);
+	
+	ALL_VARS[VECTOR_C_3x1][1][0] = 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][0][0], ALL_VARS[VECTOR_B_3x1][2][0]) - 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][0][0], ALL_VARS[VECTOR_A_3x1][2][0]);
+	
+	ALL_VARS[VECTOR_C_3x1][2][0] = 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][0][0], ALL_VARS[VECTOR_A_3x1][1][0]) - 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][0][0], ALL_VARS[VECTOR_B_3x1][1][0]);
+}
+
+//normalizes VECTOR_C_3x1.  puts result in VECTOR_C_3x1
+SCRIPT S_NORMALIZE (void) CLIENTSIDE
+{
+	int magnitude = FixedSqrt(
+	FixedMul(ALL_VARS[VECTOR_C_3x1][0][0], ALL_VARS[VECTOR_C_3x1][0][0]) +
+	FixedMul(ALL_VARS[VECTOR_C_3x1][1][0], ALL_VARS[VECTOR_C_3x1][1][0]) +
+	FixedMul(ALL_VARS[VECTOR_C_3x1][2][0], ALL_VARS[VECTOR_C_3x1][2][0]));
+	
+	//normalize
+	ALL_VARS[VECTOR_C_3x1][0][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][0][0], magnitude);
+	ALL_VARS[VECTOR_C_3x1][1][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][1][0], magnitude);
+	ALL_VARS[VECTOR_C_3x1][2][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][2][0], magnitude);
+}
+
+
+SCRIPT S_PROJECTION(int recalculateViewMatrix, int targetTID) CLIENTSIDE
+{
+	int myNumber = PlayerNumber();
+	int playerTid = CheckPlayerCamera(myNumber);
+	if(playerTid == -1)
+	{
+        SetResultValue(0);
+		terminate;
+	}	
+	
+	int verticalOffset = 0.0;
+	
+		
+	int camX = GetActorX(playerTid);
+	int camY = GetActorY(playerTid);
+	int camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
+
+	int targetX = GetActorX(targetTID);
+	int targetY = GetActorY(targetTID);
+	int targetZ = GetActorZ(targetTID) + verticalOffset + GetActorProperty(targetTID, APROP_Height);
+
+	int dx = targetX - camX;
+	int dy = targetY - camY;
+	int dz = targetZ - camZ;
+		
+	int dxInt = dx >> 16;
+	int dyInt = dy >> 16;
+	int dzInt = dz >> 16;	
+	int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
+	ALL_VARS[RESULT_DISTANCE][0][0] = distance;
+		
+	int trackingType = ALL_VARS[TRACKING_TYPE][0][0];
+	if((trackingType == 1 && trackingType > 50) || (trackingType == 2 && trackingType > 100))
+	{
+        SetResultValue(0);
+		terminate;
+	}
+
+	if(recalculateViewMatrix)
+	{
+		int capAngle = GetActorAngle(playerTid);
+		int camPitch = GetActorPitch(playerTid);
+
+		//camera forward vector
+		int fx = FixedMul(cos(capAngle),cos(camPitch));
+		int fy = FixedMul(sin(capAngle),cos(camPitch));
+		int fz = cos(0.25 + camPitch);
+
+		//camera forward
+		ALL_VARS[VECTOR_A_3x1][0][0] = fx;
+		ALL_VARS[VECTOR_A_3x1][1][0] = fy;
+		ALL_VARS[VECTOR_A_3x1][2][0] = fz;
+
+
+		//world up vector
+		ALL_VARS[VECTOR_B_3x1][0][0] = 0;
+		ALL_VARS[VECTOR_B_3x1][1][0] = 0;
+		ALL_VARS[VECTOR_B_3x1][2][0] = 1.0;
+		
+		//CROSS CAMERA FORWARD AND WORLD UP
+		ACS_ExecuteWithResult(S_CROSS);
+		ACS_ExecuteWithResult(S_NORMALIZE);
+		
+		//camera right vector
+		int rx = -ALL_VARS[VECTOR_C_3x1][0][0];
+		int ry = -ALL_VARS[VECTOR_C_3x1][1][0];
+		int rz = -ALL_VARS[VECTOR_C_3x1][2][0];
+
+		ALL_VARS[VECTOR_B_3x1][0][0] = rx;
+		ALL_VARS[VECTOR_B_3x1][1][0] = ry;
+		ALL_VARS[VECTOR_B_3x1][2][0] = rz;
+
+		//CROSS CAMERA FORWARD AND CAMERA RIGHT
+		ACS_ExecuteWithResult(S_CROSS);
+
+		//camera up vector
+		int ux = ALL_VARS[VECTOR_C_3x1][0][0];
+		int uy = ALL_VARS[VECTOR_C_3x1][1][0];
+		int uz = ALL_VARS[VECTOR_C_3x1][2][0];
+
+		//SET UP WORLD TO CAMERA VIEW MATRIX
+		ALL_VARS[VIEW_MATRIX_4x4][0][0] = rx;
+		ALL_VARS[VIEW_MATRIX_4x4][1][0] = ux;
+		ALL_VARS[VIEW_MATRIX_4x4][2][0] = fx;
+		ALL_VARS[VIEW_MATRIX_4x4][3][0] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][1] = rz;
+		ALL_VARS[VIEW_MATRIX_4x4][1][1] = uz;
+		ALL_VARS[VIEW_MATRIX_4x4][2][1] = fz;
+		ALL_VARS[VIEW_MATRIX_4x4][3][1] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][2] = ry;
+		ALL_VARS[VIEW_MATRIX_4x4][1][2] = uy;
+		ALL_VARS[VIEW_MATRIX_4x4][2][2] = fy;
+		ALL_VARS[VIEW_MATRIX_4x4][3][2] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][1][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][2][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][3][3] = 1.0;
+	}
+
+	int position4x1[4][1];
+	int view_position4x1[4][1];
+	
+	position4x1[0][0] = dx;
+	position4x1[1][0] = dz;
+	position4x1[2][0] = dy;
+	position4x1[3][0] = 1.0;
+
+	//MATRIX MULTIPLICATION START
+	int matrix_m = 4;
+	int matrix_n = 4;
+	int matrix_p = 1;
+	
+	for (int i = 0; i < matrix_m; i++)
+	{
+		for (int j = 0; j < matrix_p; j++)
+		{
+			view_position4x1[i][j] = 0;
+			for (int k = 0; k < matrix_n; k++)
+			{
+				view_position4x1[i][j] += FixedMul(ALL_VARS[VIEW_MATRIX_4x4][i][k], position4x1[k][j]);
+			}
+		}
+	}
+	//MATRIX MULTIPLICATION END
+
+	int viewY = view_position4x1[0][0];
+	int viewX = view_position4x1[2][0];
+	int viewZ = view_position4x1[1][0];
+		
+	//PROJECT CAMERA VIEW TO SCREEN START
+	//let's assume height and width of the screen is 2.
+	// top view of camera projection.  BC represen right half of the screen
+	// A - is a virtual point behind the screen.
+	// B - middle point of the screen. Exact matches player camera position
+	// C - right border of the screen.
+	// AB = 1
+	// BC = tan(BAC) * AB
+	//     B       C
+	//      _______
+	//     |      /
+	//     |     /
+	//     |    /
+	//     |   /
+	//     |  /
+	//     | /
+	//     |/ - half of fov angle between AB and AC
+	//     A -virtual point behind the screen
+
+	//if target is behind
+	if(viewX <= 0)
+	{
+        SetResultValue(0);
+		terminate;
+	}
+
+	int AB = 1.0;
+	
+	
+	bool recalculateFovConstants = false;
+	int fovRatio = FixedDiv(GetPlayerInfo(myNumber, PLAYERINFO_FOV), GetPlayerInfo(myNumber, PLAYERINFO_DESIREDFOV));
+	if(fovRatio != ALL_VARS[PREV_FOV_RATIO][0][0])
+	{
+		ALL_VARS[PREV_FOV_RATIO][0][0] = fovRatio;
+		recalculateFovConstants = true;
+	}
+
+	if(recalculateFovConstants)
+	{
+		int BAC_H = FixedMul(0.147, fovRatio);
+		int sin_BAC_H = sin(BAC_H);
+		int cos_BAC_H = cos(BAC_H);
+		int tan_BAC_H = FixedDiv(sin_BAC_H, cos_BAC_H);
+		ALL_VARS[PROJECTION_BC_H][0][0] = FixedMul(tan_BAC_H, AB); //horizontal half screen size
+
+
+		int BAC_V = FixedMul(0.0897, fovRatio);
+		int sin_BAC_V = sin(BAC_V);
+		int cos_BAC_V = cos(BAC_V);
+		int tan_BAC_V = FixedDiv(sin_BAC_V, cos_BAC_V);
+		ALL_VARS[PROJECTION_BC_V][0][0] = FixedMul(tan_BAC_V, AB); //vertical half screen size
+	}
+
+	int projectedScreenX = viewY;
+	int projectedScreenY = viewZ;
+
+	int projectedRatio = FixedDiv(projectedScreenY, projectedScreenX); // y = projY/ProjX * X
+
+	int borderX;
+	int borderY;
+
+	if(projectedScreenX <= 0)
+	{
+		borderX = -ALL_VARS[PROJECTION_BC_H][0][0];
+	}
+	else
+	{
+		borderX = ALL_VARS[PROJECTION_BC_H][0][0];
+	}
+	borderY = FixedMul(projectedRatio, borderX);
+
+	if(borderY > ALL_VARS[PROJECTION_BC_V][0][0] || borderY < -ALL_VARS[PROJECTION_BC_V][0][0])
+	{
+		if(borderY > 0)
+		{
+			borderY = ALL_VARS[PROJECTION_BC_V][0][0];
+		}
+		else
+		{
+			borderY = -ALL_VARS[PROJECTION_BC_V][0][0];
+		}
+		borderX = FixedDiv(borderY, projectedRatio);
+	}
+
+	int projectedScreenMaxDistance = VectorLength(borderX, borderY);
+
+	int projectedDistance = VectorLength(viewY, viewZ);
+	int projectedAngleTan = FixedDiv(projectedDistance, viewX);
+	int projectedScreenDistance = FixedMul(projectedAngleTan, AB);
+
+	if(projectedScreenDistance > projectedScreenMaxDistance)
+	{
+		projectedScreenDistance = projectedScreenMaxDistance;
+	}
+
+	int borderPoinNormalX = FixedDiv(borderX, projectedScreenMaxDistance);
+	int borderPoinNormalY = FixedDiv(borderY, projectedScreenMaxDistance);
+
+
+	borderPoinNormalX = FixedDiv(borderPoinNormalX, ALL_VARS[PROJECTION_BC_H][0][0]);
+	borderPoinNormalY = FixedDiv(borderPoinNormalY, ALL_VARS[PROJECTION_BC_V][0][0]);
+
+	int screenX = FixedMul(borderPoinNormalX, projectedScreenDistance);
+	int screenY = FixedMul(borderPoinNormalY, projectedScreenDistance);
+
+	screenX = FixedDiv(screenX + 1.0, 2.0);
+	screenY = 1.0 - FixedDiv(screenY + 1.0, 2.0);
+	
+	ALL_VARS[RESULT_SCREEN_X][0][0] = screenX;
+	ALL_VARS[RESULT_SCREEN_Y][0][0] = screenY;
+	
 }
