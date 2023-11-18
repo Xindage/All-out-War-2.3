@@ -9,6 +9,7 @@ actor Utility_GunTurretRed : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN AA 0 A_CheckSight("Death.Deconstruction")
+		CIGN A 0 ACS_ExecuteWithResult(1026)
 		CIGN A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
 	Idle:
 		CIGN A 0 A_TakeInventory ("GunTurretClip", 23)
@@ -92,6 +93,7 @@ actor Utility_GunTurretBlue : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN AA 0 A_CheckSight("Death.Deconstruction")
+		CIGN A 0 ACS_ExecuteWithResult(1026)
 		CIGN A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
 	Idle:
 		CIGN A 0 A_TakeInventory ("GunTurretClip", 23)

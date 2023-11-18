@@ -15,10 +15,9 @@ int ALL_VARS[20][100][4];
 
 #define RESULT_DISTANCE 11 //int
 #define TRACKING_TYPE 12 //int 0 - disabled, 1 - 50 units, 2 - 100 units, 3 - any distance
-#define SPOTTED_ACTOR 13 // int array[100]
-#define SPOTTED_ACTOR_TIME 14 // int array[100]
-#define SPOT_PROCESS_DIRTY 15 // bool
-#define SPOTTED_ACTOR_CLIENT 16// int array[100]
+#define SPOTTED_ACTOR 13 // int array[SPOT_MAX_ITEMS_COUNT]
+#define SPOTTED_TIME_CLIENT 14 // int array[SPOT_MAX_ITEMS_COUNT]
+#define SPOTTED_ACTOR_CLIENT 15// int array[SPOT_MAX_ITEMS_COUNT]
 
 // SCRIPTS
 #define S_IS_IN_SPAWNROOM 1010
@@ -32,14 +31,16 @@ int ALL_VARS[20][100][4];
 #define S_SPOT_ACTOR 1018
 #define S_SPOT_ACTOR_CLIENT 1019
 #define S_DRAW_NAMES 1020
-#define S_SPOT_ACTOR_PUFF 1021
-#define S_SPOT_TIMEOUT_CHECK 1022
-#define S_UNSPOT_ACTOR_CLIENT 1023
+#define S_SPOT_ACTOR_AND_NOTIFY 1021
+#define S_SPOT_TIMEOUT_CHECK_CLIENTSIDE 1022
 #define S_DRAW_NAMES_PLAYERS 1024
 #define S_DRAW_NAMES_ACTORS 1025
+#define S_PIC_RANDOM_TID 1026
+#define S_DRAW_DEBUG 1027
 
 //CONST
 #define SPOT_DURATION_TIC 350 // int  10 seconds
+#define SPOT_MAX_ITEMS_COUNT 50 // 
 
 function str GetActorName(int tid)
 {
@@ -51,51 +52,51 @@ function str GetActorName(int tid)
 	
 	if(actorName == "NuclearStrikeBeaconArmed")
 	{
-		return strparam(s:"Nuke beacon");
+		return strparam(s:"Nuke");
 	}
 	if(actorName == "IonCannonBeaconArmed")
 	{
-		return strparam(s:"Ion beacon");
+		return strparam(s:"Ion");
 	}
 	
 	if(actorName == "Utility_GunTurretRed" || actorName == "Utility_GunTurretBlue")
 	{
-		return strparam(s:"Gun Turret");
+		return strparam(s:"Gun T.");
 	}
 	
 	if(actorName == "Utility_ChemTurretRed" || actorName == "Utility_ChemTurretBlue")
 	{
-		return strparam(s:"Chem Turret");
+		return strparam(s:"Chem T.");
 	}
 	
 	if(actorName == "Utility_FlameTurretRed" || actorName == "Utility_FlameTurretBlue")
 	{
-		return strparam(s:"Flame Turret");
+		return strparam(s:"Flame T.");
 	}
 	
 	if(actorName == "Utility_PrecisionTurretRed" || actorName == "Utility_PrecisionTurretBlue")
 	{
-		return strparam(s:"Precision Turret");
+		return strparam(s:"Precision T.");
 	}
 	
 	if(actorName == "Utility_ArtilleryTurretRed" || actorName == "Utility_ArtilleryTurretBlue")
 	{
-		return strparam(s:"Artillery Turret");
+		return strparam(s:"Art T.");
 	}
 	
 	if(actorName == "Utility_RepairGunTurretRed" || actorName == "Utility_RepairGunTurretBlue")
 	{
-		return strparam(s:"Repair Turret");
+		return strparam(s:"Rep T.");
 	}
 	
 	if(actorName == "Utility_KlaxonRed" || actorName == "Utility_KlaxonBlue")
 	{
-		return strparam(s:"Klaxon Turret");
+		return strparam(s:"Klaxon T.");
 	}
 	
 	if(actorName == "Utility_MiniRavenRed" || actorName == "Utility_MiniRavenBlue")
 	{
-		return strparam(s:"Mini Raven");
+		return strparam(s:"MiniRaven");
 	}
 	
 	if(actorName == "TeleporterNodeRed" || actorName == "TeleporterNodeBlue")
@@ -142,6 +143,14 @@ function str GetActorTeam(int tid)
 }
 
 
+SCRIPT S_PIC_RANDOM_TID (void)
+{
+	int activator = ActivatorTID();
+	if(activator == 0)
+	{
+		Thing_ChangeTID(0, UniqueTID(3800 + MAXPLAYERS));		
+	}
+}
 
 SCRIPT S_SWITCH_TRACKING_TYPE (void) net CLIENTSIDE
 {	
@@ -189,42 +198,52 @@ SCRIPT S_SET_SPAWN_PAGE_2(int spawnRoomBitMap) CLIENTSIDE
 	ALL_VARS[SPAWN_ROOM_2][0][0] = spawnRoomBitMap;
 }
 
-SCRIPT S_UNSPOT_ACTOR_CLIENT(int actorIndex) CLIENTSIDE
-{
-	Print(s:"========== ", s:" Client-side unspot tid: ", i:ALL_VARS[SPOTTED_ACTOR_CLIENT][actorIndex][0]);
-	ALL_VARS[SPOTTED_ACTOR_CLIENT][actorIndex][0] = 0;
-}
 
-SCRIPT S_SPOT_ACTOR_CLIENT(int actorIndex, int sp_tid) CLIENTSIDE
+SCRIPT S_SPOT_ACTOR_CLIENT(int sp_tid) CLIENTSIDE
 {
-	Print(s:"========== ", s:" Client-side spot tid: ", i:sp_tid);
-	ALL_VARS[SPOTTED_ACTOR_CLIENT][actorIndex][0] = sp_tid;
+	bool found = false;
+	for(int i = 0; i < SPOT_MAX_ITEMS_COUNT; i++)
+	{
+		if(ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0] == sp_tid)
+		{
+			ALL_VARS[SPOTTED_TIME_CLIENT][i][0] = timer();		
+			found = true;
+			break;
+		}
+	}
+	
+	if(!found)
+	{
+		for(i = 0; i < SPOT_MAX_ITEMS_COUNT; i++)
+		{
+			if(ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0] == 0)
+			{
+				ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0] = sp_tid;
+				ALL_VARS[SPOTTED_TIME_CLIENT][i][0] = timer();
+				break;
+			}
+		}	
+	}
 }
 
 SCRIPT S_SPOT_ACTOR (void) NET //trys to spot player at sight
-{
+{	
 	int originalTid = ActivatorTID();
-	int originalPlayerNumber = originalTid - 3800;
-	int pTeam = GetPlayerTeam(originalPlayerNumber);
-	
 	int capAngle = GetActorAngle(originalTid);
-	int camPitch = GetActorPitch(originalTid);
-	str playerName = strparam (n:originalPlayerNumber + 1);
-	Log(s:"========== ", s:playerName, s:" tried spot");
-	
+	int camPitch = GetActorPitch(originalTid);	
 	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 2048.0);
 }
 
 
-SCRIPT S_SPOT_TIMEOUT_CHECK OPEN
+SCRIPT S_SPOT_TIMEOUT_CHECK_CLIENTSIDE ENTER CLIENTSIDE
 {
 	while(true)
 	{
 		delay(1);
 		
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < SPOT_MAX_ITEMS_COUNT; i++)
 		{
-			int TID = ALL_VARS[SPOTTED_ACTOR][i][0];
+			int TID = ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0];
 			if(TID == 0)
 			{
 				continue;
@@ -237,66 +256,37 @@ SCRIPT S_SPOT_TIMEOUT_CHECK OPEN
 			{
 				int playerN = TID - 3800;
 				int inGame = PlayerInGame(playerN);
-				if(!inGame && ALL_VARS[SPOTTED_ACTOR][i][0] != 0)
+				if(!inGame)
 				{
 					needToUnspot = true;
-					Log(s:"========== ", i:TID, s:" player need unspot by exit the game!");
-					
 				}
 			}
 			else // turret, c4, nuke/ion
 			{
 				bool isUsed = IsTIDUsed(TID);
-				if(!isUsed && ALL_VARS[SPOTTED_ACTOR][i][0] != 0)
+				if(!isUsed)
 				{
 					needToUnspot = true;	
-					Log(s:"========== ", i:TID, s:" item need to unspot by destruction");
 				}
 			}
 			
 			//actor is present now check the timeout
 			if(!needToUnspot)
 			{
-				int spotTime = ALL_VARS[SPOTTED_ACTOR_TIME][i][0];
-				bool timeout = (timer() - spotTime) > SPOT_DURATION_TIC;
-				needToUnspot = timeout && ALL_VARS[SPOTTED_ACTOR][i][0] != 0;
-				
-				if(needToUnspot)
-				{
-					Log(s:"========== ", i:TID, s:" need unspot by timeout");
-				}
+				int spotTime = ALL_VARS[SPOTTED_TIME_CLIENT][i][0];
+				needToUnspot = (timer() - spotTime) > SPOT_DURATION_TIC;
 			}
 			
 			
 			if(needToUnspot)
 			{
-				bool needToBreakOuter = false;
-				
-				for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
-				{
-					delay(1);
-					
-					if(ALL_VARS[SPOT_PROCESS_DIRTY][0][0])
-					{
-						ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = false;
-						needToBreakOuter = true;
-						break;
-					}
-					ExecuteClientScript(S_UNSPOT_ACTOR_CLIENT, playerIndex, i);
-				}	
-				
-				
-				if(needToBreakOuter)
-				{
-					break;
-				}
-				ALL_VARS[SPOTTED_ACTOR][i][0] = 0;
+				ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0] = 0;
 			}
 		}
 	}
 }
 
-SCRIPT S_SPOT_ACTOR_PUFF (void)
+SCRIPT S_SPOT_ACTOR_AND_NOTIFY (void)
 {
 	int playerTID = GetActorProperty(0, APROP_TargetTID);
 	int targetTID = GetActorProperty(0, APROP_TRACERTID);
@@ -311,12 +301,12 @@ SCRIPT S_SPOT_ACTOR_PUFF (void)
 	
 	str playerName = strparam(n:playerIndex + 1);
 	
-	str team = strparam(s:"red");
+	/*str team = strparam(s:"red");
 	if(pTeam == 0)
 	{
 		team = strparam(s:"blue");
 	}
-	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);
+	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);*/
 	
 	int targetTeam = -1;
 	
@@ -330,14 +320,14 @@ SCRIPT S_SPOT_ACTOR_PUFF (void)
 			terminate;
 		}
 	
-		str tName = strparam(n:taregtIndex + 1);
+		/*str tName = strparam(n:taregtIndex + 1);
 		
 		str tTeam = strparam(s:"red");
 		if(targetTeam == 0)
 		{
 			tTeam = strparam(s:"blue");
 		}
-		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);
+		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);*/
 	}
 	else
 	{
@@ -348,57 +338,37 @@ SCRIPT S_SPOT_ACTOR_PUFF (void)
 			terminate;
 		}
 		
-		str aTeam = strparam(s:"red");
+		/*str aTeam = strparam(s:"red");
 		if(targetTeam == 0)
 		{
 			aTeam = strparam(s:"blue");
 		}
-		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);
+		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);*/
 	}
 	
-	if(pTeam == targetTeam)
-	{
-		terminate;
-	}
-	
-	printBold(s:logT);
-	
-	//check if already spottedTID
-	bool alreadySpotted = false;
-	for(int i = 0; i < 100; i++)
-	{
-		if(ALL_VARS[SPOTTED_ACTOR][i][0] == targetTID)
+	if(pTeam != targetTeam)
+	{		
+		for(int i = 0; i < MAXPLAYERS; i++)
 		{
-			ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = true;
-			ALL_VARS[SPOTTED_ACTOR_TIME][i][0] = timer();
-			alreadySpotted = true;
-			break;
-		}
-	}
-	
-	if(alreadySpotted)
-	{
-		terminate;
-	}
-	
-	//spot
-	for(i = 0; i < 100; i++)
-	{
-		if(ALL_VARS[SPOTTED_ACTOR][i][0] == 0)
-		{
-			ALL_VARS[SPOT_PROCESS_DIRTY][0][0] = true;
-			ALL_VARS[SPOTTED_ACTOR][i][0] = targetTID;
-			ALL_VARS[SPOTTED_ACTOR_TIME][i][0] = timer();
-			
-			for(playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+			if(PlayerInGame(i) && GetPlayerTeam(i) == pTeam)
 			{
+				ExecuteClientScript(S_SPOT_ACTOR_CLIENT, i, targetTID);
 				delay(1);
-				ExecuteClientScript(S_SPOT_ACTOR_CLIENT, playerIndex, i, targetTID);
 			}
-			break;
 		}
 	}
+	
+	//printBold(s:logT);
 }
+
+
+/*script 4444 ENTER
+{
+	delay(35);
+	
+	Credits[PlayerNumber()] = 15000;
+	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
+}*/
 
 //tracks whether players are in spawnroom or not
 SCRIPT S_SPWAN_ROOM_CHECK OPEN 
@@ -471,6 +441,125 @@ SCRIPT S_SPWAN_ROOM_CHECK OPEN
 	}
 }
 
+/*SCRIPT S_DRAW_DEBUG ENTER CLIENTSIDE
+{
+	while(true)
+	{
+		delay(1);
+		
+		for(int i = 0; i < SPOT_MAX_ITEMS_COUNT; i ++)
+		{
+			int targetTID = ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0];
+			int time = ALL_VARS[SPOTTED_TIME_CLIENT][i][0];
+			
+			str message = strparam(s:"i: ", i:i, s:" TID: ", i:targetTID);
+			bool isPlayer = targetTID >= 3800 && targetTID < 3800 + MAXPLAYERS;
+			int targetTeam = -1;
+			str targetName = strparam(s:"name none");
+			
+			if(isPlayer)
+			{
+				int targetIndex = targetTID - 3800;
+				targetName = strparam(n:targetIndex + 1);
+				message = strparam(s:message, s:"; ", s:"player name: ", s:targetName);	
+				targetTeam = GetPlayerTeam(targetIndex);
+			}
+			else
+			{
+				str className = GetActorClass(targetTID);
+				targetName = GetActorName(targetTID);
+				
+				message = strparam(s:message, s:"; ", s:"actor class: ", s: className);	
+				message = strparam(s:message, s:"; ", s:"actor name: ", s:"", s:targetName);	
+				
+				targetTeam = GetActorTeam(targetTID);
+			}
+			
+			if(targetTeam == 1)
+			{
+				message = strparam(s:message, s:"; ", s:"team: RED");		
+			}
+			else if(targetTeam == 0)
+			{
+				message = strparam(s:message, s:"; ", s:"team: BLUE");		
+			}
+			else
+			{
+				message = strparam(s:message, s:"; ", s:"team: NONE: ", i:targetTeam);
+			}
+			
+			int timeLeft = timer() - time;
+			if(timeLeft > SPOT_DURATION_TIC)
+			{
+				message = strparam(s:message, s:"; time: out");
+			}
+			else
+			{
+				message = strparam(s:message, s:"; time: ", i:timeLeft);	
+			}
+			
+			HudMessage(s:message; HUDMSG_PLAIN, 9600 + i, CR_WHITE, 0.7, 0.1 + FixedMul(0.035, i <<16), 0.5);
+		}
+	}
+}*/
+
+
+/*SCRIPT S_DRAW_DEBUG ENTER
+{
+	delay(70);
+	
+	Credits[PlayerNumber()] = 15000;
+	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
+	
+	while(true)
+	{
+		delay(1);
+		
+		int pn = PlayerNumber();
+		SetActivatorToTarget(0);
+		int targetTID = ActivatorTID();
+		
+		str message = strparam(s:"TID: ", i:targetTID);
+		bool isPlayer = targetTID >= 3800 && targetTID < 3800 + MAXPLAYERS;
+		int targetTeam = -1;
+		str targetName = strparam(s:"name none");
+		
+		if(isPlayer)
+		{
+			int targetIndex = targetTID - 3800;
+			targetName = strparam(n:targetIndex + 1);
+			message = strparam(s:message, s:"; ", s:"player name: ", s:targetName);	
+			targetTeam = GetPlayerTeam(targetIndex);
+		}
+		else
+		{
+			str className = GetActorClass(targetTID);
+			targetName = GetActorName(targetTID);
+			
+			message = strparam(s:message, s:"; ", s:"actor class: ", s: className);	
+			message = strparam(s:message, s:"; ", s:"actor name: ", s:"", s:targetName);	
+			
+			targetTeam = GetActorTeam(targetIndex);
+		}
+		
+		if(targetTeam == 1)
+		{
+			message = strparam(s:message, s:"; ", s:"team: RED");		
+		}
+		else if(targetTeam == 0)
+		{
+			message = strparam(s:message, s:"; ", s:"team: BLUE");		
+		}
+		else
+		{
+			message = strparam(s:message, s:"; ", s:"team: NONE: ", i:targetTeam);
+		}
+		
+		SetActivatorToPlayer(pn);
+		HudMessage(s:message; HUDMSG_PLAIN, 9990, CR_WHITE, 0.1, 0.05, 0.5);
+	}
+}*/
+
 
 SCRIPT S_DRAW_NAMES ENTER CLIENTSIDE
 {
@@ -485,18 +574,16 @@ SCRIPT S_DRAW_NAMES ENTER CLIENTSIDE
 			continue;
 		}
 		
-		bool recalculateViewMatrix = true;
-		ACS_ExecuteWithResult(S_DRAW_NAMES_PLAYERS, recalculateViewMatrix);
-		
-		recalculateViewMatrix = false;
-		ACS_ExecuteWithResult(S_DRAW_NAMES_ACTORS, recalculateViewMatrix);
+		ACS_ExecuteWithResult(S_DRAW_NAMES_PLAYERS);
+		ACS_ExecuteWithResult(S_DRAW_NAMES_ACTORS);
 	}
 }
 
-SCRIPT S_DRAW_NAMES_PLAYERS(int recalculateViewMatrix) CLIENTSIDE
+SCRIPT S_DRAW_NAMES_PLAYERS(void) CLIENTSIDE
 {
 	int myNumber = PlayerNumber();
 	int myTid = myNumber + 3800;
+	bool recalculateViewMatrix = true;
 	
 	bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(S_IS_IN_SPAWNROOM, myNumber);	
 		
@@ -543,7 +630,7 @@ SCRIPT S_DRAW_NAMES_PLAYERS(int recalculateViewMatrix) CLIENTSIDE
 		SetFont("SMALLFONT");
 		HudMessage(s:playerName, s:" \cj[", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
 		
-		if(distance < 15)
+		if(distance < 10)
 		{
 			int spawnHealth = GetActorSpawnHealth(playerTID);
 			HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
@@ -551,58 +638,109 @@ SCRIPT S_DRAW_NAMES_PLAYERS(int recalculateViewMatrix) CLIENTSIDE
 	}
 }
 
-SCRIPT S_DRAW_NAMES_ACTORS(int recalculateViewMatrix) CLIENTSIDE
+SCRIPT S_DRAW_NAMES_ACTORS(void) CLIENTSIDE
 {
 	int pTeam = PlayerTeam();
+	bool recalculateViewMatrix = true;
 		
-	for(int i = 0; i < 100; i++)
+	for(int i = 0; i < SPOT_MAX_ITEMS_COUNT; i++)
 	{	
 		int TID = ALL_VARS[SPOTTED_ACTOR_CLIENT][i][0];
+		//str debugMessage = strParam(s:"index: ", i:i, s:"; TID: ", i:TID);
+		
 		
 		bool isPlayer = TID >= 3800 && TID < 3800 + MAXPLAYERS;
 		bool isSuccess = false;
 		str actorName;
-		if(isPlayer && GetPlayerTeam(TID - 3800) != pTeam)
-		{
-			int currentHealth = GetActorHealth(TID);
-			if(currentHealth > 0)
-			{
-				isSuccess = ACS_ExecuteWithResult(S_PROJECTION, recalculateViewMatrix, TID);
-				if(!isSuccess)
-				{
-					continue;
-				}
+		int targetTeam = -1;
 		
-				actorName = GetActorClass(TID);
-				SetFont("SMALLFONT");
+		if(isPlayer)
+		{
+			int targetIndex = TID - 3800;
+			targetTeam = GetPlayerTeam(TID - 3800);
+			
+			/*debugMessage = strParam(s:debugMessage, s:"; player: ", n:targetIndex + 1);	
+			if(targetTeam == 1)
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team: RED");	
+			}
+			else if(targetTeam == 0)
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team: BLUE");	
+			}
+			else
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team NONE: ", i:targetTeam);	
+			}*/
+			
+			if(targetTeam != pTeam && targetTeam != -1)
+			{
+				int currentHealth = GetActorHealth(TID);
+				//debugMessage = strParam(s:debugMessage, s:"; HP: ", i:currentHealth);	
 				
-				HudMessage(s:"Enemy: ", s:actorName, s:" \cj[", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:"]"; HUDMSG_PLAIN, 9000 + MAXPLAYERS + i, CR_DARKRED, 
-				ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);
-			}	
+				if(currentHealth > 0)
+				{
+					isSuccess = ACS_ExecuteWithResult(S_PROJECTION, recalculateViewMatrix, TID);
+					if(isSuccess)
+					{
+						recalculateViewMatrix = false;
+						//debugMessage = strParam(s:debugMessage, s:"; Projected!");
+						
+						actorName = GetActorClass(TID);
+						SetFont("SMALLFONT");
+						
+						HudMessage(s:"Enemy: ", s:" \cj[", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:"]"; 
+						HUDMSG_PLAIN, 9000 + MAXPLAYERS + i, 
+						CR_DARKRED, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);	
+						
+						HudMessage(s:actorName; HUDMSG_PLAIN, 9000 + MAXPLAYERS + i, 
+						CR_DARKRED, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0] + 0.015, 1873);	
+					}
+					{
+						//debugMessage = strParam(s:debugMessage, s:"; Projection failed: ", i:isSuccess);
+					}
+				}	
+			}
 		}
 		else 
 		{
-			int actorTeam = GetActorTeam(TID);
-			if(actorTeam == -1)
-			{
-				continue;
-			}	
+			actorName = GetActorName(TID);
+			targetTeam = GetActorTeam(TID);
 			
-			if(actorTeam != pTeam)
+			/*debugMessage = strParam(s:debugMessage, s:"; actor: ", s:actorName);
+			if(targetTeam == 1)
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team: RED");	
+			}
+			else if(targetTeam == 0)
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team: BLUE");	
+			}
+			else
+			{
+				debugMessage = strParam(s:debugMessage, s:"; team NONE: ", i:targetTeam);	
+			}*/
+			
+			if(targetTeam != pTeam && targetTeam != -1)
 			{
 				isSuccess = ACS_ExecuteWithResult(S_PROJECTION, recalculateViewMatrix, TID);
-				if(!isSuccess)
-				{
-					continue;
+				if(isSuccess)
+				{	
+					recalculateViewMatrix = false;
+					//debugMessage = strParam(s:debugMessage, s:"; Projected!");				
+					
+					SetFont("SMALLFONT");
+					HudMessage(s:"Enemy: ", s:actorName, s:" \cj[", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:"]"; HUDMSG_PLAIN, 9000 + MAXPLAYERS + i, CR_DARKRED, 
+					ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);
 				}
-		
-				actorName = GetActorName(TID);
-				SetFont("SMALLFONT");
-				HudMessage(s:"Enemy: ", s:actorName, s:" \cj[", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:"]"; HUDMSG_PLAIN, 9000 + MAXPLAYERS + i, CR_DARKRED, 
-				ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);
+				else
+				{
+					//debugMessage = strParam(s:debugMessage, s:"; Projection failed: ", i:isSuccess);
+				}
 			}
-			
 		}
+		
+		//HudMessage(s:debugMessage; HUDMSG_PLAIN, 9400 + i, CR_WHITE, 0.3, 0.1 + FixedMul(0.05, i <<16), 0.5);
 	}
 }
 
@@ -655,12 +793,12 @@ SCRIPT S_NORMALIZE (void) CLIENTSIDE
 
 
 SCRIPT S_PROJECTION(int recalculateViewMatrix, int targetTID) CLIENTSIDE
-{
+{	
 	int myNumber = PlayerNumber();
 	int playerTid = CheckPlayerCamera(myNumber);
 	if(playerTid == -1)
 	{
-        SetResultValue(0);
+        SetResultValue(-1);
 		terminate;
 	}	
 	
@@ -688,7 +826,7 @@ SCRIPT S_PROJECTION(int recalculateViewMatrix, int targetTID) CLIENTSIDE
 	int trackingType = ALL_VARS[TRACKING_TYPE][0][0];
 	if((trackingType == 1 && trackingType > 50) || (trackingType == 2 && trackingType > 100))
 	{
-        SetResultValue(0);
+        SetResultValue(-2);
 		terminate;
 	}
 
@@ -808,7 +946,7 @@ SCRIPT S_PROJECTION(int recalculateViewMatrix, int targetTID) CLIENTSIDE
 	//if target is behind
 	if(viewX <= 0)
 	{
-        SetResultValue(0);
+        SetResultValue(-3);
 		terminate;
 	}
 

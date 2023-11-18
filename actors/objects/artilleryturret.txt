@@ -10,6 +10,7 @@ actor Utility_ArtilleryTurretRed : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN FF 0 A_CheckSight("Death.Deconstruction")
+		CIGN F 0 ACS_ExecuteWithResult(1026)
 		CIGN F 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
 	Idle:
 		CIGN F 6 A_Look
@@ -75,6 +76,7 @@ actor Utility_ArtilleryTurretBlue : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN FF 0 A_CheckSight("Death.Deconstruction")
+        CIGN F 0 ACS_ExecuteWithResult(1026)
 		CIGN F 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
 	Idle:
 		CIGN F 6 A_Look
