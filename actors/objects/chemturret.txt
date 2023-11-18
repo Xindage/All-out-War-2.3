@@ -13,6 +13,7 @@ actor Utility_ChemTurretRed : Utility_TurretBase {
 	states {
 	Spawn:
 		CHTU AA 0 A_CheckSight("Death.Deconstruction")
+		CHTU A 0 ACS_ExecuteWithResult(1026)
 		CHTU A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
 	Idle:
 		CHTU A 0 A_TakeInventory ("GunTurretClip", 23)
@@ -102,6 +103,7 @@ actor Utility_ChemTurretBlue : Utility_TurretBase {
 	states {
 	Spawn:
 		CHTU AA 0 A_CheckSight("Death.Deconstruction")
+		CHTU A 0 ACS_ExecuteWithResult(1026)
 		CHTU A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
 	Idle:
 		CHTU A 0 A_TakeInventory ("GunTurretClip", 23)
