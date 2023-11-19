@@ -1,0 +1,233 @@
+SCRIPT SC_PIC_RANDOM_TID_SERVER (void)
+{
+	int activator = ActivatorTID();
+	if(activator == 0)
+	{
+		Thing_ChangeTID(0, UniqueTID(3800 + MAXPLAYERS));		
+	}
+}
+
+//called by client hotkey
+//trys to spot player at sight
+SCRIPT SC_SPOT_ACTOR_SERVER (void) NET 
+{	
+	int originalTid = ActivatorTID();
+	int capAngle = GetActorAngle(originalTid);
+	int camPitch = GetActorPitch(originalTid);	
+	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 2048.0);
+}
+
+//called by HitscanPuff when it's spawned on target. puff contains information about target.
+// works at any distance instead of SetActivatorToTarget(0) which sets activator to target at sight only for small distances like 15-20 units
+SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
+{
+	int playerTID = GetActorProperty(0, APROP_TargetTID);
+	int targetTID = GetActorProperty(0, APROP_TRACERTID);
+	
+	if(targetTID == 0)
+	{
+		terminate;
+	}
+	
+	int playerIndex = playerTID - 3800;
+	int pTeam = GetPlayerTeam(playerIndex);
+	
+	str playerName = strparam(n:playerIndex + 1);
+	
+	/*str team = strparam(s:"red");
+	if(pTeam == 0)
+	{
+		team = strparam(s:"blue");
+	}
+	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);*/
+	
+	int targetTeam = -1;
+	
+	bool isTargetPlayer = targetTID >= 3800 && targetTID < 3800 + MAXPLAYERS;
+	if(isTargetPlayer)
+	{
+		int taregtIndex = targetTID - 3800;	
+		targetTeam = GetPlayerTeam(taregtIndex);
+		if(targetTeam == -1)
+		{
+			terminate;
+		}
+	
+		/*str tName = strparam(n:taregtIndex + 1);
+		
+		str tTeam = strparam(s:"red");
+		if(targetTeam == 0)
+		{
+			tTeam = strparam(s:"blue");
+		}
+		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);*/
+	}
+	else
+	{
+		targetTeam = GetActorTeam(targetTID);
+		str actorName = GetActorName(targetTID);
+		if(targetTeam == -1)
+		{
+			terminate;
+		}
+		
+		/*str aTeam = strparam(s:"red");
+		if(targetTeam == 0)
+		{
+			aTeam = strparam(s:"blue");
+		}
+		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);*/
+	}
+	
+	if(pTeam != targetTeam)
+	{		
+		for(int i = 0; i < MAXPLAYERS; i++)
+		{
+			if(PlayerInGame(i) && GetPlayerTeam(i) == pTeam)
+			{
+				ExecuteClientScript(SC_SPOT_HANDLER_CL, i, targetTID);
+				delay(1);
+			}
+		}
+	}
+	
+	//printBold(s:logT);
+}
+
+
+//tracks whether players are in spawnroom or not
+SCRIPT SC_SPWAN_ROOM_CHECK_SERVER OPEN 
+{
+	//there are 32 bits in integer. each bit is a flag for whether player is in spawn room for player numbers from 0 to 31
+	// one integer value covers 32 players
+	int pageSize = 32; 
+	
+	int inSpawnRoomPage_1 = 0; //first 32 players
+	int inSpawnRoomPage_2 = 0; //last 32 players
+	
+	while (true)
+	{
+		delay(1);
+		
+		for(int page = 0; page < 2; page++)
+		{
+			int pageStart = page * pageSize; 
+			int pageEnd = (page + 1) * pageSize;
+			
+			int newBitMap = 0;
+			for(int i = pageStart; i < pageEnd; i++) // i is a player index and also a bit position
+			{
+				int tid = i + 3800;
+				int inSpawnRoom = CheckActorInventory(tid, "IsInSpawnRoom");
+				if(inSpawnRoom)
+				{
+					newBitMap |= 1 << (i - pageStart);
+				}
+				else
+				{
+					newBitMap &= ~(1 << (i - pageStart));
+				}
+			}
+			
+			if(page == 0)
+			{
+				if(newBitMap != inSpawnRoomPage_1)
+				{
+					inSpawnRoomPage_1 = newBitMap;
+					
+					for(i = 0; i < MAXPLAYERS; i++)
+					{
+						if(!PlayerInGame(i))
+						{
+							continue;
+						}
+						delay(1);
+						ExecuteClientScript(SC_SPAWN_ROOM_1_HANDLER_CL, i, inSpawnRoomPage_1);	
+					}
+				}	
+			}
+			else
+			{
+				if(newBitMap != inSpawnRoomPage_2)
+				{
+					inSpawnRoomPage_2 = newBitMap;
+					for(i = 0; i < MAXPLAYERS; i++)
+					{
+						if(!PlayerInGame(i))
+						{
+							continue;
+						}
+						delay(1);
+						ExecuteClientScript(SC_SPAWN_ROOM_2_HANDLER_CL, i, inSpawnRoomPage_2);
+					}
+				}	
+			}
+		}
+	}
+}
+
+
+/*SCRIPT SC_DRAW_ACTOR_INFO_DEBUG_SERVER ENTER
+{
+	delay(70);
+	
+	Credits[PlayerNumber()] = 15000;
+	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
+	
+	while(true)
+	{
+		delay(1);
+		
+		int pn = PlayerNumber();
+		SetActivatorToTarget(0);
+		int targetTID = ActivatorTID();
+		
+		str message = strparam(s:"TID: ", i:targetTID);
+		bool isPlayer = targetTID >= 3800 && targetTID < 3800 + MAXPLAYERS;
+		int targetTeam = -1;
+		str targetName = strparam(s:"name none");
+		
+		if(isPlayer)
+		{
+			int targetIndex = targetTID - 3800;
+			targetName = strparam(n:targetIndex + 1);
+			message = strparam(s:message, s:"; ", s:"player name: ", s:targetName);	
+			targetTeam = GetPlayerTeam(targetIndex);
+		}
+		else
+		{
+			str className = GetActorClass(targetTID);
+			targetName = GetActorName(targetTID);
+			
+			message = strparam(s:message, s:"; ", s:"actor class: ", s: className);	
+			message = strparam(s:message, s:"; ", s:"actor name: ", s:"", s:targetName);	
+			
+			targetTeam = GetActorTeam(targetIndex);
+		}
+		
+		if(targetTeam == 1)
+		{
+			message = strparam(s:message, s:"; ", s:"team: RED");		
+		}
+		else if(targetTeam == 0)
+		{
+			message = strparam(s:message, s:"; ", s:"team: BLUE");		
+		}
+		else
+		{
+			message = strparam(s:message, s:"; ", s:"team: NONE: ", i:targetTeam);
+		}
+		
+		SetActivatorToPlayer(pn);
+		HudMessage(s:message; HUDMSG_PLAIN, 9990, CR_WHITE, 0.1, 0.05, 0.5);
+	}
+}*/
+
+
+/*script 4444 ENTER
+{
+	delay(35);
+	
+	Credits[PlayerNumber()] = 15000;
+	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
+}*/

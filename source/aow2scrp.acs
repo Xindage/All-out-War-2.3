@@ -101,55 +101,55 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define BUILDING_FACTORY 3
 #define BUILDING_REPAIR 4
 #define BUILDING_OBELISK 5
-#define BUILDING_MINIREF 6
-#define BUILDING_HEALTHREGEN 7
-#define BUILDING_AMMOREGEN 8
+#define BUILDING_HEALTHREGEN 6
+#define BUILDING_AMMOREGEN 7
+#define BUILDING_MINIREF 8
 #define BUILDING_PORTAL1 9
 #define BUILDING_PORTAL2 10
 // ----
 #define MAX_BUILDINGS 11
 
+// [Xindage] Well sorted ID.
 // ============================================================================
 // Thing IDs
-// TODO: move these to 1000+ range
 // (100 200) team | 10 Btos | X building
-#define TID_BARRACKS_BLUE		101		//1101
-#define TID_BARBTOS_BLUE		100		//1111
-#define TID_BARRACKS_RED		201		//1201
-#define TID_BARBTOS_RED			200		//1211
-#define TID_REFINERY_BLUE		103		//1102
-#define TID_REFBTOS_BLUE		102		//1112
-#define TID_REFINERY_RED		203		//1202
-#define TID_REFBTOS_RED			202		//1212
-#define TID_RESCENTRE_BLUE		105		//1103
-#define TID_RESBTOS_BLUE		104		//1113
-#define TID_RESCENTRE_RED		205		//1203
-#define TID_RESBTOS_RED			204		//1213
-#define TID_FACTORY_BLUE		107		//1104
-#define TID_FACBTOS_BLUE		106		//1114
-#define TID_FACTORY_RED			207		//1204
-#define TID_FACBTOS_RED			206		//1214
-#define TID_OBELISK_BLUE		114		//1105
-#define TID_OBEBTOS_BLUE		115		//1115
-#define TID_OBELISK_RED			214		//1205
-#define TID_OBEBTOS_RED			215		//1215
-#define TID_REPAIR_BLUE			109		//1106
-#define TID_REPBTOS_BLUE		110		//1116
-#define TID_REPAIR_RED			209		//1206
-#define TID_REPBTOS_RED			210		//1216
-#define TID_HEALTHREGEN_BLUE	903		//1107
-#define TID_HEALTHREGEN_RED		902		//1207
-#define TID_AMMOREGEN_BLUE		905		//1108
-#define TID_AMMOREGEN_RED		904		//1208
-#define TID_MINIREF_BLUE		901		//1109
-#define TID_MINIREF_RED			900		//1209
+#define TID_BARRACKS_BLUE		1101	// Blue Buildings
+#define TID_REFINERY_BLUE		1102
+#define TID_RESCENTRE_BLUE		1103
+#define TID_FACTORY_BLUE		1104
+#define TID_OBELISK_BLUE		1105
+#define TID_REPAIR_BLUE			1106
+#define TID_HEALTHREGEN_BLUE	1107
+#define TID_AMMOREGEN_BLUE		1108
+#define TID_MINIREF_BLUE		1109
+#define TID_BARRACKS_RED		1201	// Red Buildings
+#define TID_REFINERY_RED		1202
+#define TID_RESCENTRE_RED		1203
+#define TID_FACTORY_RED			1204
+#define TID_OBELISK_RED			1205
+#define TID_REPAIR_RED			1206
+#define TID_HEALTHREGEN_RED		1207
+#define TID_AMMOREGEN_RED		1208
+#define TID_MINIREF_RED			1209
+#define TID_BARBTOS_BLUE		1111	// Blue BTOs
+#define TID_REFBTOS_BLUE		1112
+#define TID_RESBTOS_BLUE		1113
+#define TID_FACBTOS_BLUE		1114
+#define TID_OBEBTOS_BLUE		1115
+#define TID_REPBTOS_BLUE		1116
+#define TID_BARBTOS_RED			1211	// Red BTOs
+#define TID_REFBTOS_RED			1212
+#define TID_RESBTOS_RED			1213
+#define TID_FACBTOS_RED			1214
+#define TID_OBEBTOS_RED			1215
+#define TID_REPBTOS_RED			1216
 
+// TODO: move these to 1000+ range
 #define TID_TIBERIUM 402			//1000
 #define TID_CRATE 1300				//1001
 #define TID_CRATESPOT_START 410		//1002
 // 410 - 442 We reall need 32 spots?
 #define TID_CRATESPOT_END 442		//1034
-
 #define TID_TELENODE_BLUE1			1500
 #define TID_TELENODE_BLUE2			1501
 #define TID_TELENODE_RED1			1502
@@ -173,12 +173,14 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Pref_FreezeCMD			802
 #libdefine SC_Pref_MenuToggle			803
 #libdefine SC_Pref_RequestFreeze		804
-//#libdefine SC_Init_crates				805
-// [...]
+#libdefine SC_Init_crates				805
+#libdefine SC_TargetMessage				806
 #libdefine SC_BombPackItem				807
-// [...]
+#libdefine SC_SpawnImp					808 // ???????
 #libdefine SC_HUDDaemon					809
-// [...]
+#libdefine SC_RandomizeCrateSpots		810
+#libdefine SC_GetclassName				811
+#libdefine SC_CrateControl				812
 #libdefine SC_AOWVersionInfo			813
 #libdefine SC_GiveCredits				815
 #libdefine SC_SelfHealHealth			816
@@ -197,6 +199,14 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_JuggArmorHelp				829
 #libdefine SC_CheckC4Timer				830
 #libdefine SC_CheckC4Placement			831
+#libdefine SC_StructureFall				832
+#libdefine SC_SFSpecial					833
+#libdefine SC_StructurePain				834
+#libdefine SC_PlayerCheckRank			835
+#libdefine SC_StructureBTODamage		836
+#libdefine SC_CreditBonus				837
+#libdefine SC_CL_MenuCall				838
+#libdefine SC_CrateEffect				839
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
@@ -206,7 +216,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // 9** scripts
 #libdefine SC_IdentifyTarget			900
 #libdefine SC_BeaconExplosion			901
-//										902
+#libdefine SC_SFAnnounce				902
 #libdefine SC_SillyThings				903
 //#libdefine SC_TortoisePassenger			904
 #libdefine SC_WeaponCheck				905
@@ -680,28 +690,28 @@ int intHolder[256] =
 	1, //useteleporternodes
 	-1, //consoleplayer
 	0,
+	0,	// Unused - i_CreditFragAward
+	0,	// Unused - i_CreditAwardTime
+	0,	// Unused - i_CreditAwardAmount
+	0,	// Unused - i_CreditRepairAmount
 	0,
+	0,	// Unused - i_TicketPool
 	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+	0,	// Unused - i_TournamentMode
+	0,	// Unused - i_TicketPool
 	300, //RedBeaconTime
 	300, //BlueBeaconTime
 	0,
 	0,
 	0,
 	0,
+	0,	// Unused - i_MedicBonusNeed
 	0,
 	0,
 	0,
 	0,
-	0,
-	
-	0 // end
+	0	// Unused - i_PlasmaCooldownTime
+// Variables End.
 };
 
 #define i_Developer 0
@@ -710,26 +720,26 @@ int intHolder[256] =
 #define i_UseTeleporterNodes 3
 #define i_consoleplayer 4
 #define i_consoledead 5
-#define i_CreditFragAward 6
-#define i_CreditAwardTime 7
-#define i_CreditAwardAmount 8
-#define i_CreditRepairAmount 9
+// #define i_CreditFragAward 6
+// #define i_CreditAwardTime 7
+// #define i_CreditAwardAmount 8
+// #define i_CreditRepairAmount 9
 #define i_SuddenDeath 10
-#define i_TicketPool 11
+// #define i_TicketPool 11
 #define i_StartingTickets 12
 #define i_TournamentMode 13
-#define i_BeaconPurchaseDelay 14
+// #define i_BeaconPurchaseDelay 14
 #define i_RedBeaconTime 15
 #define i_BlueBeaconTime 16
 #define i_gameover 17
 #define i_LastAttackMessage 18
 #define i_InterpolatorActive 19
-#define i_MedicBonusNeed 20
+// #define i_MedicBonusNeed 20
 #define i_g_CreditDelta 21
 #define i_MenuFrozen 22
 #define i_GotSnapshot 23
 #define i_g_CrateSeed 24
-#define i_PlasmaCooldownTime 25
+// #define i_PlasmaCooldownTime 25
 
 str MenuName;
 // [Dusk] Network state
@@ -806,3 +816,8 @@ global int 63:deathtoll;
 #include "a_tiberium.acs"
 #include "a_utility.acs"
 #include "a_changelog.acs"
+
+#include "a_player_names_client.acs"
+#include "a_player_names_projection.acs"
+#include "a_player_names_server.acs"
+#include "a_player_names_spotted_client.acs"
