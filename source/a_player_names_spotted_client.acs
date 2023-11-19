@@ -186,6 +186,12 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
 {
 	int pTeam = PlayerTeam();
 	bool recalculateViewMatrix = true;
+	
+	str enemyColor = "\cn";
+    if(pTeam == 0)
+    {
+        enemyColor = "\cr";
+    }
 		
 	for(int i = 0; i < MAX_SPOTTED_ACTORS_CLIENT; i++)
 	{	
@@ -253,12 +259,23 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
         		
         	SetFont("SMALLFONT");
         	
-        	HudMessage(s:"Enemy: ", s:" \cj[", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:"]"; 
-        	HUDMSG_PLAIN, messageIdBase, 
-        	CR_DARKRED, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);	
+        	if(actorName == "Player")
+        	{
+        	    actorName = "";
+        	}
         	
-        	HudMessage(s:actorName; HUDMSG_PLAIN, messageIdBase + 1, 
-        	CR_DARKRED, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0] + 0.015, 1873);	
+        	if(ALL_VARS[RESULT_DISTANCE][0][0] < 30)
+        	{
+        	    HudMessage(s:enemyColor, s:actorName, s:" [\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:enemyColor, s:"]"; 
+                HUDMSG_PLAIN, messageIdBase, 
+                CR_WHITE, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);    
+        	}
+        	else
+        	{
+        	    HudMessage(s:enemyColor, s:"[\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:enemyColor, s:"]"; 
+                HUDMSG_PLAIN, messageIdBase, 
+                CR_WHITE, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);
+        	}	
         }
         {
         	//debugMessage = strParam(s:debugMessage, s:"; Projection failed: ", i:isSuccess);
