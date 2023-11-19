@@ -46,6 +46,16 @@ int ALL_VARS[20][100][4];
 #define SC_PIC_RANDOM_TID_SERVER 1026
 #define SC_DRAW_NAMES_DEBUG_CL 1027
 
+// MESSAGES IDS AND CONSTS
+#define DRAW_DISTANCE 9000
+#define PLAYER_NAMES_START 9010
+#define PLAYER_NAMES_STEP 5 //each player has 5 ids. ex. player0 has ids 9010, 9012... 9014; player 63 has 9316-9320; and
+#define SPOTTED_NAMES_START 9350
+#define PLAYER_SPOTTED_STEP 5 // from SPOTTED_NAMES_START to SPOTTED_NAMES_START + MAX_SPOTTED_ACTORS_CLIENT * 5 - 1 (included); ex from 9350 to 9599
+
+#define DEBUG_SPOTTED 9600
+#define DEBUG_ACTOR 9700
+
 
 SCRIPT SC_SWITCH_DRAWING_DISTANCE_CL (void) net CLIENTSIDE
 {	
@@ -58,11 +68,11 @@ SCRIPT SC_SWITCH_DRAWING_DISTANCE_CL (void) net CLIENTSIDE
 	SetFont("BIGFONT");
 	if(ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] == 0)
 	{
-	    HudMessage(s:"Player names disabled"; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 2.0);
+	    HudMessage(s:"Player names disabled"; HUDMSG_PLAIN, DRAW_DISTANCE, CR_WHITE, 0.5, 0.2, 2.0);
 	}
 	else
 	{
-	    HudMessage(s:"Player names enabled for distance: ", i:ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]; HUDMSG_PLAIN, 9400, CR_WHITE, 0.5, 0.2, 3.0);
+	    HudMessage(s:"Player names enabled for distance: ", i:ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]; HUDMSG_PLAIN, DRAW_DISTANCE, CR_WHITE, 0.5, 0.2, 3.0);
 	}	
 	
 	str cvar = strparam (s:"toggle_names");
@@ -122,9 +132,10 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 			continue;
 		}
 		
-		bool isSuccess = ACS_ExecuteWithResult(SC_PROJECTION_CL, recalculateViewMatrix, playerTID, maxDistance);
-		if(!isSuccess)
+		int isSuccess = ACS_ExecuteWithResult(SC_PROJECTION_CL, recalculateViewMatrix, playerTID, maxDistance);
+		if(isSuccess != 1)
 		{
+		    //print(s:"Projection failed: ", i:isSuccess);
 			continue;
 		}
 		recalculateViewMatrix = false; //that's how we recalculate it once per frame
@@ -137,12 +148,13 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 		int distance = ALL_VARS[RESULT_DISTANCE][0][0];
 		
 		SetFont("SMALLFONT");
-		HudMessage(s:playerName, s:" \cj[", i:distance,  s:"]"; HUDMSG_PLAIN, 9000 + playerIndex, CR_WHITE, screenX, screenY, 1873);
+		int messageIdBase = PLAYER_NAMES_START + playerIndex * PLAYER_NAMES_STEP;
+		HudMessage(s:playerName, s:" \cj[", i:distance,  s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
 		
 		if(distance < 10)
 		{
 			int spawnHealth = GetActorSpawnHealth(playerTID);
-			HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, 9100 + playerIndex, CR_WHITE, screenX, screenY + 0.015, 1873);	
+			HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, messageIdBase + 1, CR_WHITE, screenX, screenY + 0.015, 1873);	
 		}
 	}
 }
