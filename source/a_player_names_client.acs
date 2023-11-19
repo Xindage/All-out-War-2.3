@@ -103,8 +103,14 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 	int myNumber = PlayerNumber();
 	int myTid = myNumber + 3800;
 	bool recalculateViewMatrix = true;
+	bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, myNumber);
+	int pTeam = PlayerTeam();
 	
-	bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, myNumber);	
+	str color = "\cn";
+    if(pTeam == 1)
+    {
+    	color = "\cr";
+    }
 		
 	for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
 	{	
@@ -113,7 +119,7 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 			continue;
 		}
 		
-		if(GetPlayerTeam(playerIndex) != PlayerTeam())
+		if(GetPlayerTeam(playerIndex) != pTeam)
 		{
 			continue;
 		}
@@ -147,14 +153,16 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 		int screenY = ALL_VARS[RESULT_SCREEN_Y][0][0];
 		int distance = ALL_VARS[RESULT_DISTANCE][0][0];
 		
-		SetFont("SMALLFONT");
 		int messageIdBase = PLAYER_NAMES_START + playerIndex * PLAYER_NAMES_STEP;
-		HudMessage(s:playerName, s:" \cj[", i:distance,  s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
-		
+		SetFont("SMALLFONT");
 		if(distance < 10)
 		{
-			int spawnHealth = GetActorSpawnHealth(playerTID);
-			HudMessage(s:"Health: ", d:currentHealth, s:"/", d:spawnHealth; HUDMSG_PLAIN, messageIdBase + 1, CR_WHITE, screenX, screenY + 0.015, 1873);	
+		    HudMessage(s:playerName, s:color, s:" [\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
+			HudMessage(s:"\cdHP: ", d:currentHealth; HUDMSG_PLAIN, messageIdBase + 1, CR_WHITE, screenX, screenY + 0.015, 1873);	
+		}
+		else
+		{
+		    HudMessage(s:color, s:"[\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
 		}
 	}
 }

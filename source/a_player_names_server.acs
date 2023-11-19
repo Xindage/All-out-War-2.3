@@ -225,10 +225,10 @@ SCRIPT SC_SPWAN_ROOM_CHECK_SERVER OPEN
 }*/
 
 
-/*script 4444 ENTER
+script 4444 ENTER
 {
 	delay(35);
 	
 	Credits[PlayerNumber()] = 15000;
 	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
-}*/
+}
