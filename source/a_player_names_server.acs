@@ -26,6 +26,7 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 	
 	if(targetTID == 0)
 	{
+        //printBold(s:"spot terminated tid is 0");
 		terminate;
 	}
 	
@@ -34,12 +35,12 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 	
 	str playerName = strparam(n:playerIndex + 1);
 	
-	/*str team = strparam(s:"red");
+	str team = strparam(s:"red");
 	if(pTeam == 0)
 	{
 		team = strparam(s:"blue");
 	}
-	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);*/
+	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);
 	
 	int targetTeam = -1;
 	
@@ -53,14 +54,14 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 			terminate;
 		}
 	
-		/*str tName = strparam(n:taregtIndex + 1);
+		str tName = strparam(n:taregtIndex + 1);
 		
 		str tTeam = strparam(s:"red");
 		if(targetTeam == 0)
 		{
 			tTeam = strparam(s:"blue");
 		}
-		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);*/
+		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);
 	}
 	else
 	{
@@ -71,12 +72,12 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 			terminate;
 		}
 		
-		/*str aTeam = strparam(s:"red");
+		str aTeam = strparam(s:"red");
 		if(targetTeam == 0)
 		{
 			aTeam = strparam(s:"blue");
 		}
-		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);*/
+		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);
 	}
 	
 	if(pTeam != targetTeam)
@@ -219,7 +220,7 @@ SCRIPT SC_SPWAN_ROOM_CHECK_SERVER OPEN
 		}
 		
 		SetActivatorToPlayer(pn);
-		HudMessage(s:message; HUDMSG_PLAIN, 9990, CR_WHITE, 0.1, 0.05, 0.5);
+		HudMessage(s:message; HUDMSG_PLAIN, DEBUG_ACTOR, CR_WHITE, 0.1, 0.05, 0.5);
 	}
 }*/
 

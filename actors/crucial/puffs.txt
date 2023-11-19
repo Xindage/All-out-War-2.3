@@ -106,9 +106,9 @@ Actor HitscanPuff : BulletPuff
 	States
 	{
 		Spawn:
-			TNT1 A 1
+			TNT1 A 2
 		Death: 
-			TNT1 A 1 ACS_ExecuteAlways (1021, 0) //S_SPOT_ACTOR_PUFF
+			TNT1 A 1 ACS_ExecuteAlways (1021, 0) //SC_SPOT_ACTOR_SERVER_PUFF
 		Stop
 	}
 }
