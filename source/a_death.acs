@@ -132,13 +132,23 @@ script SC_DEATH DEATH {
 	}
 }
 
-// [Xindage] Script called to check if the death happened in the bounds of the base for purpose of giving extra
-// Its the same script used by the utilgun but in reverse.
+// [Xindage] Script called to check if the death happened in the bounds of the base for
+// purpose of giving extra credits, points and experience.
 // Global caches and miniref are dont count for this purpose.
 function bool SC_DEFENSEKILL (int team)
 {
-	if (!team)
-	{
+    int ptr = team ? 0 : 1; // Revert the team value.
+
+    for (int i = 0; i < MAX_BUILDINGS-5; ++i)
+    {
+        if (CheckActorDistance(0, MainTIDs[ptr][i], MAX_TURRET_DISTANCE/2))
+        {return true;}
+    }
+    return false;
+}
+
+/*function bool SC_DEFENSEKILL (int team)
+{
 		if (CheckActorDistance(0,201,MAX_TURRET_DISTANCE/2)) { return true; }
 		else if (CheckActorDistance(0,203,MAX_TURRET_DISTANCE/2)) { return true; }
 		else if (CheckActorDistance(0,205,MAX_TURRET_DISTANCE/2)) { return true; }
@@ -158,7 +168,7 @@ function bool SC_DEFENSEKILL (int team)
 		else { return false; }
 	}
 	return false;
-}
+}*/
 
 // Client-side death script
 script SC_CL_PLAYERDEATH DEATH CLIENTSIDE {
