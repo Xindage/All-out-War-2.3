@@ -75,14 +75,14 @@ SCRIPT SC_SWITCH_DRAWING_DISTANCE_CL (void) net CLIENTSIDE
 	    HudMessage(s:"Player names enabled for distance: ", i:ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]; HUDMSG_PLAIN, DRAW_DISTANCE, CR_WHITE, 0.5, 0.2, 3.0);
 	}	
 	
-	str cvar = strparam (s:"toggle_names");
+	str cvar = strparam (s:"names_draw_distance");
 	SetCVar(cvar, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
 }
 
 
 SCRIPT SC_DRAW_ALL_CL ENTER CLIENTSIDE
 {
-	str cvar = strparam (s:"toggle_names");
+	str cvar = strparam (s:"names_draw_distance");
 	ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] = GetCVar(cvar);
 		
 	while (true)

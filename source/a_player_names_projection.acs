@@ -39,7 +39,7 @@ SCRIPT SC_PROJECTION_CL(int recalculateViewMatrix, int targetTID, int maxDistanc
 		terminate;
 	}	
 	
-	int verticalOffset = 35;
+	int verticalOffset = 20.0;
 		
 	int camX = GetActorX(playerTid);
 	int camY = GetActorY(playerTid);
