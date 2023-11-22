@@ -1,6 +1,44 @@
 function str GetActorName(int tid)
 {
 	str actorName = GetActorClass(tid);
+
+	if(actorName == "Player")
+	{
+		return "";
+	}
+
+	if(actorName == "MadCatUsed")
+	{
+		return "MadCat";
+	}
+	if(actorName == "LancerUsed")
+	{
+		return "Lancer";
+	}
+	if(actorName == "RavenUsed")
+	{
+		return "Raven";
+	}
+	if(actorName == "TortoiseUsed")
+	{
+		return "Tortoise";
+	}
+	
+	if(actorName == "TitanUsed")
+	{
+		return "Titan";
+	}
+	
+	if(actorName == "MastodonUsed")
+	{
+		return "Mastodon";
+	}
+	
+	if(actorName == "MastodonUsed")
+	{
+		return "Mastodon";
+	}
+
 	if(actorName == "TimedC4ArmedBlue" || actorName == "TimedC4Armed")
 	{
 		return strparam(s:"C4");
@@ -60,7 +98,7 @@ function str GetActorName(int tid)
 		return strparam(s:"Teleport");
 	}
 	
-	return strparam(s:"None");
+	return actorName;
 }
 
 function str GetActorTeam(int tid)
@@ -98,16 +136,20 @@ function str GetActorTeam(int tid)
 	return -1;
 }
 
+
+
+
 //receives server data
 SCRIPT SC_SPOT_HANDLER_CL(int sp_tid) CLIENTSIDE
 {
-    //print(s:"receive spot: ", s:sp_tid);
+    //printbold(s:"============receive spot: ", i:sp_tid);
+	
 	bool found = false;
 	for(int i = 0; i < MAX_SPOTTED_ACTORS_CLIENT; i++)
 	{
 		if(ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0] == sp_tid)
 		{
-		    //print(s:"spot again: ", s:sp_tid);
+		    //print(s:"spot again: ", i:sp_tid);
 			ALL_VARS[SPOTTED_TIMEOUTS_CLIENT][i][0] = timer();		
 			found = true;
 			break;
@@ -120,9 +162,9 @@ SCRIPT SC_SPOT_HANDLER_CL(int sp_tid) CLIENTSIDE
 		{
 			if(ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0] == 0)
 			{
-			    //print(s:"spot first: ", s:sp_tid);
 				ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0] = sp_tid;
 				ALL_VARS[SPOTTED_TIMEOUTS_CLIENT][i][0] = timer();
+				//printbold(s:"===========spot first:  val[", i:i, s:"] ", i:ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0]);
 				break;
 			}
 		}	
@@ -144,6 +186,12 @@ SCRIPT SC_SPOT_TIMEOUT_CL ENTER CLIENTSIDE
 				continue;
 			}
 			
+			bool isTeamItem = TID < 0;
+			if(isTeamItem)
+			{
+				TID = -TID;
+			}
+			
 			bool needToUnspot = false;
 			bool isPlayer = TID >= 3800 && TID < 3800 + MAXPLAYERS;
 			
@@ -158,6 +206,7 @@ SCRIPT SC_SPOT_TIMEOUT_CL ENTER CLIENTSIDE
 			}
 			else // turret, c4, nuke/ion
 			{
+				
 				bool isUsed = IsTIDUsed(TID);
 				if(!isUsed)
 				{
@@ -166,7 +215,7 @@ SCRIPT SC_SPOT_TIMEOUT_CL ENTER CLIENTSIDE
 			}
 			
 			//actor is present now check the timeout
-			if(!needToUnspot)
+			if(!needToUnspot && !isTeamItem)
 			{
 				int spotTime = ALL_VARS[SPOTTED_TIMEOUTS_CLIENT][i][0];
 				needToUnspot = (timer() - spotTime) > SPOT_DURATION_TIC;
@@ -188,56 +237,70 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
 	bool recalculateViewMatrix = true;
 	
 	str enemyColor = "\cn";
+	str teammateColor = "\cr";
     if(pTeam == 0)
     {
+		teammateColor = "\cn";
         enemyColor = "\cr";
     }
 		
 	for(int i = 0; i < MAX_SPOTTED_ACTORS_CLIENT; i++)
 	{	
-	    int messageIdBase = SPOTTED_NAMES_START + i * PLAYER_SPOTTED_STEP;
-	    
 		int TID = ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0];
-		//str debugMessage = strParam(s:"index: ", i:i, s:"; TID: ", i:TID);
+		if(TID == 0)
+		{
+			continue;
+		}
 		
+		int messageIdBase = SPOTTED_NAMES_START + i * PLAYER_SPOTTED_STEP;
+		//str debugMessage = strParam(s:"index: ", i:i, s:"; TID: ", i:TID);
+		bool isTeammateItem = TID < 0;
+		if(isTeammateItem)
+		{
+			TID = -TID;
+		} 
 		
 		bool isPlayer = TID >= 3800 && TID < 3800 + MAXPLAYERS;
 		bool isSuccess = false;
-		str actorName;
+		str actorName = GetActorName(TID);
 		int targetTeam = -1;
 		
 		if(isPlayer)
 		{
 			int targetIndex = TID - 3800;
-			targetTeam = GetPlayerTeam(TID - 3800);
-			actorName = GetActorClass(TID);
+			
+			bool isInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, targetIndex);
+			if(isInSpawnRoom)
+			{
+				continue;
+			}
+			targetTeam = GetPlayerTeam(targetIndex);
 			//debugMessage = strParam(s:debugMessage, s:"; player: ", n:targetIndex + 1);
 		}
 		else
 		{
-		    actorName = GetActorName(TID);
         	targetTeam = GetActorTeam(TID);
         	//debugMessage = strParam(s:debugMessage, s:"; item: ", s:actorName);
 		}
 			
-		/*if(targetTeam == 1)
+		if(targetTeam == 1)
 		{
-			debugMessage = strParam(s:debugMessage, s:"; team: RED");	
+			//debugMessage = strParam(s:debugMessage, s:"; team: RED");	
 		}
 		else if(targetTeam == 0)
 		{
-			debugMessage = strParam(s:debugMessage, s:"; team: BLUE");	
+			//debugMessage = strParam(s:debugMessage, s:"; team: BLUE");	
 		}
 		else
 		{
-			debugMessage = strParam(s:debugMessage, s:"; team NONE: ", i:targetTeam);	
-		}*/
+			//debugMessage = strParam(s:debugMessage, s:"; team NONE: ", i:targetTeam);	
+		}
 			
-		if(targetTeam != pTeam && targetTeam != -1)
+		if(targetTeam != -1 && 
+			(targetTeam != pTeam || (isTeammateItem && targetTeam == pTeam )))
 		{
 			if(isPlayer)
 			{
-			    //debugMessage = strParam(s:debugMessage, s:"; HP: ", i:currentHealth);
 			    int currentHealth = GetActorHealth(TID);
 			    if(currentHealth)
 			    {
@@ -247,7 +310,7 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
 			}	
 			else
 			{
-			isSuccess = ACS_ExecuteWithResult(SC_PROJECTION_CL, recalculateViewMatrix, TID, maxDistance);   
+				isSuccess = ACS_ExecuteWithResult(SC_PROJECTION_CL, recalculateViewMatrix, TID, maxDistance);   
 			}
 		}
 		
@@ -258,24 +321,25 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
         	//debugMessage = strParam(s:debugMessage, s:"; Projected!");
         		
         	SetFont("SMALLFONT");
-        	
-        	if(actorName == "Player")
-        	{
-        	    actorName = "";
-        	}
+			
+			str color = enemyColor;
+			if(isTeammateItem)
+			{
+				color = teammateColor;
+			}
         	
         	if(ALL_VARS[RESULT_DISTANCE][0][0] < 30)
         	{
-        	    HudMessage(s:enemyColor, s:actorName, s:" [\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:enemyColor, s:"]"; 
+        	    HudMessage(s:color, s:actorName, s:" [\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:color, s:"]"; 
                 HUDMSG_PLAIN, messageIdBase, 
                 CR_WHITE, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);    
         	}
-        	else
-        	{
-        	    HudMessage(s:enemyColor, s:"[\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:enemyColor, s:"]"; 
+			else
+			{
+				HudMessage(s:color, s:"[\cj", i:ALL_VARS[RESULT_DISTANCE][0][0],  s:color, s:"]"; 
                 HUDMSG_PLAIN, messageIdBase, 
                 CR_WHITE, ALL_VARS[RESULT_SCREEN_X][0][0], ALL_VARS[RESULT_SCREEN_Y][0][0], 1873);
-        	}	
+			}
         }
         {
         	//debugMessage = strParam(s:debugMessage, s:"; Projection failed: ", i:isSuccess);
@@ -294,6 +358,12 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
 		for(int i = 0; i < MAX_SPOTTED_ACTORS_CLIENT; i ++)
 		{
 			int targetTID = ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0];
+			
+			if(targetTID == 0)
+			{
+				continue;
+			}
+			
 			int time = ALL_VARS[SPOTTED_TIMEOUTS_CLIENT][i][0];
 			
 			str message = strparam(s:"i: ", i:i, s:" TID: ", i:targetTID);

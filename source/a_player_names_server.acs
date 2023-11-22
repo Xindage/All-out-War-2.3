@@ -3,9 +3,30 @@ SCRIPT SC_PIC_RANDOM_TID_SERVER (void)
 	int activator = ActivatorTID();
 	if(activator == 0)
 	{
-		Thing_ChangeTID(0, UniqueTID(3800 + MAXPLAYERS));		
+		activator = UniqueTID(3800 + MAXPLAYERS);
+		Thing_ChangeTID(0, activator);		
+		
+		//send the spawned object's tid to teammates for c4 and beacons
+		str activatorsName = GetActorName(activator);
+		
+		//printBold(s:"Created: ", i:activator, s:" name: ", s:activatorsName);
+		
+		if(activatorsName == "C4" || activatorsName == "Nuke" || activatorsName == "Ion")
+		{
+			int team = GetActorTeam(activator);
+			
+			for(int i = 0; i < MAXPLAYERS; i++)
+			{
+				if(PlayerInGame(i) && GetPlayerTeam(i) == team)
+				{
+					ExecuteClientScript(SC_SPOT_HANDLER_CL, i, -activator);
+					delay(1);
+				}
+			}
+		}
 	}
 }
+
 
 //called by client hotkey
 //trys to spot player at sight
@@ -35,12 +56,12 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 	
 	str playerName = strparam(n:playerIndex + 1);
 	
-	str team = strparam(s:"red");
+	/*str team = "red";
 	if(pTeam == 0)
 	{
-		team = strparam(s:"blue");
+		team = "blue";
 	}
-	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);
+	str logT = strparam(s:"========== server: player", s:playerName, s:" of team ", s:team);*/
 	
 	int targetTeam = -1;
 	
@@ -54,14 +75,13 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 			terminate;
 		}
 	
-		str tName = strparam(n:taregtIndex + 1);
-		
-		str tTeam = strparam(s:"red");
+		/*str tName = strparam(n:taregtIndex + 1);
+		str tTeam = "red";
 		if(targetTeam == 0)
 		{
-			tTeam = strparam(s:"blue");
+			tTeam = "blue";
 		}
-		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);
+		logT = strparam(s:logT, s:" spot player ", s:tName, s:" of team ", s:tTeam);*/
 	}
 	else
 	{
@@ -72,12 +92,12 @@ SCRIPT SC_SPOT_AND_NOTIFY_SERVER (void)
 			terminate;
 		}
 		
-		str aTeam = strparam(s:"red");
+		/*str aTeam = "red";
 		if(targetTeam == 0)
 		{
-			aTeam = strparam(s:"blue");
+			aTeam = "blue";
 		}
-		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);
+		logT = strparam(s:logT, s:" spot actor ", s:actorName, s:" of team ", s:aTeam);*/
 	}
 	
 	if(pTeam != targetTeam)
@@ -223,12 +243,3 @@ SCRIPT SC_SPWAN_ROOM_CHECK_SERVER OPEN
 		HudMessage(s:message; HUDMSG_PLAIN, DEBUG_ACTOR, CR_WHITE, 0.1, 0.05, 0.5);
 	}
 }*/
-
-
-script 4444 ENTER
-{
-	delay(35);
-	
-	Credits[PlayerNumber()] = 15000;
-	SetActorInventory (3800 + PlayerNumber(), "Credit", 15000);
-}
