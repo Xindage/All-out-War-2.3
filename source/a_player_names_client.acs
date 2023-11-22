@@ -2,21 +2,21 @@
 int ALL_VARS[20][100][4];
 
 //general name drawing
-#define SPAWN_ROOM_1_CLIENT 9 //bitmap
-#define SPAWN_ROOM_2_CLIENT 10 //bitmap
-#define DRAWING_DISTANCE_CLIENT 12 //int 0 - disabled
+#define SPAWN_ROOM_1_CLIENT 1 //bitmap
+#define SPAWN_ROOM_2_CLIENT 2 //bitmap
+#define DRAWING_DISTANCE_CLIENT 3 //int 0 - disabled
 
 //projection
-#define VIEW_MATRIX_4x4 0 //float array[4][4]
-#define VECTOR_A_3x1 1 //float array[4]
-#define VECTOR_B_3x1 2 //float array[4]
-#define VECTOR_C_3x1 3 //float array[4]
-#define PREV_FOV_RATIO 4 //float
-#define RESULT_SCREEN_X 5 //float
-#define RESULT_SCREEN_Y 6 //float
-#define PROJECTION_BC_H 7 //float
-#define PROJECTION_BC_V 8 //float
-#define RESULT_DISTANCE 11 //int 
+#define VIEW_MATRIX_4x4 4 //float array[4][4]
+#define VECTOR_A_3x1 5 //float array[4]
+#define VECTOR_B_3x1 6 //float array[4]
+#define VECTOR_C_3x1 7 //float array[4]
+#define PREV_FOV_RATIO 8 //float
+#define RESULT_SCREEN_X 9 //float
+#define RESULT_SCREEN_Y 10 //float
+#define PROJECTION_BC_H 11 //float
+#define PROJECTION_BC_V 12 //float
+#define RESULT_DISTANCE 13 //int 
 
 //spotted
 #define SPOTTED_TIMEOUTS_CLIENT 14 // int array[MAX_SPOTTED_ACTORS_CLIENT]
@@ -157,8 +157,7 @@ SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
 		SetFont("SMALLFONT");
 		if(distance < 10)
 		{
-		    HudMessage(s:playerName, s:color, s:" [\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
-			HudMessage(s:"\cdHP: ", d:currentHealth; HUDMSG_PLAIN, messageIdBase + 1, CR_WHITE, screenX, screenY + 0.015, 1873);	
+		    HudMessage(s:playerName, s:color, s:" [\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);	
 		}
 		else
 		{
