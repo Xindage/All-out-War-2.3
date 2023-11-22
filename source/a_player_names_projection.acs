@@ -1,0 +1,273 @@
+//performes cross multiplication VECTOR_A_3x1 and VECTOR_B_3x1. puts result in VECTOR_C_3x1
+SCRIPT SC_CROSS_CL (void) CLIENTSIDE
+{
+	ALL_VARS[VECTOR_C_3x1][0][0] = 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][1][0], ALL_VARS[VECTOR_A_3x1][2][0]) - 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][1][0], ALL_VARS[VECTOR_B_3x1][2][0]);
+	
+	ALL_VARS[VECTOR_C_3x1][1][0] = 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][0][0], ALL_VARS[VECTOR_B_3x1][2][0]) - 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][0][0], ALL_VARS[VECTOR_A_3x1][2][0]);
+	
+	ALL_VARS[VECTOR_C_3x1][2][0] = 
+	FixedMul(ALL_VARS[VECTOR_B_3x1][0][0], ALL_VARS[VECTOR_A_3x1][1][0]) - 
+	FixedMul(ALL_VARS[VECTOR_A_3x1][0][0], ALL_VARS[VECTOR_B_3x1][1][0]);
+}
+
+//normalizes VECTOR_C_3x1.  puts result in VECTOR_C_3x1
+SCRIPT SC_NORMALIZE_CL (void) CLIENTSIDE
+{
+	int magnitude = FixedSqrt(
+	FixedMul(ALL_VARS[VECTOR_C_3x1][0][0], ALL_VARS[VECTOR_C_3x1][0][0]) +
+	FixedMul(ALL_VARS[VECTOR_C_3x1][1][0], ALL_VARS[VECTOR_C_3x1][1][0]) +
+	FixedMul(ALL_VARS[VECTOR_C_3x1][2][0], ALL_VARS[VECTOR_C_3x1][2][0]));
+	
+	//normalize
+	ALL_VARS[VECTOR_C_3x1][0][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][0][0], magnitude);
+	ALL_VARS[VECTOR_C_3x1][1][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][1][0], magnitude);
+	ALL_VARS[VECTOR_C_3x1][2][0] = FixedDiv(ALL_VARS[VECTOR_C_3x1][2][0], magnitude);
+}
+
+
+SCRIPT SC_PROJECTION_CL(int recalculateViewMatrix, int targetTID, int maxDistance) CLIENTSIDE
+{	
+	int myNumber = PlayerNumber();
+	int playerTid = CheckPlayerCamera(myNumber);
+	if(playerTid == -1)
+	{
+        SetResultValue(-1);
+		terminate;
+	}	
+	
+	int verticalOffset = 20.0;
+		
+	int camX = GetActorX(playerTid);
+	int camY = GetActorY(playerTid);
+	int camZ = GetActorZ(playerTid) + GetActorViewHeight(playerTid);
+
+	int targetX = GetActorX(targetTID);
+	int targetY = GetActorY(targetTID);
+	int targetZ = GetActorZ(targetTID) + verticalOffset + GetActorProperty(targetTID, APROP_Height);
+
+	int dx = targetX - camX;
+	int dy = targetY - camY;
+	int dz = targetZ - camZ;
+		
+	int dxInt = dx >> 16;
+	int dyInt = dy >> 16;
+	int dzInt = dz >> 16;	
+	int distance = Sqrt(dxInt * dxInt + dyInt * dyInt + dzInt * dzInt) / 100;
+	ALL_VARS[RESULT_DISTANCE][0][0] = distance;
+	
+	if(distance > maxDistance)
+	{
+        SetResultValue(-2);
+		terminate;
+	}
+
+	if(recalculateViewMatrix)
+	{
+		int capAngle = GetActorAngle(playerTid);
+		int camPitch = GetActorPitch(playerTid);
+
+		//camera forward vector
+		int fx = FixedMul(cos(capAngle),cos(camPitch));
+		int fy = FixedMul(sin(capAngle),cos(camPitch));
+		int fz = cos(0.25 + camPitch);
+
+		//camera forward
+		ALL_VARS[VECTOR_A_3x1][0][0] = fx;
+		ALL_VARS[VECTOR_A_3x1][1][0] = fy;
+		ALL_VARS[VECTOR_A_3x1][2][0] = fz;
+
+
+		//world up vector
+		ALL_VARS[VECTOR_B_3x1][0][0] = 0;
+		ALL_VARS[VECTOR_B_3x1][1][0] = 0;
+		ALL_VARS[VECTOR_B_3x1][2][0] = 1.0;
+		
+		//CROSS CAMERA FORWARD AND WORLD UP
+		ACS_ExecuteWithResult(SC_CROSS_CL);
+		ACS_ExecuteWithResult(SC_NORMALIZE_CL);
+		
+		//camera right vector
+		int rx = -ALL_VARS[VECTOR_C_3x1][0][0];
+		int ry = -ALL_VARS[VECTOR_C_3x1][1][0];
+		int rz = -ALL_VARS[VECTOR_C_3x1][2][0];
+
+		ALL_VARS[VECTOR_B_3x1][0][0] = rx;
+		ALL_VARS[VECTOR_B_3x1][1][0] = ry;
+		ALL_VARS[VECTOR_B_3x1][2][0] = rz;
+
+		//CROSS CAMERA FORWARD AND CAMERA RIGHT
+		ACS_ExecuteWithResult(SC_CROSS_CL);
+
+		//camera up vector
+		int ux = ALL_VARS[VECTOR_C_3x1][0][0];
+		int uy = ALL_VARS[VECTOR_C_3x1][1][0];
+		int uz = ALL_VARS[VECTOR_C_3x1][2][0];
+
+		//SET UP WORLD TO CAMERA VIEW MATRIX
+		ALL_VARS[VIEW_MATRIX_4x4][0][0] = rx;
+		ALL_VARS[VIEW_MATRIX_4x4][1][0] = ux;
+		ALL_VARS[VIEW_MATRIX_4x4][2][0] = fx;
+		ALL_VARS[VIEW_MATRIX_4x4][3][0] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][1] = rz;
+		ALL_VARS[VIEW_MATRIX_4x4][1][1] = uz;
+		ALL_VARS[VIEW_MATRIX_4x4][2][1] = fz;
+		ALL_VARS[VIEW_MATRIX_4x4][3][1] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][2] = ry;
+		ALL_VARS[VIEW_MATRIX_4x4][1][2] = uy;
+		ALL_VARS[VIEW_MATRIX_4x4][2][2] = fy;
+		ALL_VARS[VIEW_MATRIX_4x4][3][2] = 0.0;
+
+		ALL_VARS[VIEW_MATRIX_4x4][0][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][1][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][2][3] = 0.0;
+		ALL_VARS[VIEW_MATRIX_4x4][3][3] = 1.0;
+	}
+
+	int position4x1[4][1];
+	int view_position4x1[4][1];
+	
+	position4x1[0][0] = dx;
+	position4x1[1][0] = dz;
+	position4x1[2][0] = dy;
+	position4x1[3][0] = 1.0;
+
+	//MATRIX MULTIPLICATION START
+	int matrix_m = 4;
+	int matrix_n = 4;
+	int matrix_p = 1;
+	
+	for (int i = 0; i < matrix_m; i++)
+	{
+		for (int j = 0; j < matrix_p; j++)
+		{
+			view_position4x1[i][j] = 0;
+			for (int k = 0; k < matrix_n; k++)
+			{
+				view_position4x1[i][j] += FixedMul(ALL_VARS[VIEW_MATRIX_4x4][i][k], position4x1[k][j]);
+			}
+		}
+	}
+	//MATRIX MULTIPLICATION END
+
+	int viewY = view_position4x1[0][0];
+	int viewX = view_position4x1[2][0];
+	int viewZ = view_position4x1[1][0];
+		
+	//PROJECT CAMERA VIEW TO SCREEN START
+	//let's assume height and width of the screen is 2.
+	// top view of camera projection.  BC represen right half of the screen
+	// A - is a virtual point behind the screen.
+	// B - middle point of the screen. Exact matches player camera position
+	// C - right border of the screen.
+	// AB = 1
+	// BC = tan(BAC) * AB
+	//     B       C
+	//      _______
+	//     |      /
+	//     |     /
+	//     |    /
+	//     |   /
+	//     |  /
+	//     | /
+	//     |/ - half of fov angle between AB and AC
+	//     A -virtual point behind the screen
+
+	//if target is behind
+	if(viewX <= 0)
+	{
+        SetResultValue(-3);
+		terminate;
+	}
+
+	int AB = 1.0;
+	
+	
+	bool recalculateFovConstants = false;
+	int fovRatio = FixedDiv(GetPlayerInfo(myNumber, PLAYERINFO_FOV), GetPlayerInfo(myNumber, PLAYERINFO_DESIREDFOV));
+	if(fovRatio != ALL_VARS[PREV_FOV_RATIO][0][0])
+	{
+		ALL_VARS[PREV_FOV_RATIO][0][0] = fovRatio;
+		recalculateFovConstants = true;
+	}
+
+	if(recalculateFovConstants)
+	{
+		int BAC_H = FixedMul(0.147, fovRatio);
+		int sin_BAC_H = sin(BAC_H);
+		int cos_BAC_H = cos(BAC_H);
+		int tan_BAC_H = FixedDiv(sin_BAC_H, cos_BAC_H);
+		ALL_VARS[PROJECTION_BC_H][0][0] = FixedMul(tan_BAC_H, AB); //horizontal half screen size
+
+
+		int BAC_V = FixedMul(0.0897, fovRatio);
+		int sin_BAC_V = sin(BAC_V);
+		int cos_BAC_V = cos(BAC_V);
+		int tan_BAC_V = FixedDiv(sin_BAC_V, cos_BAC_V);
+		ALL_VARS[PROJECTION_BC_V][0][0] = FixedMul(tan_BAC_V, AB); //vertical half screen size
+	}
+
+	int projectedScreenX = viewY;
+	int projectedScreenY = viewZ;
+
+	int projectedRatio = FixedDiv(projectedScreenY, projectedScreenX); // y = projY/ProjX * X
+
+	int borderX;
+	int borderY;
+
+	if(projectedScreenX <= 0)
+	{
+		borderX = -ALL_VARS[PROJECTION_BC_H][0][0];
+	}
+	else
+	{
+		borderX = ALL_VARS[PROJECTION_BC_H][0][0];
+	}
+	borderY = FixedMul(projectedRatio, borderX);
+
+	if(borderY > ALL_VARS[PROJECTION_BC_V][0][0] || borderY < -ALL_VARS[PROJECTION_BC_V][0][0])
+	{
+		if(borderY > 0)
+		{
+			borderY = ALL_VARS[PROJECTION_BC_V][0][0];
+		}
+		else
+		{
+			borderY = -ALL_VARS[PROJECTION_BC_V][0][0];
+		}
+		borderX = FixedDiv(borderY, projectedRatio);
+	}
+
+	int projectedScreenMaxDistance = VectorLength(borderX, borderY);
+
+	int projectedDistance = VectorLength(viewY, viewZ);
+	int projectedAngleTan = FixedDiv(projectedDistance, viewX);
+	int projectedScreenDistance = FixedMul(projectedAngleTan, AB);
+
+	if(projectedScreenDistance > projectedScreenMaxDistance)
+	{
+		projectedScreenDistance = projectedScreenMaxDistance;
+	}
+
+	int borderPoinNormalX = FixedDiv(borderX, projectedScreenMaxDistance);
+	int borderPoinNormalY = FixedDiv(borderY, projectedScreenMaxDistance);
+
+
+	borderPoinNormalX = FixedDiv(borderPoinNormalX, ALL_VARS[PROJECTION_BC_H][0][0]);
+	borderPoinNormalY = FixedDiv(borderPoinNormalY, ALL_VARS[PROJECTION_BC_V][0][0]);
+
+	int screenX = FixedMul(borderPoinNormalX, projectedScreenDistance);
+	int screenY = FixedMul(borderPoinNormalY, projectedScreenDistance);
+
+	screenX = FixedDiv(screenX + 1.0, 2.0);
+	screenY = 1.0 - FixedDiv(screenY + 1.0, 2.0);
+	
+	ALL_VARS[RESULT_SCREEN_X][0][0] = screenX;
+	ALL_VARS[RESULT_SCREEN_Y][0][0] = screenY;
+	
+}

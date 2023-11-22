@@ -9,6 +9,7 @@ actor Utility_KlaxonRed : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN AA 0 A_CheckSight("Death.Deconstruction")
+		CIGN A 0 ACS_ExecuteWithResult(1026)
 		CIGN A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
 	Idle:
 		CIGN A 0 A_GiveInventory("MechReloading",12)
@@ -103,6 +104,7 @@ actor Utility_KlaxonBlue : Utility_TurretBase {
 	states {
 	Spawn:
 		CIGN AA 0 A_CheckSight("Death.Deconstruction")
+		CIGN A 0 ACS_ExecuteWithResult(1026)
 		CIGN A 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
 	Idle:
 		CIGN A 0 A_GiveInventory("MechReloading",12)

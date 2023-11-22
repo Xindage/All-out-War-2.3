@@ -34,6 +34,7 @@ actor Utility_MiniRavenRed {
 	States {
 	Spawn:
 		RAVN II 0 A_CheckSight("Death.Deconstruction")
+		RAVN I 0 ACS_ExecuteWithResult(1026)
 		RAVN I 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_RED)
 	Idle:
 		RAVN I 2 A_LookEx(0,32,7072,512,180,"SeeFull") 
@@ -207,6 +208,7 @@ actor Utility_MiniRavenBlue {
 	{
 	Spawn:
 		RAVN II 0 A_CheckSight("Death.Deconstruction")
+		RAVN I 0 ACS_ExecuteWithResult(1026)
 		RAVN I 0 Thing_SetSpecial (0, 84, 345, 0, TEAM_BLUE)
 	Idle:
 		RAVN I 2 A_LookEx(0,32,7072,512,180,"SeeFull") 
