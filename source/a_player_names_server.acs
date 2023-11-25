@@ -35,7 +35,7 @@ SCRIPT SC_SPOT_ACTOR_SERVER (void) NET
 	int originalTid = ActivatorTID();
 	int capAngle = GetActorAngle(originalTid);
 	int camPitch = GetActorPitch(originalTid);	
-	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 2048.0);
+	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 8192.0);
 }
 
 //called by HitscanPuff when it's spawned on target. puff contains information about target.
