@@ -243,9 +243,17 @@ SCRIPT SC_DRAW_SPOTTED_ACTORS_CL(int maxDistance) CLIENTSIDE
 		teammateColor = "\cn";
         enemyColor = "\cr";
     }
-		
+
+    int pn = PlayerNumber();	
+	
 	for(int i = 0; i < MAX_SPOTTED_ACTORS_CLIENT; i++)
 	{	
+        bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, pn);
+		if(isPlayerInSpawnRoom)
+		{
+			continue;
+		}
+    
 		int TID = ALL_VARS[SPOTTED_ACTORS_CLIENT][i][0];
 		if(TID == 0)
 		{
