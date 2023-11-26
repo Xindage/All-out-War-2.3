@@ -1024,9 +1024,9 @@ function bool SC_DISTCHECK (bool full, int team, int dist, bool enforce)
 	if (full)	Basecheck = MAX_BUILDINGS - 2;		// All Buildings.
 	else		Basecheck = MAX_BUILDINGS - 5;		// No caches.
 	// Define the distance to check, if 0 is set use default "MAX_TURRET_DISTANCE".
-	int MapUnits;	// Map units are multiplied by 8 for convenience.
+	int MapUnits;
 	if (!dist)	MapUnits = MAX_TURRET_DISTANCE;		// Default distance.
-	else		MapUnits = dist * 8;				// Custom distance.
+	else		MapUnits = dist;					// Custom distance.
 
 	int cdist = 1;	// Caches dist check is decreased if not enforced.
 	for (int i = 0; i < Basecheck; ++i)

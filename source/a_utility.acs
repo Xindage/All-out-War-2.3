@@ -440,8 +440,32 @@ script 347 (int Type) {
 // [SP] This script is used to determine whether a utility is in his own base or not, and to
 // give "UtilityOutOfRange" if he's not.
 // [Dusk] Mini-refinery has only 1/4 range.
-// [Xindage] Fixed the checking using building array. Still missing miniref todo.
+// [Xindage] Fixed the checking using building array.
 script 370 (void)
+{
+	bool IsInBase = false;
+	// Defining the variable swap, where true mean Red, turning swap Blue.
+	int swap = PlayerTeam() ? 0 : 1;
+	bool TeamBase = SC_DISTCHECK(1, PlayerTeam(), 0, 0);
+	bool EnemyBase = SC_DISTCHECK(0, swap, MIN_ENEMY_DISTANCE, 0);
+
+	if (TeamBase && !EnemyBase) IsInBase = true;
+
+	//Debug.
+//	if (IsInBase)
+//		Log(s:"In base");
+//	else if (EnemyBase)
+//		Log(s:"In enemy base");
+//	else
+//		Log(s:"Too far away");
+	if ( CheckInventory("UtilityOutOfRange") == 1 && IsInBase == true )
+		TakeInventory("UtilityOutOfRange",1);
+	else if ( CheckInventory("UtilityOutOfRange") == 0 && IsInBase == false )
+		GiveInventory("UtilityOutOfRange",1);
+}
+
+// Old
+/* script 370 (void)
 {
 	bool IsInBase = false;
 	int swap;
@@ -468,65 +492,6 @@ script 370 (void)
 				IsInBase = false;
 				break;
 			}
-		}
-	}
-	//if ( IsInBase )
-	//	Log(s:"In base");
-	//else
-	//	Log(s:"Too far away");
-	if ( CheckInventory("UtilityOutOfRange") == 1 && IsInBase == true )
-		TakeInventory("UtilityOutOfRange",1);
-	else if ( CheckInventory("UtilityOutOfRange") == 0 && IsInBase == false )
-		GiveInventory("UtilityOutOfRange",1);
-}
-
-// Kept for reference.
-// TODO: Remove someday.
-/*script 370 (void)
-{
-	bool IsInBase;
-	if ( PlayerTeam() == TEAM_RED )
-	{
-		if (CheckActorDistance(0,TID_BARRACKS_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_REFINERY_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_RESCENTRE_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_FACTORY_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_REPAIR_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_OBELISK_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_MINIREF_RED,MAX_TURRET_DISTANCE/4)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_HEALTHREGEN_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,TID_AMMOREGEN_RED,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else { IsInBase = false; }
-		if ( IsInBase )
-		{
-			if (CheckActorDistance(0,TID_BARRACKS_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,TID_REFINERY_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,TID_RESCENTRE_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,TID_FACTORY_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,TID_REPAIR_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,TID_OBELISK_BLUE,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-		}
-	}
-	else
-	{
-		if (CheckActorDistance(0,101,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,103,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,105,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,107,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,109,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,114,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,901,MAX_TURRET_DISTANCE/4)) { IsInBase = true; }
-		else if (CheckActorDistance(0,903,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else if (CheckActorDistance(0,905,MAX_TURRET_DISTANCE)) { IsInBase = true; }
-		else { IsInBase = false; }
-		if ( IsInBase )
-		{
-			if (CheckActorDistance(0,201,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,203,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,205,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,207,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,209,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
-			else if (CheckActorDistance(0,214,MIN_ENEMY_DISTANCE)) { IsInBase = false; }
 		}
 	}
 	//if ( IsInBase )
