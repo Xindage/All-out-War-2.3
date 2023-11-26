@@ -1013,3 +1013,29 @@ script "SC_FREEREPAIRING" (int WhatBuilding, int who)
 		
 	Repairing_int[WhatBuilding * 2][who] = 0;
 }
+
+// [Xindage] Expanded version of Defense kill check for multi purpose use.
+// Distance and Enforce are optional.
+function bool SC_DISTCHECK (bool full, int team, int dist, bool enforce)
+{
+	// Define if check only the core building or include the global caches,
+	// portals are opt out check a_staticdata for details about "MainTIDs".
+	int Basecheck;
+	if (full)	Basecheck = MAX_BUILDINGS - 2;		// All Buildings.
+	else		Basecheck = MAX_BUILDINGS - 5;		// No caches.
+	// Define the distance to check, if 0 is set use default "MAX_TURRET_DISTANCE".
+	int MapUnits;	// Map units are multiplied by 8 for convenience.
+	if (!dist)	MapUnits = MAX_TURRET_DISTANCE;		// Default distance.
+	else		MapUnits = dist * 8;				// Custom distance.
+
+	int cdist = 1;	// Caches dist check is decreased if not enforced.
+	for (int i = 0; i < Basecheck; ++i)
+    {
+		// Enforce is checked throughout the loop; if true, set the new divisor.
+		// Enforce is obsolete if full is false as well.
+		if (enforce && i >= 6) cdist = 4;
+        if (CheckActorDistance(0, MainTIDs[team][i], MapUnits / cdist))
+        {return true;}
+    }
+    return false;
+}

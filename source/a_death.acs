@@ -9,11 +9,19 @@
  */
 
 // Death script
-script SC_DEATH DEATH {
+// [Xindage] 2023/11/26 - There's lot of unused data that was cleaned.
+// If necessary look for the commit at that date for detailed changes.
+script SC_DEATH DEATH
+{
 	// Killer information
-	int killer_t = GetTargetInfo (TARGETINFO_TID);
-	int killer_p = GetTargetInfo (TARGETINFO_PlayerNum);
-	
+	int killer_n = GetTargetInfo (TARGETINFO_PlayerNum);
+	int killer_t = GetTargetInfo (TARGETINFO_Team);
+	int killer_i = GetTargetInfo (TARGETINFO_TID);
+
+	// Victim information
+	int victim_n = PlayerNumber();
+	int victim_t = PlayerTeam();
+
 	Thing_ChangeTID (0, TID_DeadPlayer);
 	TakeInventory ("ThermalCloakingTime", 90);
 	SetInventory ("InMenu", 0);
@@ -62,7 +70,8 @@ script SC_DEATH DEATH {
 	// The victim is now allowed to request killer's health
 	CanCheckKillerHealth[PlayerNumber()] = true;
 	
-	// :V
+	// [Xindage] I'm not the one who create it but i'll comment what it does.
+	// Every 75th death is going to be extreme for whatever reason.
 	deathtoll++;
 	if (deathtoll % 75 == (75 - 1))
 		SetActorState (0, "XDeath");
@@ -70,7 +79,7 @@ script SC_DEATH DEATH {
 	// If the victim was a suicide bomber and was killed at close range with a
 	// melee weapon, the killer gets the bomb pack.
 	if (GetClass () == CLASS_SuicideBomber &&
-		AproxDistance (0, GetTargetInfo (TARGETINFO_TID)) < 80.0 && 
+		AproxDistance (0, killer_i) < 80.0 &&
 			(
 				CheckTargetWeapon ("Unarmed") ||
 				CheckTargetWeapon ("EagerBeaver") ||
@@ -81,34 +90,29 @@ script SC_DEATH DEATH {
 	{
 		GiveToTarget ("BombPackItem", 1);
 		TargetMessage ("You got the bomb pack! Terrorist!");
-		ThingSound (3800 + GetTargetInfo (TARGETINFO_TID), "terrorist/activate", 127);
+		ThingSound (3800 + killer_i, "terrorist/activate", 127);
 	}
 	
 	// =========================================================================
 	// KILLER POV STARTS HERE
-	
-	int n0 = PlayerNumber();
-	int t0 = PlayerTeam();
 
 	// Check if the death happens in the enemy base area
-	bool IsInEnemyBase = SC_DEFENSEKILL(t0);
+	bool IsInEnemyBase = SC_DISTCHECK(0, killer_t, MAX_TURRET_DISTANCE/2, 0);
 
 	SetActivatorToTarget (0);
 	
 	// Remove tickets from the victim team.
-	TakeTickets (t0, points);
+	TakeTickets (victim_t, points);
 	
 	if (PlayerNumber() != -1) {
 		// If the kill was done with a blood revolver, give a new clip.
 		if (!CheckInventory ("BloodRevolverKill") && CheckWeapon ("BloodRevolver"))
 			GiveInventory ("BloodRevolverAmmo", 1);
 		
-		int n1 = PlayerNumber();
-		int t1 = PlayerTeam();
 		int extra = 1.0;
 		
 		// No points for suicides
-		if (n0 != n1 && n1 != -1)
+		if (victim_n != killer_n && killer_n != -1)
 		{
 			LocalAmbientSound ("game/boink", 127);
 
@@ -120,55 +124,9 @@ script SC_DEATH DEATH {
 			AddExperience((50 * extra) >> 16 );
 			
 			delay (5);
-			// [Cata] Moved to a_sprees.acs
-			/*
-			if (!intHolder[i_FirstBlood]) {
-				// We got first blood!
-				intHolder[i_FirstBlood] = true;
-				IntelMessage (strparam (n:0, s:"\c- gets first blood!"), true);
-			}
-			*/
 		}
 	}
 }
-
-// [Xindage] Script called to check if the death happened in the bounds of the base for
-// purpose of giving extra credits, points and experience.
-// Global caches and miniref are dont count for this purpose.
-function bool SC_DEFENSEKILL (int team)
-{
-    int ptr = team ? 0 : 1; // Revert the team value.
-
-    for (int i = 0; i < MAX_BUILDINGS-5; ++i)
-    {
-        if (CheckActorDistance(0, MainTIDs[ptr][i], MAX_TURRET_DISTANCE/2))
-        {return true;}
-    }
-    return false;
-}
-
-/*function bool SC_DEFENSEKILL (int team)
-{
-		if (CheckActorDistance(0,201,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,203,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,205,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,207,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,209,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,214,MAX_TURRET_DISTANCE/2)) { return true; }
-		else { return false; }
-	}
-	else
-	{
-		if (CheckActorDistance(0,101,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,103,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,105,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,107,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,109,MAX_TURRET_DISTANCE/2)) { return true; }
-		else if (CheckActorDistance(0,114,MAX_TURRET_DISTANCE/2)) { return true; }
-		else { return false; }
-	}
-	return false;
-}*/
 
 // Client-side death script
 script SC_CL_PLAYERDEATH DEATH CLIENTSIDE {
