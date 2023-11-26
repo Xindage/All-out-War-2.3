@@ -80,7 +80,7 @@ script SC_GAMEINIT OPEN {
 			s:pair[1][3], s:"War Factory:",			s:pair[0][3], s:"\n",
 			s:pair[1][5], s:"Obelisk of Light:",	s:pair[0][5], s:"\n",
 			s:pair[1][4], s:"Repair Facility:",		s:pair[0][4];
-			HUDMSG_PLAIN, 100, CR_WHITE, 0.4, 0.25, 16.0);
+			HUDMSG_PLAIN, 100, CR_WHITE, 0.4, 0.25, 6.0);
 	}
 
 	// [Xindage] Dusk applied a cleanup work when one of the terminals were missing for War Factory
