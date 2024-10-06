@@ -147,3 +147,25 @@ texture BTERWAR1
     allowdecals
     pic BTERWAR1 tics 1
     pic BTERWAR2 tics 1
+
+// Dust 3
+texture flag_w1
+pic 1 tics 6
+pic 2 tics 6
+texture flag_w1b
+pic 1 tics 6
+pic 2 tics 6
+
+texture BRAFLG01
+pic 1 tics 10
+pic 2 tics 10
+pic 3 tics 10
+pic 4 tics 10
+pic 5 tics 10
+pic 6 tics 10
+pic 7 tics 10
+pic 8 tics 10
+pic 9 tics 10
+pic 10 tics 10
+pic 11 tics 10
+pic 12 tics 10

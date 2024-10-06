@@ -1,0 +1,19 @@
+Submitted: MagicWazard
+Decorate: MagicWazard
+GLDefs: n/a
+Sounds: n/a
+Sprites: MagicWazard
+Sprite Edit: MagicWazard
+Idea Base: Urban/military decorations/obstacles
+
+// -----
+
+Name: Czech Hedgehog
+Connection: None
+Palette: Custom
+Summon: Hedgehog
+Ambient Sound: No
+De-/Activatable: No
+Destroyable: No
+Special Effects: No
+ACS: No
