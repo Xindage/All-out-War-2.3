@@ -1,0 +1,194 @@
+// VARIABLES
+int ALL_VARS[20][100][4];
+
+//general name drawing
+#define SPAWN_ROOM_1_CLIENT 1 //bitmap
+#define SPAWN_ROOM_2_CLIENT 2 //bitmap
+#define DRAWING_DISTANCE_CLIENT 3 //int 0 - disabled
+
+//projection
+#define VIEW_MATRIX_4x4 4 //float array[4][4]
+#define VECTOR_A_3x1 5 //float array[4]
+#define VECTOR_B_3x1 6 //float array[4]
+#define VECTOR_C_3x1 7 //float array[4]
+#define PREV_FOV_RATIO 8 //float
+#define RESULT_SCREEN_X 9 //float
+#define RESULT_SCREEN_Y 10 //float
+#define PROJECTION_BC_H 11 //float
+#define PROJECTION_BC_V 12 //float
+#define RESULT_DISTANCE 13 //int 
+
+//spotted
+#define SPOTTED_TIMEOUTS_CLIENT 14 // int array[MAX_SPOTTED_ACTORS_CLIENT]
+#define SPOTTED_ACTORS_CLIENT 15// int array[MAX_SPOTTED_ACTORS_CLIENT]
+
+//spotted consts
+#define SPOT_DURATION_TIC 350 // int  10 seconds
+#define MAX_SPOTTED_ACTORS_CLIENT 50 //int 
+
+
+// SCRIPTS
+#define SC_CHECK_IS_IN_SPAWNROOM_CL 1010
+#define SC_CROSS_CL 1011
+#define SC_NORMALIZE_CL 1012
+#define SC_PROJECTION_CL 1013
+#define SC_SWITCH_DRAWING_DISTANCE_CL 1014
+#define SC_SPAWN_ROOM_1_HANDLER_CL 1015
+#define SC_SPAWN_ROOM_2_HANDLER_CL 1016
+#define SC_SPWAN_ROOM_CHECK_SERVER 1017
+#define SC_SPOT_ACTOR_SERVER 1018
+#define SC_SPOT_HANDLER_CL 1019
+#define SC_DRAW_ALL_CL 1020
+#define SC_SPOT_AND_NOTIFY_SERVER 1021
+#define SC_SPOT_TIMEOUT_CL 1022
+#define SC_DRAW_TEAMMATES_CL 1024
+#define SC_DRAW_SPOTTED_ACTORS_CL 1025
+#define SC_PIC_RANDOM_TID_SERVER 1026
+#define SC_DRAW_NAMES_DEBUG_CL 1027
+
+// MESSAGES IDS AND CONSTS
+#define DRAW_DISTANCE 9000
+#define PLAYER_NAMES_START 9010
+#define PLAYER_NAMES_STEP 5 //each player has 5 ids. ex. player0 has ids 9010, 9012... 9014; player 63 has 9316-9320; and
+#define SPOTTED_NAMES_START 9350
+#define PLAYER_SPOTTED_STEP 5 // from SPOTTED_NAMES_START to SPOTTED_NAMES_START + MAX_SPOTTED_ACTORS_CLIENT * 5 - 1 (included); ex from 9350 to 9599
+
+#define DEBUG_SPOTTED 9600
+#define DEBUG_ACTOR 9700
+
+
+SCRIPT SC_SWITCH_DRAWING_DISTANCE_CL (void) net CLIENTSIDE
+{	
+	ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] += 50;
+	if(ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] > 200)
+	{
+		ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] = 0;
+	}
+	
+	SetFont("BIGFONT");
+	if(ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] == 0)
+	{
+	    HudMessage(s:"Player names disabled"; HUDMSG_PLAIN, DRAW_DISTANCE, CR_WHITE, 0.5, 0.2, 2.0);
+	}
+	else
+	{
+	    HudMessage(s:"Player names enabled for distance: ", i:ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]; HUDMSG_PLAIN, DRAW_DISTANCE, CR_WHITE, 0.5, 0.2, 3.0);
+	}	
+	
+	str cvar = strparam (s:"names_draw_distance");
+	SetCVar(cvar, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
+}
+
+
+SCRIPT SC_DRAW_ALL_CL ENTER CLIENTSIDE
+{
+	str cvar = strparam (s:"names_draw_distance");
+	ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] = GetCVar(cvar);
+		
+	while (true)
+	{
+		delay(1);
+		if(ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] == 0)
+		{
+			continue;
+		}
+		
+		ACS_ExecuteWithResult(SC_DRAW_TEAMMATES_CL, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
+		ACS_ExecuteWithResult(SC_DRAW_SPOTTED_ACTORS_CL, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
+	}
+}
+
+SCRIPT SC_DRAW_TEAMMATES_CL(int maxDistance) CLIENTSIDE
+{
+	int myNumber = PlayerNumber();
+	int myTid = myNumber + 3800;
+	bool recalculateViewMatrix = true;
+	bool isPlayerInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, myNumber);
+	int pTeam = PlayerTeam();
+	
+	str color = "\cn";
+    if(pTeam == 1)
+    {
+    	color = "\cr";
+    }
+		
+	for(int playerIndex = 0; playerIndex < MAXPLAYERS; playerIndex++)
+	{	
+		if(!PlayerInGame(playerIndex) || playerIndex == myNumber)
+		{
+			continue;
+		}
+		
+		if(GetPlayerTeam(playerIndex) != pTeam)
+		{
+			continue;
+		}
+		
+		bool isTeamMateInSpawnRoom = ACS_ExecuteWithResult(SC_CHECK_IS_IN_SPAWNROOM_CL, playerIndex);
+		
+		if(isPlayerInSpawnRoom != isTeamMateInSpawnRoom)
+		{
+			continue;
+		}	
+		
+		int playerTID = playerIndex + 3800;
+		int currentHealth = GetActorHealth(playerTID);
+		if(currentHealth <= 0)
+		{
+			continue;
+		}
+		
+		int isSuccess = ACS_ExecuteWithResult(SC_PROJECTION_CL, recalculateViewMatrix, playerTID, maxDistance);
+		if(isSuccess != 1)
+		{
+		    //print(s:"Projection failed: ", i:isSuccess);
+			continue;
+		}
+		recalculateViewMatrix = false; //that's how we recalculate it once per frame
+
+		SetHudSize(0, 0, false);
+		str playerName = strparam (n:playerIndex + 1);
+		
+		int screenX = ALL_VARS[RESULT_SCREEN_X][0][0];
+		int screenY = ALL_VARS[RESULT_SCREEN_Y][0][0];
+		int distance = ALL_VARS[RESULT_DISTANCE][0][0];
+		
+		int messageIdBase = PLAYER_NAMES_START + playerIndex * PLAYER_NAMES_STEP;
+		SetFont("SMALLFONT");
+		if(distance < 10)
+		{
+		    HudMessage(s:playerName, s:color, s:" [\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);	
+		}
+		else
+		{
+		    HudMessage(s:color, s:"[\cj", i:distance, s:color, s:"]"; HUDMSG_PLAIN, messageIdBase, CR_WHITE, screenX, screenY, 1873);
+		}
+	}
+}
+
+//receives data from server
+SCRIPT SC_SPAWN_ROOM_1_HANDLER_CL(int spawnRoomBitMap) CLIENTSIDE
+{
+	ALL_VARS[SPAWN_ROOM_1_CLIENT][0][0] = spawnRoomBitMap;
+}
+//receives data from server
+SCRIPT SC_SPAWN_ROOM_2_HANDLER_CL(int spawnRoomBitMap) CLIENTSIDE
+{
+	ALL_VARS[SPAWN_ROOM_2_CLIENT][0][0] = spawnRoomBitMap;
+}
+
+
+SCRIPT SC_CHECK_IS_IN_SPAWNROOM_CL (int myNumber) CLIENTSIDE
+{
+    int isPlayerInSpawnRoom;
+	if(myNumber < 32)
+	{   
+		isPlayerInSpawnRoom = (ALL_VARS[SPAWN_ROOM_1_CLIENT][0][0] >> myNumber) & 1;
+	}
+	else
+	{
+		isPlayerInSpawnRoom = (ALL_VARS[SPAWN_ROOM_2_CLIENT][0][0] >> (myNumber - 32)) & 1;
+	}
+
+    SetResultValue(isPlayerInSpawnRoom);
+}
