@@ -1,6 +1,7 @@
 actor IsAIMarine : Inventory {}
 // [Xindage] Important note: Never use goto in the marines, just dynamic jumps. loops are ok.
 // Read more about in https://zdoom.org/wiki/Using_inheritance
+// The reason of this base existence is to decrease the amount of copy paste and let all marines inherit from this marine data.
 Actor MBase : PlayerPawn	// Basic unarmed marine.
 {
 
@@ -67,13 +68,12 @@ Actor MBase : PlayerPawn	// Basic unarmed marine.
 //					Spawn and idle states.
 //
 //-----------------------------------------------------------------------
-// Y - yes and N - no means states that can be used by all other marines whitout issues.
-// TODO: Descrease the amount of copy paste and let all marines inherit from this marine data.
+// Y - Yes and N - No - means states that can be used by all other marines whitout issues.
 
 	Spawn: // N
 		TNT1 A 0 // Dummy frame needed.
 //		TNT1 A 0 A_GiveInventory("IsTeam", 1) // Give team items here
-		TNT1 A 0 A_ChangeFlag("Friendly", 0) // Execute ACS script(s) here.
+		TNT1 A 0 A_ChangeFlag("Friendly", 0) // Execute ACS script(s) after here.
 		TNT1 A 0 ACS_ExecuteAlways (993, 0, 1, ARMOD_NOCHANGE) // ACS 993 must be used by ai marines.
 		TNT1 A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
 		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
