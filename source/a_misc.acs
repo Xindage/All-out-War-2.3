@@ -95,7 +95,7 @@ script SC_WEAPONCHECK OPEN {
 		if (CheckInventory ("StealthLaserRifle")) CheckAndRemove("LaserRifle");
 		if (CheckInventory ("TiberiumAutorifle")) CheckAndRemove("TiberiumAutorifleWeak");
 		if (CheckInventory ("SniperRifle")) CheckAndRemove("SniperRifleWeak");
-		if (CheckInventory ("CombustionAutorifle")) CheckAndRemove("CombustionAutorifleWeak");
+		//if (CheckInventory ("CombustionAutorifle")) CheckAndRemove("CombustionAutorifleWeak");
 		
 		// [Dusk] The player may not have stealth with anything but the known
 		// stealth weapons, aka laser rifle and knife.

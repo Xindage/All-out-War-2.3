@@ -84,7 +84,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Superweapon Beacon", "BeaconItem", "", ""},
 	
 	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},
-	{"Combustion Autorifle (weak)", "CombustionAutorifleWeak", "FA21CalAmmo", ""},
+	{"Combustion Autorifle (weak)", "CombustionAutorifle", "FA21CalAmmo", ""},
 	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperBolt", "SniperAmmo"},
 	{"Cryo Bow", "CryoBow", "CryoBolt", ""},
 	{"Karasawa", "Karasawa", "KarasawaAmmo", "KarasawaBurst"},

@@ -765,7 +765,7 @@ script SC_CRATEEFFECT (int c)
 		CheckAndRemove ("GatlingGun");
 		CheckAndRemove ("Karasawa");
 		CheckAndRemove ("CombustionAutorifle");
-		CheckAndRemove ("CombustionAutorifleWeak");
+		//CheckAndRemove ("CombustionAutorifleWeak");
 		CheckAndRemove ("TimeGun");
 		CheckAndRemove ("CryoBow");
 		CheckAndRemove ("Quad Shotgun");

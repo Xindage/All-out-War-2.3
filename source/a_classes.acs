@@ -417,7 +417,7 @@ function int SetClass (int id, int scflags) {
 		GiveInventory ("StealthCharge", 100);
 		}
 
-	// Tag the demolitoin expert so it can disarm remote c4
+	// Tag the demolition expert so it can disarm remote c4
 	if (id == CLASS_DemoExpert)
 		GiveInventory ("IsDemoExpert", 1);
 
@@ -429,13 +429,17 @@ function int SetClass (int id, int scflags) {
 	if (id == CLASS_Rifleman)
 		GiveInventory ("IsRifleman", 1);
 
-	// Tag the gunman so it has better fire rate anda accuracy
+	// Tag the gunman so it has better fire rate and accuracy
 	if (id == CLASS_Gunman)
 		GiveInventory ("IsGunman", 1);
 
 	// Tag the minigunner so it has altfire
 	if (id == CLASS_MachineGunner)
 		GiveInventory ("IsMachinegunner", 1);
+	
+	// Tag the CombustionGunner so it carries more ammo.
+	if (id == CLASS_MachineGunner)
+		GiveInventory ("IsCombustionGunner", 1);
 
 	// Tag the minigunner so it can spin the gattlinggun without firing
 	if (id == CLASS_Minigunner || id == CLASS_JetTrooper || id == CLASS_Commando)
