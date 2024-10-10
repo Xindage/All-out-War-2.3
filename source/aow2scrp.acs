@@ -90,7 +90,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ============================================================================
 // Team battery, part of team Hud alongside with the buildings
 #define BATTERY_CHARGES 50000
-#define BATTERY_MAX 50000
+#define BATTERY_MAX 60000
 
 // ============================================================================
 // Building identifiers
@@ -574,7 +574,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define ITEM_ArmorUp			38 // Armor upgrade
 #define ITEM_Beacon				39 // Beacon item
 #define ITEM_CombustRifle		40
-#define ITEM_CombustRifleWeak	41
+#define ITEM_CombustRifleWeak	41 // About to be removed
 #define ITEM_SniperRifleWeak	42
 #define ITEM_CryoBow			43
 #define ITEM_Karasawa			44

@@ -344,7 +344,7 @@ script SC_RepairHUD (void) CLIENTSIDE {
 }*/
 
 
-
+// [Xindage] Repair Facility now does worth a lot to be alive.
 Script "SC_BatteryRegeneration" OPEN
 {
 	int bp;		// Blue Points
@@ -352,40 +352,53 @@ Script "SC_BatteryRegeneration" OPEN
 	int rp;		// Red Points
 	int rtotal;	// Red Total
 
+	Delay (TICRATE * 30); // Wait for at least falf minute.
 	While (!intHolder[i_SuddenDeath])
 	{
-		bp = 75;
-		rp = 75;
-		if (GotRepair[1]) bp += 25;
-		if (GotRepair[0]) rp += 25;
-		btotal = (16 /*GetCVAR("zeta_batteryregen")*/ * bp) / 100;
-		rtotal = (16 /*GetCVAR("zeta_batteryregen")*/ * rp) / 100;
+		bp = 40;
+		rp = 40;
+		if (GotRepair[0]) bp += 60;
+		if (GotRepair[1]) rp += 60;
+		btotal = (96 /*GetCVAR("zeta_batteryregen")*/ * bp) / 100;
+		rtotal = (96 /*GetCVAR("zeta_batteryregen")*/ * rp) / 100;
+			// Dont update if sudden death is about to start on the end of this loop.
+			if (Timer() >= GetCVAR("zeta_suddendeathtime") * MINUTETICS - 9 * TICRATE) {btotal = 0;rtotal = 0;}
 		if (RepairCharges[0] + btotal >= BATTERY_MAX) RepairCharges[0] = BATTERY_MAX;
 		else RepairCharges[0] += btotal;
 		if (RepairCharges[1] + rtotal >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
 		else RepairCharges[1] += rtotal;
-//		HudMessageBold(s: "rtotal ", d: rtotal, s:"\nbtotal ", d: btotal;
-//		HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
+			// Debug
+			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
+			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
 		// Send the info to clientside hud.
 		int btc = RepairCharges[0];
 		int rtc = RepairCharges[1];
 		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
-		Delay (35 * 5);
-
+		Delay (TICRATE * 10); // Each loop is a sync, lets not push the clients too hard.
 	}
 	While (intHolder[i_SuddenDeath])
 	{
-		// When sudden death start battery get drained instead of filled
+		bp = 100;
+		rp = 100;
+		if (!GotRepair[0]) bp += 50;
+		if (!GotRepair[1]) rp += 50;
+		// When sudden death start battery get drained instead of filled, repair facilty slowdown the amount.
 		// if(GetCVAR("zeta_batterydegeneration") == 0) terminate; // Server can set it off.
-		if (RepairCharges[0] - 320 <= 0) RepairCharges[0] = 0;
-		else RepairCharges[0] -= 320;
-		if (RepairCharges[1] - 320 <= 0) RepairCharges[1] = 0;
-		else RepairCharges[1] -= 320;
+		btotal = (320 /*GetCVAR("zeta_batterydegen")*/ * bp) / 100;
+		rtotal = (320 /*GetCVAR("zeta_batterydegen")*/ * rp) / 100;
+		if (RepairCharges[0] - btotal <= 0) RepairCharges[0] = 0;
+		else RepairCharges[0] -= btotal;
+		if (RepairCharges[1] - rtotal <= 0) RepairCharges[1] = 0;
+		else RepairCharges[1] -= rtotal;
 		// terminate when both teams are empty
 		if (RepairCharges[0] < 1 && RepairCharges[1] < 1) terminate;
 		btc = RepairCharges[0];
 		rtc = RepairCharges[1];
+			// Debug
+			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
+			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
+		// Send the info to clientside hud.
 		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
-		delay(35 * 5); // Should be 1 per sec but that can rush the sync so much.
+		delay(35 * 10); // Each loop is a sync, lets not push the clients too hard.
 	}
 }

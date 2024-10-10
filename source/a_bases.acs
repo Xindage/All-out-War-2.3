@@ -226,7 +226,7 @@ script SC_SFSPECIAL (int what, int team)
 			{
 			ReddenSector(tnb);
 			}
-			PrintBold(i:tnb);
+			// PrintBold(i:tnb); Debug
 		SetLineTexture(0 + tnb, SIDE_FRONT,	TEXTURE_MIDDLE, "MCT6");
 		SetLineTexture(1 + tnb, SIDE_FRONT,	TEXTURE_BOTTOM, "MCT6");
 		SetLineTexture(9 + tnb, SIDE_BACK,	TEXTURE_MIDDLE, "-");
@@ -792,7 +792,30 @@ script 214 (VOID)
 		SetTickets (TEAM_BLUE, Tickets[TEAM_BLUE] + GetCVar ("zeta_tickets_obelisk"));
 }*/
 
-// [Xindade] I believe that code can be improved.
+script SC_STRUCTUREPAIN (int Structure, int Team)
+{
+	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate; // Do not cry on SD.
+	// This script must refuse to accept integers beyond the main ones.
+	if (Structure < BUILDING_BARRACKS || Structure > BUILDING_OBELISK || Structure == 4) terminate;
+	
+	if (Timer() > intHolder[i_LastAttackMessage] + 35 * 15)
+	{
+		// Announcers names
+		str RedSounds[6] = {"red/barracks", "red/refinery", "red/powerplant", "red/factory", "", "red/obelisk"};
+		str BlueSounds[6] = {"blue/barracks", "blue/refinery", "blue/powerplant", "blue/factory", "", "blue/obelisk"};
+        str Sound;
+        switch (Team)
+		{
+			case 0: Sound = BlueSounds[Structure]; break;
+			case 1: Sound = RedSounds[Structure]; break;
+        }
+        AmbientSound(Sound, 255);
+        intHolder[i_LastAttackMessage] = Timer();
+    }
+}
+
+// Old Code
+/*
 script SC_STRUCTUREPAIN (int Structure, int Team) {
 	// stfu during degeneration
 	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate;
@@ -820,7 +843,7 @@ script SC_STRUCTUREPAIN (int Structure, int Team) {
 			AmbientSound("blue/obelisk",255);
 		intHolder[i_LastAttackMessage] = Timer();
 	}
-}
+}*/
 
 // =============================================================================
 // [Dusk] BTOs call this to cause external damage, this way the attacker is
