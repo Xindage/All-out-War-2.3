@@ -327,8 +327,8 @@ function int CheckCrate (int c) {
 }
 
 // ============================================================================
-// Script 309: actual crate script
 // [Dusk] This uses identifiers now
+// Use puke 839 for debug.
 script SC_CRATEEFFECT (int c)
 {
 	int team = PlayerTeam (); // Manual warning system requires it.
@@ -361,37 +361,14 @@ script SC_CRATEEFFECT (int c)
 	// Base Miracle. Custom Warning
 	case CRATE_BASEMIRACLE:
 		AmbientSound ("powerup/base", 127);
-		
-		// These booleans are really necessary?
-		// TODO: Heal everything, includind portals.
 		if (team == TEAM_RED) {
 			IntelMessage ("\cARed team: \c- was blessed with a \cDbase miracle\cJ!", true);
-			if (GotBarracks[0])
-				SetActorHealth (201, GetActorSpawnHealth (201));
-			if (GotRefinery[0])
-				SetActorHealth (203, GetActorSpawnHealth (203));
-			if (GotResearch[0])
-				SetActorHealth (205, GetActorSpawnHealth (205));
-			if (GotFactory[0])
-				SetActorHealth (207, GetActorSpawnHealth (207));
-			if (GotObelisk[0])
-				SetActorHealth (214, GetActorSpawnHealth (214));
-			if (GotRepair[0])
-				SetActorHealth (209, GetActorSpawnHealth (114));
+			for (int i = 0; i < MAX_BUILDINGS; i++) // Heals Everything, any MTID gone cannot be healed anyway.
+				{SetActorHealth (MainTIDs[1][i], GetActorSpawnHealth (MainTIDs[1][i]));}
 		} else if (team == TEAM_BLUE) {
 			IntelMessage ("\cNBlue team: \c- was blessed with a \cDbase miracle\cJ!", true);
-			if (GotBarracks[1])
-				SetActorHealth (101, GetActorSpawnHealth (101));
-			if (GotRefinery[1])
-				SetActorHealth (103, GetActorSpawnHealth (103));
-			if (GotResearch[1])
-				SetActorHealth (105, GetActorSpawnHealth (105));
-			if (GotFactory[1])
-				SetActorHealth (107, GetActorSpawnHealth (107));
-			if (GotObelisk[1])
-				SetActorHealth (114, GetActorSpawnHealth (114));
-			if (GotRepair[1])
-				SetActorHealth (109, GetActorSpawnHealth (114));
+			for (i = 0; i < MAX_BUILDINGS; i++)
+				{SetActorHealth (MainTIDs[0][i], GetActorSpawnHealth (MainTIDs[0][i]));}
 		}
 		
 		SYNC_UpdateAllBuildings ();
@@ -422,7 +399,7 @@ script SC_CRATEEFFECT (int c)
 	case CRATE_BONUSXP:
 		LocalAmbientSound ("powerup/exp",255);
 		
-		for (int i = 0; i < 5; i++) {
+		for (i = 0; i < 5; i++) {
 			Delay (5);
 			ActivatorSound ("c4/use", 127);
 			AddExperience (50);
