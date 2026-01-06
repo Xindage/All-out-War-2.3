@@ -182,7 +182,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_GetclassName				811
 #libdefine SC_CrateControl				812
 #libdefine SC_AOWVersionInfo			813
-#libdefine SC_GiveCredits				815
+//#libdefine SC_GiveCredits				815
 #libdefine SC_SelfHealHealth			816
 #libdefine SC_ServerSettings			817
 #libdefine SC_PlayerRespawn				818

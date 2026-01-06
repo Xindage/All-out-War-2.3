@@ -38,36 +38,25 @@ function void AwardCredits (int amount) {
 	IntelMessage (strparam (s:"You have been awarded with \cQ$\cD", d:amount), false);
 }
 
-function void SetCredits (int value) {
-	DoSetCredits (PlayerNumber(), value, true);
-}
-
-function void SetPlayerCredits (int player, int value) {
-	DoSetCredits (player, value, true);
-}
-
-function void DoSetCredits (int player, int value, int inform) {
-	if (player < 0)
-		player = PlayerNumber();
+function void SetCredits (int player, int value) {
+	if (player < 0) player = PlayerNumber();
+	if (IsAdmin[player] || !PlayerInGame (player)) return;
 	
-	if (IsAdmin[player] || !PlayerInGame (player))
-		return;
-	
-	// [Dusk] Don't go past credit cap
+	// Don't go past credit cap or negative
 	int cap = GetConfig (CONFIG_CREDITCAP);
-	if (cap && value > cap)
-		value = cap;
+	if (cap && value > cap)		value = cap;
+	if (value < 0)				value = 0;
 	
 	Credits[player] = value;
 	SetActorInventory (3800 + player, "Credit", value);
 }
 
 function void GivePlayerCredits (int player, int amount) {
-	DoSetCredits (player, GetPlayerCredits (player) + amount, true);
+	SetCredits (player, GetPlayerCredits (player) + amount);
 }
 
 function void GiveCredits (int amount) {
-	DoSetCredits (PlayerNumber(), GetCredits() + amount, true);
+	SetCredits (PlayerNumber(), GetCredits() + amount);
 }
 
 function void GiveCreditsBold (int amount) {
@@ -80,13 +69,13 @@ function void GiveTeamCredits (int b, int r) {
 			continue;
 		
 		if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
-			DoSetCredits (i, GetPlayerCredits (i) + b, false);
+			SetCredits (i, GetPlayerCredits (i) + b);
 		else
-			DoSetCredits (i, GetPlayerCredits (i) + r, false);
+			SetCredits (i, GetPlayerCredits (i) + r);
 	}
 }
 
-// Give credits to a player, 
+// Give credits to a player
 function void RefundCredits (int p, int v) {
 	if (p == -1)
 		p = PlayerNumber();
@@ -110,17 +99,6 @@ function void TakeCredits (int p, int v, int verbose) {
 		
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (s:"You have been deducted \cQ$\cD", d:v), false);
-	}
-}
-
-// testing script
-Script SC_GIVECREDITS (int amount, int i) {
-	GivePlayerCredits (i, amount);
-	
-	// Online, this needs a message
-	if (netstate == NETSTATE_Server) {
-		SetFont ("SMALLFONT");
-		IntelMessage (strparam (s:"\cRServer \cJhas given \cQ$\cD", d:amount, s:" \cJto ", n:i+1), true);
 	}
 }
 
@@ -213,3 +191,25 @@ function int CalcDiscount (int amount) {
 	
 	return d;
 }
+
+/*
+// Removed unecessary Data
+// Test script
+Script SC_GIVECREDITS (int amount, int i) {
+	GivePlayerCredits (i, amount);
+	
+	// Online, this needs a message
+	if (netstate == NETSTATE_Server) {
+		SetFont ("SMALLFONT");
+		IntelMessage (strparam (s:"\cRServer \cJhas given \cQ$\cD", d:amount, s:" \cJto ", n:i+1), true);
+	}
+}
+
+// Redundant
+function void SetCredits (int value)
+{DoSetCredits (PlayerNumber(), value, true);}
+
+// Redundant
+function void SetPlayerCredits (int player, int value)
+{DoSetCredits (player, value, true);}
+*/
