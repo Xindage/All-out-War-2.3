@@ -211,18 +211,18 @@ map AOW26 "All Out War"
 
 map AOW27 "Hoth"
 {
-	next = "AOW28"
+	next = "AOW29"
 	sky1 = "SKYFOG0"
 	music = "D_AOW17"
 	levelnum = 27
 }
 
-map AOW28 "Dust3"
+map AOW29 "Dust3"
 {
 	next = "AOW01"
 	sky1 = "SKYFOG0"
 	music = "D_AOW17"
-	levelnum = 28
+	levelnum = 29
 }
 
 skill Normal {
