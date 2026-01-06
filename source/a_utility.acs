@@ -411,7 +411,7 @@ script 346 (int Type, int Team) {
 		break;
 	case 3:
 		// if (MiniRefinery[Team]) SetResultValue (0);
-		if (ThingCount (T_NONE, MainTIDs[1-team][6]) != 0) SetResultValue (0);
+		if (ThingCount (T_NONE, MainTIDs[1-team][BUILDING_MINIREF]) != 0) SetResultValue (0);
 		break;
 	case 4:
 		if (GlobalMedic[Team]) SetResultValue (0);
@@ -911,21 +911,21 @@ function int PF_CheckLimits (int def) {
 		break;*/
 	case PF_MINIREFINERY:
 		// Mini-refinery
-		if (ThingCount (T_NONE, MainTIDs[ct][8])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][BUILDING_MINIREF])) {
 			g_Error = "You already have a mini-refinery!";
 			return 0;
 		}
 		break;
 	case PF_GLOBALHEALTHREGEN:
 		// Health regen
-		if (ThingCount (T_NONE, MainTIDs[ct][6])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][BUILDING_HEALTHREGEN])) {
 			g_Error = "You already have a health regenerator!";
 			return 0;
 		}
 		break;
 	case PF_GLOBALAMMOREGEN:
 		// Ammo regen
-		if (ThingCount (T_NONE, MainTIDs[ct][7])) {
+		if (ThingCount (T_NONE, MainTIDs[ct][BUILDING_AMMOREGEN])) {
 			g_Error = "You already have an ammo regenerator!";
 			return 0;
 		}

@@ -616,8 +616,8 @@ function int CheckMinutes (int m) {
 
 // ============================================================================
 // Does a given building exist?
-function int CheckBuilding (int b, int t) {
-	return ThingCount (T_NONE, BaseTIDs[2*b + t]);
+function int CheckBuilding (int building, int team) {
+	return ThingCount (T_NONE, MainTIDs[team][building]);
 }
 
 // ============================================================================
