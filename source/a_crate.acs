@@ -571,30 +571,30 @@ script SC_CRATEEFFECT (int c)
 		// [Dusk] Set the activator to world first. A player cannot damage his own buildings
 		// now that buildings are team-designated. Also store his team first for the check below.
 		SetActivator (-1);
+
 		int charges = 14000;
+		int damage  = 4000;
+
 		AmbientSound ("weapons/rocklx", 127);
 		AmbientSound ("powerup/crsh", 127);
-		if (team == TEAM_RED) {
-			IntelMessage (strparam(s:("\cARed team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
-			Thing_Damage(201,4000,0);
-			Thing_Damage(203,4000,0);
-			Thing_Damage(205,4000,0);
-			Thing_Damage(207,4000,0);
-			Thing_Damage(214,2500,0);
-			if (RepairCharges[1] + charges >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
-			else RepairCharges[1] += charges;
-		} else {
-			IntelMessage (strparam(s:("\cNBlue team: \c-"), n:0, s:"\c- messed up and activated \cRBase crasher\cJ!"), true);
-			Thing_Damage(101,4000,0);
-			Thing_Damage(103,4000,0);
-			Thing_Damage(105,4000,0);
-			Thing_Damage(107,4000,0);
-			Thing_Damage(114,2500,0);
-			if (RepairCharges[0] + charges >= BATTERY_MAX) RepairCharges[0] = BATTERY_MAX;
-			else RepairCharges[0] += charges;
+
+		if (team == TEAM_RED)
+			IntelMessage (strparam(s:"\cARed team: \c- messed up and activated \cRBase crasher\cJ!"), true);
+		else
+			IntelMessage (strparam(s:"\cNBlue team: \c- messed up and activated \cRBase crasher\cJ!"), true);
+
+		int baseTid = (team == TEAM_RED) ? 1200 : 1100;
+
+		for (int b = 1; b <= 6; b++) {
+			Thing_Damage(baseTid + b, damage, 0);
 		}
-		
-		// Update the building healths to clients
+
+		// Give repair charges to the SAME team that was damaged
+		if (RepairCharges[team] + charges >= BATTERY_MAX)
+			RepairCharges[team] = BATTERY_MAX;
+		else
+			RepairCharges[team] += charges;
+
 		SYNC_UpdateAllBuildings ();
 		break;
 
@@ -861,7 +861,7 @@ script SC_CRATEEFFECT (int c)
 		
 		// Check that this team actually has terminals
 		for (i = 0; i < 5; i++)
-			if (ThingCount (T_NONE, BaseTIDs[random (0, 5) * 2 + PlayerTeam()]))
+			if (ThingCount (T_NONE, MainTIDs[PlayerTeam()][random (0, 5)]))
 				break;
 		
 		if (i == 5)
@@ -871,7 +871,7 @@ script SC_CRATEEFFECT (int c)
 		// in assaulting dead buidings.
 		int building;
 		do
-			building = BaseTIDs[random (0, 5) * 2 + PlayerTeam()];
+			building = MainTIDs[PlayerTeam()][random (0, 5)];
 		while (ThingCount (T_NONE, building) == 0);
 		
 		// Spawn 3 spawner actors, each spawns 7 imps. We do this instead of
