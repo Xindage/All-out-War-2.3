@@ -70,41 +70,41 @@ script SC_STRUCTUREFALL (int what, int team)
 	SetActivatorToTarget (0); // target: building -> player
 	str name;
 	switch (what) {
-		case 0:
+		case BUILDING_BARRACKS:
 			GotBarracks[team] = false;
 			name = "Barracks";
 			CallEvent (ACTION_DESTROY_BARRACKS, TEAM_BLUE);
 			break;
-		case 1:
+		case BUILDING_REFINERY:
 			GotRefinery[team] = false;
 			name = "Refinery";
 			CallEvent (ACTION_DESTROY_REFINERY, TEAM_BLUE);
 			break;
-		case 2:
+		case BUILDING_RESCENTRE:
 			GotResearch[team] = false;
 			name = "Research Centre";
 			CallEvent (ACTION_DESTROY_PLANT, TEAM_BLUE);
 			break;
-		case 3:
+		case BUILDING_FACTORY:
 			GotFactory[team] = false;
 			name = "War Factory";
 			CallEvent (ACTION_DESTROY_FACTORY, TEAM_BLUE);
 			break;
-		case 4:
-			GotRepair[team] = false;
-			name = "Repair Facility";
-			CallEvent (ACTION_DESTROY_REPAIR, team);
-			break;
-		case 5:
+		case BUILDING_OBELISK:
 			GotObelisk[team] = false;
 			name = "Obelisk";
 			CallEvent (ACTION_DESTROY_OBELISK, team);
+			break;
+		case BUILDING_REPAIR:
+			GotRepair[team] = false;
+			name = "Repair Facility";
+			CallEvent (ACTION_DESTROY_REPAIR, team);
 			break;
 		default:
 			// TODO: Add error handler.
 			break;
         }
-	if (what == 4)	// Repair faility only.
+	if (what == BUILDING_REPAIR)	// Repair faility only.
 	{
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
@@ -172,13 +172,13 @@ script SC_SFSPECIAL (int what, int team)
 				ReddenSector (10);
 				break;
 			case 4:
-				ReddenSector (13);
-				ReddenSector (14);
-				break;
-			case 5:
 				ReddenSector (19);
 				SetLineTexture(11,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 				SetLineTexture(11,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				break;
+			case 5:
+				ReddenSector (13);
+				ReddenSector (14);
 				break;
 			case 6:
 				SetLineTexture(2,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
@@ -204,13 +204,13 @@ script SC_SFSPECIAL (int what, int team)
 				ReddenSector (12);
 				break;
 			case 10:
-				ReddenSector (15);
-				ReddenSector (16);
-				break;
-			case 11:
 				ReddenSector (20);
 				SetLineTexture(12,SIDE_FRONT,TEXTURE_BOTTOM,"MCT2");
 				SetLineTexture(12,SIDE_BACK,TEXTURE_BOTTOM,"MCT2");
+				break;
+			case 11:
+				ReddenSector (15);
+				ReddenSector (16);
 				break;
 		}
 	}
@@ -219,7 +219,7 @@ script SC_SFSPECIAL (int what, int team)
 		// 3D mode
 		// Blue is 100 - Red is 200, simple.
 		int tnb = team ? 200+(what*10) : 100+(what*10);
-		// tnb stand for team nunber & building.
+		// tnb stand for team number & building.
 		// "what" multiplied by 10 tells the structures tags.
 		// Do what is default in every building:
 		for (int id = 0 + tnb; id < 10 + tnb; id++)
@@ -233,22 +233,19 @@ script SC_SFSPECIAL (int what, int team)
 		SetLineTexture(9 + tnb, SIDE_FRONT,	TEXTURE_MIDDLE, "-");
 		switch (what) // Switch handle special lines ids only.
 		{
-			case 1:
-				// REF
+			case BUILDING_REFINERY:
 				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERREF1");
 				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERREF1");
 				break;
-			case 2:
-				// RES
+			case BUILDING_RESCENTRE:
 				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERRES1");
 				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERRES1");
 				break;
-			case 3:
-				// WAR
+			case BUILDING_FACTORY:
 				SetLineTexture(2 + tnb,SIDE_FRONT,TEXTURE_MIDDLE,"BTERWAR1");
 				SetLineTexture(3 + tnb,SIDE_FRONT,TEXTURE_BOTTOM,"BTERWAR1");
 				break;
-			case 4:
+			case BUILDING_REPAIR:
 				ChangeFloor(9 + tnb, "MCT6");
 				break;
 		}
@@ -795,23 +792,31 @@ script 214 (VOID)
 script SC_STRUCTUREPAIN (int Structure, int Team)
 {
 	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate; // Do not cry on SD.
-	// This script must refuse to accept integers beyond the main ones.
-	if (Structure < BUILDING_BARRACKS || Structure > BUILDING_OBELISK || Structure == 4) terminate;
+	// Explicity set the main building only.
+	if 
+		(
+		Structure != BUILDING_BARRACKS &&
+		Structure != BUILDING_REFINERY &&
+		Structure != BUILDING_RESCENTRE &&
+		Structure != BUILDING_FACTORY &&
+		Structure != BUILDING_OBELISK
+		)
+	terminate;
 	
 	if (Timer() > intHolder[i_LastAttackMessage] + 35 * 15)
 	{
-		// Announcers names
-		str RedSounds[6] = {"red/barracks", "red/refinery", "red/powerplant", "red/factory", "", "red/obelisk"};
-		str BlueSounds[6] = {"blue/barracks", "blue/refinery", "blue/powerplant", "blue/factory", "", "blue/obelisk"};
-        str Sound;
-        switch (Team)
+		str Sound = ""; // Default to none in case of errors.
+		switch (Structure) // Announcers names
 		{
-			case 0: Sound = BlueSounds[Structure]; break;
-			case 1: Sound = RedSounds[Structure]; break;
-        }
-        AmbientSound(Sound, 255);
-        intHolder[i_LastAttackMessage] = Timer();
-    }
+			case BUILDING_BARRACKS:  Sound = Team ? "red/barracks"   : "blue/barracks";   break;
+			case BUILDING_REFINERY:  Sound = Team ? "red/refinery"   : "blue/refinery";   break;
+			case BUILDING_RESCENTRE: Sound = Team ? "red/powerplant" : "blue/powerplant"; break;
+			case BUILDING_FACTORY:   Sound = Team ? "red/factory"    : "blue/factory";    break;
+			case BUILDING_OBELISK:   Sound = Team ? "red/obelisk"    : "blue/obelisk";    break;
+		}
+		AmbientSound(Sound, 255);
+		intHolder[i_LastAttackMessage] = Timer();
+	}
 }
 
 // Old Code
