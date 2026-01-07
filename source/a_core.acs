@@ -60,7 +60,7 @@ script SC_GAMEINIT OPEN {
 	if (netstate == NETSTATE_Offline)
 	{
 		str pair[2][MAX_BUILDINGS];
-		for (int z = 0; z < MAX_BUILDINGS-5; z++)
+		for (int z = 0; z < MAX_BUILDINGS-5; z++) // -5 is the addons who is not present at start.
 		{
 			// Not Really an issue but multiple ids are not really ideal (ex: nukes/ions.
 			if (ThingCount (0, MainTIDs[0][z]) >= 2 || ThingCount (0, MainTIDs[1][z]) >= 2)
@@ -78,8 +78,8 @@ script SC_GAMEINIT OPEN {
 			s:pair[1][1], s:"Refinery:",			s:pair[0][1], s:"\n",
 			s:pair[1][2], s:"Research Centre:",		s:pair[0][2], s:"\n",
 			s:pair[1][3], s:"War Factory:",			s:pair[0][3], s:"\n",
-			s:pair[1][5], s:"Obelisk of Light:",	s:pair[0][5], s:"\n",
-			s:pair[1][4], s:"Repair Facility:",		s:pair[0][4];
+			s:pair[1][4], s:"Obelisk of Light:",	s:pair[0][4], s:"\n",
+			s:pair[1][5], s:"Repair Facility:",		s:pair[0][5];
 			HUDMSG_PLAIN, 100, CR_WHITE, 0.4, 0.25, 6.0);
 	}
 
@@ -89,7 +89,7 @@ script SC_GAMEINIT OPEN {
 	{
 		switch (y)
 		{
-			case 0:
+			case BUILDING_BARRACKS:
 				if (ThingCount (0, TID_BARRACKS_BLUE) * ThingCount (0, TID_BARRACKS_RED) == 0)
 				{
 //					SetMapFlags (MAPF_NoBar);
@@ -101,7 +101,7 @@ script SC_GAMEINIT OPEN {
 					Thing_Remove (TID_BARBTOS_RED);
 				}
 				break;
-			case 1:
+			case BUILDING_REFINERY:
 				if (ThingCount (0, TID_REFINERY_BLUE) * ThingCount (0, TID_REFINERY_RED) == 0)
 				{
 //					SetMapFlags (MAPF_NoRef);
@@ -113,7 +113,7 @@ script SC_GAMEINIT OPEN {
 					Thing_Remove (TID_REFBTOS_RED);
 				}
 				break;
-			case 2:
+			case BUILDING_RESCENTRE:
 				if (ThingCount (0, TID_RESCENTRE_BLUE) * ThingCount (0, TID_RESCENTRE_RED) == 0)
 				{
 //					SetMapFlags (MAPF_NoRes);
@@ -125,7 +125,7 @@ script SC_GAMEINIT OPEN {
 					Thing_Remove (TID_RESBTOS_RED);
 				}
 				break;
-			case 3:
+			case BUILDING_FACTORY:
 				if (ThingCount (0, TID_FACTORY_BLUE) * ThingCount (0, TID_FACTORY_RED) == 0)
 				{
 					SetMapFlags (MAPF_NoMechs);
@@ -137,19 +137,7 @@ script SC_GAMEINIT OPEN {
 					Thing_Remove (TID_FACBTOS_RED);
 				}
 				break;
-			case 4:
-				if (ThingCount (0, TID_REPAIR_BLUE) * ThingCount (0, TID_REPAIR_RED) == 0)
-				{
-//					SetMapFlags (MAPF_NoRep);
-					GotRepair[0] = false;
-					GotRepair[1] = false;
-					Thing_Remove (TID_REPAIR_BLUE);
-					Thing_Remove (TID_REPAIR_RED);
-					Thing_Remove (TID_REPBTOS_BLUE);
-					Thing_Remove (TID_REPBTOS_RED);
-				}
-				break;
-			case 5:
+			case BUILDING_OBELISK:
 				if (ThingCount (0, TID_OBELISK_BLUE) * ThingCount (0, TID_OBELISK_RED) == 0)
 				{
 //					SetMapFlags (MAPF_NoObe);
@@ -159,6 +147,18 @@ script SC_GAMEINIT OPEN {
 					Thing_Remove (TID_OBELISK_RED);
 					Thing_Remove (TID_OBEBTOS_BLUE);
 					Thing_Remove (TID_OBEBTOS_RED);
+				}
+				break;
+			case BUILDING_REPAIR:
+				if (ThingCount (0, TID_REPAIR_BLUE) * ThingCount (0, TID_REPAIR_RED) == 0)
+				{
+//					SetMapFlags (MAPF_NoRep);
+					GotRepair[0] = false;
+					GotRepair[1] = false;
+					Thing_Remove (TID_REPAIR_BLUE);
+					Thing_Remove (TID_REPAIR_RED);
+					Thing_Remove (TID_REPBTOS_BLUE);
+					Thing_Remove (TID_REPBTOS_RED);
 				}
 				break;
 		}
