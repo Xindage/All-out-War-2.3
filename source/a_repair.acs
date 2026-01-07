@@ -54,11 +54,18 @@ script 650 (int amount, int repairtype, int turret) {
 	int tteam = -1;
 	
 	// Are we shooting at a terminal?
-	// If so, find its information
-	for (int i = 0; i < MAX_BUILDINGS * 2; i++) {
-		if (tid == BaseTIDs[i]) {
-			what = i / 2;
-			tteam = i % 2;
+	// Try to decode terminal info directly from TID (aow2scrp.acs)
+	int tidtype = tid / 100;
+
+	// Building terminals are 11xx (blue) or 12xx (red)
+	if (tidtype == 11 || tidtype == 12)
+	{
+		int b = tid % 100;
+		// Valid building range (01..11)
+		if (b >= 1 && b <= MAX_BUILDINGS)
+		{
+			what  = b - 1; // Required offset.
+			tteam = (tidtype == 12); // 0 = Blue, 1 = Red
 		}
 	}
 	
@@ -73,7 +80,7 @@ script 650 (int amount, int repairtype, int turret) {
 
 		// Cant repair with a empty battery if the target object is:
 		// Bar Ref Res War Obe
-		if (RepairCharges[team] < 10 && (what < 4 || what == 5))
+		if (RepairCharges[team] < 10 && (what < 5))
 			terminate;
 		
 		if (!Repairing_int[what * 2][pn])
@@ -105,7 +112,7 @@ script 650 (int amount, int repairtype, int turret) {
 		
 		SetHealth (newhp);
 		// Take the charges away when repairing main buildings
-		if (what < 4 || what == 5)
+		if (what < 5)
 			{
 			RepairCharges[team] -= RepairAmounts[numRepairers];
 			// Dont go negative please!
@@ -140,6 +147,7 @@ script 650 (int amount, int repairtype, int turret) {
 		
 		// Update the building health to the clients
 		SYNC_UpdateBuildingHealth (what, tteam);
+		// SYNC_UpdateAllBuildings(); // test
 	}
 	
 	else if (PlayerNumber() != -1 || CheckInventory ("IsAIMarine")) {
