@@ -80,7 +80,7 @@ script 650 (int amount, int repairtype, int turret) {
 
 		// Cant repair with a empty battery if the target object is:
 		// Bar Ref Res War Obe
-		if (RepairCharges[team] < 10 && (what < 5))
+		if (RepairCharges[team] < 10 && IsMainBuilding[what])
 			terminate;
 		
 		if (!Repairing_int[what * 2][pn])
@@ -112,7 +112,7 @@ script 650 (int amount, int repairtype, int turret) {
 		
 		SetHealth (newhp);
 		// Take the charges away when repairing main buildings
-		if (what < 5)
+		if (IsMainBuilding[what])
 			{
 			RepairCharges[team] -= RepairAmounts[numRepairers];
 			// Dont go negative please!
@@ -232,14 +232,18 @@ script 823 (int check, int team) {
 		GiveInventory ("SDReplace", 1);
 		terminate;
 	}*/
-	
-	// Find terminal info
+
+	// Same as Above
 	int what = -1;
 	int tteam = -1;
-	for (int i = 0; i < 18; i++) {
-		if (tid == BaseTIDs[i]) {
-			what = i/2;
-			tteam = i%2;
+	int tidtype = tid / 100;
+	if (tidtype == 11 || tidtype == 12)
+	{
+		int b = tid % 100;
+		if (b >= 1 && b <= MAX_BUILDINGS)
+		{
+			what  = b - 1;
+			tteam = (tidtype == 12);
 		}
 	}
 	
@@ -255,19 +259,19 @@ script 823 (int check, int team) {
 		SetResultValue (1);
 		terminate;
 	}
-
-	if (RepairCharges[team] < 10 && (what < 4 || what == 5))
+	
+	if (RepairCharges[team] < 10 && IsMainBuilding[what])
 		terminate;
 	
 	// Heal the terminal
 	int hp = GetActorHealth (tid);
-	int newhp = hp + 8;
+	int newhp = hp + 10;
 	if (hp >= GetActorSpawnHealth (tid)) terminate;
 	if (newhp >= GetActorSpawnHealth (tid)) newhp = GetActorSpawnHealth(tid);
 	SetActorHealth (tid, newhp);
 
 	// Take the charges away when repairing main buildings
-	if (what < 4 || what == 5)
+	if (IsMainBuilding[what])
 		{
 		RepairCharges[team] -= RepairAmounts[1];
 		// Dont go negative please!
