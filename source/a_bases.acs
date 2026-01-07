@@ -64,9 +64,22 @@ function void AwardBuildingDamage (int what, int team) {
 	}
 }
 
-// [Xindage] Merge all the buiding death in a single script.
+// [Xindage January seventh 2026]
+// I noticed that server reset sometimes when a building dies, so i'll add safety checks.
 script SC_STRUCTUREFALL (int what, int team)
 {
+	if (what < BUILDING_BARRACKS || what >= MAX_BUILDINGS)
+	{
+		Log(s:"[ERROR] Invalid building id: ", d:what);
+		terminate;
+	}
+	
+	if (team < 0 || team > 1) // We have only 2 team but who knows?
+	{
+		Log(s:"[ERROR] Invalid team id: ", d:team);
+		terminate;
+	}
+	
 	SetActivatorToTarget (0); // target: building -> player
 	str name;
 	switch (what) {
@@ -101,8 +114,8 @@ script SC_STRUCTUREFALL (int what, int team)
 			CallEvent (ACTION_DESTROY_REPAIR, team);
 			break;
 		default:
-			// TODO: Add error handler.
-			break;
+			Log(s:"[FATAL] SC_STRUCTUREFALL invalid switch state: what= ", d:what, s:" team= ", d:team);
+			terminate;
         }
 	if (what == BUILDING_REPAIR)	// Repair faility only.
 	{
