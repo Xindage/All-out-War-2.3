@@ -590,7 +590,7 @@ function int GetPlayerClass (int i) {
 // [Cata] This is for the menu to gray out classes once a building is destroyed.
 function int menuPurchase_ExistsBuilding (int b, int t) 
 {
-	if (GetActorSpeed (BaseTIDs[2*b + t]) > 0) 
+	if (GetActorSpeed (MainTIDs[t][b]) > 0) 
 			return true;
 	return false;
 }
