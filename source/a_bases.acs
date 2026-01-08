@@ -805,16 +805,13 @@ script 214 (VOID)
 script SC_STRUCTUREPAIN (int Structure, int Team)
 {
 	if (intHolder[i_SuddenDeath] && GetCVar ("zeta_degeneration")) terminate; // Do not cry on SD.
-	// Explicity set the main building only.
-	if 
-		(
-		Structure != BUILDING_BARRACKS &&
-		Structure != BUILDING_REFINERY &&
-		Structure != BUILDING_RESCENTRE &&
-		Structure != BUILDING_FACTORY &&
-		Structure != BUILDING_OBELISK
-		)
-	terminate;
+	if (Structure < 0 || Structure >= MAX_BUILDINGS)
+	{
+		Log(s:"[ERROR] SC_STRUCTUREPAIN invalid Structure= ", d:Structure);
+		terminate;
+	}
+	if (!IsMainBuilding[Structure])
+		terminate;
 	
 	if (Timer() > intHolder[i_LastAttackMessage] + 35 * 15)
 	{
