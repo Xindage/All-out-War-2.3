@@ -136,7 +136,8 @@ script SC_MECHMORPH (int mech) {
 	GiveInventory (Mechs_str[mech][MK_MORPH], 1);
 	GiveInventory (Mechs_str[mech][MK_AMMO], 1);
 	
-	SetThingSpecial (0, ACS_ExecuteAlways, 317, 0, PlayerTeam());
+	// Calculated in death now
+	// SetThingSpecial (0, ACS_ExecuteAlways, 317, 0, PlayerTeam());
 	
 	SpendCredits (Mechs_int[mech][MK_COST]);
 	DisplayTick();
@@ -255,12 +256,14 @@ script SC_MECHMORPH (int mech) {
 }
 // =============================================================================
 // Frag bounty
+/*
 script 317 (int team) {
 	if (team == PlayerTeam())
 		terminate;
 	AwardCredits (200);
 	AddExperience (150);
 }
+*/
 
 // =============================================================================
 // Mech Weapon Switching

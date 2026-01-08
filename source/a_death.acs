@@ -44,8 +44,10 @@ script SC_DEATH DEATH
 	// Xindage 2022/10/17 - three mechs was missing from the list: Mastodon, tortoise and lancer.
 	// Mech points is also now based on their weight.
 	int points = 1;
+	bool VictimWasMech = false; // Used for credits calculation.
 	if (CheckInventory ("IsMech"))
 	{
+		bool VictimWasMech = true;
 		// Light
 		if (CheckInventory ("OrcaWeapons") ||
 			CheckInventory ("RavenWeapons") ||
@@ -58,7 +60,7 @@ script SC_DEATH DEATH
 			{points = 4;}
 		// Heavy
 		if (CheckInventory ("MadCatWeapons") ||
-			CheckInventory ("TitanWeapons") ||
+			CheckInventory ("LancerWeapons") ||
 			CheckInventory ("JuggernautWeapons"))
 			{points = 5;}
 	}
@@ -119,9 +121,12 @@ script SC_DEATH DEATH
 			// Give 50% bonus to all if the kill was a defensive one.
 			if (IsInEnemyBase) extra = 1.5;
 
-			GivePoints ((2*points * extra) >> 16 );
-			GiveCredits((GetCVAR("zeta_creditfrag") * extra ) >> 16 );
-			AddExperience((50 * extra) >> 16 );
+			GivePoints ((2 * points * extra) >> 16 );
+			AddExperience((50 * extra * points) >> 16 );
+			// Mech Kill
+			if (VictimWasMech)	GiveCredits((GetCVAR("zeta_creditfrag") * extra * points * 3) >> 16 );
+			// infantry Kill
+			else				GiveCredits((GetCVAR("zeta_creditfrag") * extra) >> 16 );
 			
 			delay (5);
 		}
