@@ -47,7 +47,7 @@ script SC_DEATH DEATH
 	bool VictimWasMech = false; // Used for credits calculation.
 	if (CheckInventory ("IsMech"))
 	{
-		bool VictimWasMech = true;
+		VictimWasMech = true;
 		// Light
 		if (CheckInventory ("OrcaWeapons") ||
 			CheckInventory ("RavenWeapons") ||
