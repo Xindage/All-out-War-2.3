@@ -61,6 +61,7 @@ const int TID_OBEBTOS_RED		 = 1215;
 const int TID_REPBTOS_RED		 = 1216;
 
 // Script numbers
+const int SC_GiveCredits = 814;
 const int SC_SuperNukeCheck = 824;
 const int SC_PushAngle = 825;
 const int SC_PopAngle = 826;

@@ -1,3 +1,120 @@
+// [Xindage] i decided to set a single function for everything.
+// Core of credits function
+#define CREDIT_SET        0
+#define CREDIT_ADD        1
+#define CREDIT_SUB        2
+#define CREDIT_REFUND     3
+
+function void ModifyCredits (int player, int value, int mode, int showmsg)
+{
+	// Target activator if no player is set.
+	if (player < 0) player = PlayerNumber();
+	if (!PlayerInGame(player) || IsAdmin[player])
+		return;
+
+	int old = Credits[player];
+	int new = old;
+
+	// Apply operation
+	if (mode == CREDIT_SET)
+		new = value;
+	else if (mode == CREDIT_ADD || mode == CREDIT_REFUND)
+		new += value;
+	else if (mode == CREDIT_SUB)
+		new -= value;
+
+	// Don't go past credit cap or negative
+	int cap = GetConfig(CONFIG_CREDITCAP);
+	if (cap && new > cap)	new = cap;
+	if (new < 0)			new = 0;
+
+	// If nothing changed do nothing.
+	if (new == old)
+		return;
+
+	Credits[player] = new;
+	SetActorInventory(3800 + player, "Credit", new);
+
+	// Optional message
+	if (!showmsg)
+		return;
+
+	if (PlayerNumber() != player)
+		SetActivator(3800 + player);
+
+	SetFont("SMALLFONT");
+
+	if (mode == CREDIT_ADD)
+	{
+		IntelMessage(
+			strparam(s:"You have been awarded with \cQ$\cD", d:value),
+			false
+		);
+	}
+	else if (mode == CREDIT_REFUND)
+	{
+		IntelMessage(
+			strparam(s:"You have been refunded with \cQ$\cD", d:value),
+			false
+		);
+	}
+	else if (mode == CREDIT_SUB)
+	{
+		IntelMessage(
+			strparam(s:"You have been deducted \cQ$\cD", d:value),
+			false
+		);
+	}
+	// Do CREDIT_SET if necessary.
+}
+
+//Used by Decorate
+Script SC_GiveCredits (int amount) {GiveCredits (amount);}
+
+function void GiveCredits (int amount)
+{
+	ModifyCredits(-1, amount, CREDIT_ADD, false);
+}
+
+function void GivePlayerCredits (int player, int amount)
+{
+	ModifyCredits(player, amount, CREDIT_ADD, false);
+}
+
+function void AwardCredits (int amount)
+{
+	ModifyCredits(-1, amount, CREDIT_ADD, true);
+}
+
+function void RefundCredits(int player, int amount)
+{
+	ModifyCredits(player, amount, CREDIT_REFUND, true);
+}
+
+function void TakeCredits(int player, int amount, int showmsg)
+{
+	ModifyCredits(player, amount, CREDIT_SUB, showmsg);
+}
+
+function void SetCredits(int player, int amount)
+{
+	ModifyCredits(player, amount, CREDIT_SET, false);
+}
+
+function void GiveTeamCredits(int blue, int red)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+	{
+		if (!PlayerInGame(i) || IsAdmin[i])
+			continue;
+
+		if (GetPlayerInfo(i, PLAYERINFO_TEAM) == TEAM_BLUE)
+			ModifyCredits(i, blue, CREDIT_ADD, false);
+		else
+			ModifyCredits(i, red, CREDIT_ADD, false);
+	}
+}
+
 // MONEY RELATED SCRIPTS
 function int GetCredits (void) {
 	if (netstate == NETSTATE_Client)
@@ -15,91 +132,17 @@ function int GetPlayerCredits (int i) {
 }
 
 function void SpendCredits (int amount) {
-	int d = CalcDiscount (amount);
-	amount -= d;
-	TakeInventory ("Credit", amount);
-	Credits[PlayerNumber()] -= amount;
+	int Discount = CalcDiscount (amount);
+	int Final = amount - Discount;
 	
+	ModifyCredits(PlayerNumber(), final, CREDIT_SUB, false);	
 	SetFont ("BIGFONT");
-	if (d > 0)
-		HudMessage (s:"\cJYou have spent \cQ$\cD", d:amount, s:" \cF[\cQ-$\cD", d:d, s:"\cF]";
+	if (Final > 0)
+		HudMessage (s:"\cJYou have spent \cQ$\cD", d:amount, s:" \cF[\cQ-$\cD", d:Final, s:"\cF]";
 			HUDMSG_FADEOUT, 480+PlayerNumber(), CR_Green, 0.5, 0.55, 2.0, 1.0);
 	else
 		HudMessage (s:"\cJYou have spent \cQ$\cD", d:amount;
 			HUDMSG_FADEOUT, 480+PlayerNumber(), CR_Green, 0.5, 0.55, 2.0, 1.0);
-}
-
-function void AwardCredits (int amount) {
-	if (IsAdmin[PlayerNumber()])
-		return;
-	
-	SetFont ("SMALLFONT");
-	GiveInventory ("Credit", amount);
-	IntelMessage (strparam (s:"You have been awarded with \cQ$\cD", d:amount), false);
-}
-
-function void SetCredits (int player, int value) {
-	if (player < 0) player = PlayerNumber();
-	if (IsAdmin[player] || !PlayerInGame (player)) return;
-	
-	// Don't go past credit cap or negative
-	int cap = GetConfig (CONFIG_CREDITCAP);
-	if (cap && value > cap)		value = cap;
-	if (value < 0)				value = 0;
-	
-	Credits[player] = value;
-	SetActorInventory (3800 + player, "Credit", value);
-}
-
-function void GivePlayerCredits (int player, int amount) {
-	SetCredits (player, GetPlayerCredits (player) + amount);
-}
-
-function void GiveCredits (int amount) {
-	SetCredits (PlayerNumber(), GetCredits() + amount);
-}
-
-function void GiveCreditsBold (int amount) {
-	GiveTeamCredits (amount, amount);
-}
-
-function void GiveTeamCredits (int b, int r) {
-	for (int i = 0; i < MAXPLAYERS; i++) {
-		if (!PlayerInGame (i) || IsAdmin[i])
-			continue;
-		
-		if (GetPlayerInfo (i, PLAYERINFO_TEAM) == TEAM_BLUE)
-			SetCredits (i, GetPlayerCredits (i) + b);
-		else
-			SetCredits (i, GetPlayerCredits (i) + r);
-	}
-}
-
-// Give credits to a player
-function void RefundCredits (int p, int v) {
-	if (p == -1)
-		p = PlayerNumber();
-	GivePlayerCredits (p, v);
-	
-	if (PlayerNumber() != p)
-		SetActivator (3800+p);
-	
-	SetFont ("SMALLFONT");
-	IntelMessage (strparam (s:"You have been refunded with \cQ$\cD", d:v), false);
-}
-
-function void TakeCredits (int p, int v, int verbose) {
-	if (p == -1)
-		p = PlayerNumber();
-	GivePlayerCredits (p, -v);
-	
-	if (verbose) {
-		if (PlayerNumber() != p)
-			SetActivator (3800+p);
-		
-		SetFont ("SMALLFONT");
-		IntelMessage (strparam (s:"You have been deducted \cQ$\cD", d:v), false);
-	}
 }
 
 function int CalcCreditFlow (int team) {
@@ -135,10 +178,6 @@ script SC_CREDITFLOW OPEN {
 	}
 }
 
-// DECORATE front-end
-script 814 (int amount)
-	GiveCredits (amount);
-
 //Price check
 script 330 (int amount) {
 	int d = CalcDiscount (amount);
@@ -158,7 +197,7 @@ Script SC_CREDITBONUS OPEN {
 	while (GetCVAR("zeta_bonustime") <= 0)	delay (5 * 35);
 	delay (GetCVAR("zeta_bonustime") * MINUTETICS);
 	
-	GiveCreditsBold (GetCVAR("zeta_bonusamount"));
+	GiveTeamCredits(GetCVAR("zeta_bonusamount"), GetCVAR("zeta_bonusamount"));
 	AmbientSound ("powerup/credsound", 127);
 	SetFont ("SMALLFONT");
 	IntelMessage (strparam (s:"Credit bonus! You all get \cQ$\cD", d:GetCVAR("zeta_bonusamount"), s:"\cJ!"), true);
@@ -191,25 +230,3 @@ function int CalcDiscount (int amount) {
 	
 	return d;
 }
-
-/*
-// Removed unecessary Data
-// Test script
-Script SC_GIVECREDITS (int amount, int i) {
-	GivePlayerCredits (i, amount);
-	
-	// Online, this needs a message
-	if (netstate == NETSTATE_Server) {
-		SetFont ("SMALLFONT");
-		IntelMessage (strparam (s:"\cRServer \cJhas given \cQ$\cD", d:amount, s:" \cJto ", n:i+1), true);
-	}
-}
-
-// Redundant
-function void SetCredits (int value)
-{DoSetCredits (PlayerNumber(), value, true);}
-
-// Redundant
-function void SetPlayerCredits (int player, int value)
-{DoSetCredits (player, value, true);}
-*/

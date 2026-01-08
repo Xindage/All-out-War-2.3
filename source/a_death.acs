@@ -124,7 +124,7 @@ script SC_DEATH DEATH
 			GivePoints ((2 * points * extra) >> 16 );
 			AddExperience((50 * extra * points) >> 16 );
 			// Mech Kill
-			if (VictimWasMech)	GiveCredits((GetCVAR("zeta_creditfrag") * extra * points * 3) >> 16 );
+			if (VictimWasMech)	ModifyCredits(PlayerNumber(), ((GetCVAR("zeta_creditfrag") * extra * points * 3) >> 16 ), CREDIT_ADD, true);
 			// infantry Kill
 			else				GiveCredits((GetCVAR("zeta_creditfrag") * extra) >> 16 );
 			
