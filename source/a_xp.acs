@@ -223,16 +223,6 @@ script SC_PLAYERCHECKRANK (void) {
 	}
 }
 
-// Just add experience.
-Script 318 (VOID)
-{
-	for (int i = 0; i < 5; i++) {
-		LocalAmbientSound ("c4/use", 255);
-		AddExperience (50);
-		Delay(5);
-	}
-}
-
 script 324 (int n) {
 	while (n > 0) {
 		n--;

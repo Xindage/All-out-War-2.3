@@ -461,7 +461,7 @@ function void InitPlayer (void) {
 
 // =============================================================================
 // [Dusk] This script checks for the game-over condition and ends the game if so.
-script SC_GameOver (int team, int small) {
+script SC_GameOver (int team) {
 	SetActivator (-1);
 	
 	if (CalcBaseLeft (!team))
