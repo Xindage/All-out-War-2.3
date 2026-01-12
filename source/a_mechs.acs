@@ -180,22 +180,8 @@ script SC_MECHMORPH (int mech) {
 		delay (18);
 	}
 	delay (18);
-	
-	
-	// [Cata] Special conditions for AOW13 (strange world)
-	if(getlevelinfo(LEVELINFO_LEVELNUM) == 13)
-	{
-		Plat_DownWaitUpStay (door, 64, 35*3);
-		delay(35 + 35/2);
-	}
-	
-	// Open the door.
-	else
-	{
-		Door_Open (door, 64);
-		TagWait (door);
-	}
-	
+	Door_Open (door, 64);
+	TagWait (door);
 	
 	// [NG] This will thrust the player out of the hanger.
 	ThrustThing (GetActorAngle (dest) >> 8, 35, 1, 0);
@@ -861,12 +847,8 @@ script 84 (void) {
 		HUDMSG_FADEOUT, 240+PlayerNumber(), CR_DarkRed, 0.5, 0.45, 2.0, 1.0); */
 }
 
-script 86 (int x) 
+script SC_WFPush (void)
 {
-
-	// dont run if on roof on aow13
-	if(getactorz(activatortid()) > 342.0 && getlevelinfo(LEVELINFO_LEVELNUM) == 13) terminate;
-
 	// [Cata] push back based on tele. No more weird directions.
 	int team = getplayerinfo(playernumber(), PLAYERINFO_TEAM);
 	int angle;

@@ -208,6 +208,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_CreditBonus				837
 #libdefine SC_CL_MenuCall				838
 #libdefine SC_CrateEffect				839
+#libdefine SC_WFPush					840
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
