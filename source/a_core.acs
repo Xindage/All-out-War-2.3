@@ -79,9 +79,10 @@ script SC_GAMEINIT OPEN {
 			s:pair[1][2], s:"Research Centre:",		s:pair[0][2], s:"\n",
 			s:pair[1][3], s:"War Factory:",			s:pair[0][3], s:"\n",
 			s:pair[1][4], s:"Obelisk of Light:",	s:pair[0][4], s:"\n",
-			s:pair[1][5], s:"Repair Facility:",		s:pair[0][5];
+			s:pair[1][5], s:"Repair Facility:",		s:pair[0][5], s:"\n\n",
+			s:"3D Buildings: ",	s:(GetConfig(CONFIG_3DBUILDINGS) ? "\cdON" : "\ciOFF");
 			HUDMSG_PLAIN, 100, CR_WHITE, 0.4, 0.25, 6.0);
-	}
+	} // GetConfig(CONFIG_3DBUILDINGS
 
 	// [Xindage] Dusk applied a cleanup work when one of the terminals were missing for War Factory
 	// Now if any of the terminals for any building is missing, everything else will be cleaned.
