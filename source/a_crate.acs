@@ -161,7 +161,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0),	"");
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
-	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  3, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
+	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  1, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
 	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
 }
 
