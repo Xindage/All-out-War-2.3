@@ -847,7 +847,7 @@ script 84 (void) {
 		HUDMSG_FADEOUT, 240+PlayerNumber(), CR_DarkRed, 0.5, 0.45, 2.0, 1.0); */
 }
 
-script SC_WFPush (void)
+script SC_WFPush (void) // 840 | Ideally placed on a line 16 pixels in front of the door as WR.
 {
 	// [Cata] push back based on tele. No more weird directions.
 	int team = getplayerinfo(playernumber(), PLAYERINFO_TEAM);
@@ -875,9 +875,9 @@ script SC_WFPush (void)
 }
 
 // Duplicates..
-script 85 (void) {ACS_ExecuteAlways (84, 0);}
-script 88 (void) {ACS_ExecuteAlways (86, 0, 1);}
-script 89 (void) {} // Dummy - present because maps actually call this. even though it was empty
+//script 85 (void) {ACS_ExecuteAlways (84, 0);}
+//script 88 (void) {ACS_ExecuteAlways (SC_WFPush, 0, 1);}
+//script 89 (void) {} // Dummy - present because maps actually call this. even though it was empty
 
 script SC_JUGGARMORHELP (void)
 {
