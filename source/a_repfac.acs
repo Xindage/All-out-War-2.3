@@ -5,6 +5,98 @@
 // You may use portions of this script in your project as long as you give credit where credit is
 // due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
 
+// Map does not need to send arguments
+// Tag are explicit taged as 150 - Blue, 250 - Red. Repair cannot be done outside this area.
+script SC_Repairloop (void)
+{
+	// Already under repair, dont even start.
+	if (CheckInventory("InRepairs"))	terminate;
+	
+	int repairsector = 0;
+	// Get the tag for the apropriate team.
+	if	(PlayerTeam() == TEAM_BLUE)	repairsector = (100 + (BUILDING_REPAIR * 10));
+	else							repairsector = (200 + (BUILDING_REPAIR * 10));
+	
+	// Tried to use enemy repair pad, or pad is mistagged.
+	if (!ThingCountSector(T_NONE, PlayerNumber()+3800, repairsector))	terminate;
+	
+	GiveInventory("InRepairs", 1); // Lock item.
+	while (ThingCountSector(T_NONE, PlayerNumber()+3800, repairsector))
+	{
+		// Get this info on start.
+		int hp     = GetHealth();
+		int maxhp  = GetSpawnHealth();
+		int isMech = CheckInventory("IsMech");
+		
+		int ChargeAmount = 0;
+		
+		if (isMech) // The check must be done on the loop in case players eject/enters mechs.
+		{
+			int weight = Mechs_int[getMechIndex()][MK_WEIGHT];
+			ChargeAmount =
+				(weight != MECHWEIGHT_LIGHT)
+				? REPAIRPAD_MECHCHARGEAMOUNT
+				: REPAIRPAD_LIGHTCHARGEAMOUNT;
+		}
+		
+		if (hp < maxhp)
+		{
+			// Infantry.
+			if (!isMech)
+			{
+				GiveInventory("RepairEffectPlayer", 1);
+				
+				hp += GotRepair[PlayerTeam()] ? 3 : 1;
+				
+				if (GotRepair[PlayerTeam()])
+					GiveInventory("AmmoCachePack", 1);
+			}
+			
+			// Mechs.
+			else
+			{
+				if (GetCredits() < ChargeAmount)
+				{
+					GenericError("You need more credits!");
+					continue;
+				}
+				
+				GiveInventory("RepairEffectMech", 1);
+				
+				int value = GotRepair[PlayerTeam()] ? 30 : 10;
+				RepairPadMechHPStore[PlayerNumber()] += value;
+				hp += value;
+				
+				if (GotRepair[PlayerTeam()])
+					GiveInventory("MechAmmoStuffSmall", 1);
+				
+				if (RepairPadMechHPStore[PlayerNumber()] >= 100)
+				{
+					//SpendCredits(ChargeAmount);
+					TakeCredits(-1, ChargeAmount, true);
+					LocalAmbientSound("c4/use", 127);
+					RepairPadMechHPStore[PlayerNumber()] -= 100;
+				}
+			}
+			
+			if (hp > maxhp) hp = maxhp;
+			if (hp <= 0) terminate;
+			
+			SetHealth(hp);
+			}
+			else // No repair pad. Give ammo only after full healed.
+			{
+				GiveInventory(isMech ? "MechAmmoStuffSmall" : "AmmoCachePack", 1);
+			}
+		delay(15); // Bahaves like the old version
+	}
+	TakeInventory("InRepairs", 1);
+}
+
+// if (GotRepair[1-PlayerTeam()]) was causing some nasty side effects
+// Destroying enemy Repair was making your own repair pad to heal mech faster and heal infantry slower
+// and giving ammo just once the player was full healed. (Nerfing yourself in a nutshell).
+/*
 script 106 (int team) {
 	if (team == PlayerTeam()) terminate; // inverse values, bah
 	if (CheckInventory ("InRepairs")) terminate;
@@ -105,3 +197,4 @@ script 107 (void) {
 }
 
 script 108 (void) TakeInventory ("InRepairs", 1);
+*/
