@@ -10,7 +10,8 @@
  * which shoot the plasma blast at enemies they see.
  */
 
-actor RedObeliskThing 21214 {
+actor ObeliskThingBase
+{
 	//$Category Buildings
 	MONSTER
 	-ISMONSTER
@@ -31,10 +32,30 @@ actor RedObeliskThing 21214 {
 	Mass 999999
 	Speed 0
 	PainChance 0
+	Tag "Obelisk Eye"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 // A_ChangeFlag("ISMONSTER",1)
+		TNT1 A 8 
+		loop
+	Death:	
+		TNT1 A 10
+		TNT1 A 0 A_PlayWeaponSound("weapons/rocklx")
+		TNT1 A 0 A_SpawnItemEx("ExplosionMainLarge")
+		stop
+	}
+}
+ 
+actor RedObeliskThing : ObeliskThingBase 21214
+{
+	//$Category Buildings
 	Tag "Red Obelisk Eye"
 	Obituary "$OB_OBELISK_RED"
 	DesignatedTeam 1
-	States {
+	States
+	{
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 Thing_ChangeTID (0, TID_OBEBTOS_RED)
@@ -54,11 +75,12 @@ actor RedObeliskThing 21214 {
 	Clear:
 		TNT1 A 2 A_ClearTarget
 		goto See
-	MissileCheck:
-		TNT1 A 1 A_JumpIfInTargetInventory ("IsBlue", 1, "MissileGo")
-		goto Clear
+//	MissileCheck:
+//		TNT1 A 1 A_JumpIfInTargetInventory ("IsBlue", 1, "MissileGo")
+//		goto Clear
 	Missile:
-		TNT1 A 0 
+		TNT1 A 0 A_SpawnItemEx("AntiUtilityExplosion")
+		TNT1 A 0 A_SpawnItemEx("AntiUtilityExplosionDisarm")
 		TNT1 A 1 A_JumpIfInTargetInventory("IsRed",1,"Clear")
 		TNT1 A 1 A_JumpIfCloser(30000,"MissileGo")
 		TNT1 A 0 
@@ -110,37 +132,17 @@ actor RedObeliskThing 21214 {
 		TNT1 A 80 A_FaceTarget
 		TNT1 A 0 A_TakeInventory("ObeliskCharged",15)
 		goto See
-	Death:	
-		TNT1 A 5
-		stop
 	}
 }
 
-actor BlueObeliskThing 21213 {
+actor BlueObeliskThing : ObeliskThingBase 21213
+{
 	//$Category Buildings
-	MONSTER
-	-ISMONSTER
-	-SOLID
-	-FRIENDLY
-	+FLOORCLIP
-	+NOBLOOD
-	+NOICEDEATH
-	+NOCLIP
-	+NOTARGET
-	+LOOKALLAROUND
-	+NEVERRESPAWN
-	+NOGRAVITY
-	+NOINTERACTION
-	Health 99999
-	Radius 16
-	Height 64
-	Mass 999999
-	Speed 0
-	PainChance 0
-	DesignatedTeam 0
 	Tag "Blue Obelisk Eye"
 	Obituary "$OB_OBELISK_BLUE" // "%o was vaporized by the \chBlue Obelisk\c-."
-	States {
+	DesignatedTeam 0
+	States
+	{
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 Thing_ChangeTID (0, TID_OBEBTOS_BLUE)
@@ -160,12 +162,12 @@ actor BlueObeliskThing 21213 {
 	Clear:
 		TNT1 A 2 A_ClearTarget
 		goto See
-	MissileCheck:
-		TNT1 AA 0 A_JumpIfInTargetInventory("IsRed",1,"MissileGo")
-		TNT1 A 0 
-		goto See
+//	MissileCheck:
+//		TNT1 A 1 A_JumpIfInTargetInventory("IsRed",1,"MissileGo")
+//		goto Clear
 	Missile:
-		TNT1 A 0 
+		TNT1 A 0 A_SpawnItemEx("AntiUtilityExplosion")
+		TNT1 A 0 A_SpawnItemEx("AntiUtilityExplosionDisarm")
 		TNT1 A 1 A_JumpIfInTargetInventory("IsBlue",1,"Clear")
 		TNT1 A 1 A_JumpIfCloser(30000,"MissileGo")
 		TNT1 A 0 
@@ -217,9 +219,6 @@ actor BlueObeliskThing 21213 {
 		TNT1 A 70 A_FaceTarget
 		TNT1 A 0 A_TakeInventory("ObeliskCharged",15)
 		goto See
-	Death:	
-		TNT1 A 5
-		stop
 	}
 }
 
@@ -230,7 +229,7 @@ Actor ObbyFlare {
 	Scale 2.0
 	States {
 	Spawn:
-		CACH B 8 BRIGHT
+		CACH B 8 BRIGHT 
 		CACH B 1 BRIGHT A_Fadeout(0.05)
 		Wait
 	}
