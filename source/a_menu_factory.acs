@@ -31,17 +31,30 @@ script 707 (int m0, int m1, int y) CLIENTSIDE {
 	// Health
 	HudMessage (s:"Health: \cd", d:Mechs_int[MenuMechs[m0][m1]][MK_HEALTH], s:" \cqHP";
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
-	y -= MENU_SPACING; hid++;
+		y -= MENU_SPACING; hid++;
 	
-	// Price - no mech is free so no need to check for that
-	HudMessage (s:"Cost: \cq$\cd", d:Mechs_int[MenuMechs[m0][m1]][MK_COST];
+	// Price - Check for discount to apply on menu itself its easyer to read that way.
+	int Cost  = Mechs_int[MenuMechs[m0][m1]][MK_COST];
+	int Discount  = CalcDiscount(Cost);
+	int Final = Cost - Discount;
+	// HudMessage (s:"Cost: \cq$\cd", d:Mechs_int[MenuMechs[m0][m1]][MK_COST];
+	if (Cost != Final) // Has discount, show it.
+	{
+		HudMessage (s:"Cost: \cq$\cn", d:Final, s:"  \cc(\cq$\cc", d:Discount, s:" - \cq$\cd", d:Cost, s:"\cc)";
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
-	y -= MENU_SPACING; hid++;
+		y -= MENU_SPACING; hid++;
+	}
+	else
+	{
+	HudMessage (s:"Cost: \cq$\cd", d:Final;
+		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING; hid++;
+	}
 	
 	// Description - shifted a bit to the left to compensate for tabs
 	HudMessage (s:Mechs_str[MenuMechs[m0][m1]][MK_DESCRIPTION];
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4-0.025, y, 0.0);
-	y -= 0.1; hid++;
+		y -= 0.1; hid++;
 	
 	SetResultValue (y);
 }
