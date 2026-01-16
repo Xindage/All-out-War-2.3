@@ -137,7 +137,9 @@ script 344 (int Type, int DoneByUtilGun)
 	}
 	if(Type == 6)
 	{
-		delay(70);
+		delay(1);
+		SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, PlayerTeam()); // Update early, prevents 6553600% hps on hud
+		delay(69);
 		if (GlobalMedic[PlayerTeam()] == 1)
 		{
 			// [Dusk] fuckup compensation..
@@ -204,7 +206,6 @@ script 344 (int Type, int DoneByUtilGun)
 			SetActorState (TID_HEALTHREGEN_BLUE, "Approved");
 			Log(n:0, s:" builds Blue Health Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
-			SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, TEAM_BLUE);
 			TeamMessage (TMSG_CONSTRUCT, 1,  playernumber());
 		} else if (PlayerTeam() == TEAM_BLUE) {
 			SetFont ("SMALLFONT");
@@ -222,8 +223,11 @@ script 344 (int Type, int DoneByUtilGun)
 		HudMessage(s:"\cFLimit: \cJ",d:MiniRavenLimit(), s:" \cK/\cJ ", d:MAX_MINIRAVENS;
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
-	if(Type == 8) {
-		delay(70);
+	if(Type == 8)
+	{
+		delay(1);
+		SYNC_UpdateBuildingHealth (BUILDING_AMMOREGEN, PlayerTeam()); // Update early, prevents 6553600% hps on hud
+		delay(69);
 		if (GlobalAmmo[PlayerTeam()] == 1) {
 			// [Dusk] fuckup compensation..
 			
@@ -265,7 +269,6 @@ script 344 (int Type, int DoneByUtilGun)
 			SetThingSpecial(TID_AMMOREGEN_RED, ACS_ExecuteAlways, 345, 0, 7, 0);
 			Log(n:0, s:" builds Red Ammo Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
-			SYNC_UpdateBuildingHealth (BUILDING_AMMOREGEN, TEAM_RED);
 			TeamMessage (TMSG_CONSTRUCT, 2,  playernumber());
 		} else if(PlayerTeam() == TEAM_RED) {
 			SetFont ("SMALLFONT");
@@ -288,7 +291,6 @@ script 344 (int Type, int DoneByUtilGun)
 			SetThingSpecial(TID_AMMOREGEN_BLUE, ACS_ExecuteAlways, 345, 0, 7, 1);
 			Log(n:0, s:" builds Blue Ammo Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
-			SYNC_UpdateBuildingHealth (BUILDING_AMMOREGEN, TEAM_BLUE);
 			TeamMessage (TMSG_CONSTRUCT, 2,  playernumber());
 		} else if (PlayerTeam() == TEAM_BLUE) {
 			SetFont ("SMALLFONT");
@@ -401,11 +403,13 @@ script 345 (int Type, int Team)
 }
 
 //Check if it's not at limit
-script 346 (int Type, int Team) {
+script 346 (int Type)
+{
+	// Rely on PlayerTeam()
 	SetResultValue(1);
 	switch (Type) {
 	case 0:
-		if (CountTurrets() >= MaxTurrets[Team]) SetResultValue(0);
+		if (CountTurrets() >= MaxTurrets[PlayerTeam()]) SetResultValue(0);
 		break;
 	/*case 1:
 		if (CountRazorWire() >= MAX_RAZORWIRE) SetResultValue(0);
@@ -414,21 +418,21 @@ script 346 (int Type, int Team) {
 		if (MineLimit() >= MAX_PROXYMINE) SetResultValue(0);
 		break;
 	case 3:
-		// if (MiniRefinery[Team]) SetResultValue (0);
-		if (ThingCount (T_NONE, MainTIDs[team][BUILDING_MINIREF]) != 0) SetResultValue (0);
+		 if (MiniRefinery[PlayerTeam()]) SetResultValue (0);
+//		if (ThingCount (T_NONE, MainTIDs[PlayerTeam()][BUILDING_MINIREF]) != 0) SetResultValue (0);
 		break;
 	case 4:
-		if (GlobalMedic[Team]) SetResultValue (0);
+		if (GlobalMedic[PlayerTeam()]) SetResultValue (0);
 		break;
 	case 5:
 		if (MiniRavenLimit() >= MAX_MINIRAVENS) SetResultValue (0);
 		break;
 	case 6:
-		if (GlobalAmmo[Team]) SetResultValue (0);
+		if (GlobalAmmo[PlayerTeam()]) SetResultValue (0);
 		break;
 	case 21:
-		if (Team == 0 && TeleporterNodes[0] && TeleporterNodes[1]) SetResultValue (0);
-		if (Team == 1 && TeleporterNodes[2] && TeleporterNodes[3]) SetResultValue (0);
+		if (PlayerTeam() == 0 && TeleporterNodes[0] && TeleporterNodes[1]) SetResultValue (0);
+		if (PlayerTeam() == 1 && TeleporterNodes[2] && TeleporterNodes[3]) SetResultValue (0);
 		break;
 	}
 }

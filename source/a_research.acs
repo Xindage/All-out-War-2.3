@@ -228,11 +228,13 @@ script SC_SpawnCache (int what, int team)
 			// Clear the crap
 			SpawnSpot("SmallAUE",  baseTID + 12);
 			SpawnSpot("SmallAUED", baseTID + 12);
-			Delay(2);
+			Delay(1);
 			SpawnSpotForced(
 				(team == TEAM_BLUE)	? "Utility_GlobalMedicCacheBlue"
 									: "Utility_GlobalMedicCacheRed",
 				baseTID + 12, 0, 0);
+			Delay(1);
+			SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, team);
 			ACS_ExecuteAlways(344, 0, 6);
 			break;
 		}
@@ -242,11 +244,13 @@ script SC_SpawnCache (int what, int team)
 			// Clear the crap
 			SpawnSpot("SmallAUE",  baseTID + 13);
 			SpawnSpot("SmallAUED", baseTID + 13);
-			Delay(2);
+			Delay(1);
 			SpawnSpotForced(
 				(team == TEAM_RED)	? "Utility_GlobalAmmoCacheRed"
 									: "Utility_GlobalAmmoCacheBlue",
 				baseTID + 13, 0, 0);
+			Delay(1);
+			SYNC_UpdateBuildingHealth (BUILDING_AMMOREGEN, team);
 			ACS_ExecuteAlways(344, 0, 8);
 			break;
 		}
