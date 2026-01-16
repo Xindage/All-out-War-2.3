@@ -269,7 +269,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.RazorWire:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,1) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0) == 0, "Limit")
 		UTIF A 0 A_SpawnItemEx ("Utility_RazorWireMarker", 96,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
 		UTIF A 0 A_JumpIfInventory ("IsBlue", 1, "Done.RazorWireBlue")
 		UTIF A 0 A_SpawnItemEx ("RazorWire", 96,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
@@ -327,7 +327,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.GunTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,0,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,0,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_TurretMarker",96,0,0,0,0,0,0,32,0)
@@ -360,7 +360,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.MechTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,3,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,4,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_TurretMarker",96,0,0,0,0,0,0,32,0)
@@ -513,7 +513,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.MiniRefBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,3,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,3,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,2,0,0) == 0, "EndFire2")
 		UTIF A 0 ACS_ExecuteAlways(344, 0, 3, 0, 0)
 		UTIF A 0 A_SpawnItemEx("Utility_MiniRefCacheMarker",128,0,0,0,0,0,0,32)
@@ -546,7 +546,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.RegenBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,4,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,4,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,7,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,6,1,0)
 		UTIF A 0 A_SpawnItemEx("Utility_CacheMarker",96,0,0,0,0,0,0,32,0)
@@ -579,7 +579,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.RegenAmmoBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,6,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,6,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,7,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,8,1,0)
 		UTIF A 0 A_SpawnItemEx("Utility_CacheMarker",96,0,0,0,0,0,0,32,0)
@@ -624,7 +624,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.MinesBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,2,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,2,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,4,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,5,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_MinesMarker",64,0,0,0,0,0,0,32,0)
@@ -669,7 +669,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.RepairTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,5,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,4,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_TurretMarker",96,0,0,0,0,0,0,32,0)
@@ -704,7 +704,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.KlaxonTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,6,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,4,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_TurretMarker",96,0,0,0,0,0,0,32,0)
@@ -813,7 +813,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.PrecisionTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,5,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,4,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_TurretMarker",96,0,0,0,0,0,0,32,0)
@@ -847,7 +847,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.MiniRavenBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,5,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,5,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,9,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,7,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_MiniRavenMarker",96,0,0,0,0,0,0,32,0)
@@ -881,7 +881,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.ArtilleryTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,10,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,9,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_ArtilleryTurretMarker",96,0,0,0,0,0,0,32,0)
@@ -915,7 +915,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.FlameTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,12,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,10,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_ChemTurretMarker",96,0,0,0,0,0,0,32,0)
@@ -950,7 +950,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.ChemTurretBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,0,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,12,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,10,0,0)
 		UTIF A 0 A_SpawnItemEx("Utility_ChemTurretMarker",96,0,0,0,0,0,0,32,0)
@@ -984,7 +984,7 @@ actor UtilityGun : AOWWeapon {
 		UTIF A 0 A_Refire
 		Goto EndFire
 	Done.PowerGeneratorBlue:
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,20,1,0) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,20,0,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(695,7,0,0) == 0, "EndFire2")
 		RPBL B 0 ACS_ExecuteAlways(344,0,20)
 		UTIF A 0 A_SpawnItemEx("Utility_CacheMarker",96,0,0,0,0,0,0,32,0)
@@ -1028,7 +1028,7 @@ actor UtilityGun : AOWWeapon {
 		Goto EndFire
 	Done.Portal:
 		UTIF A 0 A_JumpIfInventory ("IsBlue", 1, "Done.PortalBlue")
-		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,21,1) == 0, "Limit")
+		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(346,21,0) == 0, "Limit")
 		UTIF A 0 A_JumpIf(ACS_ExecuteWithResult(694,250) == 0, "EndFire2")
 		UTIF A 2 ACS_ExecuteAlways (SC_TELENODE_INIT, 0)
 		UTIF A 0 A_SpawnItemEx("Utility_PortalStandMarker",224,80,0,0,0,0,0,32,0)

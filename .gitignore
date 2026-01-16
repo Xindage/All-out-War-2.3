@@ -1,3 +1,6 @@
 *.err
+*.backup*
+*.dbs
+*.kate-swp
 acs/aow2scrp.o
 OUTPUT/*
