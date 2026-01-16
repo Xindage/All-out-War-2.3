@@ -359,18 +359,16 @@ script SC_RepairHUD (void) CLIENTSIDE {
 // [Xindage] Repair Facility now does worth a lot to be alive.
 Script "SC_BatteryRegeneration" OPEN
 {
-	int bp;		// Blue Points
-	int btotal;	// Blue Total
-	int rp;		// Red Points
-	int rtotal;	// Red Total
+	int bp;		// Blue Points %
+	int btotal;	// Blue Total %
+	int rp;		// Red Points %
+	int rtotal;	// Red Total %
 
-	Delay (TICRATE * 30); // Wait for at least falf minute.
+	Delay (TICRATE * 30); // Wait for at least half minute.
 	While (!intHolder[i_SuddenDeath])
 	{
-		bp = 40;
-		rp = 40;
-		if (GotRepair[0]) bp += 60;
-		if (GotRepair[1]) rp += 60;
+		bp = GotRepair[0] ? 100 : 40;
+		rp = GotRepair[1] ? 100 : 40;
 		btotal = (96 /*GetCVAR("zeta_batteryregen")*/ * bp) / 100;
 		rtotal = (96 /*GetCVAR("zeta_batteryregen")*/ * rp) / 100;
 			// Dont update if sudden death is about to start on the end of this loop.
@@ -380,8 +378,8 @@ Script "SC_BatteryRegeneration" OPEN
 		if (RepairCharges[1] + rtotal >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
 		else RepairCharges[1] += rtotal;
 			// Debug
-			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
-			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
+//			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
+//			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
 		// Send the info to clientside hud.
 		int btc = RepairCharges[0];
 		int rtc = RepairCharges[1];
@@ -390,10 +388,8 @@ Script "SC_BatteryRegeneration" OPEN
 	}
 	While (intHolder[i_SuddenDeath])
 	{
-		bp = 100;
-		rp = 100;
-		if (!GotRepair[0]) bp += 50;
-		if (!GotRepair[1]) rp += 50;
+		bp = GotRepair[0] ? 100 : 150;
+		rp = GotRepair[1] ? 100 : 150;
 		// When sudden death start battery get drained instead of filled, repair facilty slowdown the amount.
 		// if(GetCVAR("zeta_batterydegeneration") == 0) terminate; // Server can set it off.
 		btotal = (320 /*GetCVAR("zeta_batterydegen")*/ * bp) / 100;
@@ -407,10 +403,10 @@ Script "SC_BatteryRegeneration" OPEN
 		btc = RepairCharges[0];
 		rtc = RepairCharges[1];
 			// Debug
-			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
-			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
+//			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
+//			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
 		// Send the info to clientside hud.
 		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
-		delay(35 * 10); // Each loop is a sync, lets not push the clients too hard.
+		Delay(TICRATE * 10); // Each loop is a sync, lets not push the clients too hard.
 	}
 }
