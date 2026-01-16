@@ -1126,6 +1126,20 @@ actor AntiUtilityExplosion {
 
 actor AntiUtilityExplosionDisarm : AntiUtilityExplosion { damagetype "Disarm" }
 
+// [Xindage] Small version used by caches on spawn
+actor SmallAUE : AntiUtilityExplosion
+{
+	states
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_Explode (999999, 32)
+			stop
+	}
+}
+
+actor SmallAUED : SmallAUE { damagetype "Disarm" }
+
 actor PowerupCacheMapSpawned 21490 {
 	states {
 	Spawn:

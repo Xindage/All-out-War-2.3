@@ -173,18 +173,10 @@ function bool RC_PurchaseResearch (int r) {
 		SetConfig (CONFIG_ADVMECHS_BLUE + PlayerTeam(), AdvancedMechs[PlayerTeam()]);
 		break;
 	case RESEARCH_HEALTHREGEN:
-		ACS_ExecuteAlways(344, 0, 6);
-		if (PlayerTeam() == TEAM_RED)
-			SpawnSpot("Utility_GlobalMedicCacheRed", 212);
-		else
-			SpawnSpot("Utility_GlobalMedicCacheBlue", 112);
+		ACS_ExecuteAlways(SC_SpawnCache, 0, BUILDING_HEALTHREGEN, PlayerTeam());
 		break;
 	case RESEARCH_AMMOREGEN:
-		ACS_ExecuteAlways(344, 0, 8);
-		if (PlayerTeam() == TEAM_RED)
-			SpawnSpot("Utility_GlobalAmmoCacheRed", 213);
-		else
-			SpawnSpot("Utility_GlobalAmmoCacheBlue", 113);
+		ACS_ExecuteAlways(SC_SpawnCache, 0, BUILDING_AMMOREGEN, PlayerTeam());
 		break;
 	case RESEARCH_C4:
 		MenuResponse (MSGTYPE_SUCCESS, "Got extra C4!");
@@ -222,4 +214,41 @@ function bool RC_PurchaseResearch (int r) {
 	SYNC_RefreshMenu ();
 	CallEvent (ACTION_ResearchPurchase, r);
 	return true;
+}
+
+// Events to spawn caches safely and forced, so it'll spawn even if someone is standing there.
+script SC_SpawnCache (int what, int team)
+{
+	//Blue = 100 | Red = 200
+	int baseTID = (team == TEAM_BLUE) ? 100 : 200;
+	switch (what)
+	{
+		case BUILDING_HEALTHREGEN:
+		{
+			// Clear the crap
+			SpawnSpot("SmallAUE",  baseTID + 12);
+			SpawnSpot("SmallAUED", baseTID + 12);
+			Delay(2);
+			SpawnSpotForced(
+				(team == TEAM_BLUE)	? "Utility_GlobalMedicCacheBlue"
+									: "Utility_GlobalMedicCacheRed",
+				baseTID + 12, 0, 0);
+			ACS_ExecuteAlways(344, 0, 6);
+			break;
+		}
+		
+		case BUILDING_AMMOREGEN:
+		{
+			// Clear the crap
+			SpawnSpot("SmallAUE",  baseTID + 13);
+			SpawnSpot("SmallAUED", baseTID + 13);
+			Delay(2);
+			SpawnSpotForced(
+				(team == TEAM_RED)	? "Utility_GlobalAmmoCacheRed"
+									: "Utility_GlobalAmmoCacheBlue",
+				baseTID + 13, 0, 0);
+			ACS_ExecuteAlways(344, 0, 8);
+			break;
+		}
+	}
 }

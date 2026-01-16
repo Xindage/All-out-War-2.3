@@ -135,7 +135,8 @@ script 344 (int Type, int DoneByUtilGun)
 		HudMessage(s:"\cFLimit: \cJ",d:MineLimit(), s:" \cK/\cJ ", d:MAX_PROXYMINE;
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
-	if(Type == 6) {
+	if(Type == 6)
+	{
 		delay(70);
 		if (GlobalMedic[PlayerTeam()] == 1)
 		{
@@ -189,7 +190,7 @@ script 344 (int Type, int DoneByUtilGun)
 			SetFont ("SMALLFONT");
 			IntelMessage ("Something must have blocked the\nregenerator from spawning.", false);
 			delay (3*35);
-			RefundCredits (-1, 2250);	
+			RefundCredits (-1, 2250-CalcDiscount(2250));	
 		}
 		
 		if (PlayerTeam() == TEAM_BLUE && ThingCount(T_NONE,TID_HEALTHREGEN_BLUE) == 1) {
@@ -212,7 +213,7 @@ script 344 (int Type, int DoneByUtilGun)
 			SetFont ("SMALLFONT");
 			IntelMessage ("Something must have blocked the\nregenerator from spawning.", false);
 			delay (3*35);
-			RefundCredits (-1, 2250);
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 	}
 	if(Type == 7)
