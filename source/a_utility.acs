@@ -32,13 +32,13 @@ script 349 (int Type) {
 	if(Type == 3)
 	{
 		SetFont("BIGFONT");
-		HudMessage(s:"\cFLimit: \cJ", d:MiniRefinery[1-PlayerTeam()],s:" \cK/\cJ 1";
+		HudMessage(s:"\cFLimit: \cJ", d:MiniRefinery[PlayerTeam()],s:" \cK/\cJ 1";
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
 	if(Type == 4)
 	{
 		SetFont("BIGFONT");
-		HudMessage(s:"\cFLimit: \cJ", d:GlobalMedic[1-PlayerTeam()],s:" \cK/\cJ 1";
+		HudMessage(s:"\cFLimit: \cJ", d:GlobalMedic[PlayerTeam()],s:" \cK/\cJ 1";
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
 	if(Type == 5)
@@ -50,13 +50,13 @@ script 349 (int Type) {
 	if(Type == 6)
 	{
 		SetFont("BIGFONT");
-		HudMessage(s:"\cFLimit: \cJ", d:GlobalMedic[1-PlayerTeam()],s:" \cK/\cJ 1";
+		HudMessage(s:"\cFLimit: \cJ", d:GlobalMedic[PlayerTeam()],s:" \cK/\cJ 1";
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
 	if(Type == 8)
 	{
 		SetFont("BIGFONT");
-		HudMessage(s:"\cFLimit: \cJ", d:GlobalAmmo[1-PlayerTeam()],s:" \cK/\cJ 1";
+		HudMessage(s:"\cFLimit: \cJ", d:GlobalAmmo[PlayerTeam()],s:" \cK/\cJ 1";
 			HUDMSG_FADEOUT, 960+PlayerNumber(), CR_White, 0.2, 0.4, 2.0, 1.0);
 	}
 }
@@ -83,7 +83,7 @@ script 344 (int Type, int DoneByUtilGun)
 		delay(101);
 		if(PlayerTeam() == TEAM_RED && ThingCountSector(T_NONE,TID_MINIREF_RED,18) >= 1) {
 			SetFont("SMALLFONT");
-			MiniRefinery[1] = 1;
+			MiniRefinery[TEAM_RED] = 1;
 			IntelMessage (strparam (n:0, s:"\cJ of \cARed Team\cJ\nhas built a \cDMini-Refinery!"), true);
 			//ACS_ExecuteAlways(324,0,2,0,0);
 			AddExperience (125);
@@ -104,7 +104,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		if (PlayerTeam() == TEAM_BLUE && ThingCountSector(T_NONE,TID_MINIREF_BLUE,18) >= 1) {
 			SetFont("SMALLFONT");
-			MiniRefinery[0] = 1;
+			MiniRefinery[TEAM_BLUE] = 1;
 			IntelMessage (strparam (n:0, s:"\cJ of \cNBlue Team\cJ\nhas built a \cDMini-Refinery!"), true);
 			//ACS_ExecuteAlways(324,0,2,0,0);
 			AddExperience (125);
@@ -137,7 +137,8 @@ script 344 (int Type, int DoneByUtilGun)
 	}
 	if(Type == 6) {
 		delay(70);
-		if (GlobalMedic[1-PlayerTeam()] == 1) {
+		if (GlobalMedic[PlayerTeam()] == 1)
+		{
 			// [Dusk] fuckup compensation..
 			
 			// NOTE: this check leaves the useless cache there,
@@ -148,7 +149,8 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		// [SP] Can only build on repair pad if built w/ util gun
-		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,TID_HEALTHREGEN_RED,15) == 1 || ThingCountSector(T_NONE,TID_HEALTHREGEN_RED,240) == 1) &&  ThingCount(T_NONE,TID_HEALTHREGEN_RED) == 1) {
+		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && ThingCountSector(T_NONE, TID_HEALTHREGEN_RED, 250) != 1 && ThingCount(T_NONE, TID_HEALTHREGEN_RED) == 1)
+		{
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_HEALTHREGEN_RED, "Disapproved");
@@ -157,7 +159,8 @@ script 344 (int Type, int DoneByUtilGun)
 			terminate;
 		}
 		
-		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,TID_HEALTHREGEN_BLUE,13) == 1 || ThingCountSector(T_NONE,TID_HEALTHREGEN_BLUE,140) == 1) &&  ThingCount(T_NONE,TID_HEALTHREGEN_BLUE) == 1) {
+		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && ThingCountSector(T_NONE,TID_HEALTHREGEN_BLUE, 150) != 1 &&  ThingCount(T_NONE,TID_HEALTHREGEN_BLUE) == 1)
+		{
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_HEALTHREGEN_BLUE, "Disapproved");
@@ -167,7 +170,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 
 		if(PlayerTeam() == TEAM_RED && ThingCount(T_NONE,TID_HEALTHREGEN_RED) == 1) {
-			GlobalMedic[0] = 1;
+			GlobalMedic[TEAM_RED] = 1;
 			delay(35);
 			SetFont ("SMALLFONT");
 			IntelMessage (strparam (n:0, s:"\cJ of \cARed Team\cJ\nhas built a \cAHealth Regenerator!"), true);
@@ -190,7 +193,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		if (PlayerTeam() == TEAM_BLUE && ThingCount(T_NONE,TID_HEALTHREGEN_BLUE) == 1) {
-			GlobalMedic[1] = 1;
+			GlobalMedic[TEAM_BLUE] = 1;
 			delay(35);
 			SetFont ("SMALLFONT");
 			IntelMessage (strparam (n:0, s:"\cJ of \cNBlue Team\cJ\nhas built a \cAHealth Regenerator!"), true);
@@ -220,7 +223,7 @@ script 344 (int Type, int DoneByUtilGun)
 	}
 	if(Type == 8) {
 		delay(70);
-		if (GlobalAmmo[1-PlayerTeam()] == 1) {
+		if (GlobalAmmo[PlayerTeam()] == 1) {
 			// [Dusk] fuckup compensation..
 			
 			// NOTE: this check leaves the useless cache there,
@@ -231,7 +234,8 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		// [SP] Can only build on repair pad if built w/ util gun
-		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,TID_AMMOREGEN_RED,15) == 1 || ThingCountSector(T_NONE,TID_AMMOREGEN_RED,240) == 1) &&  ThingCount(T_NONE,TID_AMMOREGEN_RED) == 1) {
+		if (PlayerTeam() == TEAM_RED && DoneByUtilGun == 1 && ThingCountSector(T_NONE,TID_AMMOREGEN_RED,250) != 1 && ThingCount(T_NONE,TID_AMMOREGEN_RED) == 1)
+		{
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_AMMOREGEN_RED, "Disapproved");
@@ -239,7 +243,8 @@ script 344 (int Type, int DoneByUtilGun)
 			RefundCredits (-1, 1500);		
 			terminate;
 		}
-		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && !(ThingCountSector(T_NONE,TID_AMMOREGEN_BLUE,13) == 1 || ThingCountSector(T_NONE,TID_AMMOREGEN_BLUE,140) == 1) &&  ThingCount(T_NONE,TID_AMMOREGEN_BLUE) == 1) {
+		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && ThingCountSector(T_NONE,TID_AMMOREGEN_BLUE,150) != 1 && ThingCount(T_NONE,TID_AMMOREGEN_BLUE) == 1)
+		{
 			SetFont ("SMALLFONT");
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_AMMOREGEN_BLUE, "Disapproved");
@@ -249,7 +254,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 
 		if(PlayerTeam() == TEAM_RED && ThingCount(T_NONE,TID_AMMOREGEN_RED) == 1) {
-			GlobalAmmo[0] = 1;
+			GlobalAmmo[TEAM_RED] = 1;
 			delay(35);
 			SetFont ("SMALLFONT");
 			IntelMessage (strparam (n:0, s:"\cJ of \cARed Team\cJ\nhas built an \cKAmmo Regenerator!"), true);
@@ -272,7 +277,7 @@ script 344 (int Type, int DoneByUtilGun)
 		}
 		
 		if (PlayerTeam() == TEAM_BLUE && ThingCount(T_NONE,TID_AMMOREGEN_BLUE) == 1) {
-			GlobalAmmo[1] = 1;
+			GlobalAmmo[TEAM_BLUE] = 1;
 			delay(35);
 			SetFont ("SMALLFONT");
 			IntelMessage (strparam (n:0, s:"\cJ of \cNBlue Team\cJ\nhas built a \cKAmmo Regenerator!"), true);
@@ -320,7 +325,7 @@ script 345 (int Type, int Team)
 	int Counter = 0;
 	if(Type == 3 && Team == 0) //RED 
 	{
-		MiniRefinery[1] = 0;
+		MiniRefinery[TEAM_RED] = 0;
 		SetFont("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cARed \cDMini-Refinery!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -334,7 +339,7 @@ script 345 (int Type, int Team)
 	}
 	if(Type == 3 && Team == 1) //BLUE 
 	{
-		MiniRefinery[0] = 0;
+		MiniRefinery[TEAM_BLUE] = 0;
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cNBlue \cDMini-Refinery!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -346,7 +351,7 @@ script 345 (int Type, int Team)
 	}
 	if(Type == 5 && Team == 0) //RED 
 	{
-		GlobalMedic[0] = 0;
+		GlobalMedic[TEAM_RED] = 0;
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cARed \cAHealth Regenerator!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -358,7 +363,7 @@ script 345 (int Type, int Team)
 	}
 	if(Type == 5 && Team == 1) //BLUE 
 	{
-		GlobalMedic[1] = 0;
+		GlobalMedic[TEAM_BLUE] = 0;
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cNBlue \cAHealth Regenerator!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -370,7 +375,7 @@ script 345 (int Type, int Team)
 	}
 	if(Type == 7 && Team == 0) //RED 
 	{
-		GlobalAmmo[0] = 0;
+		GlobalAmmo[TEAM_RED] = 0;
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cARed \cKAmmo Regenerator!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -382,7 +387,7 @@ script 345 (int Type, int Team)
 	}
 	if(Type == 7 && Team == 1) //BLUE 
 	{
-		GlobalAmmo[1] = 0;
+		GlobalAmmo[TEAM_BLUE] = 0;
 		SetFont ("SMALLFONT");
 		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\nthe \cNBlue \cKAmmo Regenerator!"), true);
 		ACS_ExecuteAlways(324,0,2,0,0); // 100xp
@@ -395,13 +400,11 @@ script 345 (int Type, int Team)
 }
 
 //Check if it's not at limit
-// [Xindage] There's a big gross hack happening with team number here...
-// TODO: Fix the team, this could be decorate sided...'
 script 346 (int Type, int Team) {
 	SetResultValue(1);
 	switch (Type) {
 	case 0:
-		if (CountTurrets() >= MaxTurrets[1-Team]) SetResultValue(0);
+		if (CountTurrets() >= MaxTurrets[Team]) SetResultValue(0);
 		break;
 	/*case 1:
 		if (CountRazorWire() >= MAX_RAZORWIRE) SetResultValue(0);
@@ -411,7 +414,7 @@ script 346 (int Type, int Team) {
 		break;
 	case 3:
 		// if (MiniRefinery[Team]) SetResultValue (0);
-		if (ThingCount (T_NONE, MainTIDs[1-team][BUILDING_MINIREF]) != 0) SetResultValue (0);
+		if (ThingCount (T_NONE, MainTIDs[team][BUILDING_MINIREF]) != 0) SetResultValue (0);
 		break;
 	case 4:
 		if (GlobalMedic[Team]) SetResultValue (0);
