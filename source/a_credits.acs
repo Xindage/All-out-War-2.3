@@ -193,14 +193,21 @@ script 330 (int amount) {
 }
 
 // CREDIT BONUS
-Script SC_CREDITBONUS OPEN {
+// [Xindage] Added an extra of 50 each loop to make the bonus more valuable as the game goes.
+int Extrabonusloop = 0;
+
+Script SC_CREDITBONUS OPEN
+{
 	while (GetCVAR("zeta_bonustime") <= 0)	delay (5 * 35);
 	delay (GetCVAR("zeta_bonustime") * MINUTETICS);
 	
-	GiveTeamCredits(GetCVAR("zeta_bonusamount"), GetCVAR("zeta_bonusamount"));
+	int Value = GetCVAR("zeta_bonusamount") + (Extrabonusloop * 50);
+	
+	GiveTeamCredits(Value, Value);
 	AmbientSound ("powerup/credsound", 127);
 	SetFont ("SMALLFONT");
-	IntelMessage (strparam (s:"Credit bonus! You all get \cQ$\cD", d:GetCVAR("zeta_bonusamount"), s:"\cJ!"), true);
+	IntelMessage (strparam (s:"Credit bonus! You all get \cQ$\cD", d:Value, s:"\cJ!"), true);
+	Extrabonusloop++;
 	restart;
 }
 
