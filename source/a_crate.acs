@@ -120,7 +120,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_NoDeck),	"");			// Custon announce type.
 	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0),	"");
-	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(0),	"");
+	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(CRF_ANNOUNCE_TO),				"Shared a part of");
 	AddCrateType (CRATE_BONUSXP,		"bonus experience",		"D", 15, CRT_Upgrade,	(0),	"");
 	AddCrateType (CRATE_FIREARMOR,		"fire proof",			"F", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_STEALTH,		"stealth suit",			"U", 10, CRT_Upgrade,	(0),	"");
@@ -387,13 +387,31 @@ script SC_CRATEEFFECT (int c)
 		GiveInventory ("FirepowerUpgrade", 1);
 		break;
 
-	// Bonus Credits. No warning.
+	// Bonus Credits. Warning Team.
 	case CRATE_BONUSCREDITS:
+	{
+		int minutes = Timer() / MINUTETICS;
+		if (minutes > 60)	minutes = 60; // Cap at 1 hour - 1500 activator, 750 teammates.
+		int total = GetCVAR("zeta_bonusamount") + (minutes * 20);
+		int allyShare = total / 2;
+
 		LocalAmbientSound ("powerup/cred", 127);
 		Delay (4);
 		ActivatorSound ("powerup/credsound", 127);
-		GiveCredits (GetCVAR("zeta_bonusamount"));
+		AwardCredits(total);
+
+		// Teammates get 50% to make crate relevant.
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			if (!PlayerInGame(i) || i == PlayerNumber())
+				continue;
+
+			if (GetPlayerTeam(i) == team)
+				ModifyCredits(i, allyShare, CREDIT_ADD, true);
+		}
+
 		break;
+}
 
 	// Bonus experience. No warning.
 	case CRATE_BONUSXP:
