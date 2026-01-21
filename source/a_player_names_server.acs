@@ -27,15 +27,30 @@ SCRIPT SC_PIC_RANDOM_TID_SERVER (void)
 	}
 }
 
-
+// [Xindage] There is a report of things disapearing when it is spammed too much too fast.
 //called by client hotkey
 //trys to spot player at sight
-SCRIPT SC_SPOT_ACTOR_SERVER (void) NET 
-{	
-	int originalTid = ActivatorTID();
-	int capAngle = GetActorAngle(originalTid);
-	int camPitch = GetActorPitch(originalTid);	
-	LineAttack (0, capAngle, camPitch, 0, "HitscanPuff", "None", 8192.0);
+
+int SpotNextAllowed[MAXPLAYERS];
+
+SCRIPT SC_SPOT_ACTOR_SERVER (void) NET
+{
+	// Get player info.
+	int p = PlayerNumber();
+	if (p < 0 || p >= MAXPLAYERS)	terminate;	// Prevent void activation.
+	if (!PlayerInGame(p))	terminate;			// Lets prevent spectators as well
+	
+	int now = Timer(); // Lock system - DO NOT SPAM!
+	if (now < SpotNextAllowed[p]) terminate;
+	// If aproved to use, block it for a second.
+	SpotNextAllowed[p] = now + TICRATE;
+
+	int tid = ActivatorTID();
+	SetActivator(tid);
+	
+//	int capAngle = GetActorAngle(tid);
+//	int camPitch = GetActorPitch(tid);	
+	LineAttack (0, GetActorAngle(0), GetActorPitch(0), 0, "HitscanPuff", "None", 8192.0);
 }
 
 //called by HitscanPuff when it's spawned on target. puff contains information about target.
