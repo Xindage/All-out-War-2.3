@@ -100,7 +100,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("Must be built into a \cDTiberium Field!", false);
 			SetActorState (TID_MINIREF_RED, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 		if (PlayerTeam() == TEAM_BLUE && ThingCountSector(T_NONE,TID_MINIREF_BLUE,18) >= 1) {
 			SetFont("SMALLFONT");
@@ -120,7 +120,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("Must be built into a \cDTiberium Field!", false);
 			SetActorState (TID_MINIREF_BLUE, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 	}
 	if(Type == 4)
@@ -158,7 +158,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_HEALTHREGEN_RED, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);		
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 			terminate;
 		}
 		
@@ -168,7 +168,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_HEALTHREGEN_BLUE, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);		
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 			terminate;
 		}
 
@@ -192,7 +192,7 @@ script 344 (int Type, int DoneByUtilGun)
 			SetFont ("SMALLFONT");
 			IntelMessage ("Something must have blocked the\nregenerator from spawning.", false);
 			delay (3*35);
-			RefundCredits (-1, 2250-CalcDiscount(2250));	
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 		
 		if (PlayerTeam() == TEAM_BLUE && ThingCount(T_NONE,TID_HEALTHREGEN_BLUE) == 1) {
@@ -245,7 +245,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_AMMOREGEN_RED, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);		
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 			terminate;
 		}
 		if (PlayerTeam() == TEAM_BLUE && DoneByUtilGun == 1 && ThingCountSector(T_NONE,TID_AMMOREGEN_BLUE,150) != 1 && ThingCount(T_NONE,TID_AMMOREGEN_BLUE) == 1)
@@ -254,7 +254,7 @@ script 344 (int Type, int DoneByUtilGun)
 			IntelMessage ("You must put this in your \cKrepair facility!", false);
 			SetActorState (TID_AMMOREGEN_BLUE, "Disapproved");
 			delay (3*35);
-			RefundCredits (-1, 1500);		
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 			terminate;
 		}
 
@@ -277,7 +277,7 @@ script 344 (int Type, int DoneByUtilGun)
 			SetFont ("SMALLFONT");
 			IntelMessage ("Something must have blocked the\nregenerator from spawning.", false);
 			delay (3*35);
-			RefundCredits (-1, 2250);	
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 		
 		if (PlayerTeam() == TEAM_BLUE && ThingCount(T_NONE,TID_AMMOREGEN_BLUE) == 1) {
@@ -299,7 +299,7 @@ script 344 (int Type, int DoneByUtilGun)
 			SetFont ("SMALLFONT");
 			IntelMessage ("Something must have blocked the\nregenerator from spawning.", false);
 			delay (3*35);
-			RefundCredits (-1, 2250);
+			RefundCredits (-1, 2250-CalcDiscount(2250));
 		}
 	}
 	if(Type == 9)
