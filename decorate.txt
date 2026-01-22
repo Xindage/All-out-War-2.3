@@ -133,16 +133,17 @@
 #include "actors/marines/marine-tibrifle-red.txt"
 #include "actors/marines/marine-rocketsoldier-blue.txt"
 #include "actors/marines/marine-rocketsoldier-red.txt"
-#include "actors/marines/marine-flamer-blue.txt"
-#include "actors/marines/marine-flamer-red.txt"
-#include "actors/marines/marine-plasma-blue.txt"
-#include "actors/marines/marine-plasma-red.txt"
 #include "actors/marines/marinebeacon.txt"
 #include "actors/marines/compensation.txt"
 #include "actors/misc/doomreplacements.txt"
 #include "actors/misc/cactus.txt"
 #include "actors/misc/admin.txt"
 #include "actors/misc/skulltag.txt"
+
+// New Marines
+#include "actors/marines/m-base.txt"
+#include "actors/marines/m-flamer.txt"
+#include "actors/marines/m-plasma.txt"
 
 //Nasty Dogs - Effects
 #include "actors/effects/flares.txt"
