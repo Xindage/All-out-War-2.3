@@ -93,6 +93,39 @@ script SC_Repairloop (void)
 	TakeInventory("InRepairs", 1);
 }
 
+script SC_RepairCacheloop (int Team, int Type)
+{
+	if (!GotRepair[Team]) terminate; // Repair facility is destroyed, do not set automatic repair.
+	SetActivator(Type); // Set the cache as the activator of the script.
+	
+	int repairsector;
+	if	(team == TEAM_BLUE)	repairsector = (100 + (BUILDING_REPAIR * 10));
+	else					repairsector = (200 + (BUILDING_REPAIR * 10));
+	
+	while (ThingCountSector(T_NONE, Type, repairsector) == 1 && GotRepair[Team])
+	{
+		// Get this info on start.
+		int cachebhp = GetActorHealth(0);
+		int cachemhp = GetActorSpawnHealth(0);
+		
+		if (cachebhp <= 0) terminate; // Dead.
+		
+
+		if (cachebhp < cachemhp)
+		{
+			SpawnSpotForced("RepairEffectEmitter", Type, 0, 0);
+			cachebhp += 5;
+			
+			if (cachebhp > cachemhp)	cachebhp = cachemhp;
+			
+			SetActorHealth(0, cachebhp);
+			SYNC_UpdateBuildingHealth (Type, Team);
+		}
+		
+		delay(15);
+	}
+}
+
 // if (GotRepair[1-PlayerTeam()]) was causing some nasty side effects
 // Destroying enemy Repair was making your own repair pad to heal mech faster and heal infantry slower
 // and giving ammo just once the player was full healed. (Nerfing yourself in a nutshell).

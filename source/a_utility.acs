@@ -181,6 +181,7 @@ script 344 (int Type, int DoneByUtilGun)
 			AddExperience (125);
 			SetThingSpecial(TID_HEALTHREGEN_RED, ACS_ExecuteAlways, 345,0,5,0);
 			SetActorState (TID_HEALTHREGEN_RED, "Approved");
+			if (DoneByUtilGun)	ACS_ExecuteAlways(SC_RepairCacheloop, 0, TEAM_RED, TID_HEALTHREGEN_RED); // Setup auto repair.
 			Log(n:0, s:" builds Red Health Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
 			SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, TEAM_RED);
@@ -204,6 +205,7 @@ script 344 (int Type, int DoneByUtilGun)
 			AddExperience (125);
 			SetThingSpecial(TID_HEALTHREGEN_BLUE, ACS_ExecuteAlways, 345, 0, 5, 1);
 			SetActorState (TID_HEALTHREGEN_BLUE, "Approved");
+			if (DoneByUtilGun)	ACS_ExecuteAlways(SC_RepairCacheloop, 0, TEAM_BLUE, TID_HEALTHREGEN_BLUE); // Setup auto repair.
 			Log(n:0, s:" builds Blue Health Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
 			TeamMessage (TMSG_CONSTRUCT, 1,  playernumber());
@@ -267,6 +269,7 @@ script 344 (int Type, int DoneByUtilGun)
 			AddExperience (125);
 			SetActorState (TID_AMMOREGEN_RED, "Approved");
 			SetThingSpecial(TID_AMMOREGEN_RED, ACS_ExecuteAlways, 345, 0, 7, 0);
+			if (DoneByUtilGun)	ACS_ExecuteAlways(SC_RepairCacheloop, 0, TEAM_RED, TID_AMMOREGEN_RED); // Setup auto repair.
 			Log(n:0, s:" builds Red Ammo Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
 			TeamMessage (TMSG_CONSTRUCT, 2,  playernumber());
@@ -289,6 +292,7 @@ script 344 (int Type, int DoneByUtilGun)
 			AddExperience (125);
 			SetActorState (TID_AMMOREGEN_BLUE, "Approved");
 			SetThingSpecial(TID_AMMOREGEN_BLUE, ACS_ExecuteAlways, 345, 0, 7, 1);
+			if (DoneByUtilGun)	ACS_ExecuteAlways(SC_RepairCacheloop, 0, TEAM_BLUE, TID_AMMOREGEN_BLUE); // Setup auto repair.
 			Log(n:0, s:" builds Blue Ammo Regen Cache.");
 			GivePoints (RESEARCHPOINTS);
 			TeamMessage (TMSG_CONSTRUCT, 2,  playernumber());
