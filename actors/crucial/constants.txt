@@ -86,6 +86,7 @@ const int SC_MARINE_DEATH = 968;
 const int SC_SETPITCH = 979;
 const int SC_DAMAGEOVERTIME = 974;
 const int SC_STEALTH = 975;
+const int SC_SETAIARMORGRADE = 993;
 
 
 const int STEALTH_ON = 0;
