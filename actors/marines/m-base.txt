@@ -17,6 +17,7 @@ Actor MBase : PlayerPawn	// Basic unarmed marine.
 	Mass 100
 	Painchance 200
 //	MaxTargetRange 128		// For close quarter weapons.
+	+SLIDESONWALLS
 	+CANPASS
 	+CANPUSHWALLS
 	+CANUSEWALLS
