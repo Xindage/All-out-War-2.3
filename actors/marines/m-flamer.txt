@@ -1,5 +1,6 @@
 // * Scripted marine rework state:
 // Fully functional.
+// Todo: Alt-Fire
 // -------------------------------
 Actor BlueFlamerDude : MBase // Marine wielding Flamethrower
 {

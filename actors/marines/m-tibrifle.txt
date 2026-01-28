@@ -1,0 +1,526 @@
+// * Scripted marine rework state:
+// Fully functional.
+// Todo:
+// -------------------------------
+Actor BlueTiberiumRifleman : MBase // Marine wielding Tiberium Rifle
+{
+	DropItem ""
+	obituary "$OB_MARINE_TIBRIFLE_BLUE"
+	MaxTargetRange 1600 //TODO
+	Translation "112:127=[0,68,181]:[0,0,0]"
+	DesignatedTeam 0
+
+//-----------------------------------------------------------------------
+
+	States // Some states now inherit from this marine base.
+	{
+
+//-----------------------------------------------------------------------
+//
+//					Spawn and idle states.
+//
+//-----------------------------------------------------------------------
+
+	Spawn:
+		MGMR A 0 // Dummy frame needed.
+		MGMR A 0 A_GiveInventory("IsBlue", 1)
+		MGMR A 0 A_ChangeFlag("Friendly", 0)
+		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM)) // SC_SETAIARMORGRADE must be used by ai marines.
+		MGMR A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
+		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
+		Stop
+
+	Idle:
+		MGMR A 0 A_JumpIf (momx != 0 || momy != 0, "MomentumCheck")
+
+		MGMR A 1 A_LookEx (0, 0, 0, 1200, 360, "DisablePushablePreAlternateChase")
+		MGMR A 0 A_CheckSight ("DisablePushablePreAlternateWander")
+
+		MGMR A 0 A_JumpIf (z - floorz == 0, 4) //If non-deep water or at bottom, don't sink.
+		MGMR A 0 A_JumpIf (waterlevel == 1, "SinkDown1")
+		MGMR A 0 A_JumpIf (waterlevel == 2, "SinkDown2")
+		MGMR A 0 A_JumpIf (waterlevel == 3, "SinkDown3")
+		MGMR A 0
+		Loop
+
+//-----------------------------------------------------------------------
+
+	MomentumCheck:
+		MGMR A 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
+		MGMR A 4
+		MGMR A 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
+		MGMR B 4
+		MGMR B 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
+		MGMR C 4
+		MGMR C 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
+		MGMR D 4
+		TNT1 A 0 A_Jump (256, "CheckIfAnyTargetsWhilePushed")
+		Stop
+
+//-----------------------------------------------------------------------
+//
+//	Chase, check target, check if stuck/underwater and back off states.
+//
+//-----------------------------------------------------------------------
+
+	ChaseForward:
+		MGMR A 4 A_Recoil (-3.675)
+		MGMR B 4 A_Recoil (-3.675)
+		MGMR C 4 A_Recoil (-3.675)
+		MGMR D 4 A_Recoil (-3.675)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
+		Stop
+
+	ChaseForwardAndLeft:
+		MGMR A 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR A 4 A_Recoil (-0.504)
+		MGMR A 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (-0.504)
+		MGMR B 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (-0.504)
+		MGMR C 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (-0.504)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
+		Stop
+
+	ChaseForwardAndRight:
+		MGMR A 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR A 4 A_Recoil (-0.504)
+		MGMR A 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (-0.504)
+		MGMR B 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (-0.504)
+		MGMR C 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (-0.504)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
+		Stop
+
+//-----------------------------------------------------------------------
+
+	MoveBackwards:
+		MGMR A 4 A_Recoil (3.675)
+		MGMR B 4 A_Recoil (3.675)
+		MGMR C 4 A_Recoil (3.675)
+		MGMR D 4 A_Recoil (3.675)
+		MGMR D 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
+
+	MoveBackwardsAndLeft:
+		MGMR A 4 A_Recoil (0.504)
+		MGMR A 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR D 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
+
+	MoveBackwardsAndRight:
+		MGMR A 4 A_Recoil (0.504)
+		MGMR A 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR D 0 A_Jump (random(128, 256), "AddToTimers")
+		Loop
+
+
+//-----------------------------------------------------------------------
+//
+//	Wander, check target, check if stuck/underwater and back off states.
+//
+//-----------------------------------------------------------------------
+
+	WanderForward:
+		MGMR A 4 A_Recoil (-3.675)
+		MGMR B 4 A_Recoil (-3.675)
+		MGMR C 4 A_Recoil (-3.675)
+		MGMR D 4 A_Recoil (-3.675)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
+		Stop
+
+	WanderForwardAndLeft:
+		MGMR A 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR A 4 A_Recoil (-0.504)
+		MGMR A 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (-0.504)
+		MGMR B 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (-0.504)
+		MGMR C 0 ThrustThing (angle*256/360-38.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (-0.504)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
+		Stop
+
+	WanderForwardAndRight:
+		MGMR A 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR A 4 A_Recoil (-0.504)
+		MGMR A 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (-0.504)
+		MGMR B 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (-0.504)
+		MGMR C 0 ThrustThing (angle*256/360+38.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (-0.504)
+		TNT1 A 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
+		Stop
+
+//-----------------------------------------------------------------------
+
+	MoveBackwardsWhileWander:
+		MGMR A 4 A_Recoil (3.675)
+		MGMR B 4 A_Recoil (3.675)
+		MGMR C 4 A_Recoil (3.675)
+		MGMR D 4 A_Recoil (3.675)
+		MGMR D 0 A_Jump (random(128, 256), "AlternateWander")
+		Loop
+
+	MoveBackwardsAndLeftWhileWander:
+		MGMR A 4 A_Recoil (0.504)
+		MGMR A 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR D 0 A_Jump (random(128, 256), "AlternateWander")
+		Loop
+
+	MoveBackwardsAndRightWhileWander:
+		MGMR A 4 A_Recoil (0.504)
+		MGMR A 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR D 0 A_Jump (random(128, 256), "AlternateWander")
+		Loop
+
+
+//-----------------------------------------------------------------------
+//
+//			Back off from target.
+//
+//-----------------------------------------------------------------------
+
+	BackOffBackwards:
+		MGMR A 0 A_FaceTarget
+		MGMR A 4 A_Recoil (3.675)
+		MGMR B 4 A_Recoil (3.675)
+		MGMR C 4 A_Recoil (3.675)
+		MGMR D 4 A_Recoil (3.675)
+		MGMR A 0 A_JumpIf (health <= 50, "Missile")
+		MGMR A 0 A_Jump (random(128, 256), 1)
+		Loop
+		MGMR A 0 A_MonsterRefire (10, "ResetTimers")
+		TNT1 A 0 A_Jump (256, "Missile")
+		Stop
+
+	BackOffBackwardsAndLeft:
+		MGMR A 0 A_FaceTarget
+		MGMR A 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR A 0 A_JumpIf (health <= 50, "Missile")
+		MGMR A 0 A_Jump (random(128, 256), 1)
+		Loop
+		MGMR A 0 A_MonsterRefire (10, "ResetTimers")
+		TNT1 A 0 A_Jump (256, "Missile")
+		Stop
+
+	BackOffBackwardsAndRight:
+		MGMR A 0 A_FaceTarget
+		MGMR A 4 A_Recoil (0.504)
+		MGMR A 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR B 4 A_Recoil (0.504)
+		MGMR B 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR C 4 A_Recoil (0.504)
+		MGMR C 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR D 4 A_Recoil (0.504)
+		MGMR D 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR A 0 A_JumpIf (health <= 50, "Missile")
+		MGMR A 0 A_Jump (random(128, 256), 1)
+		Loop
+		MGMR A 0 A_MonsterRefire (10, "ResetTimers")
+		TNT1 A 0 A_Jump (256, "Missile")
+		Stop
+
+//-----------------------------------------------------------------------
+//
+//			Pre-missile states. (Check team and target)
+//
+//-----------------------------------------------------------------------
+
+	Missile:
+		MGMR E 0 A_JumpIfInventory("TiberiumRifleCooldown", 1, "AlternateChase")
+		MGMR E 0 A_JumpIfInTargetInventory("IsBlue", 1, "ClearTarget")
+		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
+		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
+		MGMR E 0 A_JumpIfCloser(1600, 2)
+		MGMR E 0 A_Jump (256, "AlternateChase")
+		MGMR E 0 A_Jump (256, "missilego1", "missilego2")
+		Stop
+
+//-----------------------------------------------------------------------
+
+	Refirecheck1: // No need to check team here, clear target only in reload and calls missile state.
+		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "Reload")
+//		MGMR E 0 A_Jump (256, 3) // Unload everything before giving up on stealths.
+//		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
+//		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
+//		MGMR E 0 A_Jump (random(64, 256), "Missilego1") // Do not change strafe while attacking.
+		MGMR E 0 A_Jump (256, "Missilego1") // Because inherit
+		Stop
+	Missilego1:
+		MGMR E 0 A_FaceTarget
+		MGMR E 0 A_PlayWeaponSound("toxin/fire")
+		MGMR E 0 A_CustomMissile("TiberiumDart", 36, 10, 2+random(-3,0))
+		MGMR E 0 NoiseAlert (0, 0)
+		MGMR E 0 A_GiveInventory("TE21CallAmmoAI")
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		// 6 Frames Delay between all projectiles.
+		MGMR E 0 A_MonsterRefire (0, "SLReload")
+		MGMR E 0 A_Jump (256, "Refirecheck2")
+		stop
+	SLReload:
+		MGMR E 0 A_FaceTarget
+		MGMR E 0 A_TakeInventory("TE21CallAmmoAI", 6)
+		MGMR E 0 A_GiveInventory("TiberiumRifleCooldown")
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856) // 4 tics
+		MGMR A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856) // 8 tics
+		MGMR B 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856) // 12 tics
+		MGMR C 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856)
+		MGMR D 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856)
+		MGMR D 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856) // 15 tics, Cooldown finished.
+		MGMR D 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+		MGMR D 0 A_ClearTarget
+		MGMR D 0 A_Chase ("", "")
+		MGMR D 0 A_MonsterRefire (0, "See")
+		MGMR D 0 A_Jump (256, "Missile")
+		Stop
+
+	Refirecheck2: // No need to check team here, clear target only in reload and calls missile state.
+		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "Reload")
+//		MGMR E 0 A_Jump (256, 3) // Unload everything before giving up on stealths.
+//		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
+//		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
+//		MGMR E 0 A_Jump (random(64, 256), "Missilego1") // Do not change strafe while attacking.
+		MGMR E 0 A_Jump (256, "Missilego2") // Because inherit
+		Stop
+	Missilego2:
+		MGMR E 0 A_FaceTarget
+		MGMR E 0 A_PlayWeaponSound("toxin/fire")
+		MGMR E 0 A_CustomMissile("TiberiumDart", 36, 10, 2+random(-3,0))
+		MGMR E 0 NoiseAlert (0, 0)
+		MGMR E 0 A_GiveInventory("TE21CallAmmoAI")
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR E 0 A_FaceTarget
+		MGMR E 1 Bright A_Recoil (-0.368856)
+		MGMR E 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		// 6 Frames Delay between all projectiles.
+		MGMR E 0 A_MonsterRefire (0, "SRReload")
+		MGMR E 0 A_Jump (256, "Refirecheck2")
+		Stop
+	SRReload:
+		MGMR E 0 A_FaceTarget
+		MGMR E 0 A_TakeInventory("TE21CallAmmoAI", 6)
+		MGMR E 0 A_GiveInventory("TiberiumRifleCooldown")
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856)
+		MGMR A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR A 1 A_Recoil (-0.368856) // 4 tics
+		MGMR A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR A 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856)
+		MGMR B 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR B 1 A_Recoil (-0.368856) // 8 tics
+		MGMR B 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR B 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856)
+		MGMR C 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR C 1 A_Recoil (-0.368856) // 12 tics
+		MGMR C 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856)
+		MGMR D 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856)
+		MGMR D 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR C 0 A_FaceTarget
+		MGMR D 1 A_Recoil (-0.368856) // 15 tics, Cooldown finished.
+		MGMR D 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+		MGMR D 0 A_ClearTarget
+		MGMR D 0 A_Chase ("", "")
+		MGMR D 0 A_MonsterRefire (0, "See")
+		MGMR D 0 A_Jump (256, "Missile")
+		Stop
+
+//-----------------------------------------------------------------------
+//
+//				Pain states.
+//
+//-----------------------------------------------------------------------
+
+	PainBackOffBackwards:
+		MGMR G 0 A_FaceTarget
+		MGMR G 4 A_Recoil (3.675)
+		MGMR G 0 A_Pain
+		MGMR G 4 A_Recoil (3.675)
+		MGMR E 0 A_Jump (256, "CheckIfTargetInLOS")
+		Stop
+
+	PainBackOffBackwardsAndLeft:
+		MGMR G 0 A_FaceTarget
+		MGMR G 4 A_Recoil (0.504)
+		MGMR G 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR G 0 A_Pain
+		MGMR G 4 A_Recoil (0.504)
+		MGMR G 0 ThrustThing (angle*256/360+166.7, 4, 0, 0)
+		MGMR E 0 A_Jump (256, "CheckIfTargetInLOS")
+		Stop
+
+	PainBackOffBackwardsAndRight:
+		MGMR G 0 A_FaceTarget
+		MGMR G 4 A_Recoil (0.504)
+		MGMR G 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR G 0 A_Pain
+		MGMR G 4 A_Recoil (0.504)
+		MGMR G 0 ThrustThing (angle*256/360-166.7, 4, 0, 0)
+		MGMR E 0 A_Jump (256, "CheckIfTargetInLOS")
+		Stop
+	}
+}
+
+//-----------------------------------------------------------------------
+//
+//					Red Version. Inhert blue data.
+//
+//-----------------------------------------------------------------------
+
+Actor RedTiberiumRifleman : BlueTiberiumRifleman
+{
+	obituary "$OB_MARINE_TIBRIFLE_RED"
+	Translation "112:127=[160,0,0]:[0,0,0]"
+	DesignatedTeam 1
+
+	States // Minimal states, necessary by this team marine.
+	{
+	Spawn:
+		MGMR A 0 // Dummy frame needed.
+		MGMR A 0 A_GiveInventory("IsRed", 1)
+		MGMR A 0 A_ChangeFlag("Friendly", 0)
+		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM)) // SC_SETAIARMORGRADE must be used by ai marines.
+		MGMR A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
+		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
+		Stop
+
+//-----------------------------------------------------------------------
+
+	Missile:
+		MGMR E 0 A_JumpIfInventory("TiberiumRifleCooldown", 1, "AlternateChase")
+		MGMR E 0 A_JumpIfInTargetInventory("IsRed", 1, "ClearTarget")
+		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
+		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
+		MGMR E 0 A_JumpIfCloser(1600, 2)
+		MGMR E 0 A_Jump (256, "AlternateChase")
+		MGMR E 0 A_Jump (256, "missilego1", "missilego2")
+		Stop
+	}
+}

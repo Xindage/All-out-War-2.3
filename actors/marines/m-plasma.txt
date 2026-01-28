@@ -56,7 +56,6 @@ Actor BluePlasmaGunner : MBase // Marine wielding Plasma rifle
 		TNT1 A 0 A_Jump (256, "CheckIfAnyTargetsWhilePushed")
 		Stop
 
-
 //-----------------------------------------------------------------------
 //
 //	Chase, check target, check if stuck/underwater and back off states.
