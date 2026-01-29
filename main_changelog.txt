@@ -1,57 +1,42 @@
 ===========================================================================================================================================================
 Title                   : All Out War 2.3: Nasty Dogs
 Filename                : aow2.3_code_rxxxxxx.pk3
-Author                  : Gaturra (discord: Gaturra#8745)
-Discord server          : https://discord.gg/Y36tp5D8
+Author                  : Xindage
+Discord server          : -------
 
 Original Release date   : 2022/04/18 (v0.1)
-For older changelogs please look out for old 2.3 releases or in the github website.
-Version r230124 (2023/01/24)
-					- Beacons can cause damage from outside buildings.
-					- Mechs plasma cannon resistance increased.
-					- Plasma cannon decay can disarm mines.
-					- Mine damage is not affected by armor type.
-					- C4 mines and grenades now does mine damage type.
-					- Cryo archer (former chrono) cost less 100.
-					- Cryo Bow is dropable.
-					- Credits per tib refined raised for the team.
-					- Titan weapons are now improved to be a demolisher mech.
-					- Team boost is kept when being promoted.
-					- Cryo resistance is immune to ice slow.
-					- Non class cryobow charge and reload slower.
-					- Cryo bow can hurt the user if you hit a wall too close.
-					- You gain less hp per rank. (zeta_rankmode 1)
-					- Mastodon stomp range was reworked.
-					- Firepower upgraded dont affect mines anymore.
-					- Mines does not explode on its own team while being disarmed.
-					- Madcat Wont hurt himself or team building anymore.
-					- Wolverine pickup had its scale fixed.
-					- Menus now properly calculate the discount.
-					- Fixed crates duplicated announcers and improved them.
-					- New time warp crate comes to replace fatigue as bad crate.
-					- Harvesters cannot commit suicide with tiberium now.
-					- Beacons being disarmed too fast with remover gun.
-					- Plasma cannon now cause energy based damage only.
-					- Plasma rifle causing wrong damage type.
-					- Ammo regens now properly regen karasawa and cryobow ammo.
-					- Adjusted grenade launcher firing when close to walls.
-					- Added changelog in game.
-					- Ice type damage included.
-					- Ice armor weakness is only bullets.
-					- Zandronum bots can choose more classes.
-					- Added debug map.
-					- Moon gravity crate was completely reworked.
-					- Mechs gravity was increased by 75%.
-					- Burning corpses does not cause special type damage anymore.
-					- StealthKnife damage type renamed to Knife.
-					- aow23 (immortal kombat) Now have side alleys.
+For older changelogs, please refer to old 2.3 releases or the GitHub repository.
+	Version r260129 (2026/01/29)
+		- Major rework of core scripts — all maps require adjustments.
+		- Support for legacy/old maps has been completely removed.
+		- Base Miracle now heals all buildings and add-ons.
+		- Base Crasher now converts some of the damage dealt into energy.
+		- Max energy cap was increased by 10k, while the starting energy remains at 50k.
+		- Mechs now give XP and Credits on death based on their weight.
+		- Players can now properly receive credit rewards while dead.
+		- Fixed occurrences of bodies disappearing on energy-type deaths.
+		- Fixed repair healing rates when destroyed, for both allied and enemy teams.
+		- Moon gravity crate weight reduced to the minimum possible chance (3 -> 1).
+		- Mech discounts are now shown directly on the main price.
+		- Obelisk can no longer be obstructed by util trash or mines at its eye source.
+		- Caches are now forced to spawn even after clearing util objects at their source.
+		- Failed caches and add-ons now properly refund players when they fail.
+		- Add-ons now update correctly on creation, preventing visual HP overflow.
+		- Each subsequent credit bonus has been increased by 50.
+		- Credit bonus crates now scale with map time and grant 50% of that value to teammates.
+		- This changelog is now toggleable (but not this .txt one ;P).
+		- Spot feature can no longer be spammed to prevent exploitative behavior.
+		- Repair Factory now repairs global caches while alive when built via util.
+		- Scripted marines have been reworked and fixed.
+		- Reduced CPU and bandwidth usage while repairing buildings, if that matters.
 
 ===========================================================================================================================================================
-* What is new about the tiberium system *
+* About the tiberium system *
 
 		Tiberium now reward players who don't die and also don't give to your team an absurd amount of credits.
 		Continuously harvesting without dying increase the credits and experience.
-		Your team does not gain a fixed amount when a tiberium is refined, now the value given to the team is divided equally among all team members, up to a minimum value if the value is too low, your own bonus increases this value as well.
+		Your team does not gain a fixed amount when a tiberium is refined, now the value given to the team is divided equally among all team members, up to
+		a minimum value if the value is too low, your own bonus increases this value as well.
 		Also resigning your class don't take away your bonus, so you can freely switch from harvest to adv harvest without loss.
 
 ===========================================================================================================================================================
