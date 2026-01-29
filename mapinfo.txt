@@ -1,21 +1,32 @@
 clearepisodes
 clearskills
 
-defaultmap {
+defaultmap
+{
 	allowrespawn
 	smoothlighting
 	clipmidtextures
 }
 
-episode aow01 {
+episode aow01
+{
 	name = "A New War"
 }
 
-map aow01 "Red Zone" {
+map aow01 "Red Zone"
+{
 	next = "aow02"
 	sky1 = "stsky2"
 	music = "d_aow01"
 	levelnum = 1
+}
+
+map aow02 "Barrens"
+{
+	next = "aow03"
+	sky1 = "stsky2"
+	music = "d_aow02"
+	levelnum = 2
 }
 
 skill Normal {
