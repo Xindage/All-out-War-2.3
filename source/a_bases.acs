@@ -133,7 +133,7 @@ script SC_STRUCTUREFALL (int what, int team)
 	ACS_ExecuteAlways			(SC_SFSPECIAL, 0, what, team);
 	Thing_Destroy				(MainTIDs[team][what],0);
 	Thing_Destroy				(BTOsTIDs[team][what],0);
-	AwardBuildingDestruction	(team);
+	AwardBuildingDestruction	(!team);
 	AwardBuildingDamage			(what, team);
 	SYNC_UpdateBuildingHealth	(what, team);
 	delay(40); // It's 40 tics to the terminals finish its death sequence.
@@ -869,9 +869,8 @@ script SC_STRUCTUREBTODAMAGE (int tid, int damage) {
 }
 
 // =============================================================================
-function void AwardBuildingDestruction (int team) {
-	// [Dusk] Is keeping the below block still a good idea?
-	int activator = ActivatorTID();
+function void AwardBuildingDestruction (int team)
+{
 	for (int k = 0; k < MAXPLAYERS; k++) {
 		if (PlayerInGame(k) && GetPlayerInfo(k,PLAYERINFO_TEAM) == Team) {
 			SetActivator(3800+k);

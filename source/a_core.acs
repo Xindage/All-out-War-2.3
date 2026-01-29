@@ -462,10 +462,11 @@ function void InitPlayer (void) {
 
 // =============================================================================
 // [Dusk] This script checks for the game-over condition and ends the game if so.
-script SC_GameOver (int team) {
+// [Xindage] I suffered to find what was going on so i renamed the var to the intended value
+script SC_GameOver (int winningTeam) {
 	SetActivator (-1);
 	
-	if (CalcBaseLeft (!team))
+	if (CalcBaseLeft (!winningTeam))
 		terminate;
 	
 	// No buildings left standing, thus the game is over.
@@ -474,7 +475,7 @@ script SC_GameOver (int team) {
 	
 	// Give the end-of-game points to the winning team.
 	// This ensures that the correct team actually wins.
-	int winpoints = GetTeamProperty (!team, TPROP_PointCount) - GetTeamProperty (team, TPROP_PointCount);
+	int winpoints = GetTeamProperty (!winningTeam, TPROP_PointCount) - GetTeamProperty (winningTeam, TPROP_PointCount);
 	if (winpoints < 0) // Don't let it be negative.
 		winpoints = 0;
 	
@@ -484,9 +485,9 @@ script SC_GameOver (int team) {
 	// it could be seen as a bug (there's actually a ticket on the tracker
 	// about this at the time of this writing) so I'm dynamically setting the
 	// points so that the winning team has just about enough score to reach it.
-	int pointlimit = GetTeamProperty (team, TPROP_PointCount) + winpoints;
+	int pointlimit = GetTeamProperty (winningTeam, TPROP_PointCount) + winpoints;
 	ConsoleCommand (strparam (s:"pointlimit ", d:pointlimit));
 	
 	// Give the final points to the winning team. This line ends the game.
-	Team_GivePoints (team, winpoints, false);
+	Team_GivePoints (winningTeam, winpoints, false);
 }
