@@ -46,7 +46,7 @@ if ! acc source/aow2scrp.acs acs/aow2scrp.o; then
     exit 1
 fi
 echo "ACS source was compiled successfully!"
-zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt keyconf.txt changelog_gaturra.txt gldefs.txt language.txt loadacs.txt teaminfo.txt acs/* source/* actors/* credits/*
+zip -Ar0 OUTPUT/aow2.3_code_r$vardate.pk3 cvarinfo.txt decorate.txt gameinfo.txt keyconf.txt main_changelog.txt gldefs.txt language.txt loadacs.txt teaminfo.txt acs/* source/* actors/* credits/*
 
 # Generate maps pk3.
 echo "Generating maps package."
