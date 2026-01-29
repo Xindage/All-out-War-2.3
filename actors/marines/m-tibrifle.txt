@@ -25,7 +25,7 @@ Actor BlueTiberiumRifleman : MBase // Marine wielding Tiberium Rifle
 		MGMR A 0 // Dummy frame needed.
 		MGMR A 0 A_GiveInventory("IsBlue", 1)
 		MGMR A 0 A_ChangeFlag("Friendly", 0)
-		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM)) // SC_SETAIARMORGRADE must be used by ai marines.
+		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM) // SC_SETAIARMORGRADE must be used by ai marines.
 		MGMR A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
 		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
 		Stop
@@ -275,7 +275,7 @@ Actor BlueTiberiumRifleman : MBase // Marine wielding Tiberium Rifle
 //-----------------------------------------------------------------------
 
 	Refirecheck1: // No need to check team here, clear target only in reload and calls missile state.
-		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "Reload")
+		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "SLReload")
 //		MGMR E 0 A_Jump (256, 3) // Unload everything before giving up on stealths.
 //		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
 //		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
@@ -307,7 +307,7 @@ Actor BlueTiberiumRifleman : MBase // Marine wielding Tiberium Rifle
 		MGMR E 0 ThrustThing (angle*256/360-192, 1, 0, 0)
 		// 6 Frames Delay between all projectiles.
 		MGMR E 0 A_MonsterRefire (0, "SLReload")
-		MGMR E 0 A_Jump (256, "Refirecheck2")
+		MGMR E 0 A_Jump (256, "Refirecheck1")
 		stop
 	SLReload:
 		MGMR E 0 A_FaceTarget
@@ -364,7 +364,7 @@ Actor BlueTiberiumRifleman : MBase // Marine wielding Tiberium Rifle
 		Stop
 
 	Refirecheck2: // No need to check team here, clear target only in reload and calls missile state.
-		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "Reload")
+		MGMR E 0 A_JumpIfInventory("TE21CallAmmoAI", 6, "SRReload")
 //		MGMR E 0 A_Jump (256, 3) // Unload everything before giving up on stealths.
 //		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
 //		MGMR E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
@@ -506,7 +506,7 @@ Actor RedTiberiumRifleman : BlueTiberiumRifleman
 		MGMR A 0 // Dummy frame needed.
 		MGMR A 0 A_GiveInventory("IsRed", 1)
 		MGMR A 0 A_ChangeFlag("Friendly", 0)
-		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM)) // SC_SETAIARMORGRADE must be used by ai marines.
+		MGMR A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_CHEM) // SC_SETAIARMORGRADE must be used by ai marines.
 		MGMR A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
 		TNT1 A 0 A_Jump (256, "EnablePushablePreIdle")
 		Stop
