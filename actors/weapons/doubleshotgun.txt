@@ -70,7 +70,7 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		SHT2 A 0 Radius_Quake(5,4,0,1,0)
 		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 		TNT1 A 0 A_TakeInventory("SSGShell",2)
-        TNT1 A 0 A_FireBullets (15.7, 11.7, 20, 5, "HandgunPuff", 1, 750)
+        TNT1 A 0 A_FireBullets (15.7, 11.7, 20, 5, "HandgunPuff", 1, 760)
         SG2F AB 2 BRIGHT
 	    SHT2 BCD 1
 	    SHT2 A 2 A_CheckReload
@@ -90,7 +90,7 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		TNT1 A 0 Radius_Quake(3,4,0,1,0)
 		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 		TNT1 A 0 A_TakeInventory("SSGShell",1)
-		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1000)
+		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1024)
 		SG2F F 2 bright A_Light2
 		TNT1 A 0 A_Light0
 		SHT2 BCD 1
@@ -101,7 +101,7 @@ actor DoubleShotgun : AOWWeapon replaces SuperShotgun 21086 {
 		TNT1 A 0 Radius_Quake(3,4,0,1,0)
 		TNT1 A 0 A_PlaySound ("weapons/sshotf", CHAN_WEAPON)
 		TNT1 A 0 A_TakeInventory("SSGShell",1)
-		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1000)
+		TNT1 A 0 Bright A_FireBullets (7.4, 5.4, 8, 5, "HandgunPuff", 1, 1024)
 		SG2F D 2 bright A_Light2
 		TNT1 A 0 A_Light0
 		SHT2 BCD 1
