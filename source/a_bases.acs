@@ -86,22 +86,22 @@ script SC_STRUCTUREFALL (int what, int team)
 		case BUILDING_BARRACKS:
 			GotBarracks[team] = false;
 			name = "Barracks";
-			CallEvent (ACTION_DESTROY_BARRACKS, TEAM_BLUE);
+			CallEvent (ACTION_DESTROY_BARRACKS, team);
 			break;
 		case BUILDING_REFINERY:
 			GotRefinery[team] = false;
 			name = "Refinery";
-			CallEvent (ACTION_DESTROY_REFINERY, TEAM_BLUE);
+			CallEvent (ACTION_DESTROY_REFINERY, team);
 			break;
 		case BUILDING_RESCENTRE:
 			GotResearch[team] = false;
 			name = "Research Centre";
-			CallEvent (ACTION_DESTROY_PLANT, TEAM_BLUE);
+			CallEvent (ACTION_DESTROY_PLANT, team);
 			break;
 		case BUILDING_FACTORY:
 			GotFactory[team] = false;
 			name = "War Factory";
-			CallEvent (ACTION_DESTROY_FACTORY, TEAM_BLUE);
+			CallEvent (ACTION_DESTROY_FACTORY, team);
 			break;
 		case BUILDING_OBELISK:
 			GotObelisk[team] = false;
@@ -120,7 +120,7 @@ script SC_STRUCTUREFALL (int what, int team)
 	if (what == BUILDING_REPAIR)	// Repair faility only.
 	{
 		SetFont ("SMALLFONT");
-		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd !"), true);
+		IntelMessage (strparam (n:0, s:"\cJ has destroyed\cJ\n", s:"\cdthe ", s:TeamColors[team + 2], s:TeamNames[team], s:" ", s:name, s:" \cd!"), true);
 	}
 	else // All others
 	{
