@@ -10,6 +10,11 @@ Actor SSGFireCooldown : Powerup
 	Powerup.Duration 59
 }
 
+Actor SSGAltFireCooldown : Powerup
+{
+	Powerup.Duration 8
+}
+
 Actor TiberiumRifleCooldown : Powerup
 {
 	Powerup.Duration 15
