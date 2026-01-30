@@ -247,6 +247,7 @@ actor Reload-ShockCannon : Inventory {}
 
 actor ShockCannonBall {
 	PROJECTILE
+	+THRUGHOST
 	radius 8
 	height 8
 	speed 50
@@ -418,6 +419,7 @@ actor ShockCannonTrail {
 	speed 2
 	damage 0
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	renderstyle Add
 	alpha 0.5

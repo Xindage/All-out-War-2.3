@@ -163,6 +163,7 @@ actor PrecisionTurretProjectile : FastProjectile
   Speed 550
   Damage (18)
   Projectile
+  +THRUGHOST
   -RANDOMIZE
   Obituary "%o died."
   DamageType "Rifle"

@@ -324,6 +324,7 @@ actor A14RedTowerFX 27500 {
 
 actor A14RedTowerFX2 {
 	PROJECTILE
+	+THRUGHOST
 	+CLIENTSIDEONLY
 	+FORCEXYBILLBOARD
 	renderstyle add

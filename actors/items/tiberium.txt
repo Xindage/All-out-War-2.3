@@ -74,6 +74,7 @@ actor TiberiumCrystal : CustomInventory {
 
 actor TiberiumCrystalThrown {
 	PROJECTILE
+	+THRUGHOST
 	-NOGRAVITY
 	+GHOST
 	+THRUGHOST

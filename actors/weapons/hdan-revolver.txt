@@ -231,6 +231,7 @@ Actor HProjectile : FastProjectile
   Speed 220
   Decal "Bulletchip"
   Projectile
+  +THRUGHOST
   +BLOODSPLATTER
   +THRUSPECIES
   Species "Player"

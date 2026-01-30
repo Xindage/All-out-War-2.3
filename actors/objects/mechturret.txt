@@ -155,6 +155,7 @@ actor MechTurretProjectile : FastProjectile {
 	Speed 250
 	Damage (12)
 	Projectile
+	+THRUGHOST
 	-RANDOMIZE
 	obituary "%o was owned by a \cgRed \c-anti-Mech turret."
 	DamageType "AntiArmor"

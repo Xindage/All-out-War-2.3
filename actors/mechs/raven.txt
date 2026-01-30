@@ -193,6 +193,7 @@ actor RavenAC2 : FastProjectile {
 	Speed 250
 	Damage (20)
 	Projectile
+	+THRUGHOST
 	-RANDOMIZE
 	Obituary "$OB_RAVEN"
 	DamageType "Rifle"

@@ -294,6 +294,7 @@ actor Titan-FlamerAmmo : Ammo {
 
 actor TitanShell {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	-NOGRAVITY
 	radius 14

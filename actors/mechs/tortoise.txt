@@ -357,6 +357,7 @@ actor TortoisePlasmaShot
 	SeeSound "Tortoise/Blaster"	
     Deathsound "Tortoise/BlasterExp"
 	PROJECTILE
+	+THRUGHOST
 	obituary "$OB_TORTOISE"
 	speed 45
 	renderstyle add
@@ -389,6 +390,7 @@ Actor ImpactGrenade1
     Gravity 0.3
     Scale 1.0
     Projectile
+    +THRUGHOST
     -NoGravity
     DeathSound "Tortoise/GrenadeHit"
 	damagetype "Explosion"	

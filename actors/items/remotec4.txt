@@ -152,6 +152,7 @@ actor RemoteC4 : AOWWeapon {
 actor RemoteC4Thrown {
 	PROJECTILE
 	-NOGRAVITY
+	+THRUGHOST
 	Radius 6
 	Height 8
 	Speed 30

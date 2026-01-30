@@ -99,6 +99,7 @@ actor BurnCount : Inventory {inventory.maxamount 12}
 
 actor FlameFX {
 	PROJECTILE
+	+THRUGHOST
 	+CLIENTSIDEONLY
 	+FORCEXYBILLBOARD
 	-RANDOMIZE
@@ -215,6 +216,7 @@ actor ChemicalCorpseReduced : ChemicalCorpse {
 
 actor ChemicalFlame {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	+CLIENTSIDEONLY
 	+FORCEXYBILLBOARD
@@ -245,6 +247,7 @@ actor ChemicalFlameSmall : ChemicalFlame {
 	renderstyle Add
 	alpha 0.75
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	Scale 0.4
 	states {

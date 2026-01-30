@@ -380,6 +380,7 @@ Actor IonFx {
 	+NOINTERACTION
 	+NOGRAVITY
 	+FORCEXYBILLBOARD
+	+THRUGHOST
 	Renderstyle Add
 	alpha 0.2
 	ReactionTime 10

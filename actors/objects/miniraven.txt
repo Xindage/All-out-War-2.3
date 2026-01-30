@@ -353,6 +353,7 @@ actor MiniRaven-LRM {
 	Speed 20
 	Damage (12)
 	Projectile
+	+THRUGHOST
 	-RANDOMIZE
 	+ROCKETTRAIL
 	+SEEKERMISSILE

@@ -9,6 +9,7 @@ actor Giblet {
 	+DOOMBOUNCE
 	+BOUNCEONACTORS
 	+CLIENTSIDEONLY
+	+THRUGHOST
 	Mass 50
 	Scale 0.7
 	gravity 0.5

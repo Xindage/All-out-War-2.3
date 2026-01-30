@@ -170,6 +170,7 @@ actor OrcaRocket {
 	PROJECTILE
 	-RANDOMIZE
 	+ROCKETTRAIL
+	+THRUGHOST
 	Radius 11
 	Height 8
 	obituary "$OB_ORCA"
@@ -269,6 +270,7 @@ actor EjectedOrca {
 	PROJECTILE
 	-NOGRAVITY
 	+NOCLIP
+	+THRUGHOST
 	radius 58
 	height 128
 	damage (300)

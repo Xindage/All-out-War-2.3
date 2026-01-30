@@ -6,6 +6,7 @@ actor FlameShot {
 	renderstyle Add
 	alpha 0.66
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	Scale 0.6
 	DamageType "Fire"
@@ -46,6 +47,7 @@ actor FlameShotDebris {
 actor FlameDebrisFX {
 	PROJECTILE
 	-RANDOMIZE
+	+THRUGHOST
 	+CLIENTSIDEONLY
 	-ACTIVATEPCROSS
 	-ACTIVATEIMPACT

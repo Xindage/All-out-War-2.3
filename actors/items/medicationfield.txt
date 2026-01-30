@@ -32,6 +32,7 @@ actor MedicationFieldCount : Inventory {
 // Medication field pad being casted to the field
 actor MedicationFieldThrown {
 	PROJECTILE
+	+THRUGHOST
 	+DOOMBOUNCE
 	-NOGRAVITY
 	Speed 15

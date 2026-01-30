@@ -339,6 +339,7 @@ actor MiniNuke {
 	-RANDOMIZE
 	-NOGRAVITY
 	+FULLVOLDEATH
+	+THRUGHOST
 	Radius 11
 	Height 8
 	Speed 40

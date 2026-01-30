@@ -46,6 +46,7 @@ actor MechDeathJunk {
 	PROJECTILE
 	-RANDOMIZE
 	-NOGRAVITY
+	+THRUGHOST
 	Radius 11
 	Height 8
 	Speed 1
@@ -182,6 +183,7 @@ actor LongRangeMissile {
 	PROJECTILE
 	-RANDOMIZE
 	+ROCKETTRAIL
+	+THRUGHOST
 	radius 11
 	height 8
 	speed 45

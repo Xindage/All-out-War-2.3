@@ -170,6 +170,7 @@ actor Lavaball1
   +FORCEXYBILLBOARD
   -FORCEYBILLBOARD
   -NOGRAVITY
+  +THRUGHOST
   damagetype "Fire"
   gravity 0.3
   alpha 0.75
@@ -199,6 +200,7 @@ actor Lavaball2 : Lavaball1 {
 
 actor Airstrike {
 	PROJECTILE
+	+THRUGHOST
 	+CEILINGHUGGER
 	Speed 40
 	Obituary "$OB_AIRSTRIKE"
@@ -216,6 +218,7 @@ actor Airstrike {
 actor AirstrikeBomb {
 	PROJECTILE
 	-NOGRAVITY
+	+THRUGHOST
 	obituary "$OB_AIRSTRIKE"
 	radius 11
 	height 8
