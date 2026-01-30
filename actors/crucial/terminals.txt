@@ -9,9 +9,10 @@ actor BaseTerminal {
 	+QUICKTORETALIATE
 	+NEVERRESPAWN
 	+GHOST
+	+NOGRAVITY
 	//$Category Buildings
 	Radius 16
-	Height 120
+	Height 48
 	Mass 0x7FFFFFFF
 	Speed 100 // [Dusk] used for base hud health percentages! DON'T TOUCH IT
 	Damagetype "Explosion"
