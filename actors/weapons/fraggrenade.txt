@@ -189,6 +189,7 @@ actor FragGrenadePower : Ammo {
 // =============================================================================
 actor FragGrenadeThrown {
 	PROJECTILE
+	+THRUGHOST
 	-NOGRAVITY
 	+RANDOMIZE
 	+HEXENBOUNCE
@@ -231,6 +232,7 @@ actor FragGrenadeShrapnel {
 	+RIPPER
 	+BLOODSPLATTER
 	+HEXENBOUNCE
+	+THRUGHOST
 	Radius 10
 	Height 8
 	Damage (4)

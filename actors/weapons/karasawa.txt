@@ -619,6 +619,7 @@ ACTOR Karasawa : AOWWeapon
 Actor KsawBolt
 {
     Projectile
+    +THRUGHOST
     +Ripper
     +BloodSplatter
     +StrifeDamage
@@ -675,6 +676,7 @@ Actor KsawBoltBlueWeak : KsawBoltBlue {bouncecount 3}
 Actor KsawBolt2
 {
    Projectile
+   +THRUGHOST
    +Ripper
    +BloodSplatter
    +StrifeDamage

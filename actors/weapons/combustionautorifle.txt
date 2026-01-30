@@ -236,6 +236,7 @@ actor FA21Burst6 : Ammo {
 actor CombustionRound : FastProjectile {
 	Obituary "$OB_COMBAUTORIFLE"
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	radius 10
 	height 6

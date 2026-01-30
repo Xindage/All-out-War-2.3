@@ -321,6 +321,7 @@ actor Flamer : AOWWeapon 21047 {
 actor FlameThrowerFire {
 	PROJECTILE
 	+FORCEXYBILLBOARD
+	+THRUGHOST
 	obituary "$OB_FLAMER"
 	renderstyle Add
 	alpha 0.5
@@ -348,6 +349,7 @@ actor FlameThrowerFire {
 
 actor FlameThrowerFireRemains {
 	PROJECTILE
+	+THRUGHOST
 	+RANDOMIZE
 	+CLIENTSIDEONLY
 	+FORCEXYBILLBOARD
@@ -374,6 +376,7 @@ actor FlameThrowerFireRemains {
 // Phosphorus grenade
 actor PhosphorusGrenade {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	-NOGRAVITY
 	Obituary "$OB_FLAMER_GRENADE"

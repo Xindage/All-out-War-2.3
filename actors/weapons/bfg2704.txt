@@ -122,6 +122,7 @@ Actor BFGBetaShot1 : PlasmaBall
 	damagetype "Energy"
 	seesound "imp/attack"
 	+HERETICBOUNCE
+	+THRUGHOST
 	bouncecount 256
 	bouncefactor 1.0
 	States

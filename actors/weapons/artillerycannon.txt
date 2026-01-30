@@ -365,6 +365,7 @@ actor ArtilleryShell {
 	PROJECTILE
 	-RANDOMIZE
 	-NOGRAVITY
+	+THRUGHOST
 	Radius 11
 	Height 8
 	Speed 75

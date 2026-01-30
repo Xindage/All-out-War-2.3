@@ -102,6 +102,7 @@ actor ChainsawThrown {
 	PROJECTILE
 	+RIPPER
 	+EXTREMEDEATH
+	+THRUGHOST
 	speed 40
 	radius 20
 	height 20

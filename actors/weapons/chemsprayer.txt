@@ -113,6 +113,7 @@ actor ChemicalSprayer : AOWWeapon 21066 {
 actor ChemicalShot {
 	PROJECTILE
 	+FORCEXYBILLBOARD
+	+THRUGHOST
 	Obituary "$OB_CHEMSPRAYER"
 	Renderstyle Add
 	Alpha 0.9
@@ -197,6 +198,7 @@ actor ChemicalGrenade {
 	PROJECTILE
 	-RANDOMIZE
 	-NOGRAVITY
+	+THRUGHOST
 	Gravity 0.125
 	radius 11
 	height 8
@@ -230,6 +232,7 @@ actor ChemicalShotDummy {
 	+FORCEXYBILLBOARD
 	-ACTIVATEIMPACT
 	-ACTIVATEPCROSS
+	+THRUGHOST
 	renderstyle Add
 	alpha 0.9
 	Radius 8

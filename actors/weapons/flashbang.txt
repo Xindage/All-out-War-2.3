@@ -195,6 +195,7 @@ actor FlashbangThrown {
     Speed 17	
     Damage (0)	
     PROJECTILE
+    +THRUGHOST
     -NOGRAVITY
     +HEXENBOUNCE
     +NOEXTREMEDEATH

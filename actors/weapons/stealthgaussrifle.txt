@@ -1010,6 +1010,7 @@ ACTOR RailgunImpactBlue : RailgunImpact
 ACTOR RailgunImpactExplode
 {
 	PROJECTILE
+	+THRUGHOST
 	+Missile
 	+NOCLIP
 	Radius 2
@@ -1042,6 +1043,7 @@ ACTOR RailgunImpactExplode2
     Renderstyle Add
     Alpha 0.75
 	PROJECTILE
+	+THRUGHOST
 	+Missile
     +THRUACTORS
     +NODAMAGETHRUST

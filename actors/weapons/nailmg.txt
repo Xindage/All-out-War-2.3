@@ -161,6 +161,7 @@ Actor "Nail-Machine Gun" : AOWWeapon
 Actor MGNail
 {
   Projectile
+  +THRUGHOST
   Radius 3
   Height 3
   Speed 44
@@ -215,6 +216,7 @@ Actor NailBombBig {
 	SEESOUND "Weapons/NBBounce"
 	DEATHSOUND "Weapons/NailBombExp"
 	PROJECTILE
+	+THRUGHOST
 	-SHOOTABLE
 	+DOOMBOUNCE
 	+RANDOMIZE
@@ -270,6 +272,7 @@ Actor NailBomb {
 	SEESOUND "Weapons/NBBounce"
 	DEATHSOUND "Weapons/NailBombExp"
 	PROJECTILE
+	+THRUGHOST
 	-SHOOTABLE
 	+DOOMBOUNCE
 	+RANDOMIZE
@@ -312,6 +315,7 @@ Actor NailBombBlue : NailBomb {
 Actor Nail1
 {
         Projectile
+        +THRUGHOST
 	    Obituary "$OB_NAILGRENADE"
         Radius 5
         Height 8

@@ -309,6 +309,7 @@ actor TE21Burst6 : Ammo {
 
 actor TiberiumDart : FastProjectile {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	radius 13
 	height 6

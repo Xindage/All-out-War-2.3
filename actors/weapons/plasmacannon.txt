@@ -203,6 +203,7 @@ actor PlasmaCannon : AOWWeapon {
 // Main projectile
 actor PlasmaCannonBall {
 	PROJECTILE
+	+THRUGHOST
 	+FORCEXYBILLBOARD
 	+EXTREMEDEATH
 	Radius 13

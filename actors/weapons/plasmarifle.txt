@@ -258,6 +258,7 @@ Actor PRScriptInitiated : Inventory
 
 actor PlasmaShotBlue {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	Radius 12
 	Height 8

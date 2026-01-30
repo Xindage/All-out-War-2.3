@@ -319,6 +319,7 @@ actor VoltageDecay { //Now with extra hi-res funk!
 
 actor VoltageSpark {
 	PROJECTILE
+	+THRUGHOST
 	+CLIENTSIDEONLY
 	+NOINTERACTION
 	+FORCEXYBILLBOARD
@@ -512,6 +513,7 @@ Actor TeslaExtra
 	+RIPPER
 	+BLOODLESSIMPACT
 	+CLIENTSIDEONLY
+	+THRUGHOST
 	Speed 0
 	Radius 1
 	Height 1
@@ -536,6 +538,7 @@ Actor Teslatail
 {
 	Projectile
 	Damage 0
+	+THRUGHOST
 	+RIPPER
 	+BLOODLESSIMPACT
 	+NOGRAVITY

@@ -588,6 +588,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 
 actor HeavyMissile {
 	PROJECTILE
+	+THRUGHOST
 	-RANDOMIZE
 	Radius 11
 	Height 8

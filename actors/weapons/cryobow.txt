@@ -171,6 +171,7 @@ actor CryoBow : AOWWeapon {
 // never execute the Spawn state. Why?
 actor ChronoBoltBase /* : FastProjectile */ {
 	PROJECTILE
+	+THRUGHOST
 	+FORCERADIUSDMG
 	Radius 4
 	Height 8
