@@ -29,6 +29,7 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Repair Factory now repairs global caches while alive when built via util.
 		- Scripted marines have been reworked and fixed.
 		- Reduced CPU and bandwidth usage while repairing buildings, if that matters.
+		- Projetiles does not collide with building hitboxes.
 
 ===========================================================================================================================================================
 * About the tiberium system *
