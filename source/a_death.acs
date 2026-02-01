@@ -99,40 +99,43 @@ script SC_DEATH DEATH
 		ThingSound (3800 + killer_i, "terrorist/activate", 127);
 	}
 	
-	bool IsInBase = SC_DISTCHECK(0, PlayerTeam(), MAX_TURRET_DISTANCE, 0);
-	// Check if the death happens in your own base, we dont want to defensive use of these class to be an issue.
-	if (!IsInBase)
+	if (!intHolder[i_SuddenDeath]) // No need to calculate things in sudden death.
 	{
-		// Mech in base has reduced effect as can be used in defense, free for light
-		if (VictimWasMech) threat_level -= 2;
-		// Calculate the threat level of the killed player
-		if (checkInventory("TimedC4Count") >= 2) threat_level += checkInventory("TimedC4Count")-1;
-		if (checkInventory("IsStealth")) threat_level += 1;
-		if (checkInventory("RepairGun") || checkInventory("HealGun") || checkInventory("BombSquadGun")) threat_level += 1;
-		if (checkInventory("PlasmaCannon")) threat_level += 2;
-		if (checkInventory("UtilityGun")) threat_level += 2;
-		if (checkInventory("TimeGun")) threat_level += 2;
-		if (checkInventory("RemoteC4")) threat_level += 3;
-		if (checkInventory("BombPack")) threat_level += 3;
-		if (checkInventory("IsKamikaze")) threat_level += 3;
-	}
-	// Nuke is still an offensive only item.
-	if (checkInventory("IonCannonBeacon") || checkInventory("NuclearStrikeBeacon")) threat_level += 3;
-	
-	// =====
-	// Battery Charge award.
-	// Check if the death happens in the enemy base area
-	bool IsInEnemyBase = SC_DISTCHECK(0, !PlayerTeam(), MAX_TURRET_DISTANCE/2, 0);
-	int battery_gain = 60 * threat_level;	// Base reward.
+		bool IsInBase = SC_DISTCHECK(0, PlayerTeam(), MAX_TURRET_DISTANCE, 0);
+		// Check if the death happens in your own base, we dont want to defensive use of these class to be an issue.
+		if (!IsInBase)
+		{
+			// Mech in base has reduced effect as can be used in defense, free for light
+			if (VictimWasMech) threat_level -= 2;
+			// Calculate the threat level of the killed player
+			if (checkInventory("TimedC4Count") >= 2) threat_level += checkInventory("TimedC4Count")-1;
+			if (checkInventory("IsStealth")) threat_level += 1;
+			if (checkInventory("RepairGun") || checkInventory("HealGun") || checkInventory("BombSquadGun")) threat_level += 1;
+			if (checkInventory("PlasmaCannon")) threat_level += 2;
+			if (checkInventory("UtilityGun")) threat_level += 2;
+			if (checkInventory("TimeGun")) threat_level += 2;
+			if (checkInventory("RemoteC4")) threat_level += 3;
+			if (checkInventory("BombPack")) threat_level += 3;
+			if (checkInventory("IsKamikaze")) threat_level += 3;
+		}
+		// Nuke is still an offensive only item.
+		if (checkInventory("IonCannonBeacon") || checkInventory("NuclearStrikeBeacon")) threat_level += 3;
 		
-	if (IsInEnemyBase)
-		battery_gain = (battery_gain * 3) / 2;	// Defensive kill, 50% bonus energy.
-		
-	if (battery_gain > 0)
-	{
-		RepairCharges[!PlayerTeam()] += battery_gain;
-		if (RepairCharges[!PlayerTeam()] > BATTERY_MAX)
-			RepairCharges[!PlayerTeam()] = BATTERY_MAX;
+		// =====
+		// Battery Charge award.
+		// Check if the death happens in the enemy base area
+		bool IsInEnemyBase = SC_DISTCHECK(0, !PlayerTeam(), MAX_TURRET_DISTANCE/2, 0);
+		int battery_gain = 60 * threat_level;	// Base reward.
+			
+		if (IsInEnemyBase)
+			battery_gain = (battery_gain * 3) / 2;	// Defensive kill, 50% bonus energy.
+			
+		if (battery_gain > 0)
+		{
+			RepairCharges[!PlayerTeam()] += battery_gain;
+			if (RepairCharges[!PlayerTeam()] > BATTERY_MAX)
+				RepairCharges[!PlayerTeam()] = BATTERY_MAX;
+		}
 	}
 	
 	// =========================================================================
