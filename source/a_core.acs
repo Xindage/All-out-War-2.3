@@ -29,7 +29,7 @@ script SC_GAMEINIT OPEN {
 	
 	intHolder[i_StartingTickets] = GetCVAR ("zeta_tickets");
 	
-	SetLineSpecial (159, ACS_Execute, 342);
+//	SetLineSpecial (159, ACS_Execute, 342);
 	
 	// Seems like the initial speeds for buildings are bogus. Correct them!
 	SYNC_UpdateAllBuildings ();
