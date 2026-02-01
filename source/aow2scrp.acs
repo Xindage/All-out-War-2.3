@@ -109,6 +109,18 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ----
 #define MAX_BUILDINGS 11
 
+// ============================================================================
+// Building teleport identifiers
+#define B_BAR   0
+#define B_REF   1
+#define B_RES   2
+#define B_WRF   3
+#define B_OBE   4
+#define B_REP   5
+#define B_TOW   6
+// ----
+#define B_MAX   7
+
 // [Xindage] Well sorted ID.
 // ============================================================================
 // Thing IDs
@@ -143,6 +155,23 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define TID_FACBTOS_RED			1214
 #define TID_OBEBTOS_RED			1215
 #define TID_REPBTOS_RED			1216
+// Teleport IDS
+#define TELE_BAR_BLUE			1130	// Blue Destinations
+#define TELE_REF_BLUE			1131
+#define TELE_RES_BLUE			1132
+#define TELE_WRF_BLUE			1133
+#define TELE_OBE_BLUE			1134
+#define TELE_REP_BLUE			1135
+#define TELE_TOW_BLUE			1136	// Tower
+#define TELE_FOR_BLUE			1137	// Foward-spawn / Fail-safe option
+#define TELE_BAR_RED			1230	// Red Destinations
+#define TELE_REF_RED			1231
+#define TELE_RES_RED			1232
+#define TELE_WRF_RED			1233
+#define TELE_OBE_RED			1234
+#define TELE_REP_RED			1235
+#define TELE_TOW_RED			1236	// Tower
+#define TELE_FOR_RED			1237	// Foward-spawn / Fail-safe option
 
 // TODO: move these to 1000+ range
 #define TID_TIBERIUM 402			//1000

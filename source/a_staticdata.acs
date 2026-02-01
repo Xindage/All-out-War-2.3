@@ -84,6 +84,25 @@ int SDVulnerabilityArray[20] = {
 	TID_OBELISK_BLUE,TID_OBEBTOS_BLUE,TID_OBELISK_RED,TID_OBEBTOS_RED
 };
 
+// Dinamic teleport array
+int TeleBlue[B_MAX] = {
+    TELE_BAR_BLUE,
+    TELE_REF_BLUE,
+    TELE_RES_BLUE,
+    TELE_WRF_BLUE,
+    TELE_OBE_BLUE,
+    TELE_REP_BLUE,
+    TELE_TOW_BLUE};
+
+int TeleRed[B_MAX] = {
+    TELE_BAR_RED,
+    TELE_REF_RED,
+    TELE_RES_RED,
+    TELE_WRF_RED,
+    TELE_OBE_RED,
+    TELE_REP_RED,
+    TELE_TOW_RED};
+
 int IsMainBuilding[MAX_BUILDINGS] =
 {
 	true,  // Barracks

@@ -1040,7 +1040,7 @@ Script "CRATE_TimeCopWarp" (void)
 
 	// Start the teleport
 	SpawnSpotForced ("TimeGunFlareCluster", 0, 0, 0);
-	ACS_ExecuteAlways (94, 0, team, 0, 0);
+	ACS_ExecuteAlways (94, 0, !team, 0, 0);
 	delay (3);
 	if (GetHealth() < 1) terminate;
 	// A_SetTranslucent (1.0, 0)

@@ -480,7 +480,7 @@ function int SetClass (int id, int scflags) {
 	
 	// Send the player to field unless undesired
 	if (!(scflags & SCF_NOTELEPORT)) {
-		ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, 1-PlayerTeam ());
+		ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, PlayerTeam ());
 		
 		// Don't give spawn invul if zeta_nospawninvul is set.
 		if (!GetCVar ("zeta_nospawninvul"))

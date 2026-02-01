@@ -122,7 +122,7 @@ script 90 (void) {
 }
 
 // Teleport the player to base.
-script SC_DOTELEPORTTOFIELD (int team) 
+/*script SC_DOTELEPORTTOFIELD (int team) 
 {
 	int i;
 	bool failed = true;
@@ -148,4 +148,86 @@ script SC_DOTELEPORTTOFIELD (int team)
 	{
 		TakeInventory ("IsInSpawnRoom", 1);
 	}
+}*/
+
+
+// [Xindage] Don't you hate when you teleport in a dead building, that solves that.
+// Early game pushes the spawn foward in the base, so every knows where you'll start.
+// Teleport back to field.
+script SC_DOTELEPORTTOFIELD (int team)
+{
+	// Early game foward teleport until FB or the first minute
+	if (Timer() < (35 * 60) && !intHolder[i_FirstBlood])
+    {
+        if (Teleport(team == TEAM_BLUE ? TELE_FOR_BLUE : TELE_FOR_RED))
+        {
+            TakeInventory("IsInSpawnRoom", 1);
+            terminate;
+        }
+		// If somehow it fails on the start, try the default back to field
+    }
+    
+	int valid[8];
+	int count = 0;
+	int i;
+	bool success = false;
+	// Default system.
+    for (i = 0; i < B_MAX; i++)
+    {
+        bool allow = false;
+		// Build the teleport pool
+        switch (i)
+        {
+            case B_BAR: allow = GotBarracks[team]; break;
+            case B_REF: allow = GotRefinery[team]; break;
+            case B_RES: allow = GotResearch[team]; break;
+            case B_WRF: allow = GotFactory[team]; break;
+            case B_OBE: allow = GotObelisk[team]; break;
+            case B_REP: allow = GotRepair[team]; break;
+
+            case B_TOW:
+                allow = (ThingCount(
+                    T_NONE,
+                    (team == TEAM_BLUE) ? TELE_TOW_BLUE : TELE_TOW_RED
+                ) > 0);
+                break;
+        }
+
+        if (allow)
+            valid[count++] =
+                (team == TEAM_BLUE) ? TeleBlue[i] : TeleRed[i];
+    }
+
+	// [Dusk] Try to teleport 10 times. This way, if one teleport destination is blocked,
+	// we'll still be able to teleport onto another.
+    for (i = 0; i < 10; i++)
+    {
+        if (count <= 0)
+            break;
+
+        if (Teleport(valid[Random(0, count - 1)]))
+        {
+            success = true;
+            break;
+        }
+    }
+    if (!success) // No valid destination? try the foward one.
+    {
+        if (Teleport(team == TEAM_BLUE ? TELE_FOR_BLUE : TELE_FOR_RED))
+        {
+            GenericError("Teleport fallback used");
+			IntelMessage ("In-field teleportation \cAfailed\cJ, fallback used.", false);
+            TakeInventory("IsInSpawnRoom", 1);
+            terminate;
+        }
+    }
+    if (!success) // Ok something really wrong is going on.
+    {
+        GenericError("In-field teleportation failed badly!");
+		Log(s:"[Error] Teleport failure for team ", d:team);
+    }
+    else
+    {
+        TakeInventory("IsInSpawnRoom", 1);
+    }
 }
