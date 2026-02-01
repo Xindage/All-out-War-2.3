@@ -29,6 +29,20 @@ map aow02 "Barrens"
 	levelnum = 2
 }
 
+map aow03 "Renegade 2030" {
+	next = "aow04"
+	music = "d_aow08"
+	sky1 = "stars"
+	levelnum = 3
+}
+
+map aow04 "Infected" {
+	next = "aow01"
+	sky1 = "sky7", 0.1
+	music = "d_aow09"
+	levelnum = 4
+}
+
 skill Normal {
 	name = "Normal"
 	damagefactor = 1.0
