@@ -1,5 +1,7 @@
 // TELEPORT BACK TO FIELD
-script 94 (int Team) {
+script SC_CHECKTELEPORTTOFIELD (void)
+{
+	if (LineSide() == LINE_BACK) terminate; // Backside cannot teleport. known issue.
 	if (!CheckInventory("HasClass")) {
 		DisplayCross();
 		SETFONT("BigFont");
@@ -10,7 +12,7 @@ script 94 (int Team) {
 	
 	TakeInventory("IsInSpawnRoom",1);
 
-	ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, Team);
+	ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, 0);
 }
 
 // RESIGN
@@ -154,11 +156,13 @@ script 90 (void) {
 // [Xindage] Don't you hate when you teleport in a dead building, that solves that.
 // Early game pushes the spawn foward in the base, so every knows where you'll start.
 // Teleport back to field.
-script SC_DOTELEPORTTOFIELD (int team)
+script SC_DOTELEPORTTOFIELD (int timecop)
 {
+	int team = !team;
 	// Early game foward teleport until FB or the first minute
 	if (Timer() < (35 * 60) && !intHolder[i_FirstBlood])
     {
+		if (timecop) team = !playerteam();
         if (Teleport(team == TEAM_BLUE ? TELE_FOR_BLUE : TELE_FOR_RED))
         {
             TakeInventory("IsInSpawnRoom", 1);

@@ -82,6 +82,7 @@ const int SC_TELENODE_TIDREQUEST = 935;
 const int SC_TELENODE_INIT = 936;
 const int SC_TELENODE_FUNCTION = 937;
 const int SC_FullRefillPack = 954;
+const int SC_DOTELEPORTTOFIELD = 961;
 const int SC_MARINE_DEATH = 968;
 const int SC_SETPITCH = 979;
 const int SC_DAMAGEOVERTIME = 974;

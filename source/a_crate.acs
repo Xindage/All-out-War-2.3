@@ -316,6 +316,7 @@ function int CheckCrate (int c) {
 			if (!random (0, 3))
 				return false;
 		return	!CheckInventory ("TimeGun") && // not if the player already has the time gun
+				!CheckInventory ("IsInSpawnRoom") && // not in spawnroom
 				!intHolder[i_SuddenDeath] && // Not in suddendeath
 				!CheckInventory ("IsMech") && // NO!
 				!CheckInventory ("IsStealth") && // this crate mess with player alpha and render mode
@@ -1019,7 +1020,6 @@ Script "CRATE_MoonGravityTimer" (void)
 Script "CRATE_TimeCopWarp" (void)
 {
 	int x;
-	int team = PlayerTeam ();
 	PlaySound (0, "plasmacannon/fire");
 	//AmbientSound ("plasmacannon/fire", 127);
 	delay (28);
@@ -1040,7 +1040,7 @@ Script "CRATE_TimeCopWarp" (void)
 
 	// Start the teleport
 	SpawnSpotForced ("TimeGunFlareCluster", 0, 0, 0);
-	ACS_ExecuteAlways (94, 0, !team, 0, 0);
+	ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, 1);
 	delay (3);
 	if (GetHealth() < 1) terminate;
 	// A_SetTranslucent (1.0, 0)

@@ -156,7 +156,7 @@ actor TimeGun : AOWWeapon {
 		TMGN H 0 A_JumpIfInventory ("HasClass", 1, 1)
 		goto Nope
 		TMGN A 0 A_TakeInventory ("IsInSpawnRoom", 1)
-		TMGN A 3 BRIGHT ACS_ExecuteAlways (94, 0, random (0, 1))
+		TMGN A 3 BRIGHT ACS_ExecuteAlways (SC_DOTELEPORTTOFIELD, 0, random (0, 1))
 		TMGN A 0 A_SetTranslucent (1.0, 0)
 		TMGN A 0 A_SpawnItemEx ("TimeGunFlareExplosion")
 		TMGN A 0 SetPlayerProperty (0, 0, 0)
