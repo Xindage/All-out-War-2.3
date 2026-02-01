@@ -120,7 +120,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_BASEMIRACLE,	"base miracle",			"D",  5, CRT_Upgrade,	(CRF_NoDeck),	"");			// Custon announce type.
 	AddCrateType (CRATE_CHEMARMOR,		"chemical proof",		"D", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_FIREPOWER,		"firepower upgrade",	"F", 10, CRT_Upgrade,	(0),	"");
-	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 15, CRT_Upgrade,	(CRF_ANNOUNCE_TO),				"Shared a part of");
+	AddCrateType (CRATE_BONUSCREDITS,	"bonus credits",		"D", 20, CRT_Upgrade,	(CRF_ANNOUNCE_TO),				"Shared a part of");
 	AddCrateType (CRATE_BONUSXP,		"bonus experience",		"D", 15, CRT_Upgrade,	(0),	"");
 	AddCrateType (CRATE_FIREARMOR,		"fire proof",			"F", 10, CRT_Armor,		(0),	"");
 	AddCrateType (CRATE_STEALTH,		"stealth suit",			"U", 10, CRT_Upgrade,	(0),	"");
@@ -1005,7 +1005,7 @@ Script "CRATE_MoonGravityTimer" (void)
 	SetGravity(300.0); // Decrease the gravity
 	Delay(70); // Sync the music
 	SetMusic("music/danielle.mp3", 0);
-	Delay((3 * MINUTETICS / 2) - 70); // 1 and half minute
+	Delay((3 * MINUTETICS) + 53); // 3 m 53 s
 	SetGravity(800.0); // Return to default
 	SetAirControl(0.00390625); // Ditto
 	IntelMessage (strparam(s:"\cUMoon Gravity \c-loses its effect."), true);
@@ -1013,7 +1013,7 @@ Script "CRATE_MoonGravityTimer" (void)
 	Delay(35);
 	SetMusic("*", 0); // Restore the level's default music
 	// Take a break before allowing it again
-	Delay((8 * MINUTETICS) - 35);
+	Delay((10 * MINUTETICS) - 35);
 	gravityonce = 0;
 }
 
