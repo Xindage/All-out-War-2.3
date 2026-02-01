@@ -31,6 +31,7 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Reduced CPU and bandwidth usage while repairing buildings, if that matters.
 		- Projetiles does not collide with building hitboxes.
 		- Remade the teleporting back to field system.
+		- Killing valuable target who can cause heavy damage to your base rewards charges.
 
 ===========================================================================================================================================================
 * About the tiberium system *
