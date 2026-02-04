@@ -666,8 +666,8 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define NUM_MECH_WEIGHTS	3
 
 // [JD] The amount charged for players in mechs to use the Repair Pad.
-#define REPAIRPAD_LIGHTCHARGEAMOUNT		30
-#define REPAIRPAD_MECHCHARGEAMOUNT		40
+#define REPAIRPAD_LIGHTCHARGEAMOUNT		20
+#define REPAIRPAD_MECHCHARGEAMOUNT		35
 
 // [Dusk] How many troops can the tortoise carry?
 //#define TORTOISE_PASSENGERS 5
