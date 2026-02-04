@@ -16,6 +16,8 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Players can now properly receive credit rewards while dead.
 		- Fixed occurrences of bodies disappearing on energy-type deaths.
 		- Fixed repair healing rates when destroyed, for both allied and enemy teams.
+		- Fixed being unable to repair at repair facility once out of credits.
+		- Repairing as mech cost slight less, and warns when low in credits.
 		- Moon gravity crate weight reduced to the minimum possible chance (3 -> 1).
 		- Mech discounts are now shown directly on the main price.
 		- Obelisk can no longer be obstructed by util trash or mines at its eye source.

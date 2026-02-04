@@ -15,25 +15,41 @@ script 501 (void) net clientside
     }
 
     // Else print.
+/*  \ci - Info/fixes
+    \cq - Buff
+    \cr - Nerf
+*/
+
     int Version = 230305; // YYMMDD
     
     HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
-        \ci- Battery reapair system introduced as experimental feature.\n
-        \cq- Buildings take only double damage during sudden death instead of quad.\n
-        \cq- Nukes had its damage increased when when used outside.\n
-        \cq- Barracks, Rescearch Centre and Obelisk had their health increased.\n
-        \cq- Charge for battery is gained by attacking buildings.\n
-        \cq- Battery regenerate slowly.\n
-        \cq- Base crasher return few charges to the affected team.\n
-        \cq- Anything aside the five main buildings cost no energy to repair.\n
-        \cr- Losing repair facility decreases the amount battery regeneration.\n
-        \cr- Frostbite effect duration decreased.\n
-        \cr- You cant repair the main buildings whitout having charges.\n
-        \cr- Battery lost its charges faster during sudden death.\n
-        \ci- Lives were removed in sudden death.\n
-        \ci- You can repair buildings during sudden death.\n
-        \ci- Sudden death start early at 30 minutes.\n
-        \ci- Mech no longer appear as giant marines."
+        \ci- Major rework of core scripts — all maps require adjustments.\n
+        \ci- Support for legacy/old maps has been completely removed.\n
+        \cq- Base Miracle now heals all buildings and add-ons.\n
+        \cq- Base Crasher now converts some of the damage dealt into energy.\n
+        \cq- Max energy cap was increased by 10k, while the starting energy remains at 50k.\n
+        \cq- Mechs now give XP and Credits on death based on their weight.\n
+        \cq- Players can now properly receive credit rewards while dead.\n
+        \ci- Fixed occurrences of bodies disappearing on energy-type deaths.\n
+        \ci- Fixed repair healing rates when destroyed, for both allied and enemy teams.\n
+        \ci- Fixed being unable to repair at repair facility once out of credits.\n
+        \cq- Repairing as mech cost slight less, and warns when low in credits.\n
+        \cr- Moon gravity crate weight reduced to the minimum possible chance (3 -> 1).\n
+        \ci- Mech discounts are now shown directly on the main price.\n
+        \ci- Obelisk can no longer be obstructed by util trash or mines at its eye source.\n
+        \ci- Caches are now forced to spawn even after clearing util objects at their source.\n
+        \ci- Failed caches and add-ons now properly refund players when they fail.\n
+        \ci- Add-ons now update correctly on creation, preventing visual HP overflow.\n
+        \cq- Each subsequent credit bonus has been increased by 50.\n
+        \cq- Credit bonus crates now scale with map time and grant 50% of that value to teammates.\n
+        \ci- This changelog is now toggleable (but not this .txt one ;P).\n
+        \ci- Spot feature can no longer be spammed to prevent exploitative behavior.\n
+        \cq- Repair Factory now repairs global caches while alive when built via util.\n
+        \ci- Scripted marines have been reworked and fixed.\n
+        \ci- Reduced CPU and bandwidth usage while repairing buildings, if that matters.\n
+        \ci- Projetiles does not collide with building hitboxes.\n
+        \ci- Remade the teleporting back to field system.\n
+        \cq- Killing valuable target who can cause heavy damage to your base rewards charges."
     ; HUDMSG_PLAIN, 801, CR_WHITE, 0.5, 0.2, 10.0);
     ChangelogOpen[p] = 1;
 }
