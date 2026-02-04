@@ -136,7 +136,7 @@ ACTOR WaterDriping 2225
 	Spawn:
 		CDRP A 20
 		CDRP BC 4
-		TNT1 A 0 A_SpawnItem("BrutalWaterDropOnFloor")
+		TNT1 A 0 // A_SpawnItem("BrutalWaterDropOnFloor") // missing
 		TNT1 D 4
 		Loop
 	}
@@ -313,7 +313,7 @@ states
 	}
 }
 
-Actor Plant12: Plant01 1994
+Actor Plant14: Plant01 1994
 {
 //$Category Vegetation
 Scale 0.9
