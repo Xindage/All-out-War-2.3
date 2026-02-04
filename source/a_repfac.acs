@@ -24,9 +24,9 @@ script SC_Repairloop (void)
 	while (ThingCountSector(T_NONE, PlayerNumber()+3800, repairsector))
 	{
 		// Get this info on start.
-		int hp     = GetHealth();
-		int maxhp  = GetSpawnHealth();
-		int isMech = CheckInventory("IsMech");
+		int hp  		= GetHealth();
+		int maxhp 		= GetSpawnHealth();
+		int isMech		= CheckInventory("IsMech");
 		
 		int ChargeAmount = 0;
 		
@@ -55,10 +55,19 @@ script SC_Repairloop (void)
 			// Mechs.
 			else
 			{
+				// New Block to warn player when they're going too low in credits.
+				if (GetCredits() < 150 && RepairPadMechHPStore[PlayerNumber()] >= 60)
+				{
+					IntelMessage(strparam(s:"\crCRITICAL credits!"), false);
+				}
+				else if (GetCredits() < 300 && RepairPadMechHPStore[PlayerNumber()] >= 60)
+				{
+					IntelMessage(strparam(s:"\ciLow credits!"), false);
+				}
 				if (GetCredits() < ChargeAmount)
 				{
-					GenericError("You need more credits!");
-					continue;
+					GenericError("No more credits!");	// Stop repairing.
+					break;
 				}
 				
 				GiveInventory("RepairEffectMech", 1);
@@ -70,12 +79,12 @@ script SC_Repairloop (void)
 				if (GotRepair[PlayerTeam()])
 					GiveInventory("MechAmmoStuffSmall", 1);
 				
-				if (RepairPadMechHPStore[PlayerNumber()] >= 100)
+				if (RepairPadMechHPStore[PlayerNumber()] >= 150)
 				{
 					//SpendCredits(ChargeAmount);
 					TakeCredits(-1, ChargeAmount, true);
 					LocalAmbientSound("c4/use", 127);
-					RepairPadMechHPStore[PlayerNumber()] -= 100;
+					RepairPadMechHPStore[PlayerNumber()] -= 150;
 				}
 			}
 			
