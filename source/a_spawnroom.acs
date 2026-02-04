@@ -158,11 +158,11 @@ script 90 (void) {
 // Teleport back to field.
 script SC_DOTELEPORTTOFIELD (int timecop)
 {
-	int team = !team;
+	int team = playerteam();
 	// Early game foward teleport until FB or the first minute
 	if (Timer() < (35 * 60) && !intHolder[i_FirstBlood])
     {
-		if (timecop) team = !playerteam();
+		if (timecop) team = !team;
         if (Teleport(team == TEAM_BLUE ? TELE_FOR_BLUE : TELE_FOR_RED))
         {
             TakeInventory("IsInSpawnRoom", 1);
