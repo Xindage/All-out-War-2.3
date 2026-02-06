@@ -130,19 +130,19 @@
 #include "actors/misc/admin.txt"
 #include "actors/misc/skulltag.txt"
 
-// New Marines
-#include "actors/marines/m-base.txt"
-#include "actors/marines/m-flamer.txt"
-#include "actors/marines/m-plasma.txt"
-#include "actors/marines/m-tibrifle.txt"
-
-// Old Marines
+// Marines
 #include "actors/marines/marinemisc.txt"
-//#include "actors/marines/marinebase.txt"
+#include "actors/marines/marinebase.txt"
 #include "actors/marines/marine-ssg-blue.txt"
 #include "actors/marines/marine-ssg-red.txt"
 #include "actors/marines/marine-rocketsoldier-blue.txt"
 #include "actors/marines/marine-rocketsoldier-red.txt"
+#include "actors/marines/marine-flamer-blue.txt"
+#include "actors/marines/marine-flamer-red.txt"
+#include "actors/marines/marine-plasma-blue.txt"
+#include "actors/marines/marine-plasma-red.txt"
+#include "actors/marines/marine-tibrifle-blue.txt"
+#include "actors/marines/marine-tibrifle-red.txt"
 #include "actors/marines/marinebeacon.txt"
 #include "actors/marines/compensation.txt"
 
