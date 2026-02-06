@@ -1,18 +1,16 @@
-Actor BluePlasmaGunner	//Red Tiberium Rifleman
-{
-
-	Speed 0					//ThrustThing and A_Recoil instead.
-	MaxDropOffHeight 64		//Gives the marines a smaller chance of falling into pits. 63, not 64.
+// Minor rework - Done
+Actor BluePlasmaGunner		// Blue Plasma Gunner
+{	// Default Properties.
+	Speed 0					// ThrustThing and A_Recoil instead.
+	MaxDropOffHeight 63		// Gives the marines a smaller chance of falling into pits. 63, not 64.
+	MaxStepHeight 56		// This is not too much?
 	PainSound "*pain"
-	MaxStepHeight 56
-//-----------------------------------------------------------------------
-	obituary "%o was incinerated by a \chBlue marine's\c- plasma gun."
 	Health 115
 	Radius 16
 	Height 56
 	Mass 100
 	Painchance 200
-
+	+SLIDESONWALLS
 	+CANPASS
 	+CANPUSHWALLS
 	+CANUSEWALLS
@@ -22,20 +20,22 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 	+SOLID
 	+SHOOTABLE
 	+QUICKTORETALIATE
-	+NODROPOFF				//In conjunction with MaxDropOffHeight.
-	+ISMONSTER				//Needed for the marines to take any projectile damage in invasion mode.
-	-COUNTKILL				//In conjunction with +ISMONSTER.
-	+NEVERFAST				//Same as above.
-	//+NOTIMEFREEZE
 	+LOOKALLAROUND
+	+NODROPOFF				// In conjunction with MaxDropOffHeight.
+	+ISMONSTER				// Needed for the marines to take any projectile damage in invasion mode.
+	-COUNTKILL				// In conjunction with +ISMONSTER.
+	+NEVERFAST				// Same as above.
+	//+NOTIMEFREEZE
 	-TELESTOMP
 	deathsound "generic/death"
-
+	// -----
+	DropItem "PlasmaGun"
+	obituary "$OB_MARINE_PLASMA_BLUE"
 	Translation "112:127=[0,68,181]:[0,0,0]"
+	DesignatedTeam 0
 
 //AOW Base DamageFactoring-----------------------------------------------------------------------
 
-	DesignatedTeam 0
 	damagefactor "Fist", 1.0
 	damagefactor "Bullet", 1.0
 	damagefactor "Rifle", 1.0
@@ -52,8 +52,8 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 	damagefactor "MassDriver", 0.3	
 	damagefactor "Mechstomp", 0.0
 	damagefactor "Monster", 1.0
-//-----------------------------------------------------------------------
 
+//-----------------------------------------------------------------------
 
 	States //Sorry about the ridiculously long state names.
 	{
@@ -64,13 +64,13 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 //
 //-----------------------------------------------------------------------
 
-
 	Spawn:
-		PLA6 A 0 //Dummy frame needed.
+		PLA6 A 0
 		PLA6 A 0 A_GiveInventory("IsBlue", 1)
-		PLA6 A 0 A_ChangeFlag("Friendly", 0)//Execute ACS script(s) here.
-		PLA6 A 0 ACS_ExecuteAlways (985, 0, 1, ARMOD_LASER)
+		PLA6 A 0 A_ChangeFlag("Friendly", 0) //Execute ACS script(s) here.
+		PLA6 A 0 ACS_ExecuteAlways (SC_SETAIARMORGRADE, 0, 1, ARMOD_LASER)
 		PLA6 A 0 ACS_ExecuteAlways (SC_MARINE_INIT, 0)
+		//PLA6 A 0 A_Jump (256, "EnablePushablePreIdle")
 		Goto EnablePushablePreIdle
 
 	EnablePushablePreIdle: //Allows you to push marines if they are in your way while idling.
@@ -92,9 +92,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 A 0 //A_Jump (256, "Idle")
 		Loop
 
-
 //-----------------------------------------------------------------------
-
 
 	MomentumCheck:
 		PLA6 A 0 A_JumpIf (momx == 0 && momy == 0, "Idle")
@@ -108,15 +106,12 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 D 0 A_Jump (256, "CheckIfAnyTargetsWhilePushed")
 		Goto CheckIfAnyTargetsWhilePushed
 
-
 	CheckIfAnyTargetsWhilePushed: //Look for potential targets while being pushed.
 		PLA6 A 0 A_LookEx (0, 0, 0, 1200, 0, "DisablePushablePreAlternateChase")
 		//PLA6 A 0 A_Jump (256, "Idle")
 		Goto Idle
 
-
 //-----------------------------------------------------------------------
-
 
 	SinkDown1: //Ankle deep.
 		PLA6 A 0 ThrustThingZ (0, 2, 1, 1)
@@ -128,24 +123,16 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "Idle")
 		Goto Idle
 
-	SinkDown3: //Cmpletely underwater. Slower sinking.
+	SinkDown3: //Completely underwater. Slower sinking.
 		PLA6 A 0 ThrustThingZ (0, 2, 1, 0)
 		//PLA6 A 0 A_Jump (256, "Idle")
 		Goto Idle
-
-
-
-
-
-
-
 
 //-----------------------------------------------------------------------
 //
 //	Chase, check target, check if stuck/underwater and back off states.
 //
 //-----------------------------------------------------------------------
-
 
 	See: //Simply for A_SpidRefire. Goes to "ResetTimers".
 		PLA6 A 0 //Dummy frame needed.
@@ -161,7 +148,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 A 0 A_Jump (85, "ChaseForwardAndLeft", "ChaseForwardAndRight") //1/3 chance of straferunning.
 		//PLA6 A 0 A_Jump (256, "ChaseForward")
 		Goto ChaseForward
-
 
 	ChaseForward:
 		PLA6 A 4 A_Recoil (-3.675)
@@ -195,7 +181,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 D 0 A_Jump (256, "TurnAndAcquireTargetWhileChase")
 		Goto TurnAndAcquireTargetWhileChase
 
-
 	TurnAndAcquireTargetWhileChase: //Allows for marines to turn and acquire targets.
 		PLA6 AAAAAAAAAAAAAAAA 0 A_Chase ("", "")
 		//PLA6 A 0 A_Jump (256, "CheckIfTargetInLOS")
@@ -214,9 +199,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "CheckIfStuck")
 		Goto CheckIfStuck
 
-
 //-----------------------------------------------------------------------
-
 
 	CheckIfStuck: //This state act as a "dynamic threshold timer". Checks if there is any momentum along the x- and y- axis. If false, add to the threshold timer. If true, clear the threshold timer and check if underwater instead.
 		PLA6 A 0 A_JumpIf (momx != 0 || momy != 0, "NotStuck")
@@ -234,9 +217,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "CheckIfUnderwater")
 		Goto CheckIfUnderwater
 
-
 //-----------------------------------------------------------------------
-
 
 	CheckIfUnderWater:
 		PLA6 A 0 A_JumpIf (waterlevel == 1, "Swim1")
@@ -244,7 +225,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 A 0 A_JumpIf (waterlevel == 3, "Swim3")
 		//PLA6 A 0 A_Jump (256, "AddToTimers") //If not underwater, add to the regular timers instead.
 		Goto AddToTimers
-
 
 	Swim1:
 		PLA6 A 0 A_JumpIf (z - floorz == 0, 2) //If non-deep water, don't swim.
@@ -263,9 +243,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "AddToTimers")
 		Goto AddToTimers
 
-
 //-----------------------------------------------------------------------
-
 
 	AddToMoveBackWardsThresholdTimer:
 		PLA6 A 0 A_GiveInventory ("MoveBackwardsThreshold", 1)
@@ -282,9 +260,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "MoveBackwardsAlternate")
 		Goto MoveBackwardsAlternate
 
-
 //-----------------------------------------------------------------------
-
 
 	MoveBackwardsAlternate: //Same "A_Recoil" and "ThrustThing" values as in "BackOff" states, but with jumps to a different state.
 		PLA6 A 0 A_Jump (256, 1,2,3)
@@ -294,7 +270,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		Goto MoveBackwardsAndLeft
 		PLA6 A 0
 		Goto MoveBackwardsAndRight
-
 
 	MoveBackwards:
 		PLA6 A 4 A_Recoil (3.675)
@@ -340,19 +315,11 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 D 0 A_Jump (256, "AddToTimers")
 		Goto AddToTimers
 
-
-
-
-
-
-
-
 //-----------------------------------------------------------------------
 //
 //	Wander, check target, check if stuck/underwater and back off states.
 //
 //-----------------------------------------------------------------------
-
 
 	DisablePushablePreAlternateWander: //Nearly identical to chase states.
 		PLA6 A 0 A_ChangeFlag ("PUSHABLE", 0)
@@ -396,16 +363,13 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 D 0 A_Jump (256, "TurnAndAcquireTargetWhileWander")
 		Goto TurnAndAcquireTargetWhileWander
 
-
 	TurnAndAcquireTargetWhileWander:
 		PLA6 AAAAAAAAAAAAAAAA 0 A_Wander
 		PLA6 A 0 A_LookEx (0, 0, 0, 1200, 0, "CheckIfTargetInLOS")
 		//PLA6 A 0 A_Jump (256, "CheckIfStuckWhileWander")
 		Goto CheckIfStuckWhileWander
 
-
 //-----------------------------------------------------------------------
-
 
 	CheckIfStuckWhileWander:
 		PLA6 A 0 A_JumpIf (momx != 0 || momy != 0, "NotStuckWhileWander")
@@ -423,9 +387,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "CheckIfUnderwaterWhileWander")
 		Goto CheckIfUnderwaterWhileWander
 
-
 //-----------------------------------------------------------------------
-
 
 	CheckIfUnderwaterWhileWander:
 		PLA6 A 0 A_JumpIf (waterlevel == 1, "SwimWhileWander1")
@@ -433,7 +395,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 A 0 A_JumpIf (waterlevel == 3, "SwimWhileWander3")
 		//PLA6 A 0 A_Jump (256, "AlternateWander")
 		Goto AlternateWander
-
 
 	SwimWhileWander1:
 		PLA6 A 0 A_JumpIf (z - floorz == 0, 2)
@@ -452,9 +413,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "AlternateWander")
 		Goto AlternateWander
 
-
 //-----------------------------------------------------------------------
-
 
 	AddToMoveBackWardsThresholdTimerWhileWander:
 		PLA6 A 0 A_GiveInventory ("MoveBackwardsThreshold", 1)
@@ -471,9 +430,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "MoveBackwardsAlternateWhileWander")
 		Goto MoveBackwardsAlternateWhileWander
 
-
 //-----------------------------------------------------------------------
-
 
 	MoveBackwardsAlternateWhileWander:
 		PLA6 A 0 A_Jump (256, 1,2,3)
@@ -483,7 +440,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		Goto MoveBackwardsAndLeftWhileWander
 		PLA6 A 0
 		Goto MoveBackwardsAndRightWhileWander
-
 
 	MoveBackwardsWhileWander:
 		PLA6 A 4 A_Recoil (3.675)
@@ -529,19 +485,11 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 D 0 A_Jump (256, "AlternateWander")
 		Goto AlternateWander
 
-
-
-
-
-
-
-
 //-----------------------------------------------------------------------
 //
 //			Back off from target and missile states.
 //
 //-----------------------------------------------------------------------
-
 
 	AlternateBackOff: //Same formula as in the chase states, but only backwards movement and different jumps.
 		PLA6 A 0 A_Jump (256, 1,2,3)
@@ -602,9 +550,9 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 D 0 //A_Jump (256, "Missile")
 		Goto Missile
 
+//-----------------------------------------------------------------------
 
 	Missile:
-		PLA6 E 0 A_JumpIfInventory("TiberiumRifleCooldown", 1, "AlternateChase")
 		PLA6 E 0 A_JumpIfInTargetInventory("IsBlue", 1, "ClearTarget")
 		PLA6 E 0 A_JumpIfInTargetInventory("StealthMode", 3, 2)
 		PLA6 E 0 A_JumpIfInTargetInventory("StealthMode", 2, "ClearTarget")
@@ -766,31 +714,22 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		PLA6 D 0 A_SpidRefire
 		Goto Missile3
 
-
-
-
-
-
-
-
 //-----------------------------------------------------------------------
 //
 //				Pain, death and respawn states.
 //
 //-----------------------------------------------------------------------
 
-
 	Pain.FireSpecial:
 		Goto DisablePushablePreAlternatePainBackOff
 	Pain.Fire:
-		PLA6 G 0 ACS_ExecuteAlways(974, 0)
+		PLA6 G 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_FIRE)
 		Goto DisablePushablePreAlternatePainBackOff
 	Pain.ChemicalSpecial:
 		Goto DisablePushablePreAlternatePainBackOff
 	Pain.Chemical:
-		PLA6 G 0 ACS_ExecuteAlways(361, 0)
+		PLA6 G 0 ACS_ExecuteAlways (SC_DAMAGEOVERTIME, 0, OVERTIME_CHEM)
 		Goto DisablePushablePreAlternatePainBackOff
-
 	Pain:
 		PLA6 G 0
 		PLA6 G 0 //A_Jump (256, "DisablePushablePreAlternatePainBackOff")
@@ -801,9 +740,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 G 0 A_Jump (256, "AlternatePainBackOff")
 		Goto AlternatePainBackOff
 
-
 //-----------------------------------------------------------------------
-
 
 	AlternatePainBackOff:
 		PLA6 G 0 A_Jump (256, 2,3)
@@ -813,7 +750,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		Goto PainBackOffBackwardsAndLeft
 		PLA6 G 0
 		Goto PainBackOffBackwardsAndRight
-
 
 	PainBackOffBackwards:
 		PLA6 G 0 A_FaceTarget
@@ -843,9 +779,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 G 0 A_Jump (256, "CheckIfTargetInLOS")
 		Goto CheckIfTargetInLOS
 
-
 //-----------------------------------------------------------------------
-
 
 	Death:
 		PLA6 H 8
@@ -906,17 +840,11 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		TNT1 A 0 A_SpawnItemEx ("TeleportFog", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION)
 		stop
 
-
-
-
-
-
 //-----------------------------------------------------------------------
 //
 //						Timer states.
 //
 //-----------------------------------------------------------------------
-
 
 	AddToTimers:
 		PLA6 A 0 A_GiveInventory ("ClearTarget", 1)
@@ -938,7 +866,6 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "AlternateChase")
 		Goto AlternateChase
 
-
 	ClearTarget:
 		PLA6 A 0 A_TakeInventory ("ClearTarget", 1)
 		PLA6 A 0 A_ClearTarget
@@ -951,9 +878,7 @@ Actor BluePlasmaGunner	//Red Tiberium Rifleman
 		//PLA6 A 0 A_Jump (256, "CheckTimers")
 		Goto CheckTimers
 
-
 //-----------------------------------------------------------------------
-
 
 	ResetTimers: //This is ONLY connected to "See", "Missile" and "Pain" states. Reset timers so that the marines don't all of sudden decide to idle in the middle of a battle.
 		PLA6 A 0 A_JumpIfInventory ("ClearTarget", 0, 4)

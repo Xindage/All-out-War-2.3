@@ -95,3 +95,7 @@ OB_MARINE_SSG_BLUE = "%o was splattered by a \chBlue marine's\c- double shotgun.
 OB_MARINE_SSG_RED = "%o was splattered by a \cgRed marine's\c- double shotgun.";
 OB_MARINE_TIBRIFLE_BLUE = "%o was skewered by a \chBlue marine's\c- tiberium autorifle.";
 OB_MARINE_TIBRIFLE_RED = "%o was skewered by a \cgRed marine's\c- tiberium autorifle.";
+OB_MARINE_PLASMA_BLUE = "%o was incinerated by a \chBlue marine's\c- plasma gun.";
+OB_MARINE_PLASMA_RED = "%o was incinerated by a \cgRed marine's\c- plasma gun.";
+OB_MARINE_FLAMER_BLUE = "%o was fried by a \chBlue marine's\c- flamethrower.";
+OB_MARINE_FLAMER_RED = "%o was fried by a \cgRed marine's\c- flamethrower.";
