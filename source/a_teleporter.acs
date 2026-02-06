@@ -88,6 +88,7 @@ script SC_TELENODE_INIT (void) {
 	int dummyZ = GetActorFloorZ(tid);
 	int dummyAngle = GetActorAngle(tid);
 	
+	// When players try to place the portal too near a wall/ledge these sanity fails to spawn, Resulting in a false possitive check of sanity. 
 	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.00)*64), dummyY + (sin(dummyAngle+0.00)*64), dummyZ, tempTID + 0, dummyAngle >> 8);
 	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.325)*64), dummyY + (sin(dummyAngle+0.325)*64), dummyZ, tempTID + 1, (dummyAngle+0.325) >> 8);
 	Spawn ("teleporterNode_SanityCheck", dummyX + (cos(dummyAngle+0.50)*64), dummyY + (sin(dummyAngle+0.50)*64), dummyZ, tempTID + 2, (dummyAngle+0.50) >> 8);
@@ -97,45 +98,49 @@ script SC_TELENODE_INIT (void) {
 	
 	for (int i = 0; i <= 3; i++)
 	{
-		if (CheckActorInventory(tempTID + i, "TeleporterNodeNotInSight"))
-			disapproved = 5;
-			
-		Thing_Remove(tempTID + i);
+		// No need to finish the loop if it already failed.
+		if (disapproved) break;
+		// Spawn failed.
+		if (!ThingCount(0, tempTID + i)) disapproved = 1;
+		// Cannot see the player.
+		if (CheckActorInventory(tempTID + i, "TeleporterNodeNotInSight")) disapproved = 2;
 	}
+	for (i = 0; i <= 3; i++) // Clear them
+	{Thing_Remove(tempTID + i);}
 
 	//==========================================================================
 	
 	// Check that the portals are not too close to each other.
 	int PortalMinDistance = 192;
 	if (idx == 0 && TeleporterNodes[1] && CheckActorDistance(TID_TELENODE_BLUE1, TID_TELENODE_BLUE2, PortalMinDistance))
-		disapproved = 4;
+		disapproved = 3;
 	else if (idx == 1 && TeleporterNodes[0] && CheckActorDistance(TID_TELENODE_BLUE2, TID_TELENODE_BLUE1, PortalMinDistance))
-		disapproved = 4;
+		disapproved = 3;
 	else if (idx == 2 && TeleporterNodes[3] && CheckActorDistance(TID_TELENODE_RED1, TID_TELENODE_RED2, PortalMinDistance))
-		disapproved = 4;
+		disapproved = 3;
 	else if (idx == 3 && TeleporterNodes[2] && CheckActorDistance(TID_TELENODE_RED2, TID_TELENODE_RED1, PortalMinDistance))
-		disapproved = 4;
+		disapproved = 3;
 	
 	// Check sight - this may not be built into void!
 	// The actor gives itself this if it can't see any players.
-	if (CheckActorInventory (tid, "TeleporterNodeNotInSight")) disapproved = 5;
+	if (CheckActorInventory (tid, "TeleporterNodeNotInSight")) disapproved = 2;
 	
 	// Not into space either... though this assumes no map uses F_SKY1 as a walkable flat
 	// This is needed so that portals won't appear in AOW10's outer space sectors.
-	if (CheckActorFloorTexture (tid, "F_SKY1")) disapproved = 5;
+	if (CheckActorFloorTexture (tid, "F_SKY1")) disapproved = 2;
 	
 	if (disapproved) {
 		SetActorState (tid, "Disapproved");
 		
 		switch (disapproved) {
-		case 2:
+		case 1:
 			IntelMessage ("The node needs more space than that...", false);
 			break;
-		case 4:
-			IntelMessage ("The other node is too close!", false);
-			break;
-		case 5:
+		case 2:
 			IntelMessage ("You can't put that there.", false);
+			break;
+		case 3:
+			IntelMessage ("The other node is too close!", false);
 			break;
 		default:
 			IntelMessage ("Initialization failed!", false);
@@ -165,18 +170,20 @@ script SC_TELENODE_INIT (void) {
 	
 	// Spawn the other needed actors now.
 	// [JD] TeleportDest3 will allow the nodes to function properly on top of 3D floors
+	// [Xindage] Spawn here is failing under certain strange condition redenring invisible portals
+	// using force spawn should at least make them visible, regardless of what mess the player did
 	x = GetActorX (tid); y = GetActorY (tid); z = GetActorFloorZ (tid); angle = GetActorAngle (tid);
-	Spawn ("TeleportDest3", x + (cos(angle+0.00)*64), y + (sin(angle+0.00)*64), z, tid_teledest, angle >> 8);
-	Spawn ("TeleportDest3", x + (cos(angle+0.325)*64), y + (sin(angle+0.325)*64), z, tid_teledest, (angle+0.325) >> 8);
-	Spawn ("TeleportDest3", x + (cos(angle+0.50)*64), y + (sin(angle+0.50)*64), z, tid_teledest, (angle+0.50) >> 8);
-	Spawn ("TeleportDest3", x + (cos(angle+0.675)*64), y + (sin(angle+0.675)*64), z, tid_teledest, (angle+0.675) >> 8);
+	SpawnForced ("TeleportDest3", x + (cos(angle+0.00)*64), y + (sin(angle+0.00)*64), z, tid_teledest, angle >> 8);
+	SpawnForced ("TeleportDest3", x + (cos(angle+0.325)*64), y + (sin(angle+0.325)*64), z, tid_teledest, (angle+0.325) >> 8);
+	SpawnForced ("TeleportDest3", x + (cos(angle+0.50)*64), y + (sin(angle+0.50)*64), z, tid_teledest, (angle+0.50) >> 8);
+	SpawnForced ("TeleportDest3", x + (cos(angle+0.675)*64), y + (sin(angle+0.675)*64), z, tid_teledest, (angle+0.675) >> 8);
 	
-	Spawn ("TeleporterNodeStand", x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 32.0, tid_effects);
-	Spawn ("TeleporterNodeStand", x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 32.0, tid_effects);
+	SpawnForced ("TeleporterNodeStand", x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 32.0, tid_effects);
+	SpawnForced ("TeleporterNodeStand", x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 32.0, tid_effects);
 	
-	Spawn (spheretype, x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 56.0, tid_effects);
-	Spawn (spheretype, x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 56.0, tid_effects);
-	Spawn (fxtype, x, y, z+56.0, tid_effects);
+	SpawnForced (spheretype, x + (cos(angle+0.25)*80), y + (sin(angle+0.25)*80), z + 56.0, tid_effects);
+	SpawnForced (spheretype, x + (cos(angle+0.75)*80), y + (sin(angle+0.75)*80), z + 56.0, tid_effects);
+	SpawnForced (fxtype, x, y, z+56.0, tid_effects);
 	
 	TeamMessage (TMSG_CONSTRUCT, 3, playernumber());
 	
