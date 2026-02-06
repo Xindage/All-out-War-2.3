@@ -242,6 +242,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_SpawnCache				842
 #libdefine SC_RepairCacheloop			843
 #libdefine SC_Checkteleporttofield		844
+#libdefine CS_C4Special					845
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889

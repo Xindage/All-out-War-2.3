@@ -233,12 +233,27 @@ script 324 (int n) {
 }
 
 // Bonuses for disarming C4.
-Script 328 (int team) {
-	if (PlayerNumber() == -1 || !PlayerInGame (PlayerNumber()) || PlayerTeam() == team)
-		terminate;
-	AddExperience (10);
-	AwardCredits (75);
-	Team_GivePoints (PlayerTeam(), 2, false);
+Script CS_C4special (int team)
+{
+	int Xp = 10;
+	int Cr = 50;
+	int Po = 1;
+	if (PlayerNumber() == -1 || !PlayerInGame (PlayerNumber()) || PlayerTeam() == team) terminate;
+		
+	if(SC_DISTCHECK(0, PlayerTeam(), 256, 0));
+	{
+		if (!intHolder[i_SuddenDeath])
+		{
+			if (RepairCharges[PlayerTeam()] + 40 >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
+			else RepairCharges[PlayerTeam()] += 40;
+		}
+		xp = 35;
+		Cr = 100;
+		Po = 3;
+	}
+	Team_GivePoints (PlayerTeam(), Po, false);
+	AddExperience (Xp);
+	AwardCredits (Cr);
 	LocalAmbientSound ("c4/use", 127);
 }
 
