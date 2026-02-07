@@ -223,17 +223,8 @@ script SC_PLAYERCHECKRANK (void) {
 	}
 }
 
-script 324 (int n) {
-	while (n > 0) {
-		n--;
-		LocalAmbientSound ("c4/use", 127);
-		AddExperience (50);
-		Delay (5);
-	}
-}
-
 // Bonuses for disarming C4.
-Script CS_C4special (int team)
+Script SC_C4special (int team)
 {
 	int Xp = 10;
 	int Cr = 50;
@@ -257,15 +248,46 @@ Script CS_C4special (int team)
 	LocalAmbientSound ("c4/use", 127);
 }
 
-// Bonuses for disarming Beacon.
-// TODO: Why not AddExperience?
-Script 350 (int team) {
-	if (team == PlayerTeam()) terminate;
+// Bonuses for disarming Beacons.
+Script SC_SuperSpecial (int team)
+{
+	log(s:"CS_C4special started");
+	int Xp = 100;
+	int Cr = 250;
+	int Po = 5;
 	
-	ACS_ExecuteAlways(324,0,3,0,0);			//150 XP
-	Team_GivePoints (PlayerTeam(), 10, false);
-	AwardCredits (250);
+	//if (PlayerNumber() == -1 || !PlayerInGame(PlayerNumber()) || PlayerTeam() == team) terminate;
 	
-	// [Dusk] Log it
+	// [Xindage] fuck this team values!!! gross hack. team+1.
+	int SuperValue = ACS_ExecuteWithResult(SC_BEACONEXPLOSION, team+1, true);
+	
+	if (SuperValue > 0)
+	{
+		if (!intHolder[i_SuddenDeath])
+		{
+			int add = 80 * SuperValue;
+			
+			if (RepairCharges[PlayerTeam()] + add >= BATTERY_MAX)
+				RepairCharges[PlayerTeam()] = BATTERY_MAX;
+			else
+				RepairCharges[PlayerTeam()] += add;
+		}
+		
+		Xp += 50 * SuperValue;
+		Cr += 75 * SuperValue;
+		Po += 2  * SuperValue;
+	}
+	Team_GivePoints(PlayerTeam(), Po, false);
+	AddExperience(Xp);
+	AwardCredits(Cr);
 	Log(n:0, s:" disarms beacon.");
+}
+
+script 324 (int n) {
+	while (n > 0) {
+		n--;
+		LocalAmbientSound ("c4/use", 127);
+		AddExperience (50);
+		Delay (5);
+	}
 }

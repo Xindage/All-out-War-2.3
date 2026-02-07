@@ -177,10 +177,10 @@ script SC_CL_NukeTimeWarning (int team, int time) CLIENTSIDE {
 		s:" seconds\c- time to disarm the ", s:enemynukename, s:"!");
 }
 
-script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
+script SC_BEACONEXPLOSION (int superwt, int calculate) // acs to check beacon distance to mtcs.
 {
 	// Set all ints necessary
-	int i;
+	int i, totalmult;
 	int bardistmult = 0;
 	int refdistmult = 0;
 	int resdistmult = 0;
@@ -201,17 +201,6 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 			if (CheckActorDistance(0, TID_OBELISK_BLUE,		distances[i])) obedistmult++;
 			if (CheckActorDistance(0, TID_REPAIR_BLUE,		distances[i])) repdistmult++;
 		}
-		// is this working?
-		if (GetCVar("zeta_debug") == 1)
-		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
-		SetActivator(0, AAPTR_MASTER);
-		// Now damage the buildings multiplied by the distance.
-		Thing_Damage(TID_BARRACKS_BLUE,		bardistmult * damage, 0);
-		Thing_Damage(TID_REFINERY_BLUE,		refdistmult * damage, 0);
-		Thing_Damage(TID_RESCENTRE_BLUE,	resdistmult * damage, 0);
-		Thing_Damage(TID_FACTORY_BLUE,		wardistmult * damage, 0);
-		Thing_Damage(TID_OBELISK_BLUE,		obedistmult * damage, 0);
-		Thing_Damage(TID_REPAIR_BLUE,		repdistmult * damage, 0);
 	}
 	if (superwt == 1)	// Ion explosion.
 	{
@@ -224,16 +213,30 @@ script SC_BEACONEXPLOSION (int superwt) // acs to check beacon distance to mtcs.
 			if (CheckActorDistance(0, TID_OBELISK_RED,		distances[i])) obedistmult++;
 			if (CheckActorDistance(0, TID_REPAIR_RED,		distances[i])) repdistmult++;
 		}
-		// is this working?
-		if (GetCVar("zeta_debug") == 1)
+	}
+	// is this working?
+	if (GetCVar("zeta_debug") == 1)
 		log(s:"bar ", i:bardistmult, s:" ref ", i:refdistmult, s:" res ", i:resdistmult, s:" war ", i:wardistmult, s:" obe ", i:obedistmult , s:" rep ", i:repdistmult);
-		SetActivator(0, AAPTR_MASTER);
-		// Now damage the buildings multiplied by the distance.
+	if (calculate) // Disarm result value.
+	{
+		totalmult = bardistmult + refdistmult + resdistmult + wardistmult + obedistmult + repdistmult;
+		SetResultValue(totalmult);
+		terminate;
+	}
+	SetActivator(0, AAPTR_MASTER); // Set the owner of the beacon to do the damage.
+	// Now damage the buildings multiplied by the distance.
+	if (superwt == 1){
 		Thing_Damage(TID_BARRACKS_RED,		bardistmult * damage, 0);
 		Thing_Damage(TID_REFINERY_RED,		refdistmult * damage, 0);
 		Thing_Damage(TID_RESCENTRE_RED,		resdistmult * damage, 0);
 		Thing_Damage(TID_FACTORY_RED,		wardistmult * damage, 0);
 		Thing_Damage(TID_OBELISK_RED,		obedistmult * damage, 0);
-		Thing_Damage(TID_REPAIR_RED,		repdistmult * damage, 0);
-	}
+		Thing_Damage(TID_REPAIR_RED,		repdistmult * damage, 0);}
+	if (superwt == 2){
+		Thing_Damage(TID_BARRACKS_BLUE,		bardistmult * damage, 0);
+		Thing_Damage(TID_REFINERY_BLUE,		refdistmult * damage, 0);
+		Thing_Damage(TID_RESCENTRE_BLUE,	resdistmult * damage, 0);
+		Thing_Damage(TID_FACTORY_BLUE,		wardistmult * damage, 0);
+		Thing_Damage(TID_OBELISK_BLUE,		obedistmult * damage, 0);
+		Thing_Damage(TID_REPAIR_BLUE,		repdistmult * damage, 0);}
 }

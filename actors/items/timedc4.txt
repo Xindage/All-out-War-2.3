@@ -122,7 +122,7 @@ actor TimedC4Armed
 		TNT1 A 0 ACS_ExecuteWithResult(1026)
 		TNT1 A 0 A_JumpIf (waterlevel > 1, "Death.Disarm")
 		TNT1 A 0 A_JumpIf (!ACS_ExecuteWithResult(831, 1), "Death.Disarm")
-		TC4T R 35 Thing_SetSpecial (0, 226, CS_C4Special, 0, TEAM_RED)
+		TC4T R 35 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_RED)
 		goto Idle
 	Idle:
 		"----" RRRRRRRRRRRRRRR 35 A_PlaySound ("c4/beep2")
@@ -172,7 +172,7 @@ actor TimedC4ArmedBlue : TimedC4Armed
 			TC4T BB 0 A_JumpIf (waterlevel > 1, "Death.Disarm")
 			TC4T B 0 ACS_ExecuteWithResult(1026)
 			TNT1 A 0 A_JumpIf (!ACS_ExecuteWithResult(831, 0), "Death.Disarm")
-			TC4T B 35 Thing_SetSpecial (0, 226, CS_C4Special, 0, TEAM_BLUE)
+			TC4T B 35 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_BLUE)
 			goto Idle
 		Death:
 			TNT1 A 0 A_NoBlocking
@@ -230,7 +230,7 @@ actor TimedC4ArmedE : TimedC4Armed
 		TNT1 A 0
 		TNT1 A 0 A_JumpIf (waterlevel > 1, "Death.Disarm")
 		TNT1 A 0 A_JumpIf (!ACS_ExecuteWithResult(831, 1), "Death.Disarm")
-		TC4T R 35 Thing_SetSpecial (0, 226, CS_C4Special, 0, TEAM_RED)
+		TC4T R 35 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_RED)
 		goto Idle
 	Idle:
 		"----" RRRRRRRRRRRRRRR 35 A_PlaySound ("c4/beep2")
@@ -279,7 +279,7 @@ actor TimedC4ArmedEBlue : TimedC4ArmedBlue
 		TNT1 A 0
 		TNT1 A 0 A_JumpIf (waterlevel > 1, "Death.Disarm")
 		TNT1 A 0 A_JumpIf (!ACS_ExecuteWithResult(831, 0), "Death.Disarm")
-		TC4T B 35 Thing_SetSpecial (0, 226, CS_C4Special, 0, TEAM_BLUE)
+		TC4T B 35 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_BLUE)
 		goto Idle
 	Idle:
 		"----" BBBBBBBBBBBBBBB 35 A_PlaySound ("c4/beep2")
