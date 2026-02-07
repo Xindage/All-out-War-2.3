@@ -34,6 +34,8 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Projetiles does not collide with building hitboxes.
 		- Remade the teleporting back to field system.
 		- Killing valuable target who can cause heavy damage to your base rewards charges.
+		- Disarming c4 and beacon grant reward, scaling based on where it was placed.
+		- Fixed portals exploits causing it to go invisible under certain conditions.
 
 ===========================================================================================================================================================
 * About the tiberium system *
