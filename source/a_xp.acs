@@ -251,12 +251,11 @@ Script SC_C4special (int team)
 // Bonuses for disarming Beacons.
 Script SC_SuperSpecial (int team)
 {
-	log(s:"CS_C4special started");
+	SetActivatorToTarget (0); // target: beacon -> player	
+	if (PlayerTeam() == team) terminate;
 	int Xp = 100;
 	int Cr = 250;
 	int Po = 5;
-	
-	//if (PlayerNumber() == -1 || !PlayerInGame(PlayerNumber()) || PlayerTeam() == team) terminate;
 	
 	// [Xindage] fuck this team values!!! gross hack. team+1.
 	int SuperValue = ACS_ExecuteWithResult(SC_BEACONEXPLOSION, team+1, true);
@@ -273,8 +272,8 @@ Script SC_SuperSpecial (int team)
 				RepairCharges[PlayerTeam()] += add;
 		}
 		
-		Xp += 50 * SuperValue;
-		Cr += 75 * SuperValue;
+		Xp += 40 * SuperValue;
+		Cr += 50 * SuperValue;
 		Po += 2  * SuperValue;
 	}
 	Team_GivePoints(PlayerTeam(), Po, false);

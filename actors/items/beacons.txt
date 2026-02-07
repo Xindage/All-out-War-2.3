@@ -55,7 +55,8 @@ actor IonCannonBeaconArmed {
 	+SHOOTABLE
 	+THRUGHOST
 	+NOBLOOD
-	+NOTARGETSWITCH
+//	+NOTARGETSWITCH
+	+QUICKTORETALIATE
 	+NOCLIP
 	Health 1750
 	Radius 6
@@ -95,7 +96,7 @@ actor IonCannonBeaconArmed {
 	Spawn:
 		BEAC D 0
 		BEAC D 0 //ACS_ExecuteWithResult(1026)
-		BEAC D 0 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_BLUE)
+		BEAC D 0 //Thing_SetSpecial (0, 226, SC_SuperSpecial, 0, TEAM_BLUE)
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 0, 2)
 			TNT1 A 0 DamageThing (health / 2) // Halve the health if super nukes are enabled.
 		BEAC D 35 ACS_ExecuteAlways (821, 0, TEAM_Blue)
@@ -129,6 +130,7 @@ actor IonCannonBeaconArmed {
 		stop
 	Death:
 		"----" A 0 A_PlaySound ("eva/iondisarmed", CHAN_BODY, 1.0, 0, ATTN_NONE)
+		"----" A 0 ACS_ExecuteAlways(SC_SuperSpecial, 0, TEAM_Blue)
 		goto Disarm
 	Disarm:
 		"----" A 0 A_GiveInventory ("BeaconDisarmed", 1)
@@ -148,7 +150,7 @@ actor NuclearStrikeBeaconArmed : IonCannonBeaconArmed {
 	Spawn:
 	    BEAC C 0 
 		BEAC C 0 //ACS_ExecuteWithResult(1026)
-		BEAC C 0 Thing_SetSpecial (0, 226, SC_C4Special, 0, TEAM_RED)
+		BEAC C 0 //Thing_SetSpecial (0, 226, SC_SuperSpecial, 0, TEAM_RED)
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult (SC_SuperNukeCheck) == 0, 2)
 			TNT1 A 0 DamageThing (health / 2)
 		BEAC C 35 ACS_ExecuteAlways (821, 0, TEAM_Red)
@@ -182,6 +184,7 @@ actor NuclearStrikeBeaconArmed : IonCannonBeaconArmed {
 		stop
 	Death:
 		"----" A 0 A_PlaySound ("eva/nukedisarmed", CHAN_BODY, 1.0, 0, ATTN_NONE)
+		"----" A 0 ACS_ExecuteAlways(SC_SuperSpecial, 0, TEAM_RED)
 		goto Disarm
 	}
 } 
