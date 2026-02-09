@@ -609,11 +609,7 @@ script SC_CRATEEFFECT (int c)
 		}
 
 		// Give repair charges to the SAME team that was damaged
-		if (RepairCharges[team] + charges >= BATTERY_MAX)
-			RepairCharges[team] = BATTERY_MAX;
-		else
-			RepairCharges[team] += charges;
-
+		BatteryModify (team, charges, BATTERY_ADD);
 		SYNC_UpdateAllBuildings ();
 		break;
 

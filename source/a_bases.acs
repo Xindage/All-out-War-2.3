@@ -34,7 +34,7 @@ function void AwardBuildingDamage (int what, int team) {
 		int damagescored = (lasthealth - health) << 16;
 		int ratio = SCORE_MAX_RATIO - FixedMul ((SCORE_MAX_RATIO - SCORE_MIN_RATIO), ((health<<16) / spawnhealth));
 		damagescored = FixedMul (damagescored, ratio);
-		int points;
+		int points, charges;
 
 		// Calculate points. Remainder goes to unawarded damage counter
 		if (damagescored >= 0) {
@@ -49,17 +49,13 @@ function void AwardBuildingDamage (int what, int team) {
 			ratio, damagescored, points, UnawardedDamage[PlayerNumber ()]);
 		*/
 		// Award the player
-		if (points > 0) {
+		if (points > 0)
+		{
+			charges = (damagescored / 2) >> 16;
+			BatteryModify (PlayerTeam(), charges, BATTERY_ADD)
 			AddExperience (points * 25);
 			GiveCredits (points * 60);
 			Team_GivePoints (PlayerTeam (), points, false);
-		}
-		// Award his team with charges, unless if its sudden death.
-		if (!intHolder[i_SuddenDeath])
-		{
-			int charges = (damagescored / 2) >> 16;
-			if (RepairCharges[PlayerTeam()] + charges >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
-			else RepairCharges[PlayerTeam()] += charges;
 		}
 	}
 }

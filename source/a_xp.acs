@@ -233,11 +233,7 @@ Script SC_C4special (int team)
 		
 	if(SC_DISTCHECK(0, PlayerTeam(), 256, 0));
 	{
-		if (!intHolder[i_SuddenDeath])
-		{
-			if (RepairCharges[PlayerTeam()] + 40 >= BATTERY_MAX) RepairCharges[PlayerTeam()] = BATTERY_MAX;
-			else RepairCharges[PlayerTeam()] += 40;
-		}
+		BatteryModify (PlayerTeam(), 40, BATTERY_ADD)
 		xp = 35;
 		Cr = 100;
 		Po = 3;

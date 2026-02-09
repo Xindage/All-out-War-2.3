@@ -36,6 +36,7 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Killing valuable target who can cause heavy damage to your base rewards charges.
 		- Disarming c4 and beacon grant reward, scaling based on where it was placed.
 		- Fixed portals exploits causing it to go invisible under certain conditions.
+		- All gain/loss of battery is tied to the existence of repair facility.
 
 ===========================================================================================================================================================
 * About the tiberium system *

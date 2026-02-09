@@ -114,9 +114,7 @@ script 650 (int amount, int repairtype, int turret) {
 		// Take the charges away when repairing main buildings
 		if (IsMainBuilding[what])
 			{
-			RepairCharges[team] -= RepairAmounts[numRepairers];
-			// Dont go negative please!
-			if (RepairCharges[team] < 1) RepairCharges[team] = 0;
+			BatteryModify(team, finalAmount, BATTERY_REP);
 			}
 
 		// Debug
@@ -273,9 +271,7 @@ script 823 (int check, int team) {
 	// Take the charges away when repairing main buildings
 	if (IsMainBuilding[what])
 		{
-		RepairCharges[team] -= RepairAmounts[1];
-		// Dont go negative please!
-		if (RepairCharges[team] < 1) RepairCharges[team] = 0;
+			BatteryModify(team, RepairAmounts[1], BATTERY_REP);
 		}
 	
 	// Update the building health to the clients
@@ -359,54 +355,25 @@ script SC_RepairHUD (void) CLIENTSIDE {
 // [Xindage] Repair Facility now does worth a lot to be alive.
 Script "SC_BatteryRegeneration" OPEN
 {
-	int bp;		// Blue Points %
-	int btotal;	// Blue Total %
-	int rp;		// Red Points %
-	int rtotal;	// Red Total %
-
-	Delay (TICRATE * 30); // Wait for at least half minute.
-	While (!intHolder[i_SuddenDeath])
+	int Amount;
+	Delay (TICRATE * 60); // Wait for at least a minute.
+	
+	while (!intHolder[i_SuddenDeath])
 	{
-		bp = GotRepair[0] ? 100 : 40;
-		rp = GotRepair[1] ? 100 : 40;
-		btotal = (96 /*GetCVAR("zeta_batteryregen")*/ * bp) / 100;
-		rtotal = (96 /*GetCVAR("zeta_batteryregen")*/ * rp) / 100;
-			// Dont update if sudden death is about to start on the end of this loop.
-			if (Timer() >= GetCVAR("zeta_suddendeathtime") * MINUTETICS - 9 * TICRATE) {btotal = 0;rtotal = 0;}
-		if (RepairCharges[0] + btotal >= BATTERY_MAX) RepairCharges[0] = BATTERY_MAX;
-		else RepairCharges[0] += btotal;
-		if (RepairCharges[1] + rtotal >= BATTERY_MAX) RepairCharges[1] = BATTERY_MAX;
-		else RepairCharges[1] += rtotal;
-			// Debug
-//			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
-//			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
-		// Send the info to clientside hud.
-		int btc = RepairCharges[0];
-		int rtc = RepairCharges[1];
-		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
-		Delay (TICRATE * 10); // Each loop is a sync, lets not push the clients too hard.
+		// Dont update if sudden death is about to start on the end of this loop.
+		if (Timer() <= GetCVAR("zeta_suddendeathtime") * MINUTETICS - 9 * TICRATE)
+		{
+			Amount = 96;
+			BatteryModify(-1, Amount, BATTERY_ADD);
+		}
+		Delay(TICRATE * 10);
 	}
-	While (intHolder[i_SuddenDeath])
+	while (intHolder[i_SuddenDeath] && (RepairCharges[0] > 0 || RepairCharges[1] > 0))
 	{
-		bp = GotRepair[0] ? 100 : 150;
-		rp = GotRepair[1] ? 100 : 150;
-		// When sudden death start battery get drained instead of filled, repair facilty slowdown the amount.
 		// if(GetCVAR("zeta_batterydegeneration") == 0) terminate; // Server can set it off.
-		btotal = (320 /*GetCVAR("zeta_batterydegen")*/ * bp) / 100;
-		rtotal = (320 /*GetCVAR("zeta_batterydegen")*/ * rp) / 100;
-		if (RepairCharges[0] - btotal <= 0) RepairCharges[0] = 0;
-		else RepairCharges[0] -= btotal;
-		if (RepairCharges[1] - rtotal <= 0) RepairCharges[1] = 0;
-		else RepairCharges[1] -= rtotal;
-		// terminate when both teams are empty
-		if (RepairCharges[0] < 1 && RepairCharges[1] < 1) terminate;
-		btc = RepairCharges[0];
-		rtc = RepairCharges[1];
-			// Debug
-//			HudMessageBold(s: "btotal ", d: btotal, s:"\nrtotal ", d: rtotal;
-//			HUDMSG_PLAIN, 1019, CR_WHITE, 0.4, 0.4, 5.0);
-		// Send the info to clientside hud.
-		ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
-		Delay(TICRATE * 10); // Each loop is a sync, lets not push the clients too hard.
+		Amount = 320;
+		BatteryModify(-1, Amount, BATTERY_SUB);
+		
+		Delay (TICRATE * 10);
 	}
 }

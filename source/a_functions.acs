@@ -1039,3 +1039,58 @@ function bool SC_DISTCHECK (bool full, int team, int dist, bool enforce)
     }
     return false;
 }
+
+// [Xindage] Core of battery management function.
+#define BATTERY_ADD 0
+#define BATTERY_SUB 1
+#define BATTERY_REP 2
+function void BatteryModify (int team, int amount, int mode)
+{
+	int finalAmount = amount;
+	int ts, te;
+	
+	if (team == -1){ts = 0;te   = 1;} // Both teams.
+	else
+	{
+		if (team < 0 || team > 1) return;
+		tStart = team;
+		tEnd   = team;
+	}
+	for (int t = ts; t <= te; t++)
+	{
+		finalAmount = amount;
+		if (mode == BATTERY_ADD && intHolder[i_SuddenDeath]) continue;
+		// Modifiers
+		if (mode != BATTERY_REP && !GotRepair[t])
+		{
+			if (mode == BATTERY_ADD) // No RF -> Loss 60% of the gain.
+			{finalAmount = (amount * 40) / 100;}
+			else if (mode == BATTERY_SUB) // No RF -> 50% extra loss.
+			{finalAmount = (amount * 150) / 100;}
+		}
+		// Apply values
+		switch(mode)
+		{
+			case BATTERY_ADD:
+			{
+				if (RepairCharges[t] + finalAmount >= BATTERY_MAX)
+					RepairCharges[t] = BATTERY_MAX;
+				else
+					RepairCharges[t] += finalAmount;
+				break;
+			}
+			case BATTERY_SUB:
+			case BATTERY_REP:
+			{
+				if (RepairCharges[t] - finalAmount <= 0)
+					RepairCharges[t] = 0;
+				else
+					RepairCharges[t] -= finalAmount;
+				break;
+			}
+		}
+	}
+	// Sync
+	ACS_ExecuteAlways(SC_CL_SYNCCHARGES, 0, RepairCharges[0], RepairCharges[1]);
+}
+

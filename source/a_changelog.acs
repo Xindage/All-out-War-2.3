@@ -51,7 +51,8 @@ script 501 (void) net clientside
         \ci- Remade the teleporting back to field system.\n
         \cq- Killing valuable target who can cause heavy damage to your base rewards charges.
         \cq- Disarming c4 and beacon grant reward, scaling based on where it was placed.\n
-        \ci- Fixed portals exploits causing it to go invisible under certain conditions."
+        \ci- Fixed portals exploits causing it to go invisible under certain conditions.\n
+        \ci- All gain/loss of battery is tied to the existence of repair facility."
     ; HUDMSG_PLAIN, 801, CR_WHITE, 0.5, 0.2, 0.0);
     ChangelogOpen[p] = 1;
 }
