@@ -52,7 +52,7 @@ function void AwardBuildingDamage (int what, int team) {
 		if (points > 0)
 		{
 			charges = (damagescored / 2) >> 16;
-			BatteryModify (PlayerTeam(), charges, BATTERY_ADD)
+			BatteryModify (PlayerTeam(), charges, BATTERY_ADD);
 			AddExperience (points * 25);
 			GiveCredits (points * 60);
 			Team_GivePoints (PlayerTeam (), points, false);

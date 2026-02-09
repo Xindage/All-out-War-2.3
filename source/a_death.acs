@@ -112,7 +112,7 @@ script SC_DEATH DEATH
 			if (checkInventory("TimedC4Count") >= 2) threat_level += checkInventory("TimedC4Count")-1;
 			if (checkInventory("IsStealth")) threat_level += 1;
 			if (checkInventory("RepairGun") || checkInventory("HealGun") || checkInventory("BombSquadGun")) threat_level += 1;
-			if (checkInventory("PlasmaCannon") threat_level += 2;
+			if (checkInventory("PlasmaCannon")) threat_level += 2;
 			if (checkInventory("UtilityGun")) threat_level += 2;
 			if (checkInventory("TimeGun")) threat_level += 2;
 			if (checkInventory("RemoteC4")) threat_level += 3;
@@ -130,7 +130,7 @@ script SC_DEATH DEATH
 		if (IsInEnemyBase)
 			battery_gain = (battery_gain * 3) / 2;	// Defensive kill, 50% bonus energy.
 		if (battery_gain > 0) // Reverse team is used to prevent suicides.
-			{BatteryModify (!PlayerTeam(), battery_gain, BATTERY_ADD)}
+			BatteryModify (!PlayerTeam(), battery_gain, BATTERY_ADD);
 	}
 	
 	// =========================================================================

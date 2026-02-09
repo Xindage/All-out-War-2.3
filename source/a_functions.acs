@@ -1053,8 +1053,8 @@ function void BatteryModify (int team, int amount, int mode)
 	else
 	{
 		if (team < 0 || team > 1) return;
-		tStart = team;
-		tEnd   = team;
+		ts = team;
+		te = team;
 	}
 	for (int t = ts; t <= te; t++)
 	{
