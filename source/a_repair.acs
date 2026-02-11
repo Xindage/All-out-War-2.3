@@ -61,11 +61,11 @@ script 650 (int amount, int repairtype, int turret) {
 	if (tidtype == 11 || tidtype == 12)
 	{
 		int b = tid % 100;
-		// Valid building range (01..11)
-		if (b >= 1 && b <= MAX_BUILDINGS)
+		// Valid building range (00..10)
+		if (b >= 0 && b < MAX_BUILDINGS)
 		{
-			what  = b - 1; // Required offset.
-			tteam = (tidtype == 12); // 0 = Blue, 1 = Red
+			what  = b;
+			tteam = (tidtype == 12);
 		}
 	}
 	

@@ -125,36 +125,41 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // ============================================================================
 // Thing IDs
 // (100 200) team | 10 Btos | X building
-#define TID_BARRACKS_BLUE		1101	// Blue Buildings
-#define TID_REFINERY_BLUE		1102
-#define TID_RESCENTRE_BLUE		1103
-#define TID_FACTORY_BLUE		1104
-#define TID_OBELISK_BLUE		1105
-#define TID_REPAIR_BLUE			1106
-#define TID_HEALTHREGEN_BLUE	1107
-#define TID_AMMOREGEN_BLUE		1108
-#define TID_MINIREF_BLUE		1109
-#define TID_BARRACKS_RED		1201	// Red Buildings
-#define TID_REFINERY_RED		1202
-#define TID_RESCENTRE_RED		1203
-#define TID_FACTORY_RED			1204
-#define TID_OBELISK_RED			1205
-#define TID_REPAIR_RED			1206
-#define TID_HEALTHREGEN_RED		1207
-#define TID_AMMOREGEN_RED		1208
-#define TID_MINIREF_RED			1209
-#define TID_BARBTOS_BLUE		1111	// Blue BTOs
-#define TID_REFBTOS_BLUE		1112
-#define TID_RESBTOS_BLUE		1113
-#define TID_FACBTOS_BLUE		1114
-#define TID_OBEBTOS_BLUE		1115
-#define TID_REPBTOS_BLUE		1116
-#define TID_BARBTOS_RED			1211	// Red BTOs
-#define TID_REFBTOS_RED			1212
-#define TID_RESBTOS_RED			1213
-#define TID_FACBTOS_RED			1214
-#define TID_OBEBTOS_RED			1215
-#define TID_REPBTOS_RED			1216
+#define TID_BARRACKS_BLUE		1100	// Blue Buildings
+#define TID_REFINERY_BLUE		1101
+#define TID_RESCENTRE_BLUE		1102
+#define TID_FACTORY_BLUE		1103
+#define TID_OBELISK_BLUE		1104
+#define TID_REPAIR_BLUE			1105
+#define TID_HEALTHREGEN_BLUE	1106
+#define TID_AMMOREGEN_BLUE		1107
+#define TID_MINIREF_BLUE		1108
+#define TID_TELENODE_BLUE1		1109
+#define TID_TELENODE_BLUE2		1110
+#define TID_BARRACKS_RED		1200	// Red Buildings
+#define TID_REFINERY_RED		1201
+#define TID_RESCENTRE_RED		1202
+#define TID_FACTORY_RED			1203
+#define TID_OBELISK_RED			1204
+#define TID_REPAIR_RED			1205
+#define TID_HEALTHREGEN_RED		1206
+#define TID_AMMOREGEN_RED		1207
+#define TID_MINIREF_RED			1208
+#define TID_TELENODE_RED1		1209
+#define TID_TELENODE_RED2		1210
+#define TID_BARBTOS_BLUE		1121	// Blue BTOs
+#define TID_REFBTOS_BLUE		1122
+#define TID_RESBTOS_BLUE		1123
+#define TID_FACBTOS_BLUE		1124
+#define TID_OBEBTOS_BLUE		1125	// Eye as well
+#define TID_REPBTOS_BLUE		1126
+#define TID_BARBTOS_RED			1221	// Red BTOs
+#define TID_REFBTOS_RED			1222
+#define TID_RESBTOS_RED			1223
+#define TID_FACBTOS_RED			1224
+#define TID_OBEBTOS_RED			1225	// Eye as well
+#define TID_REPBTOS_RED			1226
+
 // Teleport IDS
 #define TELE_BAR_BLUE			1130	// Blue Destinations
 #define TELE_REF_BLUE			1131
@@ -172,26 +177,24 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define TELE_REP_RED			1235
 #define TELE_TOW_RED			1236	// Tower
 #define TELE_FOR_RED			1237	// Foward-spawn / Fail-safe option
+// 1100 1139 - 1200 1239
+// Do not use any of these TIDs range outside this block:
 
-// TODO: move these to 1000+ range
-#define TID_TIBERIUM 402			//1000
-#define TID_CRATE 1300				//1001
-#define TID_CRATESPOT_START 410		//1002
+// Other Tids 1000 and above
+#define TID_TIBERIUM 			1000
+#define TID_CRATE 				1001
+#define TID_TELENODE_TELEDEST	1002	// - 1005
+#define TID_TELENODE_FX			1006	// - 1009
+#define TID_CRATESPOT_START 	1010
 // 410 - 442 We reall need 32 spots?
-#define TID_CRATESPOT_END 442		//1034
-#define TID_TELENODE_BLUE1			1500
-#define TID_TELENODE_BLUE2			1501
-#define TID_TELENODE_RED1			1502
-#define TID_TELENODE_RED2			1503
-#define TID_TELENODE_TELEDEST		1504 // - 1507
-#define TID_TELENODE_FX				1508 // - 1511
-// 1512 - 1519
-#define TID_MARINE					1520 // - 1544
+#define TID_CRATESPOT_END 		1042
+#define TID_MARINE				1043 // - 1066 // Max of 24.
 
-#define TID_TEMP					5000 // - 5499
-#define MAX_TEMPTID					500
+// Temp
+#define TID_TEMP				1300 // - 1799
+#define MAX_TEMPTID				500
 
-#define TID_DeadPlayer				9999
+#define TID_DeadPlayer			9999
 
 // ============================================================================
 // Script numbers. Commented ones are free.

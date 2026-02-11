@@ -28,37 +28,44 @@ const int BUILDING_MINIREF = 8;
 const int BUILDING_PORTAL = 9;
 
 // Buildings TID
-const int TID_BARRACKS_BLUE		 = 1101;	// Blue Buildings
-const int TID_REFINERY_BLUE		 = 1102;
-const int TID_RESCENTRE_BLUE	 = 1103;
-const int TID_FACTORY_BLUE		 = 1104;
-const int TID_OBELISK_BLUE		 = 1105;
-const int TID_REPAIR_BLUE		 = 1106;
-const int TID_HEALTHREGEN_BLUE	 = 1107;
-const int TID_AMMOREGEN_BLUE	 = 1108;
-const int TID_MINIREF_BLUE		 = 1109;
-const int TID_BARRACKS_RED		 = 1201;	// Red Buildings
-const int TID_REFINERY_RED		 = 1202;
-const int TID_RESCENTRE_RED		 = 1203;
-const int TID_FACTORY_RED		 = 1204;
-const int TID_OBELISK_RED		 = 1205;
-const int TID_REPAIR_RED		 = 1206;
-const int TID_HEALTHREGEN_RED	 = 1207;
-const int TID_AMMOREGEN_RED		 = 1208;
-const int TID_MINIREF_RED		 = 1209;
+const int TID_BARRACKS_BLUE		 = 1100;	// Blue Buildings
+const int TID_REFINERY_BLUE		 = 1101;
+const int TID_RESCENTRE_BLUE	 = 1102;
+const int TID_FACTORY_BLUE		 = 1103;
+const int TID_OBELISK_BLUE		 = 1104;
+const int TID_REPAIR_BLUE		 = 1105;
+const int TID_HEALTHREGEN_BLUE	 = 1106;
+const int TID_AMMOREGEN_BLUE	 = 1107;
+const int TID_MINIREF_BLUE		 = 1108;
+const int TID_TELENODE_BLUE1	 = 1109;
+const int TID_TELENODE_BLUE2	 = 1110;
+const int TID_BARRACKS_RED		 = 1200;	// Red Buildings
+const int TID_REFINERY_RED		 = 1201;
+const int TID_RESCENTRE_RED		 = 1202;
+const int TID_FACTORY_RED		 = 1203;
+const int TID_OBELISK_RED		 = 1204;
+const int TID_REPAIR_RED		 = 1205;
+const int TID_HEALTHREGEN_RED	 = 1206;
+const int TID_AMMOREGEN_RED		 = 1207;
+const int TID_MINIREF_RED		 = 1208;
+const int TID_TELENODE_RED1	     = 1209;
+const int TID_TELENODE_RED2		 = 1210;
 // Buildings BTOs - Other objects may use these as well, for example obelisk eye.
-const int TID_BARBTOS_BLUE		 = 1111;	// Blue BTOs
-const int TID_REFBTOS_BLUE		 = 1112;
-const int TID_RESBTOS_BLUE		 = 1113;
-const int TID_FACBTOS_BLUE		 = 1114;
-const int TID_OBEBTOS_BLUE		 = 1115;
-const int TID_REPBTOS_BLUE		 = 1116;
-const int TID_BARBTOS_RED		 = 1211;	// Red BTOs
-const int TID_REFBTOS_RED		 = 1212;
-const int TID_RESBTOS_RED		 = 1213;
-const int TID_FACBTOS_RED		 = 1214;
-const int TID_OBEBTOS_RED		 = 1215;
-const int TID_REPBTOS_RED		 = 1216;
+const int TID_BARBTOS_BLUE		 = 1121;	// Blue BTOs
+const int TID_REFBTOS_BLUE		 = 1122;
+const int TID_RESBTOS_BLUE		 = 1123;
+const int TID_FACBTOS_BLUE		 = 1124;
+const int TID_OBEBTOS_BLUE		 = 1125;	// Eye as well
+const int TID_REPBTOS_BLUE		 = 1126;
+const int TID_BARBTOS_RED		 = 1221;	// Red BTOs
+const int TID_REFBTOS_RED		 = 1222;
+const int TID_RESBTOS_RED		 = 1223;
+const int TID_FACBTOS_RED		 = 1224;
+const int TID_OBEBTOS_RED		 = 1225;	// Eye as well
+const int TID_REPBTOS_RED		 = 1226;
+
+// Other Tids 1000 and above
+const int TID_TIBERIUM 			 = 1000;
 
 // Script numbers
 const int SC_GiveCredits = 814;

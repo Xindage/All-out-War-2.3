@@ -49,7 +49,7 @@ script 501 (void) net clientside
         \ci- Reduced CPU and bandwidth usage while repairing buildings, if that matters.\n
         \ci- Projetiles does not collide with building hitboxes.\n
         \ci- Remade the teleporting back to field system.\n
-        \cq- Killing valuable target who can cause heavy damage to your base rewards charges.
+        \cq- Killing valuable target who can cause heavy damage to your base rewards charges.\n
         \cq- Disarming c4 and beacon grant reward, scaling based on where it was placed.\n
         \ci- Fixed portals exploits causing it to go invisible under certain conditions.\n
         \ci- All gain/loss of battery is tied to the existence of repair facility."

@@ -96,10 +96,20 @@ function int PortalHealth (int t) {
 	return s;
 }
 
-function str PortalLinkColor (int team, int teamcolor) {
-	int t1 = TID_TELENODE_BLUE1 + 2*team;
-	int t2 = TID_TELENODE_BLUE2 + 2*team;
+function str PortalLinkColor (int team, int teamcolor)
+{
+//	Please no!
+//	int t1 = TID_TELENODE_BLUE1 + 2*team;
+//	int t2 = TID_TELENODE_BLUE2 + 2*team;
+	int t1;
+	int t2;
+	if (team == TEAM_BLUE)
+	{t1 = TID_TELENODE_BLUE1; t2 = TID_TELENODE_BLUE2;}
+	else
+	{t1 = TID_TELENODE_RED1; t2 = TID_TELENODE_RED2;}
+	
 	int exists = ThingCount (T_NONE, t1) && ThingCount (T_NONE, t2);
+	
 	if (exists) {
 		if (!teamcolor)
 			return "\cD";

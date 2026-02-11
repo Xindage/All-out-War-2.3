@@ -33,6 +33,19 @@ function int GetTeleNodeTeam (int idx) {
 	return TEAM_RED;
 }
 
+// ============================================================================
+function int GetTeleNodeTID (int idx)
+{
+	switch (idx)
+	{
+		case 0: return TID_TELENODE_BLUE1;
+		case 1: return TID_TELENODE_BLUE2;
+		case 2: return TID_TELENODE_RED1;
+		case 3: return TID_TELENODE_RED2;
+	}
+	return -1;
+}
+
 // Teleporter nodes use this to request TIDs.
 script SC_TELENODE_TIDREQUEST (int team) {
 	if (team == TEAM_RED) {
@@ -73,7 +86,7 @@ script SC_TELENODE_INIT (void) {
 		FatalError ("Failed to determine teleporter node IDX during init!");
 	}
 	
-	tid = TID_TELENODE_BLUE1 + idx;
+	tid = GetTeleNodeTID(idx);
 	
 	// Determine destination
 	int dest = GetTeleporterNodeDestination (idx);
@@ -195,7 +208,7 @@ script SC_TELENODE_INIT (void) {
 		SetActorState (tid, "Active");
 		SetActorState (tid_effects, "Init.Active");
 		
-		SetActorState (TID_TELENODE_BLUE1 + dest, "Active");
+		SetActorState (GetTeleNodeTID(dest), "Active");
 		SetActorState (TID_TELENODE_FX + dest, "Active");
 		Log (n:0, s:" constructs a teleporter and establishes a link.");
 		
@@ -214,17 +227,22 @@ script SC_TELENODE_INIT (void) {
 // Teleport function
 script SC_TELENODE_FUNCTION (int idx) {
 	int dest = GetTeleporterNodeDestination (idx);
-	int tid = TID_TELENODE_BLUE1 + idx;
+	int tid = GetTeleNodeTID(idx);
 	
 	// This script gets executed on both bump and death
 	if (!ThingCount (0, tid)) {
 		Log (n:0, s:" destroys a teleporter node.");
 		
 		// Reward for destroying the enemy portal
-		if (idx >= 2 && PlayerTeam () == TEAM_BLUE || idx < 2 && PlayerTeam () == TEAM_RED) {
+		if (GetTeleNodeTeam(idx) != PlayerTeam())
+		{
 			ACS_ExecuteAlways (324, 0, 1); // 50xp
 			AwardCredits (200);
 		}
+/*		if (idx >= 2 && PlayerTeam () == TEAM_BLUE || idx < 2 && PlayerTeam () == TEAM_RED) {
+			ACS_ExecuteAlways (324, 0, 1); // 50xp
+			AwardCredits (200);
+		}*/
 		
 		TeleporterNodes[idx] = false;
 		Thing_Remove (TID_TELENODE_TELEDEST + idx);
@@ -234,7 +252,7 @@ script SC_TELENODE_FUNCTION (int idx) {
 		// Tell the possible now-defunct destination
 		// that it lost connection.
 		if (TeleporterNodes[dest]) {
-			SetActorState (TID_TELENODE_BLUE1 + dest, "Inactive");
+			SetActorState (GetTeleNodeTID(idx), "Inactive");
 			SetActorState (TID_TELENODE_FX + dest, "Inactive");
 			
 			TeamMessage (TMSG_TELELINK, 1, playernumber());
@@ -278,7 +296,7 @@ script SC_TELENODE_FUNCTION (int idx) {
 	
 	// Check that a destination exists - this is by now only
 	// a sanity check as inactive portals are non-solid
-	if (!ThingCount (0, 1500+dest)) {
+	if (!ThingCount (0, TID_TELENODE_TELEDEST + dest)) {
 		DisplayCross();
 		SetFont ("BIGFONT");
 		HudMessage(s:"There is no destination portal!";
