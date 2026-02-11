@@ -65,7 +65,7 @@ actor UtilityGun : AOWWeapon {
 		UTIG A 20
 		goto Ready
 	Ready:
-		UTIG A 0 ACS_ExecuteAlways (370, 0)
+//		UTIG A 0 ACS_ExecuteAlways (370, 0) // Unecessary.
 		TNT1 A 0 A_JumpIfInventory("SelectAnimation",1,"Select")
 		UTIG A 0 A_TakeInventory ("Utility_Percent", 2)
 		TNT1 A 0 A_JumpIfInventory("ActionFragGrenade",1,"UseFragGrenade")
