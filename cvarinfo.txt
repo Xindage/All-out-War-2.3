@@ -74,14 +74,9 @@ server	int		zeta_tiberium_maxstacks     =       15;
 // [SP] Time (in minutes) before sudden death.
 // [Dusk] changed default to 45, -1 means immediate
 server	int		zeta_suddendeathtime		=		30;
-	
-// [Dusk] Sudden death degeneration
-server	int		zeta_degeneration			=		0;
-server	int		zeta_degenerationinterval 	=		10;
 
-server	int		zeta_ticketmode 			=		0;	// Enable tickets in sudden death. (Default: False)
-server	int		zeta_ticketpool				=		0;	// Enable tickets before sudden death. (Default: False)
-server	int		zeta_tickets				=		75;	// Amount of tickets.
+server	int		zeta_ticketmode 			=		1;	// Enable tickets in sudden death. (Default: True)
+server	int		zeta_tickets				=		0;	// Amount of tickets. (Default: 0) Zero means that he server will calculate the amount.
 
 // [SG] Tickets awarded for killing buildings
 
