@@ -209,7 +209,7 @@ actor PlasmaCannonBall {
 	Radius 13
 	Height 8
 	Speed 40
-	Damage (220)
+	Damage (200)
 	Obituary "$OB_PLASMACANNON_RED" // "%o was annihilated by %k's \caPlasma Cannon."
 	RenderStyle Add
 	Alpha 0.75
@@ -224,11 +224,11 @@ actor PlasmaCannonBall {
 		loop
 	Death:
 		PLE1 A 4
-		PLE1 A 4 bright A_Explode (530, 192)
+		PLE1 A 4 bright A_Explode (512, 192)
 		PLE1 BBBB 2 bright A_SpawnItemEx("PlasmaFlameDecay", random(-32,32), random(-32,32), random(-32,32),0,0,0,0, SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		PLE1 C 0 A_SpawnItemEx ("PlasmaFlameCluster", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
 		PLE1 C 4 bright
-		PLE1 C 4 bright A_Explode (30, 550, 0)
+		PLE1 C 4 bright A_Explode (32, 512, 0)
 		PLE1 DEF 8 bright
 		stop
 	}
@@ -264,18 +264,18 @@ actor PlasmaCannonBallSmall : PlasmaCannonBall {
 }
 
 actor PlasmaCannonBallBlue : PlasmaCannonBall {
-	Damage (400)
+	Damage (200)
 	Translation "0:0=0:0"
 	Obituary "$OB_PLASMACANNON_BLUE" // "%o was annihilated by %k's \cNPlasma Cannon."
 	decal "PCLightning"
 	States {
 	Death:
 		PLE1 A 4
-		PLE1 A 4 bright A_Explode (500, 192)
+		PLE1 A 4 bright A_Explode (512, 192)
 		PLE1 BBBB 2 bright A_SpawnItemEx("PlasmaFlameDecayBlue", random(-32,32), random(-32,32), random(-32,32),0,0,0,0, SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		PLE1 C 0 A_SpawnItemEx ("PlasmaFlameCluster", 0,0,0,0,0,0,0, SXF_TRANSFERTRANSLATION)
 		PLE1 C 4 bright
-		PLE1 C 4 bright A_Explode (30, 550, 0)
+		PLE1 C 4 bright A_Explode (32, 512, 0)
 		PLE1 DEF 8 bright
 		stop
 	}
