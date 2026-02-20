@@ -1,8 +1,11 @@
 // Hitboxes - these actors are placed around buildings. They transfer external
 // damage to the terminal, allowing buildings to be destroyed from the outside.
+// [Xindage] Hitboxes now cannot be exploited by geometry, only one can be hit per tic
+// if the damage is considerable, this prevent multiples btos sending damage to the
+// terminal and virtually creating weak spots. (check a_bases.acs for info)
 
 actor BaseTerminalOutside {
-	health 99999
+	health 100000
 	radius 0
 	height 512
 	DesignatedTeam 1
@@ -26,7 +29,7 @@ actor BaseTerminalOutside {
 	DamageFactor "Ice",				0.0
 	DamageFactor "Time",			0.0
 	DamageFactor "Suicide",         1.0
-	DamageFactor "Superweapon",		1.0
+	DamageFactor "Superweapon",		0.0
 	DamageFactor "Disarm",			0.0
 	DamageFactor "Deconstruction",	0.0
 	DamageFactor "Mechstomp",		0.0
@@ -56,30 +59,45 @@ actor BaseTerminalOutside {
 		TNT1 A 0 A_SpawnItemEx("ExplosionLargeNoDebris")
 		TNT1 A -1
 		stop
+	Regenerate:
+		TNT1 A 5 HealThing (100000, 100000)
+		goto idle
 	Idle:
 		TNT1 A -1
 		stop
 	Pain:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], 1)
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], 1)
+		goto Regenerate
 	Pain.Fire:
 	Pain.EnergyDecay:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (3, 4))
-		goto Idle
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (3, 4))
+		goto Regenerate
 	Pain.Plasma:
-	Pain.MassDriver:
-	Pain.Explosion:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfHealthLower (99850, "TransferHigh")
 	Pain.AntiArmor:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (20, 40))
-		goto Idle
-
-	Pain.Superweapon:
+		TNT1 A 0 A_JumpIfHealthLower (99920, "TransferMedium")
+		goto Regenerate
+	Pain.MassDriver:
+	Pain.Explosion:
 		TNT1 A 0
-		TNT1 A 5 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (40, 80))
-		goto Idle
+		TNT1 A 0 A_JumpIfHealthLower (99940, "TransferLow")
+		goto Regenerate
+	TransferLow:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (90, 115))
+		goto Regenerate
+	TransferMedium:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (130, 180))
+		goto Regenerate
+	TransferHigh:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (350, 450))
+		goto Regenerate
 	}
 }
 

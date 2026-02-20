@@ -859,9 +859,39 @@ script SC_STRUCTUREPAIN (int Structure, int Team) {
 // =============================================================================
 // [Dusk] BTOs call this to cause external damage, this way the attacker is
 // properly rewarded for the damage done.
-script SC_STRUCTUREBTODAMAGE (int tid, int damage) {
+/*script SC_STRUCTUREBTODAMAGE (int tid, int damage)
+{
 	SetActivatorToTarget (0);
-	Thing_Damage (tid, damage, 0);
+	if (intHolder[i_SuddenDeath])
+		damage *= 2; // Double damage on SD.
+	Thing_Damage (tid, damage * dmgm, 0);
+}*/
+
+int g_LastHitTID[MAXPLAYERS];
+int g_LastHitTic[MAXPLAYERS];
+
+script SC_STRUCTUREBTODAMAGE (int tid, int damage)
+{
+	SetActivatorToTarget(0);
+	
+	int player = PlayerNumber();
+	int tic = Timer();
+	
+	if (damage > 5) // Dont check/lock if damage is from minor sources (fire, energy decay)
+	{
+		// Check if damage was taken just now
+		if (g_LastHitTID[player] == tid && g_LastHitTic[player] == tic)
+			terminate;
+		
+		// Lock it
+		g_LastHitTID[player] = tid;
+		g_LastHitTic[player] = tic;
+	}
+	
+	if (intHolder[i_SuddenDeath]) // SD Double damage
+		damage *= 2;
+	
+	Thing_Damage(tid, damage, 0);
 }
 
 // =============================================================================
