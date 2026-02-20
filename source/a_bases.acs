@@ -886,6 +886,10 @@ script SC_STRUCTUREBTODAMAGE (int tid, int damage)
 		// Lock it
 		g_LastHitTID[player] = tid;
 		g_LastHitTic[player] = tic;
+		
+		// Are you a titan, you should demolish buildings.
+		if (CheckInventory ("TitanWeapons"))
+			damage += damage / 2;
 	}
 	
 	if (intHolder[i_SuddenDeath]) // SD Double damage
