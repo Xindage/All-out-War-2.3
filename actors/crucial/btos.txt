@@ -76,7 +76,8 @@ actor BaseTerminalOutside {
 		goto Regenerate
 	Pain.Plasma:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfHealthLower (99850, "TransferHigh")
+		TNT1 A 0 A_JumpIfHealthLower (99900, "TransferHigh")
+		goto Regenerate
 	Pain.AntiArmor:
 		TNT1 A 0
 		TNT1 A 0 A_JumpIfHealthLower (99920, "TransferMedium")
