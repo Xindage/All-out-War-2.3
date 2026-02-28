@@ -205,7 +205,7 @@ actor RemoteC4Armed : SwitchableDecoration {
 	DamageFactor "FireSpecial",		0.0
 	DamageFactor "Chemical",		0.0
 	DamageFactor "ChemicalSpecial",	0.0
-	DamageFactor "Energy",			1.0
+	DamageFactor "Energy",			0.0 // glitchy
 	DamageFactor "Plasma",			0.0
 	DamageFactor "EnergyDecay",		0.0
 	DamageFactor "Ice",				0.0
