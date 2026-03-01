@@ -25,7 +25,8 @@ const int BUILDING_REPAIR = 5;
 const int BUILDING_HEALTHREGEN = 6;
 const int BUILDING_AMMOREGEN = 7;
 const int BUILDING_MINIREF = 8;
-const int BUILDING_PORTAL = 9;
+const int BUILDING_PORTAL1 = 9;
+const int BUILDING_PORTAL2 = 10;
 
 // Buildings TID
 const int TID_BARRACKS_BLUE		 = 1100;	// Blue Buildings
@@ -80,6 +81,7 @@ const int SC_STRUCTUREBTODAMAGE = 836;
 const int SC_CRATEEFFECT = 839;
 const int SC_C4Special = 845;
 const int SC_SuperSpecial = 846;
+const int SC_GetTeleNodeBuildingIndex = 848;
 const int SC_BeaconExplosion = 901;
 const int SC_SillyThings = 903;
 const int SC_TortoiseEject = 904;

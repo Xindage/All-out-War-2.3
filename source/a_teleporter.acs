@@ -46,6 +46,18 @@ function int GetTeleNodeTID (int idx)
 	return -1;
 }
 
+// Portal Pain/Death States calls.
+script SC_GetTeleNodeBuildingIndex (int team)
+{
+    int tid = ActivatorTID();
+    if (tid == MainTIDs[team][BUILDING_PORTAL2])
+    {
+        SetResultValue(BUILDING_PORTAL2);
+        terminate;
+    }
+    SetResultValue(BUILDING_PORTAL1);
+}
+
 // Teleporter nodes use this to request TIDs.
 script SC_TELENODE_TIDREQUEST (int team) {
 	if (team == TEAM_RED) {
