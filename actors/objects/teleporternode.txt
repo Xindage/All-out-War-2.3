@@ -74,12 +74,10 @@ actor TeleporterNodeBlue {
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(SC_GetTeleNodeBuildingIndex, TEAM_BLUE) == BUILDING_PORTAL2, "DeathP2")
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid) // Sending out of bounds int, no result from this acs.
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL1, TEAM_BLUE)
 		TNT1 A 10
 		stop
 	DeathP2:
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid) // Sending out of bounds int, no result from this acs.
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL2, TEAM_BLUE)
 		TNT1 A 10
 		stop
@@ -89,13 +87,11 @@ actor TeleporterNodeBlue {
 	Death.Deconstruction:
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(SC_GetTeleNodeBuildingIndex, TEAM_BLUE) == BUILDING_PORTAL2, "Deconstruction2")
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid)
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL1, TEAM_BLUE)
 		TNT1 A 10 A_PlaySound ("utility/deconstruct")
 		stop
 	Deconstruction2:
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid)
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL2, TEAM_BLUE)
 		TNT1 A 10 A_PlaySound ("utility/deconstruct")
 		stop
@@ -129,25 +125,21 @@ actor TeleporterNodeRed : TeleporterNodeBlue {
 		TNT1 A 0 A_PlaySound ("weapons/rocklx")
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMain")
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(SC_GetTeleNodeBuildingIndex, TEAM_RED) == BUILDING_PORTAL2, "DeathP2")
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid)
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL1, TEAM_RED)
 		TNT1 A 10
 		stop
 	DeathP2:
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid) // Sending out of bounds int, no result from this acs.
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL2, TEAM_RED)
 		TNT1 A 10
 		stop
 	Death.Deconstruction:
 		TNT1 A 0 A_JumpIf (ACS_ExecuteWithResult(SC_GetTeleNodeBuildingIndex, TEAM_RED) == BUILDING_PORTAL2, "Deconstruction2")
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid)
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL1, TEAM_RED)
 		TNT1 A 10 A_PlaySound ("utility/deconstruct")
 		stop
 	Deconstruction2:
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 ACS_ExecuteAlways (345, 0, 21, tid)
 		TNT1 A 0 ACS_ExecuteAlways (SC_BUILDINGDAMAGE, 0, BUILDING_PORTAL2, TEAM_RED)
 		TNT1 A 10 A_PlaySound ("utility/deconstruct")
 		stop
