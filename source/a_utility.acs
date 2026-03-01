@@ -377,7 +377,7 @@ script 345 (int Type, int Team)
 		AwardCredits (200);	
 		Log(n:0, s:" destroys Blue Health Regen Cache.");
 		GivePoints (RESEARCHPOINTS);
-		SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, TEAM_RED);
+		SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, TEAM_BLUE);
 		TeamMessage (TMSG_DESTRUCT, 1,  playernumber());
 	}
 	if(Type == 7 && Team == 0) //RED 
