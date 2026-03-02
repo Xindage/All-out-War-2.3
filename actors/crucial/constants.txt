@@ -81,6 +81,7 @@ const int SC_STRUCTUREBTODAMAGE = 836;
 const int SC_CRATEEFFECT = 839;
 const int SC_C4Special = 845;
 const int SC_SuperSpecial = 846;
+const int SC_HellSpawn = 847;
 const int SC_GetTeleNodeBuildingIndex = 848;
 const int SC_BeaconExplosion = 901;
 const int SC_SillyThings = 903;

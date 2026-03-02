@@ -47,6 +47,9 @@ int NumUtilityGuy[2];
 // [Xindage] Used by Gravity Crate.
 bool Gravityonce;
 
+// [Xindage] Used by HellSpawn Crate.
+int HSCrateTimer = 0;
+
 int RepairPadMechHPStore[MAXPLAYERS];
 
 // Set the charges     {0 BLUE         , 1 RED          };

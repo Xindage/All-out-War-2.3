@@ -357,8 +357,8 @@ script SC_BERSERKSOUND (void) {
 	SetInventory ("BerserkInit", 0);
 }
 
+// =============================================================================
 // [Dusk] Imp spawner spawns an imp
-// [Xindage] Is that even used?
 script SC_SpawnImp (void) {
 	int tid = TemporaryTID ();
 	int imps = SpawnSpot ("DoomImp", 0, tid, 0);
@@ -371,6 +371,79 @@ script SC_SpawnImp (void) {
 		
 		// Mark down that we have spawned an imp.
 		GiveInventory ("ImpSpawnerCount", 1);
+	}
+}
+
+// Hell spawm Crate data.
+str Minorlist[3][2] =
+{
+    {"AOWZombieman", "AOWShotgunGuy"},
+    {"AOWSpectre", "AOWChaingunGuy"},
+    {"AOWHellKnight", "AOWCacodemon"}
+};
+
+str Mediumlist[3][3] =
+{
+    {"AOWLostSoul", "AOWDoomImp", "AOWShotgunGuy"},
+    {"AOWChaingunGuy", "AOWDemon", "AOWDoomImp"},
+    {"AOWHellKnight", "AOWCacodemon", "AOWSpectre"}
+};
+
+str Majorlist[3][2] =
+{
+    {"AOWHellKnight", "AOWDemon"},
+    {"AOWBaronOfHell", "AOWCacodemon"},
+    {"AOWFatso", "AOWArachnotron"}
+};
+
+// Spawning itself.
+script SC_HellSpawn (int type, int Archvile)
+{
+	int tier;
+	int monster;
+	str chosen;
+	
+	// Time based tier.
+	if (HSCrateTimer < MINUTETICS * 10)			{tier = 0;}
+	else if (HSCrateTimer > MINUTETICS * 20)	{tier = 2;}
+	else										{tier = 1;}
+	
+	// The arrays are not even on size, sorry.
+	switch (type)
+	{
+		case 1: // Minor
+			chosen = Minorlist[tier][random(0,1)];
+			break;
+		case 2: // Medium
+			chosen = Mediumlist[tier][random(0,2)];
+			break;
+		case 3: // Major
+			chosen = Majorlist[tier][random(0,1)];
+			break;
+		default:
+			terminate;
+	}
+	// If end tier spawn an Archvile too as the last spawn.
+	if (Archvile)
+	{
+		if (tier != 2)
+		{
+			GiveInventory("ImpSpawnerCount", 1);
+			terminate;
+		}
+		if (SpawnSpot("AOWArchvile", 0, 0, 0))
+		{
+			SpawnSpotForced("TeleportFog", 0, 0, 0);
+			GiveInventory("ImpSpawnerCount", 1);
+		}
+		terminate;
+	}
+	// Copy paste imp crate.
+	monster = SpawnSpot(chosen, 0, 0, 0);
+	if (monster)
+	{
+		SpawnSpotForced("TeleportFog", 0, 0, 0);
+		GiveInventory("ImpSpawnerCount", 1);
 	}
 }
 

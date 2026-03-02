@@ -312,3 +312,66 @@ Actor hasTeamBoost : Inventory
 	Inventory.Amount 1
 	Inventory.MaxAmount 1
 }
+
+// HellSpawn Crate stuff:
+Actor SpawnerBase
+{
+	MONSTER
+	+SERVERSIDEONLY
+	+THRUACTORS
+	+DROPOFF
+	Radius 2
+	Height 2
+	Speed 8
+	States
+	{
+	GoAway:
+		TNT1 A 0
+		stop
+	}
+}
+
+Actor SpawnerMain : SpawnerBase
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_HellSpawn, 0, 3, 0)
+		TNT1 A 0 A_JumpIfInventory ("ImpSpawnerCount", 6, "Archvile")
+		TNT1 AAAAAAA 2 A_Wander
+		loop
+	Archvile: // If we are on tier 3 drop and archvile after 1 second
+		TNT1 AAAAAAA 5 A_Wander
+		TNT1 A 0 A_JumpIfInventory ("ImpSpawnerCount", 7, "GoAway")
+		TNT1 A 0 ACS_ExecuteAlways (SC_HellSpawn, 0, 3, 1)
+		TNT1 AAAAA 2 A_Wander
+		loop
+	}
+}
+
+Actor SpawnerOther : SpawnerBase
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_HellSpawn, 0, 2, 0)
+		TNT1 A 0 A_JumpIfInventory ("ImpSpawnerCount", 6, "GoAway")
+		TNT1 AAAAAAA 2 A_Wander
+		loop
+	}
+}
+
+Actor SpawnerMinor : SpawnerBase
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 ACS_ExecuteAlways (SC_HellSpawn, 0, 1, 0)
+		TNT1 A 0 A_JumpIfInventory ("ImpSpawnerCount", 4, "GoAway")
+		TNT1 AAAAAAA 2 A_Wander
+		loop
+	}
+}

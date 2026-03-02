@@ -69,9 +69,10 @@
 #define CRATE_BFG2704		44
 #define CRATE_GRAVITY		45
 #define CRATE_TIMEWARP		46
+#define CRATE_HELLSPAWN		47
 // ----
 // ----
-#define NUM_CRATES			47
+#define NUM_CRATES			48
 
 // --------------------------------------------------------------
 #define CRK_NAME		0 // Name of crate
@@ -157,12 +158,13 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_IMP,			"imp horde",			"S",  8, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Get attacked by");
 	AddCrateType (CRATE_C4,				"C4",					"K", 10, CRT_Item,		(0),	"");
 	AddCrateType (CRATE_GRENADES,		"grenade pack",			"D", 10, CRT_Item,		(0),	""); // 40
-	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G", 5,	 CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"wields the");
+	AddCrateType (CRATE_QUADSHOTGUN,	"QuadShotgun",			"G",  5, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"wields the");
 	AddCrateType (CRATE_SOULSPHERE,		"Soulsphere",			"N", 25, CRT_Powerup,	(0),	"");
 	AddCrateType (CRATE_LIGHTSABER,	    "Lightsaber",			"V",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"has the power of the");
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
 	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  1, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
 	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
+	AddCrateType (CRATE_HELLSPAWN,		"Hellspawn",			"F",  4, CRT_Misc,		(CRF_ANNOUNCE_FA),				"summoned a");
 }
 
 // ============================================================================
@@ -322,6 +324,9 @@ function int CheckCrate (int c) {
 				!CheckInventory ("IsStealth") && // this crate mess with player alpha and render mode
 				!CheckInventory ("PowerInvisibility");
 		}
+	case CRATE_IMP:
+		return	!intHolder[i_SuddenDeath] && // not during sudden death
+				(ThingCount(T_NONE, TID_HELLSPAWM_MAIN) > 0); // Must exist at least the main spawner.
 	}
 	
 	return true;
@@ -958,6 +963,26 @@ script SC_CRATEEFFECT (int c)
 	// Time warp. Warning Team.
 	case CRATE_TIMEWARP:
 		ACS_NamedExecuteAlways("CRATE_TimeCopWarp", 0, 0, 0, 0);
+		break;
+		
+	// Hellspawn. Warning Player and Team.
+	case CRATE_HELLSPAWN:
+		AmbientSound ("knight/sight", 127);		
+		// Spawn 1 spawner actors on each of the mapspots, each spawns a pre-defined
+		// set of monsters, almost like how impcrate works, this crate is more focused
+		// on injecting XP for the players. 
+		// Main, usually on near the main crate spot, spawn major enemies (even boss).
+		// Other, usually around the map and has multiples.
+		// Minor, Near tiberium spots, spawn just lesser tier against haverters.
+		{
+			// Save the time before start to prevent tier drift.
+			// HSCrateTimer = Timer();
+			delay(5);
+			// Spawn the spawners.
+			SpawnSpotForced ("SpawnerMain", TID_HELLSPAWM_MAIN, 0, 0);
+			SpawnSpotForced ("SpawnerOther", TID_HELLSPAWN_OTHER, 0, 0);
+			SpawnSpotForced ("SpawnerMinor", TID_HELLSPAWN_MINOR, 0, 0);
+		}
 		break;
 	}
 
