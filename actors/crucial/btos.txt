@@ -85,7 +85,7 @@ actor BaseTerminalOutside {
 	Pain.MassDriver:
 	Pain.Explosion:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfHealthLower (99940, "TransferLow")
+		TNT1 A 0 A_JumpIfHealthLower (99960, "TransferLow")
 		goto Regenerate
 	TransferLow:
 		TNT1 A 0

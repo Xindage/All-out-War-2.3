@@ -292,6 +292,7 @@ actor Titan-FlamerAmmo : Ammo {
 	ammo.backpackmaxamount 800
 }
 
+// Hit harder than massdriver, anti armor as well
 actor TitanShell {
 	PROJECTILE
 	+THRUGHOST
@@ -301,10 +302,10 @@ actor TitanShell {
 	height 10
 	Scale 0.85
 	speed 150
-	damage (30)
+	damage (50)
 	deathsound "80mm/explosion"
 	obituary "$OB_TITAN"
-	damagetype "MassDriver"
+	damagetype "AntiArmor"
 	gravity 0.05
 	decal "BiggerScorch"
 	States {
@@ -319,11 +320,8 @@ actor TitanShell {
 		TNT1 A 0 A_StopSound (CHAN_BODY)
 		TNT1 AA 0 A_SpawnItemEx ("FlameDecayStrong", random(-32,32), random(-32,32), 4)
 		TNT1 A 0 A_SpawnItemEx ("ExplosionMainLarge")
-		TNT1 A 1 bright A_Explode(16,32,0)
-		TNT1 A 1 bright A_Explode(16,32,0)
-		TNT1 A 1 bright A_Explode(32,64,0)
-		TNT1 A 1 bright A_Explode(32,64,0)
-		TNT1 A 5 bright A_Explode(64,192,0)
+		TNT1 A 1 A_Explode (100, 256, 1)
+		TNT1 A 5 A_Explode (100, 384, 1)
 		stop
 	}
 }
