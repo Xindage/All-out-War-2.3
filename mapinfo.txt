@@ -43,6 +43,20 @@ map aow04 "Infected" {
 	levelnum = 4
 }
 
+map aow05 "Waste Plant" {
+	next = "aow06"
+	music = "d_aow11"
+	sky1 = "sky14"
+	levelnum = 5
+}
+
+map aow06 "Missile Site" {
+	next = "aow01"
+	music = "d_aow12"
+	sky1 = "sky14"
+	levelnum = 6
+}
+
 skill Normal {
 	name = "Normal"
 	damagefactor = 1.0
