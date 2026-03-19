@@ -89,15 +89,15 @@ actor BaseTerminalOutside {
 		goto Regenerate
 	TransferLow:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (90, 115))
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (75, 100))
 		goto Regenerate
 	TransferMedium:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (130, 180))
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (100, 150))
 		goto Regenerate
 	TransferHigh:
 		TNT1 A 0
-		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (350, 450))
+		TNT1 A 0 ACS_ExecuteAlways (SC_STRUCTUREBTODAMAGE, 0, args[0], random (250, 350))
 		goto Regenerate
 	}
 }

@@ -874,11 +874,10 @@ script SC_STRUCTUREBTODAMAGE (int tid, int damage)
 {
 	SetActivatorToTarget(0);
 	
-	int player = PlayerNumber();
-	int tic = Timer();
-	
 	if (damage > 5) // Dont check/lock if damage is from minor sources (fire, energy decay)
 	{
+		int player = PlayerNumber();
+		int tic = Timer();
 		// Check if damage was taken just now
 		if (g_LastHitTID[player] == tid && g_LastHitTic[player] == tic)
 			terminate;
