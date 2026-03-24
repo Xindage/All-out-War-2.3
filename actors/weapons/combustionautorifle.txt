@@ -1,5 +1,5 @@
 // COMBUSTION AUTORIFLE
-actor CombustionAutorifle : AOWWeapon 21088 {
+actor CombustionAutorifle : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -19,6 +19,7 @@ actor CombustionAutorifle : AOWWeapon 21088 {
 	Weapon.UpSound "weapons/up/combrifle"
 	Weapon.PreferredSkin "MarineMachineGun"
     Tag "Combustion Autorifle"
+	Dropitem "CombustionAutoriflepickup"
 	states {
     Select:
 		E21F A 1 offset (-90,100)
@@ -293,3 +294,17 @@ actor CombustionBoomWeak : CombustionBoom {
 }
 
 actor CombustionCooldown : Cooldown { Powerup.Duration 90 }
+
+Actor CombustionAutoriflepickup : AOWWeaponPickup 21088
+{
+	Inventory.PickupMessage "You got the Combustion Autorifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, CombustionAutorifle)
+		Stop
+	Spawn:
+		E21F X -1
+		stop
+	}
+}

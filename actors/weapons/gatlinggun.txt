@@ -1,9 +1,9 @@
 // Gatling gun
-actor GatlingGun : AOWWeapon 21045 {
-    Weapon.BobSpeed 1.75
-    Weapon.BobRangeX 0.2
-    Weapon.BobRangeY 0.4
-    Weapon.BobStyle Alpha
+actor GatlingGun : AOWWeapon {
+	Weapon.BobSpeed 1.75
+	Weapon.BobRangeX 0.2
+	Weapon.BobRangeY 0.4
+	Weapon.BobStyle Alpha
 	Tag "Gatling Gun"
 	Obituary "$OB_GATLING"
 	Inventory.PickupMessage "You got the gatling gun!"
@@ -16,6 +16,7 @@ actor GatlingGun : AOWWeapon 21045 {
 	Weapon.PreferredSkin "MarineChaingun"
 	Weapon.UpSound "weapons/up/gatling"
 	decal "BulletChip"
+	Dropitem "GatlingGunpickup"
 	States {
 	Spawn:
 		GATG X -1
@@ -564,3 +565,17 @@ actor MinigunnerSpeed : PowerupGiver {
 }
 
 ACTOR SpinGattlingGun : Inventory {Inventory.MaxAmount 1}
+
+Actor GatlingGunpickup : AOWWeaponPickup 21045
+{
+	Inventory.PickupMessage "You got the gatling gun!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, GatlingGun)
+		Stop
+	Spawn:
+		GATG X -1
+		stop
+	}
+}

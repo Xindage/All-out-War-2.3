@@ -1,5 +1,5 @@
 // Chemical sprayer
-actor ChemicalSprayer : AOWWeapon 21066 {
+actor ChemicalSprayer : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -19,6 +19,7 @@ actor ChemicalSprayer : AOWWeapon 21066 {
 	Weapon.PreferredSkin "MarineChem"
 	Weapon.UpSound "weapons/up/chem"
 	Tag "Chemical Sprayer"
+	Dropitem "ChemicalSprayerpickup"
 	states {
 	Spawn:
 		CHMG X -1
@@ -259,6 +260,20 @@ actor ChemicalShotDummy {
 	Death:
 		TIBX H 3 bright A_Stop
 		TIBX IIJJKKLLMMOOPPQQ 1 bright A_FadeOut(0.07)
+		stop
+	}
+}
+
+Actor ChemicalSprayerpickup : AOWWeaponPickup 21066
+{
+	Inventory.PickupMessage "You got the chemical sprayer!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, ChemicalSprayer)
+		Stop
+	Spawn:
+		CHMG X -1
 		stop
 	}
 }

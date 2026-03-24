@@ -1,10 +1,10 @@
 // Rifle
-actor Rifle : AOWWeapon 21042 {
-    Weapon.BobSpeed 1.75
-    Weapon.BobRangeX 0.2
-    Weapon.BobRangeY 0.4
-    Weapon.BobStyle Alpha
+actor Rifle : AOWWeapon {
 	//$Category Weapons
+	Weapon.BobSpeed 1.75
+	Weapon.BobRangeX 0.2
+	Weapon.BobRangeY 0.4
+	Weapon.BobStyle Alpha
 	+NOEXTREMEDEATH
 	+ALT_AMMO_OPTIONAL
 	Obituary "$OB_RIFLE"
@@ -20,6 +20,7 @@ actor Rifle : AOWWeapon 21042 {
 	Weapon.PreferredSkin "MarineBase"
 	Weapon.UpSound "weapons/up/rifle"
 	decal "BulletChipBig"
+	Dropitem "Riflepickup"
 	States {
     Select:
 		RIFL A 1 offset (90,100)
@@ -160,4 +161,18 @@ actor RifleGrenade : GrenadeGrenade {
 
 actor RiflePuff : HHBulletPuff {
 	DamageType "Rifle"
+}
+
+Actor Riflepickup : AOWWeaponPickup 21042
+{
+	Inventory.PickupMessage "You got the rifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, Rifle)
+		Stop
+	Spawn:
+		RIFL X -1
+		stop
+	}
 }

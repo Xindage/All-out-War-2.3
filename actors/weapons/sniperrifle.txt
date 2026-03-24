@@ -12,12 +12,12 @@ actor SniperRifle : AOWWeapon {
 	Weapon.AmmoType2 "SniperAmmo"
 	weapon.ammouse 1
 	Weapon.AmmoGive2 5
-	DropItem "SniperRifleWeak"
 	inventory.pickupmessage "You got the sniper rifle!"
 	Weapon.PreferredSkin "MarineSniper"
 	Weapon.UpSound "weapons/up/sniper"
 	decal "BulletChipBig"
 	+WEAPON.AMMO_OPTIONAL
+	Dropitem "SniperRiflepickup"
 	states {
     Select:
 		SNIE A 1 offset (-90,100)
@@ -168,9 +168,10 @@ actor SniperRifle : AOWWeapon {
 
 actor IsZoomed : Inventory {}
 
-actor SniperRifleWeak : SniperRifle 21081 {
+actor SniperRifleWeak : SniperRifle {
 	//$Category Weapons
 	tag "Sniper Rifle"
+	Dropitem "SniperRifleWeak"
 	states {
 	Fire:
 		TNT1 A 0 A_JumpIfInventory ("IsInSpawnRoom", 1, "Ready")
@@ -205,4 +206,18 @@ actor SniperBolt : Ammo {
 	inventory.maxamount 1
 	ammo.backpackamount 0
 	ammo.backpackmaxamount 1
+}
+
+Actor SniperRiflepickup : AOWWeaponPickup 21081
+{
+	inventory.pickupmessage "You got the sniper rifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, SniperRifle)
+		Stop
+	Spawn:
+		SNIP X -1
+		stop
+	}
 }

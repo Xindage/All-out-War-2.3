@@ -18,6 +18,7 @@ Actor "Nail-Machine Gun" : AOWWeapon
     Weapon.SelectionOrder 7
     Weapon.UpSound "weapons/select14"	
 	Weapon.PreferredSkin "Nailgun(MG)_Marine"
+	Dropitem "Nail-Machine Gunpickup"
     States
     {
     Spawn:
@@ -348,3 +349,16 @@ Actor Nail1
         }
 }
 
+Actor "Nail-Machine Gunpickup" : AOWWeaponPickup
+{
+    Inventory.PickupMessage "You got the Nail-Machine Gun!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, 45) // TODO: WHY Nailgun is a string!!!
+		Stop
+	Spawn:
+        NLMG F -1
+        Loop
+	}
+}

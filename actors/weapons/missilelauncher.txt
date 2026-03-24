@@ -1,5 +1,5 @@
 // Missile Launcher
-actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048 
+actor MissileLauncher : AOWWeapon replaces RocketLauncher 
 {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
@@ -18,6 +18,7 @@ actor MissileLauncher : AOWWeapon replaces RocketLauncher 21048
 	Weapon.UpSound "weapons/up/rocket"
 	+WEAPON.AMMO_OPTIONAL
 	Tag "Missile Launcher"
+	Dropitem "MissileLauncherpickup"
 	states {
 	Spawn:
 		LAUN A -1
@@ -897,3 +898,17 @@ actor MissileMag : Ammo {
 ACTOR LockOnMode : Inventory {Inventory.MaxAmount 1}
 Actor LockOnActive : Inventory {Inventory.MaxAmount 30 }
 ACTOR LockOnTimer : Inventory {Inventory.MaxAmount 30}
+
+Actor MissileLauncherpickup : AOWWeaponPickup 21048
+{
+	Inventory.PickupMessage "You got the missile launcher!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, MissileLauncher)
+		Stop
+	Spawn:
+		LAUN A -1
+		stop
+	}
+}

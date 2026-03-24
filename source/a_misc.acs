@@ -92,8 +92,8 @@ script SC_WEAPONCHECK OPEN {
 		SetActivator (3800 + i);
 		
 		// [SP] The following code removes redundant weapons
-		if (CheckInventory ("StealthLaserRifle")) CheckAndRemove("LaserRifle");
-		if (CheckInventory ("TiberiumAutorifle")) CheckAndRemove("TiberiumAutorifleWeak");
+		//if (CheckInventory ("StealthLaserRifle")) CheckAndRemove("LaserRifle");
+		//if (CheckInventory ("TiberiumAutorifle")) CheckAndRemove("TiberiumAutorifleWeak");
 		if (CheckInventory ("SniperRifle")) CheckAndRemove("SniperRifleWeak");
 		//if (CheckInventory ("CombustionAutorifle")) CheckAndRemove("CombustionAutorifleWeak");
 		

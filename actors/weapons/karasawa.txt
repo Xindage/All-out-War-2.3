@@ -16,11 +16,12 @@ ACTOR Karasawa : AOWWeapon
     Weapon.SelectionOrder 5
     Weapon.UpSound "weapons/up/plasmagun"	
 	Weapon.PreferredSkin "MarineKarasawa"
+	DropItem "Karasawapickup"
 	States  
     {
     Spawn:
-        KSWP A -1
-        loop
+		KSWP A -1
+		Stop
     Select:
 		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
 		KSWR A 1 offset (90,100)
@@ -857,3 +858,17 @@ actor KarasawaBurst : Ammo {
 }
 
 ACTOR KarasawaMode1 : Inventory {Inventory.MaxAmount 1}
+
+Actor Karasawapickup : AOWWeaponPickup
+{
+	Inventory.PickupMessage "You got the 'Karasawa' High-Density Plasma Rifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, Karasawa)
+		Stop
+    Spawn:
+		KSWP A -1
+		Stop
+	}
+}

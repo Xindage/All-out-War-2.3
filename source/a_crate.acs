@@ -743,7 +743,7 @@ script SC_CRATEEFFECT (int c)
 		CheckAndRemove ("PlasmaCannon");
 		CheckAndRemove ("ArtilleryCannon");
 		CheckAndRemove ("ChemicalSprayer");
-		CheckAndRemove ("TiberiumAutorifleWeak");
+		//CheckAndRemove ("TiberiumAutorifleWeak");
 		CheckAndRemove ("TiberiumAutorifle");
 		CheckAndRemove ("Flashbang");
 		CheckAndRemove ("FragGrenade");

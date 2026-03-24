@@ -1,5 +1,5 @@
 // Handgun
-actor "StealthPistol" : AOWWeapon {
+actor StealthPistol : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -21,6 +21,7 @@ actor "StealthPistol" : AOWWeapon {
 	Tag "Stealth Pistol"
 	decal "BulletChip"
 	+WEAPON.AMMO_OPTIONAL
+	Dropitem "StealthPistolpickup"
 	States {
     Select:
 	    TNT1 A 0 A_TakeInventory ("StealthFire", 1)
@@ -201,4 +202,18 @@ Inventory.MaxAmount 12
 Ammo.BackpackAmount 0
 Ammo.BackpackMaxAmount 12
 +IGNORESKILL
+}
+
+Actor StealthPistolpickup : AOWWeaponPickup
+{
+	Inventory.Pickupmessage "You got the Stealth pistol!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, StealthPistol)
+		Stop
+	Spawn:
+		SPIS X -1
+		stop
+	}
 }

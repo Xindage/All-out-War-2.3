@@ -16,6 +16,7 @@ actor StealthGaussRifle : AOWWeapon {
 	Weapon.UpSound "weapons/up/gauss"
 	Decal "GaussScorch"
 	Tag "Stealth Gauss Rifle"
+	Dropitem "StealthGaussRiflepickup"
 	States {
 	Spawn:
 		SGAR X -1
@@ -1107,3 +1108,17 @@ ACTOR RedShockWave
 
 actor BlueShockWave : RedShockWave { Translation "112:127=194:207" }
 actor IsStealthZoomed : Inventory {}
+
+Actor StealthGaussRiflepickup : AOWWeaponPickup
+{
+	Inventory.PickupMessage "You got the stealth gauss rifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, StealthGaussRifle)
+		Stop
+	Spawn:
+		SGAR X -1
+		stop
+	}
+}

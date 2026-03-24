@@ -7,7 +7,7 @@
  * anti-mech weapon, only Plasma Cannon surpasses this.
  */
 
-actor ArtilleryCannon : AOWWeapon 21085 {
+actor ArtilleryCannon : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -26,7 +26,7 @@ actor ArtilleryCannon : AOWWeapon 21085 {
 	//$Category Weapons
 	+WEAPON.AMMO_OPTIONAL
 	Tag "Artillery Cannon"
-	
+	Dropitem "ArtilleryCannonpickup"
 	States {
     Select:
 		TNT1 A 0 A_JumpIfInventory("IsBlue",1,"Select.Blue")
@@ -419,4 +419,18 @@ actor ArtilleryCharge : Ammo {
 	inventory.maxamount 1
 	ammo.backpackamount 0
 	ammo.backpackmaxamount 1
+}
+
+Actor ArtilleryCannonpickup : AOWWeaponPickup 21085
+{
+	Inventory.PickupMessage "You got the artillery cannon!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, ArtilleryCannon)
+		Stop
+	Spawn:
+		MASD X -1
+		stop
+	}
 }

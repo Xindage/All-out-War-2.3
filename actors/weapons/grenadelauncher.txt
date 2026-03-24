@@ -1,5 +1,5 @@
 // Grenade launcher
-actor GrenadeLauncher : AOWWeapon 21046 {
+actor GrenadeLauncher : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -17,6 +17,7 @@ actor GrenadeLauncher : AOWWeapon 21046 {
 	Weapon.PreferredSkin "MarineAssaultGrenade"
 	Weapon.UpSound "weapons/up/nadelauncher"
 	Tag "Grenade Launcher"
+	Dropitem "GrenadeLauncherpickup"
 	States {
 	Spawn:
 		GREN X -1
@@ -183,3 +184,17 @@ actor GrenadeBounce : GrenadeGrenade {
 		TNT1 A 1 A_Lower
 		Wait
 */
+
+Actor GrenadeLauncherpickup : AOWWeaponPickup 21046
+{
+	Inventory.PickupMessage "You got the grenade launcher!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, GrenadeLauncher)
+		Stop
+	Spawn:
+		PIST A -1
+		stop
+	}
+}

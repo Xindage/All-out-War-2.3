@@ -252,6 +252,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_SuperSpecial				846
 #libdefine SC_HellSpawn					847
 #libdefine SC_GetTeleNodeBuildingIndex	848
+#libdefine SC_AutoSellWeapon			849
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
@@ -339,7 +340,7 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_CL_Effects2				977
 #libdefine SC_BerserkArmor				978
 #libdefine SC_CL_Effects				979
-#libdefine SC_UtilityHUD				980
+#libdefine SC_UtilityHUD				980 // Unused
 #libdefine SC_CCMD_SHOWARMOR			981
 #libdefine SC_CL_TEAMLOG				982
 #libdefine SC_RAZORWIRE					983

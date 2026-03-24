@@ -1,10 +1,11 @@
 // MACHINE GUN
-actor MachineGun : AOWWeapon replaces Chaingun 21044 {
+actor MachineGun : AOWWeapon replaces Chaingun {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
     Weapon.BobStyle Alpha
 	+NOEXTREMEDEATH
+	+WEAPON.AMMO_OPTIONAL
 	Obituary "$OB_MACHINEGUN"
 	Weapon.selectionorder 14
 	Weapon.AmmoType "MachinegunMag"
@@ -16,7 +17,7 @@ actor MachineGun : AOWWeapon replaces Chaingun 21044 {
 	Weapon.UpSound "weapons/up/machinegun"
 	Tag "Machinegun"
 	decal "BulletChip"
-	+WEAPON.AMMO_OPTIONAL
+	Dropitem "MachineGunpickup"
 	states {
     Select:
 		AK47 A 1 offset (-90,100)
@@ -307,3 +308,17 @@ Ammo.BackpackMaxAmount 30
 }
 
 actor MachineGunSwitch : Inventory {}
+
+Actor MachineGunpickup : AOWWeaponPickup 21044
+{
+	Inventory.PickupMessage "You got the machine gun!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, MachineGun)
+		Stop
+	Spawn:
+		AK47 X -1
+		stop
+	}
+}

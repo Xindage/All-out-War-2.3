@@ -20,6 +20,7 @@ actor Knife : AOWWeapon {
 	Weapon.UpSound "Weapons/KnifeSelect"
 	scale 0.25
 	Tag "Stealth Knife"
+	Dropitem "Knifepickup"
 	States {
 	Select:
 	    TNT1 A 0 A_TakeInventory ("StealthFire", 1)
@@ -223,4 +224,18 @@ actor KnifePuff : BulletPuff {
 	alpha 0.5
 	DamageType "Knife"
 	Obituary "$OB_KNIFE" 
+}
+
+Actor Knifepickup : AOWWeaponPickup
+{
+	Inventory.PickupMessage "The Ninja Knife. This is a hard weapon to get. Use it wisely."
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, Knife)
+		Stop
+	Spawn:
+		KNIF X -1
+		stop
+	}
 }

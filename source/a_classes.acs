@@ -26,7 +26,7 @@ int AddOns_str[MAX_ADDONS][MAX_ADDON_KEYS_STR] = {
 int AddOns_int[MAX_ADDONS][MAX_ADDON_KEYS_INT] = {
 	// cost, price
 	{250, ITEM_ArmorUp}, //armor upgrade
-	{300, ITEM_TibRifleWeak},
+	{300, ITEM_TibRifle},
 	{300, ITEM_CombustRifleWeak},
 	{550, ITEM_Artillery},
 	{250, ITEM_Chainsaw},
@@ -165,7 +165,7 @@ function int SetClass (int id, int scflags) {
 			bool HasPlasma = True;
 		if (CheckInventory ("ArtilleryCannon"))
 			bool HasArtillery = True;
-		if (CheckInventory ("TiberiumAutorifleWeak"))
+		if (CheckInventory ("TiberiumAutorifle"))
 			bool HasTiberiumAutorifle = True;
 		if (CheckInventory ("IonCannonBeacon") || CheckInventory("NuclearStrikeBeacon"))
 			bool HasSuperWeapon = True;

@@ -1,5 +1,5 @@
 // Flamethrower
-actor Flamer : AOWWeapon 21047 {
+actor Flamer : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -20,6 +20,7 @@ actor Flamer : AOWWeapon 21047 {
 	Weapon.UpSound "weapons/up/flamer"
 	// Why the fuck did the Flamethrower have a BulletChip decal...
 	Tag "Flamethrower"
+	Dropitem "Flamerpickup"
 	States {
 	Spawn:
 		FLMR X -1
@@ -400,6 +401,20 @@ actor PhosphorusGrenade {
 		TNT1 A 0 A_SpawnItemEx ("FlameDecay", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERPOINTERS)
 		TNT1 AAAAAAAA 70 A_SpawnItemEx ("FlameDecay", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERPOINTERS)
 		TNT1 A 0
+		stop
+	}
+}
+
+Actor Flamerpickup : AOWWeaponPickup 21047
+{
+	Inventory.PickupMessage "You got the flamethrower!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, Flamer)
+		Stop
+	Spawn:
+		FLMR X -1
 		stop
 	}
 }

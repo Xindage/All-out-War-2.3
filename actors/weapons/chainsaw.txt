@@ -14,6 +14,7 @@ actor EagerBeaver : AOWWeapon replaces Chainsaw {
 	obituary "$OB_CHAINSAW"
 	tag "Chainsaw"
 	decal "BulletChip"
+	Dropitem "EagerBeaverpickup"
 	states {
     Select:
 	    SAWG C 0 A_TakeInventory ("Unarmed", 1)
@@ -150,3 +151,17 @@ Actor ChainSawThrownBoom
 // the chainsaw. When a victim dies, if his target (the killer) has this item,
 // he will goto XDeath instead, thus emulating the behavior of +EXTREMEDEATH.
 actor IsSawing : Inventory {}
+
+Actor EagerBeaverpickup : AOWWeaponPickup
+{
+	inventory.pickupmessage "$GOTCHAINSAW"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, EagerBeaver)
+		Stop
+	Spawn:
+		CSAW A -1
+		stop
+	}
+}

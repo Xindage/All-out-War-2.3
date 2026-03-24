@@ -18,13 +18,9 @@ actor CryoBow : AOWWeapon {
 	Inventory.PickupMessage "You got the cryo bow!"
 	Weapon.UpSound "weapons/up/chrono"
 	Obituary "$OB_CRYOBOW"
-	DropItem "CryoBow"
-	Tag "CryoBow"
+	DropItem "CryoBowpickup"
+	Tag "Cryo Bow"
 	States {
-	Spawn:
-		TNT1 A 0
-		WBOW A -1
-		Stop
     Select:
 		BOWG A 1 offset (90,100)
 		BOWG A 1 offset (80,89)
@@ -164,6 +160,9 @@ actor CryoBow : AOWWeapon {
 		TNT1 A 2 Bright A_Light2
 		TNT1 A 1 Bright A_Light1
 		Goto LightDone
+	Spawn:
+		WBOW A -1
+		Stop
 	}
 }
 
@@ -295,5 +294,19 @@ actor ChronoBoltSmoke2 : ChronoBoltSmoke {
 		TNT1 A 0
 		CMOK A 6 A_FadeOut (0.04)
 		Wait
+	}
+}
+
+Actor CryoBowpickup : AOWWeaponPickup
+{
+	Inventory.PickupMessage "You got the cryo bow!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, CryoBow)
+		Stop
+	Spawn:
+		WBOW A -1
+		Stop
 	}
 }

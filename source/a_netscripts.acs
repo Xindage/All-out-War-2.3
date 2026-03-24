@@ -238,6 +238,32 @@ script SC_CCMD_SELLWEAPON (void) NET {
 	//Log (n:0, s:" sells ", s:name, s:" for $", d:value);
 }
 
+// [Xindage] Autosell yay :D
+// This acs force any weapon pickup into credits if you already have them in inventory.
+script SC_AutoSellWeapon (int Class)
+{
+	// Must be valid
+	if (Class <= 0 || Class >= MAX_ITEMS)
+		Terminate;
+	
+	int value = Items_Int[Class][IK_VALUE];
+	str weaponclass = Items_Str[class][IK_ITEM0];
+	
+	if (CheckInventory(weaponClass) > 0)
+	{
+		GiveCredits(value);
+		LocalAmbientSound("powerup/credsound", 127);
+		IntelMessage(StrParam(s:"Duplicate ",s:Items_Str[Class][IK_NAME],s:" auto-sold for \cq$\cd",d:value),false);
+		SetResultValue(1);
+	}
+	
+	else
+	{
+		GiveInventory(weaponClass, 1); // If we do not have the weapon, give it.
+		SetResultValue(1);
+	}
+}
+
 // =============================================================================
 // [Dusk] This allows players to see their speed factor.
 function int GetSpeedFactor (void) {

@@ -1,5 +1,5 @@
 // Shock rifle
-actor ShockRifle : AOWWeapon 21068 {
+actor ShockRifle : AOWWeapon {
     Weapon.BobSpeed 1.75
     Weapon.BobRangeX 0.2
     Weapon.BobRangeY 0.4
@@ -17,6 +17,7 @@ actor ShockRifle : AOWWeapon 21068 {
 	Weapon.AmmoGive 40
 	Weapon.PreferredSkin "MarineShockRifle"
 	Weapon.UpSound "weapons/up/shockrifle"
+	Dropitem "ShockRiflepickup"
 	States {
     Select:
 		TNT1 A 0 A_JumpIfInventory("IsRed",1,"Select.Red")
@@ -584,3 +585,17 @@ Actor TeslaExtraRed : TeslaExtra { Translation "192:207=224:247" }
 Actor TeslatailRed : Teslatail { Translation "192:207=224:247" }
 Actor TeslatailRedSmall : TeslatailRed { Scale 0.05 }
 //******************************** Translation "192:207=224:247"
+
+Actor ShockRiflepickup : AOWWeaponPickup 21068
+{
+	Inventory.PickupMessage "You got the shock rifle!"
+	states
+	{
+	Pickup:
+		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, ShockRifle)
+		Stop
+	Spawn:
+		VOLF X -1
+		stop
+	}
+}

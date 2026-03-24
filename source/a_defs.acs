@@ -51,7 +51,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Rifle", "Rifle", "RifleAmmo", "RifleGrenadeAmmo"},
 	{"Gauss Rifle", "GaussRifle",  "GaussRifleAmmo", ""},
 	{"Grenade Launcher", "GrenadeLauncher", "GrenadeAmmo", ""},
-	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", ""},
+	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", ""}, // 10
 	{"Stealth Laser Rifle", "StealthLaserRifle", "LaserRifleAmmo", ""},
 	{"Time Gun", "TimeGun", "TimeGunAmmo", ""},
 	{"Artillery Cannon", "ArtilleryCannon", "ArtilleryShellAmmo", ""},
@@ -60,8 +60,8 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Plasma Cannon", "PlasmaCannon", "PlasmaCannonAmmo", ""},
 	{"Chemical Sprayer", "ChemicalSprayer", "ChemicalAmmo", "ChemicalGrenadeAmmo"},
 	{"Tiberium Autorifle", "TiberiumAutorifle", "TE21CalAmmo", ""},
-	{"Tiberium Autorifle (weak)", "TiberiumAutorifleWeak", "TE21CalAmmo", ""},
-	{"Upgraded Repair Gun", "RepairGun", "RepairGunUpgrade", "",},
+	{"", "", "", ""}, // {"Tiberium Autorifle (weak)", "TiberiumAutorifleWeak", "TE21CalAmmo", ""},
+	{"Upgraded Repair Gun", "RepairGun", "RepairGunUpgrade", "",}, // 20
 	{"Repair Gun", "RepairGun", "", ""},
 	{"Deconstruction Gun", "RemoverGun", "", ""},
 	{"Bomb-Squad Gun", "BombSquadGun", "", ""},
@@ -71,7 +71,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Shock Rifle", "ShockRifle", "GeneporiumCharge", ""},
 	{"Sniper Rifle", "SniperRifle", "SniperBolt", "SniperAmmo"},
 	{"Plasma Rifle", "PlasmaGun", "PlasmaRifleAmmo", ""},
-	{"Stealth Knife", "Knife", "", ""},
+	{"Stealth Knife", "Knife", "", ""}, // 30
 	{"Chainsaw", "EagerBeaver", "", ""},
 	{"Bomb Pack", "BombPack", "", ""},
 	{"Remote C4", "RemoteC4", "RemoteC4Ammo", ""},
@@ -83,7 +83,7 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"+1 Armor Upgrade", "HasArmorUpgrade", "ArmorUpgrade", "CantMech"},
 	{"Superweapon Beacon", "BeaconItem", "", ""},
 	
-	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},
+	{"Combustion Autorifle", "CombustionAutorifle", "FA21CalAmmo", "",},// 40
 	{"Combustion Autorifle (weak)", "CombustionAutorifle", "FA21CalAmmo", ""},
 	{"Sniper Rifle (weak)", "SniperRifleWeak", "SniperBolt", "SniperAmmo"},
 	{"Cryo Bow", "CryoBow", "CryoBolt", ""},
@@ -119,7 +119,7 @@ int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 	{1, 10, 0, 500}, //plasma cannon
 	{1, 200, 4, 125}, //chem spray
 	{1, 120, 0, 125}, // tib autorifle
-	{1, 120, 0, 75}, // tib autorifle weak
+	{0, 0, 0, 0}, // tib autorifle weak {1, 120, 0, 75}
 	{1, 1, 0, 0}, // upgraded repair gun
 	{1, 0, 0, 0}, // repair gun
 	{1, 0, 0, 0}, // deconstruction gun
@@ -391,7 +391,7 @@ function void InitClasses (void) {
 	AddClass (CLASS_AdvHarvester, "Advanced Harvester", 450, 0.8, DEP_REFINERY,
 		1, ARMOD_CHEM,
 		2, 1, (CF_IsHarvester | CF_CantPilot | CF_Support),
-		ITEM_TIBRIFLEWEAK, 0, 0, 0, 0, 0);
+		ITEM_TIBRIFLE, 0, 0, 0, 0, 0);
 		
 	/*AddClass (CLASS_AutoShotgunner, "Auto Shotgunner", 650, 0.75, DEP_BARRACKS,
 		1, ARMOD_BULLET,
