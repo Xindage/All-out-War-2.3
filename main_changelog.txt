@@ -6,7 +6,7 @@ Discord server          : -------
 
 Original Release date   : 2022/04/18 (v0.1)
 For older changelogs, please refer to old 2.3 releases or the GitHub repository.
-	Version r260129 (2026/01/29)
+	Version r260331 (2026/03/31)
 		- Major rework of core scripts — all maps require adjustments.
 		- Support for legacy/old maps has been completely removed.
 		- Base Miracle now heals all buildings and add-ons.

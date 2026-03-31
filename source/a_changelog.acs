@@ -20,7 +20,7 @@ script 501 (void) net clientside
     \cr - Nerf
 */
 
-    int Version = 230305; // YYMMDD
+    int Version = 260331; // YYMMDD
     
     HudMessage(s:"\c-Changelog version: \cv", d:Version, s:"\n
         \ci- Major rework of core scripts — all maps require adjustments.\n
