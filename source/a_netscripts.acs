@@ -254,14 +254,25 @@ script SC_AutoSellWeapon (int Class)
 		GiveCredits(value);
 		LocalAmbientSound("powerup/credsound", 127);
 		IntelMessage(StrParam(s:"Duplicate ",s:Items_Str[Class][IK_NAME],s:" auto-sold for \cq$\cd",d:value),false);
-		SetResultValue(1);
 	}
 	
 	else
 	{
 		GiveInventory(weaponClass, 1); // If we do not have the weapon, give it.
-		SetResultValue(1);
 	}
+	// Regardless if you sell it or not, give ammo by 1/4 of it.
+	// (Fetch int/str)
+	int ammo1 = Items_Int[Class][IK_COUNT1];
+	int ammo2 = Items_Int[Class][IK_COUNT2];
+	str ammo1_name = Items_Str[Class][IK_ITEM1];
+	ystr ammo2_name = Items_Str[Class][IK_ITEM2];
+	// Check if we are giving main ammo or alt-ammo, main ammo is usually higher,
+	// But it must be valid as well. (Thanks chainsaw)
+	if (ammo2 > ammo1 && StrLen(ammo2_name) > 0)	// Alt is higher.
+		{GiveInventory(ammo2_name, ammo2 / 4);}
+	else if (StrLen(ammo1_name) > 0)				// Primary is higher.
+		{GiveInventory(ammo1_name, ammo1 / 4);}
+	SetResultValue(1);
 }
 
 // =============================================================================
