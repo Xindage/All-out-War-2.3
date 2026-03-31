@@ -26,16 +26,16 @@ actor BaseTerminal {
 	DamageFactor "Knife",			1.0
 	DamageFactor "Bullet",			0.8
 	DamageFactor "Rifle",			0.8
-	DamageFactor "Explosion",		0.75
-	DamageFactor "MassDriver",		0.25
-	DamageFactor "AntiArmor",		0.25
+	DamageFactor "Explosion",		0.9
+	DamageFactor "MassDriver",		0.9
+	DamageFactor "AntiArmor",		1.1
 	DamageFactor "Mine",			0.0
 	DamageFactor "Fire",			0.6
 	DamageFactor "FireSpecial",		0.6
 	DamageFactor "Chemical",		0.8		// Why?
 	DamageFactor "ChemicalSpecial",	0.8		// Ditto.
 	DamageFactor "Energy",			1.0
-	DamageFactor "Plasma",			0.75	// keep explosion damage.
+	DamageFactor "Plasma",			0.9
 	DamageFactor "EnergyDecay",		0.5
 	DamageFactor "Ice",				0.25	// Cooling terminal. :D
 	DamageFactor "Time",			1.0
