@@ -45,14 +45,24 @@ script 501 (void) net clientside
         \ci- This changelog is now toggleable.\n
         \ci- Spot feature can no longer be spammed to prevent exploitative behavior.\n
         \cq- Repair Factory now repairs global caches while alive when built via util.\n
-        \ci- Scripted marines have been reworked and fixed.\n
         \ci- Reduced CPU and bandwidth usage while repairing buildings, if that matters.\n
         \ci- Projetiles does not collide with building hitboxes.\n
         \ci- Remade the teleporting back to field system.\n
         \cq- Killing valuable target who can cause heavy damage to your base rewards charges.\n
         \cq- Disarming c4 and beacon grant reward, scaling based on where it was placed.\n
         \ci- Fixed portals exploits causing it to go invisible under certain conditions.\n
-        \ci- All gain/loss of battery is tied to the existence of repair facility."
+        \ci- All gain/loss of battery is tied to the existence of repair facility.\n
+        \ci- Tickets are now enabled by default.\n
+        \ci- Tickets are now dynamic, the starting amount scales with the number of players in the game.\n
+        \ci- Fixed plasma cannon damage for both teams.\n
+        \ci- Building hitboxes no longer have weak spots, damage is now applied consistently.\n
+        \cq- Titans now deal double damage to buildings.\n
+        \cq- Titans shells now deals anti-armor damage.\n
+        \ci- Fixed Remote C4 being triggered by energy-type weapons.\n
+        \cr- Terminals are now slightly more vulnerable to explosive weapons.\n
+        \ci- Removed the Tiberium Autorifle (weak) from the game.\n
+        \ci- Added a new autosell feature when picking up duplicate weapons.\n
+        \ci- Waste plant and Missile site updated to the new map system."
     ; HUDMSG_PLAIN, 801, CR_WHITE, 0.5, 0.2, 0.0);
     ChangelogOpen[p] = 1;
 }

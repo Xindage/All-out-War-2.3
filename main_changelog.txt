@@ -29,7 +29,7 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- This changelog is now toggleable (but not this .txt one ;P).
 		- Spot feature can no longer be spammed to prevent exploitative behavior.
 		- Repair Factory now repairs global caches while alive when built via util.
-		- Scripted marines have been reworked and fixed.
+		- Scripted marines have been reworked and fixed. (canceled)
 		- Reduced CPU and bandwidth usage while repairing buildings, if that matters.
 		- Projetiles does not collide with building hitboxes.
 		- Remade the teleporting back to field system.
@@ -37,6 +37,17 @@ For older changelogs, please refer to old 2.3 releases or the GitHub repository.
 		- Disarming c4 and beacon grant reward, scaling based on where it was placed.
 		- Fixed portals exploits causing it to go invisible under certain conditions.
 		- All gain/loss of battery is tied to the existence of repair facility.
+		- Tickets are now enabled by default.
+		- Tickets are now dynamic, the starting amount scales with the number of players in the game.
+		- Fixed plasma cannon damage for both teams.
+		- Building hitboxes no longer have weak spots, damage is now applied consistently.
+		- Titans now deal double damage to buildings.
+		- Titans shells now deals anti-armor damage.
+		- Fixed Remote C4 being triggered by energy-type weapons.
+		- Terminals are now slightly more vulnerable to explosive weapons.
+		- Removed the Tiberium Autorifle (weak) from the game.
+		- Added a new autosell feature when picking up duplicate weapons.
+		- Waste plant and Missile site updated to the new map system.
 
 ===========================================================================================================================================================
 * About the tiberium system *
