@@ -164,7 +164,7 @@ function void CR_InitCrateList (void) {
 	AddCrateType (CRATE_BFG2704,	    "BFG 2704",			    "D",  8, CRT_Weapon,	(CRF_ANNOUNCE_FA | CRF_NoDeck),	"steals the");
 	AddCrateType (CRATE_GRAVITY,	    "Moon Gravity",		    "U",  1, CRT_Misc,		(CRF_ANNOUNCE_FA | CRF_NoDeck),	"activated the");
 	AddCrateType (CRATE_TIMEWARP,		"Time warp",			"I", 10, CRT_Bad,		(CRF_ANNOUNCE_TO),				"Somebody is taking a quick way to the oposing team with the");
-	AddCrateType (CRATE_HELLSPAWN,		"Hellspawn",			"F",  4, CRT_Misc,		(CRF_ANNOUNCE_FA),				"summoned a");
+	AddCrateType (CRATE_HELLSPAWN,		"Hellspawn",			"F",  0, CRT_Misc,		(CRF_ANNOUNCE_FA),				"summoned a");
 }
 
 // ============================================================================
@@ -324,9 +324,10 @@ function int CheckCrate (int c) {
 				!CheckInventory ("IsStealth") && // this crate mess with player alpha and render mode
 				!CheckInventory ("PowerInvisibility");
 		}
-	case CRATE_IMP:
-		return	!intHolder[i_SuddenDeath] && // not during sudden death
-				(ThingCount(T_NONE, TID_HELLSPAWM_MAIN) > 0); // Must exist at least the main spawner.
+	case CRATE_HELLSPAWN: // Disabled for a while
+//		return	!intHolder[i_SuddenDeath] && // not during sudden death
+//				(ThingCount(T_NONE, TID_HELLSPAWM_MAIN) > 0); // Must exist at least the main spawner.
+		return false;
 	}
 	
 	return true;
