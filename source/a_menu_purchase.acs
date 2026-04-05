@@ -82,19 +82,22 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 			if (ArmorWeaknesses[i] == dtype)
 				strength = strparam (s:strength, s:" ", s:ArModColor (i), s:ArModName (i));
 		
-		// TODO: Break this down to individual hudmessages for flexibility
-		str classinfo;
-		classinfo = strparam (s:"Speed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16,
-			s:"\cQ%\nPrice: \cQ$\cD", d:Classes_int[id][CK_COST],
-			s:"\nArmor: \cDGrade ", s:ArmorColor (armor), d:armor, s:" ", s:ArModColor (armod), s:ArModName (armod));
-			
+		// [Cata] Restructured: price first, then discount, then stats
+		int classCost = Classes_int[id][CK_COST];
+		str classinfo = FormatPriceBlock(classCost);
+
+		// Stats block
+		classinfo = strparam (s:classinfo,
+			s:"\nSpeed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16,
+			s:"\cQ%\nArmor: \cDGrade ", s:ArmorColor (armor), d:armor, s:" ", s:ArModColor (armod), s:ArModName (armod));
+
 		// Unless we're a support class, write down strengths and weaknesses
 		if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop) {
 			classinfo = strparam (s:classinfo,
 				s:"\nStrength: ", s:strength,
 				s:"\nWeakness: ", s:weakness);
 		}
-		
+
 		// Write down the rest of the info
 		classinfo = strparam (s:classinfo,
 			s:"\nGrenades: \cD", d:Classes_int[id][CK_FRAGS],
@@ -102,14 +105,17 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 			s:"\n----\n\cD",
 			s:item0, s:"\n\cD", s:item1, s:"\n\cD", s:item2, s:"\n\cD",
 			s:item3, s:"\n\cD", s:item4, s:"\n\cD", s:item5, s:"\n\cD");
-		
+
 		// Draw it now.
 		HudMessage (s:classinfo; HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 4:
-		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST] - CalcDiscount(Addons_int[m1][ADK_COST]));
-		HudMessage (s:"Price: \cQ$\cD", d:Addons_int[m1][ADK_COST];
+		// [Cata] Show discounted price with rank discount line
+		int addonCost = Addons_int[m1][ADK_COST];
+		HudMessage (s:FormatPriceBlock(addonCost);
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 5:
 		// Resign description
@@ -120,6 +126,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"sans add-on weapons and\n",
 				s:"items.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 6:
 		// surrender descript
@@ -131,6 +138,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"again to cancel your\n",
 				s:"vote.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	}
 	

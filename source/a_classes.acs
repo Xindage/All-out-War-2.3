@@ -610,8 +610,8 @@ function int CheckClassAvailability (int id) {
 	if (CheckInventory ("HasClass"))
 		return false;
 	
-	// Check cost
-	if (CheckInventory ("Credit") < Classes_int[id][CK_COST])
+	// [Cata] Check cost with discount
+	if (CheckInventory ("Credit") < Classes_int[id][CK_COST] - CalcDiscount(Classes_int[id][CK_COST]))
 		return false;
 	
 	// Check building dependencies

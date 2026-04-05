@@ -26,20 +26,17 @@ script 700 (void) CLIENTSIDE {
 script 701 (int m0, int m1, int y) CLIENTSIDE {
 	int x = PF_FindDefByMenuCoords (m0, m1);
 	
+	// [Cata] Price first, then description, then build time
+	int utilCost = g_ParticleFuserData_int[x][UK_COST];
+	HudMessage (s:FormatPriceBlock(utilCost);
+		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= MENU_SPACING;
+
 	// Description
 	HudMessage (s:g_ParticleFuserData_str[x][UK_DESCRIPTION];
-		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 	y -= 0.1;
-	
-	// Price
-	if (g_ParticleFuserData_int[x][UK_COST] > 0)
-		HudMessage (s:"Cost: \cq$\cd", d:g_ParticleFuserData_int[x][UK_COST];
-			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
-	else
-		HudMessage (s:"Cost: \cdfree!";
-			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
-	y -= MENU_SPACING;
-	
+
 	// Build time
 	if (g_ParticleFuserData_int[x][UK_BUILDTIME] > 0) {
 		HudMessage (s:"Build time: \cd", f:g_ParticleFuserData_int[x][UK_BUILDTIME], s:" \cqseconds";
