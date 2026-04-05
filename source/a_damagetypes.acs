@@ -9,6 +9,36 @@
 //
 // Usage: str info = ACS_NamedExecuteWithResult("GetItemInfo", category, index);
 
+// [Cata] Armor weakness string lookup — replaces the ArmorWeaknessStr map variable array.
+// Returns colored weakness string for an ARMOD_* type, e.g. "\ca-Chem" for Fire armor.
+script "GetArmorWeakStr" (int armod) CLIENTSIDE {
+	switch (armod) {
+		case ARMOD_FIRE:        SetResultValue(strparam(s:"\ca-Chem")); break;
+		case ARMOD_CHEM:        SetResultValue(strparam(s:"\ca-Fire")); break;
+		case ARMOD_ENERGY:      SetResultValue(strparam(s:"\ca-Flak")); break;
+		case ARMOD_EXPLO:       SetResultValue(strparam(s:"\ca-Energy")); break;
+		case ARMOD_BULLETPROOF: SetResultValue(strparam(s:"\ca-Energy \ca-Flak \ca-Ice")); break;
+		case ARMOD_CRYO:        SetResultValue(strparam(s:"\ca-Bullet \ca-Energy \ca-Flak")); break;
+		default:                SetResultValue(strparam(s:"")); break;
+	}
+}
+
+// [Cata] Returns full armor info string for a class, e.g. "Armor: Grade 2 Flak (-Energy)"
+// Replaces ClassArmorInfo map variable array and BuildClassArmorInfo function.
+script "GetClassArmor" (int classId) CLIENTSIDE {
+	int armor = Classes_int[classId][CK_ARMOR];
+	int armod = Classes_int[classId][CK_ARMOD];
+	str info;
+	if (armod != ARMOD_NOCHANGE) {
+		str weak = ACS_NamedExecuteWithResult("GetArmorWeakStr", armod);
+		info = strparam(s:"Armor: \cDGrade ", s:ArmorColor(armor), d:armor, s:" ", s:ArModColor(armod), s:ArModName(armod));
+		if (StrLen(weak) > 0)
+			info = strparam(s:info, s:" \cc(", s:weak, s:"\cc)");
+	} else
+		info = strparam(s:"Armor: \cDGrade ", s:ArmorColor(armor), d:armor);
+	SetResultValue(info);
+}
+
 // Convert a single type ID to a colored string
 script "InfoIdToStr" (int id) CLIENTSIDE {
 	switch (id) {
@@ -32,8 +62,8 @@ script "InfoIdToStr" (int id) CLIENTSIDE {
 		case EFF_HEAL:      SetResultValue(strparam(s:"\caHeal")); break;
 		case EFF_DISARM:    SetResultValue(strparam(s:"\csDisarm")); break;
 		case EFF_DECON:     SetResultValue(strparam(s:"\cjDeconstruct")); break;
-		case EFF_FIREPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_FIRE), s:ArModName(ARMOD_FIRE), s:" \cc(", s:ArmorWeaknessStr[ARMOD_FIRE], s:"\cc)")); break;
-		case EFF_CHEMPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_CHEM), s:ArModName(ARMOD_CHEM), s:" \cc(", s:ArmorWeaknessStr[ARMOD_CHEM], s:"\cc)")); break;
+		case EFF_FIREPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_FIRE), s:ArModName(ARMOD_FIRE), s:" \cc(", s:ACS_NamedExecuteWithResult("GetArmorWeakStr", ARMOD_FIRE), s:"\cc)")); break;
+		case EFF_CHEMPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_CHEM), s:ArModName(ARMOD_CHEM), s:" \cc(", s:ACS_NamedExecuteWithResult("GetArmorWeakStr", ARMOD_CHEM), s:"\cc)")); break;
 		default:            SetResultValue(strparam(s:"")); break;
 	}
 }

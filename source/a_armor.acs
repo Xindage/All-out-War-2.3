@@ -6,19 +6,6 @@
 // due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
 
 // What type is weak against what?
-// [Cata] Armor weakness strings sourced from DECORATE damagefactors (actors/crucial/armor.txt).
-// Indexed by ARMOD_* constants. Empty string means no weaknesses.
-str ArmorWeaknessStr[8] = {
-	"",                              // 0: NOCHANGE
-	"\ca-Chem",                      // 1: FIRE
-	"\ca-Fire",                      // 2: CHEM
-	"\ca-Flak",                      // 3: ENERGY
-	"\ca-Energy",                    // 4: EXPLO
-	"\ca-Energy \ca-Flak \ca-Ice",   // 5: BULLET
-	"",                              // 6: NONE
-	"\ca-Bullet \ca-Energy \ca-Flak" // 7: CRYO
-};
-
 function int GetArmorGrade (void) {
 	return GetPlayerArmorGrade (PlayerNumber ());
 }
