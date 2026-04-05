@@ -1,0 +1,201 @@
+// [Cata] Centralized item info lookup system.
+// All damage type and effect data lives here. Sourced from DECORATE properties.
+// Uses named scripts to avoid function/variable limits.
+//
+// Categories:
+//   0 = Item (ITEM_* index)
+//   1 = Research (RESEARCH_* index)
+//   2 = Utility (PF_* index)
+//
+// Usage: str info = ACS_NamedExecuteWithResult("GetItemInfo", category, index);
+
+// Convert a single type ID to a colored string
+script "InfoIdToStr" (int id) CLIENTSIDE {
+	switch (id) {
+		// Damage types
+		case DMG_BULLET:   SetResultValue(strparam(s:"\cUBullet")); break;
+		case DMG_FIRE:     SetResultValue(strparam(s:"\cGFire")); break;
+		case DMG_CHEM:     SetResultValue(strparam(s:"\cDChem")); break;
+		case DMG_ENERGY:   SetResultValue(strparam(s:"\cNEnergy")); break;
+		case DMG_FLAK:     SetResultValue(strparam(s:"\cFFlak")); break;
+		case DMG_ICE:      SetResultValue(strparam(s:"\cVIce")); break;
+		case DMG_ANTIMECH: SetResultValue(strparam(s:"\cbAnti-mech")); break;
+		case DMG_MINE:     SetResultValue(strparam(s:"\csAnti-Personnel")); break;
+		case DMG_FLASH:    SetResultValue(strparam(s:"\cjFlash")); break;
+		case DMG_CONTACT:  SetResultValue(strparam(s:"\cpContact")); break;
+		case DMG_TIME:     SetResultValue(strparam(s:"\ciTime")); break;
+		case DMG_SUPER:    SetResultValue(strparam(s:"\ctSuper")); break;
+		case DMG_MELEE:    SetResultValue(strparam(s:"\cpMelee")); break;
+		// Passive/support effects
+		case EFF_DEFENSE10: SetResultValue(strparam(s:"\cq+10% Defence")); break;
+		case EFF_REPAIR:    SetResultValue(strparam(s:"\cnRepair")); break;
+		case EFF_HEAL:      SetResultValue(strparam(s:"\caHeal")); break;
+		case EFF_DISARM:    SetResultValue(strparam(s:"\csDisarm")); break;
+		case EFF_DECON:     SetResultValue(strparam(s:"\cjDeconstruct")); break;
+		case EFF_FIREPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_FIRE), s:ArModName(ARMOD_FIRE), s:" \cc(", s:ArmorWeaknessStr[ARMOD_FIRE], s:"\cc)")); break;
+		case EFF_CHEMPROOF: SetResultValue(strparam(s:"Armor: ", s:ArModColor(ARMOD_CHEM), s:ArModName(ARMOD_CHEM), s:" \cc(", s:ArmorWeaknessStr[ARMOD_CHEM], s:"\cc)")); break;
+		default:            SetResultValue(strparam(s:"")); break;
+	}
+}
+
+// Lookup item info string for any category.
+// Returns a fully formatted colored string like "\cUBullet \cc/ \cFFlak"
+// Packing: primary | (primary2 << 8) | (alt << 16) | (alt2 << 24)
+//   0 in any slot = not present
+//   comma separates primary+primary2, slash separates primary from alt
+script "GetItemInfo" (int category, int idx) CLIENTSIDE {
+	int packed = 0;
+
+	if (category == 0) { // Items (ITEM_* index)
+		switch (idx) {
+			case 1: case 2: case 3: case 4: case 5:
+				packed = DMG_BULLET; break;                                          // Handgun, SMG, Shotgun, SSG, MG
+			case 6:  packed = DMG_BULLET | (DMG_FLAK << 16); break;                 // Gatling (Bullet / Flak)
+			case 7:  packed = DMG_BULLET | (DMG_FLAK << 16); break;                 // Rifle (Bullet / Flak grenade)
+			case 8:  packed = DMG_ENERGY | (DMG_ANTIMECH << 16); break;             // Gauss (Energy / Anti-mech)
+			case 9:  packed = DMG_FLAK; break;                                      // Grenade Launcher
+			case 10: case 11: packed = DMG_ENERGY; break;                           // Stealth Laser, Laser Rifle
+			case 12: packed = DMG_TIME; break;                                      // Time Gun
+			case 13: packed = DMG_FLAK | (DMG_FIRE << 8) | (DMG_ANTIMECH << 16); break; // Artillery (Flak,Fire / Anti-mech)
+			case 14: packed = DMG_ENERGY; break;                                    // Laser Chaingun
+			case 16: packed = DMG_ENERGY; break;                                    // Plasma Cannon
+			case 17: packed = DMG_CHEM; break;                                      // Chemical Sprayer
+			case 18: packed = DMG_BULLET | (DMG_CHEM << 8); break;                  // Tiberium Auto (Bullet, Chem)
+			case 20: packed = EFF_REPAIR | (EFF_DISARM << 8); break;                // Upgraded Repair (Repair, Disarm)
+			case 21: packed = EFF_REPAIR | (EFF_DISARM << 8); break;                // Repair Gun (Repair, Disarm)
+			case 22: packed = EFF_DECON; break;                                     // Deconstruction Gun
+			case 23: packed = EFF_DISARM; break;                                    // Bomb Squad Gun
+			case 24: packed = EFF_HEAL; break;                                      // Heal Gun
+			case 25: packed = DMG_FLAK | (DMG_FIRE << 8); break;                    // Missile Launcher (Flak, Fire)
+			case 26: packed = DMG_FIRE; break;                                      // Flamethrower
+			case 27: packed = DMG_ENERGY; break;                                    // Shock Rifle
+			case 28: packed = DMG_BULLET; break;                                    // Sniper Rifle
+			case 29: packed = DMG_ENERGY; break;                                    // Plasma Rifle
+			case 30: packed = DMG_MELEE; break;                                     // Stealth Knife
+			case 31: packed = DMG_MELEE; break;                                     // Chainsaw
+			case 32: case 33: packed = DMG_FLAK; break;                             // Bomb Pack, Remote C4
+			case 35: case 36: packed = DMG_FLAK; break;                             // Mines
+			case 37: packed = EFF_HEAL; break;                                      // Medication Field
+			case 38: packed = EFF_DEFENSE10; break;                                 // +1 Armor (+10% Defense)
+			case 39: packed = DMG_SUPER; break;                                     // Beacon
+			case 40: case 41: packed = DMG_BULLET | (DMG_FIRE << 8); break;         // Combustion Auto (Bullet, Fire)
+			case 42: packed = DMG_BULLET; break;                                    // Sniper (weak)
+			case 43: packed = DMG_ICE; break;                                       // Cryo Bow
+			case 44: packed = DMG_ENERGY; break;                                    // Karasawa
+			case 45: packed = DMG_BULLET; break;                                    // Nail MG
+			case 46: packed = DMG_ENERGY; break;                                    // BFG 2704
+			case 47: packed = DMG_ENERGY; break;                                    // Stealth Gauss
+			case 48: packed = DMG_BULLET; break;                                    // Stealth Pistol
+		}
+	} else if (category == 1) { // Research (RESEARCH_* index)
+		switch (idx) {
+			case 4:  packed = DMG_FLAK; break;                                      // +1 Timed C4
+			case 8:  packed = DMG_MINE | (DMG_FIRE << 8); break;                    // +1 Frag Grenade (Anti-Personnel, Fire)
+			case 9:  packed = DMG_FLASH; break;                                     // +1 Flashbang
+		}
+	} else if (category == 2) { // Utility (PF_* index)
+		switch (idx) {
+			case 7:  packed = DMG_BULLET | (DMG_FLAK << 16); break;                 // Rifle pickup (Bullet / Flak)
+			case 8:  packed = DMG_BULLET; break;                                    // Machine Gun pickup
+			case 9:  packed = EFF_FIREPROOF; break;                                 // Fireproof armor
+			case 10: packed = EFF_CHEMPROOF; break;                                 // Chemproof armor
+			case 13: case 17: case 18: case 16:
+				packed = DMG_BULLET; break;                                          // Gun/Klaxon/Precision Turret, Mini-Raven
+			case 14: packed = DMG_ANTIMECH; break;                                  // Mech Turret
+			case 15: packed = DMG_MINE; break;                                      // Proxy Mine
+			case 19: packed = EFF_REPAIR; break;                                    // Repair Turret
+			case 20: packed = DMG_ANTIMECH | (DMG_FIRE << 8); break;                // Artillery Turret (Anti-mech, Fire)
+			case 21: packed = DMG_CONTACT; break;                                   // Razor Wire
+			case 32: packed = DMG_FIRE; break;                                      // Flame Turret
+			case 33: packed = DMG_CHEM; break;                                      // Chem Turret
+		}
+	}
+
+	if (packed == 0) { SetResultValue(strparam(s:"")); terminate; }
+
+	// Unpack: primary | (primary2 << 8) | (alt << 16) | (alt2 << 24)
+	int p1 = packed & 0xFF;
+	int p2 = (packed >> 8) & 0xFF;
+	int a1 = (packed >> 16) & 0xFF;
+	int a2 = (packed >> 24) & 0xFF;
+
+	str s1 = ACS_NamedExecuteWithResult("InfoIdToStr", p1);
+	str result = s1;
+
+	if (p2) result = strparam(s:result, s:"\cc, ", s:ACS_NamedExecuteWithResult("InfoIdToStr", p2));
+	if (a1) result = strparam(s:result, s:" \cc/ ", s:ACS_NamedExecuteWithResult("InfoIdToStr", a1));
+	if (a2) result = strparam(s:result, s:"\cc, ", s:ACS_NamedExecuteWithResult("InfoIdToStr", a2));
+
+	SetResultValue(result);
+}
+
+// [Cata] Helper: format a weapon line "WeaponName [DmgType1, DmgType2]"
+script "FmtMechWpn" (int packed, int nameStr) CLIENTSIDE {
+	int p1 = packed & 0xFF;
+	int p2 = (packed >> 8) & 0xFF;
+	str dmg = ACS_NamedExecuteWithResult("InfoIdToStr", p1);
+	if (p2) dmg = strparam(s:dmg, s:"\cc, ", s:ACS_NamedExecuteWithResult("InfoIdToStr", p2));
+	SetResultValue(strparam(s:"\cD", s:nameStr, s:" \cc[", s:dmg, s:"\cc]"));
+}
+
+// [Cata] Returns full weapon list for a mech, formatted as multi-line string.
+// Each weapon on its own line with damage types.
+script "GetMechWeapons" (int mechIdx) CLIENTSIDE {
+	str result = "";
+
+	switch (mechIdx) {
+	case 0: // Orca
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_BULLET, "Machine Gun"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "Rocket Pods"));
+		break;
+	case 1: // Tortoise
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ENERGY, "Plasma Rifle"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "Impact Grenades"));
+		break;
+	case 2: // Raven
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_BULLET | (DMG_FLAK << 8), "AC-2"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "LRM-5"));
+		break;
+	case 3: // Mastodon
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "Homing Missiles"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK | (DMG_FIRE << 8), "Flame Grenades"));
+		break;
+	case 4: // Wolverine
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "LRM-10"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ENERGY, "Pulse Cannon"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_BULLET, "Minigun"));
+		break;
+	case 5: // Mad Cat
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ENERGY | (DMG_FLAK << 8), "2x Shock Cannon"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ENERGY, "2x Shock Rifle"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "LRM-20"));
+		break;
+	case 6: // Titan
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ANTIMECH | (DMG_FIRE << 8), "100mm Cannon"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FIRE, "2x Flamer"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "LRM-20"));
+		break;
+	case 7: // Lancer
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "LRM-10"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ENERGY, "Plasma Cannon"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_CHEM, "Chem Sprayer"));
+		break;
+	case 8: // Juggernaut
+		result = strparam(
+			s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ANTIMECH | (DMG_FIRE << 8), "2x Artillery 80mm"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_ANTIMECH | (DMG_FIRE << 8), "2x Anti-Mech SRM-15"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "2x Flak Cannon"),
+			s:"\n", s:ACS_NamedExecuteWithResult("FmtMechWpn", DMG_FLAK, "Mini-Nuke/Ion Bomb"));
+		break;
+	}
+
+	SetResultValue(result);
+}

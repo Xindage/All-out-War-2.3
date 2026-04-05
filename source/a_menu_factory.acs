@@ -27,18 +27,13 @@ script 706 (void) CLIENTSIDE {
 // MENU DRAW
 script 707 (int m0, int m1, int y) CLIENTSIDE {
 	int hid = MENU_HID + 21;
-	
-	// Health
-	HudMessage (s:"Health: \cd", d:Mechs_int[MenuMechs[m0][m1]][MK_HEALTH], s:" \cqHP";
-		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
-		y -= MENU_SPACING; hid++;
-	
-	// Price - Check for discount to apply on menu itself its easyer to read that way.
-	int Cost  = Mechs_int[MenuMechs[m0][m1]][MK_COST];
-	int Discount  = CalcDiscount(Cost);
+	int mechIdx = MenuMechs[m0][m1];
+
+	// Price
+	int Cost = Mechs_int[mechIdx][MK_COST];
+	int Discount = CalcDiscount(Cost);
 	int Final = Cost - Discount;
-	// HudMessage (s:"Cost: \cq$\cd", d:Mechs_int[MenuMechs[m0][m1]][MK_COST];
-	if (Cost != Final) // Has discount, show it.
+	if (Cost != Final)
 	{
 		HudMessage (s:"Cost: \cq$\cn", d:Final, s:"  \cc(\cq$\cc", d:Discount, s:" - \cq$\cd", d:Cost, s:"\cc)";
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
@@ -46,15 +41,33 @@ script 707 (int m0, int m1, int y) CLIENTSIDE {
 	}
 	else
 	{
-	HudMessage (s:"Cost: \cq$\cd", d:Final;
+		HudMessage (s:"Cost: \cq$\cd", d:Final;
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
 		y -= MENU_SPACING; hid++;
 	}
-	
-	// Description - shifted a bit to the left to compensate for tabs
-	HudMessage (s:Mechs_str[MenuMechs[m0][m1]][MK_DESCRIPTION];
+
+	// Health
+	HudMessage (s:"Health: \cd", d:Mechs_int[mechIdx][MK_HEALTH], s:" \cqHP";
+		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= MENU_SPACING; hid++;
+
+	// [Cata] Weapons with damage types
+	str weapons = ACS_NamedExecuteWithResult("GetMechWeapons", mechIdx);
+	if (StrLen(weapons) > 0) {
+		HudMessage (s:"Weapons:\n", s:weapons;
+			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+		// Count newlines to adjust y
+		int wlines = 1;
+		for (int ci = 0; ci < StrLen(weapons); ci++)
+			if (GetChar(weapons, ci) == '\n') wlines++;
+		y -= MENU_SPACING * wlines;
+		hid++;
+	}
+
+	// Description
+	HudMessage (s:Mechs_str[mechIdx][MK_DESCRIPTION];
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4-0.025, y, 0.0);
-		y -= 0.1; hid++;
+	y -= 0.1; hid++;
 	
 	SetResultValue (y);
 }

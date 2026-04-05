@@ -237,3 +237,4 @@ function int CalcDiscount (int amount) {
 	
 	return d;
 }
+
