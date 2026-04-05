@@ -233,6 +233,7 @@ script SC_SpawnCache (int what, int team)
 				(team == TEAM_BLUE)	? "Utility_GlobalMedicCacheBlue"
 									: "Utility_GlobalMedicCacheRed",
 				baseTID + 12, 0, 0);
+			SetActorSpeed(MainTIDs[team][BUILDING_HEALTHREGEN], 100);
 			Delay(1);
 			SYNC_UpdateBuildingHealth (BUILDING_HEALTHREGEN, team);
 			ACS_ExecuteAlways(344, 0, 6);
@@ -249,6 +250,7 @@ script SC_SpawnCache (int what, int team)
 				(team == TEAM_RED)	? "Utility_GlobalAmmoCacheRed"
 									: "Utility_GlobalAmmoCacheBlue",
 				baseTID + 13, 0, 0);
+			SetActorSpeed(MainTIDs[team][BUILDING_AMMOREGEN], 100);
 			Delay(1);
 			SYNC_UpdateBuildingHealth (BUILDING_AMMOREGEN, team);
 			ACS_ExecuteAlways(344, 0, 8);
