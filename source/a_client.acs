@@ -169,7 +169,7 @@ script SC_CL_EFFECTS (void) NET CLIENTSIDE {
 			GetCVar ("zeta_cl_confonthud") != last_confonthud)
 		{
 			last_nohud = GetCVar ("zeta_cl_nohud");
-			last_nohud = GetCVar ("zeta_cl_confonthud");
+			last_confonthud = GetCVar ("zeta_cl_confonthud");
 			UpdateHUD ();
 		}
 		
