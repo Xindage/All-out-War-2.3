@@ -82,11 +82,12 @@ column "CountryFlag"
 	addflag ALWAYSUSESHORTESTWIDTH
 }
 
+
 // [Cata] K/D combo column
 column "PlayerKD"
 {
-	displayname = "K/D"
-	shortname = "K/D"
+	displayname = "K / D"
+	shortname = "K / D"
 	alignment = center
 	size = 4
 	addflag ALWAYSUSESHORTESTWIDTH
@@ -120,8 +121,16 @@ column "Ping"
 
 scoreboard
 {
+	teamheader
+	{
+		drawcolor(value = teamcolor, width = 8, height = 8)
+		drawstring(value = teamname + " (" + teamplayercount + ")", font = "BIGFONT", textcolor = teamtextcolor, bottompadding = 4)
+		drawstring(value = "Points: " + teampointcount, font = "BIGFONT", textcolor = teamtextcolor, horizontalalign = right, bottompadding = 4)
+	}
+	gapbetweenheaderandrows = 6
+
 	gapbetweencolumns = 4
 	headertextcolor = "Tan"
 	removefromcolumnorder = "Time", "Ping", "Frags", "Deaths", "Points"
-	addtocolumnorder = "PlayerDesig", "PlayerXP", "CreditsLive", "PlayerKD", "Points", "PlayerRankAll", "PlayerXPAll", "CreditsNet", "Time", "Ping"
+	addtocolumnorder = "PlayerDesig", "PlayerRankAll", "PlayerXP", "PlayerXPAll", "CreditsLive", "CreditsNet", "PlayerKD", "Points", "Time", "Ping"
 }
