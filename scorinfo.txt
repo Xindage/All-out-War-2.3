@@ -123,5 +123,5 @@ scoreboard
 	gapbetweencolumns = 4
 	headertextcolor = "Tan"
 	removefromcolumnorder = "Time", "Ping", "Frags", "Deaths", "Points"
-	addtocolumnorder = "PlayerDesig", "PlayerXP", "CreditsLive", "PlayerKD", "Points", "PlayerRankAll", "PlayerXPAll", "CreditsNet", "Time", "Ping", "ConnectionStrength"
+	addtocolumnorder = "PlayerDesig", "PlayerXP", "CreditsLive", "PlayerKD", "Points", "PlayerRankAll", "PlayerXPAll", "CreditsNet", "Time", "Ping"
 }
