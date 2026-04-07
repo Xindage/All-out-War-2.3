@@ -29,7 +29,7 @@ function void SYNC_UpdateBuildingHealth (int what, int team) {
 	int rtc = RepairCharges[1];
 	ACS_ExecuteAlways (SC_CL_SYNCCHARGES, 0, btc, rtc);
 
-	if (exists)
+	if (exists && GetActorSpawnHealth (tid) > 0)
 		perc = GetActorHealth (tid) * 99 / GetActorSpawnHealth (tid) + 1;
 	
 	if (perc < 0)
