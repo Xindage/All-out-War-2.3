@@ -5,6 +5,9 @@ actor RazorWire {
 	+NOBLOOD
 	+NODAMAGETHRUST
 	+NOICEDEATH
+	+ISMONSTER     // [Cata] Required for FriendPlayer kill attribution
+	+FRIENDLY      // [Cata] Prevents AI targeting
+	-COUNTKILL     // [Cata] Don't count toward monster kills
 	Health 400
 	Radius 32
 	Height 32

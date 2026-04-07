@@ -135,6 +135,9 @@ script SC_MECHMORPH (int mech) {
 	GiveInventory ("IsMech", 1);
 	GiveInventory (Mechs_str[mech][MK_MORPH], 1);
 	GiveInventory (Mechs_str[mech][MK_AMMO], 1);
+
+	// [Cata] Update scoreboard designation
+	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
 	
 	// Calculated in death now
 	// SetThingSpecial (0, ACS_ExecuteAlways, 317, 0, PlayerTeam());
@@ -725,6 +728,9 @@ script 697 (void)
 	CheckAndRemove ("MechEjectButton");
 	TakeInventory ("IsMech", 1);
 	PopArmor ();
+
+	// [Cata] Restore class designation on scoreboard
+	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
 
 	delay (1);
 

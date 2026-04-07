@@ -1,3 +1,18 @@
+// [Cata] Custom scoreboard data
+gameinfo {
+	// [Cata] In-game columns (own team only)
+	addcustomdata = "CreditsLive", "int", 0
+	addcustomdata = "PlayerXP", "int", 0
+	addcustomdata = "PlayerDesig", "string", "-"
+	addcustomdata = "PlayerKD", "string", "-"
+	addcustomdata = "PlayerKills", "int", 0
+	addcustomdata = "PlayerDeaths", "int", 0
+	// [Cata] Intermission columns (visible to all)
+	addcustomdata = "CreditsNet", "int", 0
+	addcustomdata = "PlayerXPAll", "int", 0
+	addcustomdata = "PlayerRankAll", "string", "-"
+}
+
 clearepisodes
 clearskills
 

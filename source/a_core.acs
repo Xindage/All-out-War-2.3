@@ -442,6 +442,13 @@ script SC_CL_PLAYERDISCONNECT (int gone) DISCONNECT CLIENTSIDE {
 function void InitPlayer (void) {
 	SetCredits (PlayerNumber(), GetCVAR ("zeta_startcredits"));
 	Experience[PlayerNumber()] = 0;
+	// [Cata] Initialize scoreboard values
+	SetCustomPlayerValue("CreditsLive", PlayerNumber(), GetCVAR("zeta_startcredits"));
+	SetCustomPlayerValue("PlayerXP", PlayerNumber(), 0);
+	SetCustomPlayerValue("PlayerXPAll", PlayerNumber(), 0);
+	SetCustomPlayerValue("PlayerRankAll", PlayerNumber(), strparam(s:"\ci", s:ACS_NamedExecuteWithResult("GetRankAbbr", 0)));
+	SetCustomPlayerValue("PlayerKD", PlayerNumber(), "0 / 0");
+	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
 	Surrender[PlayerNumber()] = False;
 	PlayersTeam[PlayerNumber()] = PlayerTeam();
 	StartTime[PlayerNumber()] = Timer();

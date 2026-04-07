@@ -1,0 +1,136 @@
+// [Cata] Custom scoreboard columns
+
+// Designation column — "Rank | Class" or "Rank | Mech", own team only, in-game
+column "PlayerDesig"
+{
+	displayname = "Designation"
+	shortname = "Desig"
+	alignment = center
+	size = 4
+	addflag NOENEMIES
+	addflag NOSPECTATORS
+	addflag NOINTERMISSION
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+// In-game columns — own team only, hidden at intermission
+column "PlayerXP"
+{
+	displayname = "XP"
+	shortname = "XP"
+	alignment = center
+	size = 4
+	addflag NOENEMIES
+	addflag NOSPECTATORS
+	addflag NOINTERMISSION
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+column "CreditsLive"
+{
+	displayname = "Credits"
+	shortname = "$"
+	alignment = center
+	size = 4
+	addflag NOENEMIES
+	addflag NOSPECTATORS
+	addflag NOINTERMISSION
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+// Intermission columns — visible to everyone
+column "PlayerRankAll"
+{
+	displayname = "Rank"
+	shortname = "Rank"
+	alignment = center
+	size = 4
+	addflag INTERMISSIONONLY
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+column "PlayerXPAll"
+{
+	displayname = "XP"
+	shortname = "XP"
+	alignment = center
+	size = 4
+	addflag INTERMISSIONONLY
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+column "CreditsNet"
+{
+	displayname = "Earned"
+	shortname = "Earned"
+	alignment = center
+	size = 4
+	addflag INTERMISSIONONLY
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+// [Cata] Reduce width on native columns
+column "Index"
+{
+	size = 2
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+column "CountryFlag"
+{
+	size = 2
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+
+// [Cata] K/D combo column
+column "PlayerKD"
+{
+	displayname = "K / D"
+	shortname = "K / D"
+	alignment = center
+	size = 4
+	addflag ALWAYSUSESHORTESTWIDTH
+}
+
+// [Cata] Center-align native columns
+column "Frags"
+{
+	alignment = center
+}
+
+column "Deaths"
+{
+	alignment = center
+}
+
+column "Points"
+{
+	alignment = center
+}
+
+column "Time"
+{
+	alignment = center
+}
+
+column "Ping"
+{
+	alignment = center
+}
+
+scoreboard
+{
+	teamheader
+	{
+		drawcolor(value = teamcolor, width = 8, height = 8)
+		drawstring(value = teamname + " (" + teamplayercount + ")", font = "BIGFONT", textcolor = teamtextcolor, bottompadding = 4)
+		drawstring(value = "Points: " + teampointcount, font = "BIGFONT", textcolor = teamtextcolor, horizontalalign = right, bottompadding = 4)
+	}
+	gapbetweenheaderandrows = 6
+
+	gapbetweencolumns = 4
+	headertextcolor = "Tan"
+	removefromcolumnorder = "Time", "Ping", "Frags", "Deaths", "Points"
+	addtocolumnorder = "PlayerDesig", "PlayerRankAll", "PlayerXP", "PlayerXPAll", "CreditsLive", "CreditsNet", "PlayerKD", "Points", "Time", "Ping"
+}

@@ -25,7 +25,7 @@ actor Utility_GlobalMedicCacheRed {
 	DamageFactor "Ice", 0.1
 	radius 8
 	height 64
-	speed 100 // used for base hud!
+	speed 0 // [Cata] speed is used for base hud health %; set via ACS, must be 0 here to avoid fixed-point overflow on HUD
 	health 8750
 	renderstyle Translucent
 	alpha 0.0

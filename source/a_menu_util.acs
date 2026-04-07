@@ -27,13 +27,9 @@ script 701 (int m0, int m1, int y) CLIENTSIDE {
 	int x = PF_FindDefByMenuCoords (m0, m1);
 	int hid = MENU_HID + 21;
 
-	// Price
-	if (g_ParticleFuserData_int[x][UK_COST] > 0)
-		HudMessage (s:"Cost: \cq$\cd", d:g_ParticleFuserData_int[x][UK_COST];
-			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
-	else
-		HudMessage (s:"Cost: \cdfree!";
-			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	// [Cata] Price (shared FormatPriceBlock — handles free case)
+	HudMessage (s:FormatPriceBlock(g_ParticleFuserData_int[x][UK_COST]);
+		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
 	y -= MENU_SPACING; hid++;
 
 	// [Cata] Damage type / weapons / effect info

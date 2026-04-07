@@ -53,9 +53,6 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 	switch (m0) {
 	case 0: case 1:
 	case 2: case 3:
-		// Display discount, if any
-		ACS_ExecuteWithResult (330, Classes_int[id][CK_COST]);
-
 		// [Cata] Format weapon names with damage types
 		str item0 = FormatWeaponLine(Classes_int[id][CK_ITEM0]);
 		str item1 = FormatWeaponLine(Classes_int[id][CK_ITEM1]);
@@ -64,9 +61,10 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 		str item4 = FormatWeaponLine(Classes_int[id][CK_ITEM4]);
 		str item5 = FormatWeaponLine(Classes_int[id][CK_ITEM5]);
 
-		str classinfo;
-		classinfo = strparam (s:"Speed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16,
-			s:"\cQ%\nPrice: \cQ$\cD", d:Classes_int[id][CK_COST],
+		// [Cata] Price (shared FormatPriceBlock), then stats from named scripts
+		str classinfo = FormatPriceBlock(Classes_int[id][CK_COST]);
+		classinfo = strparam (s:classinfo,
+			s:"\nSpeed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16, s:"\cQ%",
 			s:"\n", s:ACS_NamedExecuteWithResult("GetClassArmor", id));
 
 		// Write down the rest of the info
@@ -80,22 +78,24 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 		if (StrLen(item3) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item3);
 		if (StrLen(item4) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item4);
 		if (StrLen(item5) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item5);
-		
+
+
 		// Draw it now.
 		HudMessage (s:classinfo; HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 4:
-		// [Cata] Show add-on price and damage type
-		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST] - CalcDiscount(Addons_int[m1][ADK_COST]));
+		// [Cata] Price (shared) + damage type
 		int addonItem = Addons_int[m1][ADK_ITEM];
 		str addonDmg = ACS_NamedExecuteWithResult("GetItemInfo", 0, addonItem);
-		str addonInfo2 = strparam(s:"Price: \cQ$\cD", d:Addons_int[m1][ADK_COST]);
+		str addonInfo2 = FormatPriceBlock(Addons_int[m1][ADK_COST]);
 		if (addonItem == ITEM_ArmorUp)
 			addonInfo2 = strparam(s:addonInfo2, s:"\n", s:addonDmg);
 		else if (StrLen(addonDmg) > 0)
 			addonInfo2 = strparam(s:addonInfo2, s:"\nType: \cc[", s:addonDmg, s:"\cc]");
 		HudMessage (s:addonInfo2;
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 5:
 		// Resign description
@@ -106,6 +106,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"sans add-on weapons and\n",
 				s:"items.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 6:
 		// surrender descript
@@ -117,6 +118,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"again to cancel your\n",
 				s:"vote.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	}
 	
