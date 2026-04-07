@@ -32,7 +32,13 @@ function void DoAddExperience (int XP, int forcemessage) {
 	if (Experience[PlayerNumber()] >= maxexp) Experience[PlayerNumber()] = maxexp;
 	
 	SetInventory ("Experience", Experience[PlayerNumber()]);
-	
+
+	// [Cata] Scoreboard tracking
+	SetCustomPlayerValue("PlayerXP", PlayerNumber(), Experience[PlayerNumber()]);
+	SetCustomPlayerValue("PlayerXPAll", PlayerNumber(), Experience[PlayerNumber()]);
+	SetCustomPlayerValue("PlayerRankAll", PlayerNumber(), strparam(s:"\ci", s:ACS_NamedExecuteWithResult("GetRankAbbr", GetRank())));
+	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
+
 	// Don't announce minor exp awards
 	if (XP > 20 || forcemessage) {
 		SetFont ("SMALLFONT");
@@ -145,6 +151,100 @@ function str GetRankPic (int p) {
 		case RANK_GENERAL: return "RANK11";
 	}
 	return -1;
+}
+
+// [Cata] Short class/mech abbreviation for scoreboard
+script "GetClassAbbr" (int classId) {
+	switch (classId) {
+		case 0:  SetResultValue(strparam(s:"GUNMAN")); break;  // Gunman
+		case 1:  SetResultValue(strparam(s:"STGUNR")); break;  // Shotgunner
+		case 2:  SetResultValue(strparam(s:"RIFLMN")); break;  // Rifleman
+		case 3:  SetResultValue(strparam(s:"DBLSTG")); break;  // Double Shotgunner
+		case 4:  SetResultValue(strparam(s:"MCHGUN")); break;  // Machine Gunner
+		case 5:  SetResultValue(strparam(s:"MINIGN")); break;  // Minigunner
+		case 6:  SetResultValue(strparam(s:"TBAUTO")); break;  // Tiberium Autorifleman
+		case 7:  SetResultValue(strparam(s:"FLAMER")); break;  // Flamer
+		case 8:  SetResultValue(strparam(s:"GRENAD")); break;  // Grenadier
+		case 9:  SetResultValue(strparam(s:"STLTRP")); break;  // Stealth Trooper
+		case 10: SetResultValue(strparam(s:"COMBUST")); break; // Combustion Gunner
+		case 11: SetResultValue(strparam(s:"ROCKET")); break;  // Rocket Soldier
+		case 12: SetResultValue(strparam(s:"CHEMWR")); break;  // Chem Warrior
+		case 13: SetResultValue(strparam(s:"GAUSSG")); break;  // Gauss Gunner
+		case 14: SetResultValue(strparam(s:"JETTRP")); break;  // Jet Trooper
+		case 15: SetResultValue(strparam(s:"ARTILL")); break;  // Artillery Soldier
+		case 16: SetResultValue(strparam(s:"NAILMG")); break;  // Nail-MachineGunner
+		case 17: SetResultValue(strparam(s:"SNIPER")); break;  // Sniper
+		case 18: SetResultValue(strparam(s:"COMNDO")); break;  // Commando
+		case 19: SetResultValue(strparam(s:"LASRFL")); break;  // Laser Rifleman
+		case 20: SetResultValue(strparam(s:"SHOCKT")); break;  // Shock Trooper
+		case 21: SetResultValue(strparam(s:"PLASMG")); break;  // Plasma Gunner
+		case 22: SetResultValue(strparam(s:"LASCHN")); break;  // Laser Chaingunner
+		case 23: SetResultValue(strparam(s:"KARASW")); break;  // Karasawa Soldier
+		case 24: SetResultValue(strparam(s:"CRYOAR")); break;  // Cryo Archer
+		case 25: SetResultValue(strparam(s:"STLASS")); break;  // Stealth Assassin
+		case 26: SetResultValue(strparam(s:"ENG")); break;     // Engineer
+		case 27: SetResultValue(strparam(s:"TECH")); break;    // Technician
+		case 28: SetResultValue(strparam(s:"DEMO")); break;    // Demolitions Expert
+		case 29: SetResultValue(strparam(s:"UTIL")); break;    // Utility Guy
+		case 30: SetResultValue(strparam(s:"MEDIC")); break;   // Field Medic
+		case 31: SetResultValue(strparam(s:"SUICID")); break;  // Suicide Bomber
+		case 32: SetResultValue(strparam(s:"TIMECP")); break;  // Time Cop
+		case 33: SetResultValue(strparam(s:"HARVST")); break;  // Tiberium Harvester
+		case 34: SetResultValue(strparam(s:"ADVHRV")); break;  // Advanced Harvester
+		default: SetResultValue(strparam(s:"-")); break;
+	}
+}
+
+// [Cata] Mech abbreviation
+script "GetMechAbbr" (int mechId) {
+	switch (mechId) {
+		case 0: SetResultValue(strparam(s:"ORCA")); break;
+		case 1: SetResultValue(strparam(s:"TORTSE")); break;
+		case 2: SetResultValue(strparam(s:"RAVEN")); break;
+		case 3: SetResultValue(strparam(s:"MASTDN")); break;
+		case 4: SetResultValue(strparam(s:"WOLV")); break;
+		case 5: SetResultValue(strparam(s:"MADCAT")); break;
+		case 6: SetResultValue(strparam(s:"TITAN")); break;
+		case 7: SetResultValue(strparam(s:"LANCER")); break;
+		case 8: SetResultValue(strparam(s:"JUGGER")); break;
+		default: SetResultValue(strparam(s:"-")); break;
+	}
+}
+
+// [Cata] Build designation string "Rank | Class"
+script "UpdateDesig" (int player) {
+	str rank = ACS_NamedExecuteWithResult("GetRankAbbr", GetPlayerRank(player));
+	str cls = "?";
+	SetActivator(3800 + player);
+	if (CheckInventory("IsMech")) {
+		int mechId = getMechIndex();
+		if (mechId >= 0)
+			cls = ACS_NamedExecuteWithResult("GetMechAbbr", mechId);
+	} else {
+		int classId = GetClass();
+		if (classId >= 0)
+			cls = ACS_NamedExecuteWithResult("GetClassAbbr", classId);
+	}
+	str clsColor = CheckInventory("IsMech") ? "\cs" : "\cp";
+	SetCustomPlayerValue("PlayerDesig", player, strparam(s:"\ci", s:rank, s:"\cb, ", s:clsColor, s:cls));
+}
+
+// [Cata] Short rank abbreviation for scoreboard
+script "GetRankAbbr" (int rank) {
+	switch (rank) {
+		case RANK_PRIVATE:    SetResultValue(strparam(s:"Pvt")); break;
+		case RANK_CORPORAL:   SetResultValue(strparam(s:"Cpl")); break;
+		case RANK_SERGEANT:   SetResultValue(strparam(s:"Sgt")); break;
+		case RANK_MASTERSGT:  SetResultValue(strparam(s:"MSgt")); break;
+		case RANK_OFFICER:    SetResultValue(strparam(s:"OFC")); break;
+		case RANK_LIEUTENANT: SetResultValue(strparam(s:"Lt")); break;
+		case RANK_CAPTAIN:    SetResultValue(strparam(s:"Capt")); break;
+		case RANK_MAJOR:      SetResultValue(strparam(s:"Maj")); break;
+		case RANK_LTCOLONEL:  SetResultValue(strparam(s:"LtCol")); break;
+		case RANK_COLONEL:    SetResultValue(strparam(s:"Col")); break;
+		case RANK_GENERAL:    SetResultValue(strparam(s:"Gen")); break;
+		default:              SetResultValue(strparam(s:"-")); break;
+	}
 }
 
 //Rank awards/checks

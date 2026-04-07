@@ -24,6 +24,19 @@ script SC_DEATH DEATH
 	int threat_level = 0;
 
 	Thing_ChangeTID (0, TID_DeadPlayer);
+
+	// [Cata] Track K/D for scoreboard
+	int vd = GetCustomPlayerValue("PlayerDeaths", victim_n) + 1;
+	SetCustomPlayerValue("PlayerDeaths", victim_n, vd);
+	SetCustomPlayerValue("PlayerKD", victim_n,
+		strparam(d:GetCustomPlayerValue("PlayerKills", victim_n), s:" / ", d:vd));
+	if (killer_n >= 0 && killer_n != victim_n) {
+		int kk = GetCustomPlayerValue("PlayerKills", killer_n) + 1;
+		SetCustomPlayerValue("PlayerKills", killer_n, kk);
+		SetCustomPlayerValue("PlayerKD", killer_n,
+			strparam(d:kk, s:" / ", d:GetCustomPlayerValue("PlayerDeaths", killer_n)));
+	}
+
 	TakeInventory ("ThermalCloakingTime", 90);
 	SetInventory ("InMenu", 0);
 	SetPlayerProperty (0, 0, PROP_FROZEN);

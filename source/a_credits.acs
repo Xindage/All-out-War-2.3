@@ -35,6 +35,12 @@ function void ModifyCredits (int player, int value, int mode, int showmsg)
 	Credits[player] = new;
 	SetActorInventory(3800 + player, "Credit", new);
 
+	// [Cata] Scoreboard tracking
+	SetCustomPlayerValue("CreditsLive", player, new);
+	if (new > old)
+		SetCustomPlayerValue("CreditsNet", player, GetCustomPlayerValue("CreditsNet", player) + (new - old));
+
+
 	// Optional message
 	if (!showmsg)
 		return;
