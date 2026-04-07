@@ -237,3 +237,15 @@ function int CalcDiscount (int amount) {
 	
 	return d;
 }
+
+// [Cata] Shared price block for all menus.
+// Returns "Price: $270\nCorporal Discount: -$30" or just "Price: $300"
+function str FormatPriceBlock (int cost) {
+	if (cost <= 0)
+		return "Price: \cdfree!";
+	int discount = CalcDiscount(cost);
+	int final = cost - discount;
+	if (discount > 0)
+		return strparam(s:"Price: \cQ$\cD", d:final, s:" \cu[\cJ", s:RankTitles[GetRank()], s:" \ca-", d:(discount * 100 / cost), s:"% off\cu]");
+	return strparam(s:"Price: \cQ$\cD", d:cost);
+}
