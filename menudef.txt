@@ -20,6 +20,11 @@ OptionMenu "AoWOptions"
 	Title "AOW SETTINGS"
 
 	StaticText ""
+	StaticText "Controls", 1
+	StaticText ""
+	Submenu "Press to configure controls >>", "AoWKeybinds"
+
+	StaticText ""
 	StaticText "Display", 1
 	StaticText ""
 
@@ -28,7 +33,9 @@ OptionMenu "AoWOptions"
 	Option "Grenade cook size",      "zeta_cl_cookhud_size",  "CookHudSize"
 	Slider "Grenade cook opacity",   "zeta_cl_cookhud_alpha", 0.1, 1.0, 0.1, 1
 	Option "Hide AOW HUD",           "zeta_cl_nohud",         "OnOff"
-	Option "Console font HUD",       "zeta_cl_confonthud",    "OnOff"
+	Option "Always Show Ally Status", "cl_drawcoopinfo", "OnOff"
+	Option "Display allies through walls",           "names_draw_distance", "PlayerNamesDistance"
+	Option "Show team radar",                        "zeta_cl_alwaysradar", "OnOff"
 
 	StaticText ""
 	StaticText "Gameplay", 1
@@ -36,20 +43,28 @@ OptionMenu "AoWOptions"
 
 	Option "Always run",             "cl_run",                "OnOff"
 	Option "Autoaim",                "autoaim",               "AutoaimOnOff"
-	Option "Display Allies Through Walls", "names_draw_distance", "PlayerNamesDistance"
-	Option "Graphics level",         "zeta_cl_fx",            "GraphicsLevel"
-	Option "Team radar",             "zeta_cl_alwaysradar",   "OnOff"
 	Option "Show killer's health",   "zeta_cl_killerhealth",  "OnOff"
-	Option "Hide team log",          "zeta_cl_noteamlog",     "OnOff"
 	Slider "Donation amount",        "zeta_cl_donateamount",  0, 1000, 50, 0
 
 	StaticText ""
-	Submenu "Keybinds...", "AoWKeybinds"
+	StaticText "Misc", 1
+	StaticText ""
+
+	Option "Graphics level",         "zeta_cl_fx",            "GraphicsLevel"
+	Option "Hide team log",          "zeta_cl_noteamlog",     "OnOff"
 }
 
 OptionMenu "AoWKeybinds"
 {
-	Title "AOW KEYBINDS"
+	Title "AOW CONTROLS"
+
+	StaticText ""
+	StaticText "Mouse", 1
+	StaticText ""
+
+	Option      "Enable mouse",         "use_mouse",         "YesNo"
+	Slider      "Mouse sensitivity",    "mouse_sensitivity", 0.05, 5.0, 0.05, 2
+	TextField   "Sensitivity (type)",   "mouse_sensitivity"
 
 	StaticText ""
 	StaticText "Movement", 1
@@ -111,6 +126,7 @@ OptionMenu "AoWKeybinds"
 	Control "Team chat",                "messagemode2"
 	Control "Voice chat",               "+voicerecord"
 	Control "Spot enemy",               "spot_enemy"
+	Control "Taunt",                    "taunt"
 
 	StaticText ""
 	StaticText "Intel", 1
