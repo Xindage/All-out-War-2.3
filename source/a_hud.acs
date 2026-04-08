@@ -160,10 +160,36 @@ function int HudCoord (int v, int axis) {
 		else                 cleanX = cleanY;
 	}
 
-	// axis 0 -> fixed-point Left for HudMessage, axis 1 -> Top.
-	if (axis == 0)
-		return -(((realW + v * cleanX) << 16) / realW);
-	return -(((realH + v * cleanY) << 16) / realH);
+	// axis 1 = fixed-point Top, axis 3 = raw cleanY, axis 0 = fixed-point Left.
+	// Y is always linear (5:4 path is ignored as a rare edge case).
+	if (axis == 3) return cleanY;
+	if (axis == 1) return -(((realH + v * cleanY) << 16) / realH);
+
+	// X axis: positive v = from-left-edge, negative v = from-right-edge.
+	// Linear (Left = -target_real/realW) UNLESS the engine will aspect-correct
+	// us. That happens when con_scaletext is ON AND con_scaletext_usescreenratio
+	// is OFF AND we're on a non-4:3 res. In that case, VirtualToRealCoords
+	// pulls X toward screen center via the formula
+	//   real_x = (x_virt - vw/2) * realW * 960 / (vw * BR[ratio][0]) + realW/2
+	// Inverting (and converting to fractional Left for HudMessage) gives:
+	//   Left = -0.5 - (target_real - realW/2) * BR[ratio][0] / (realW * 960)
+	int targetReal;
+	if (v > 0) targetReal = v * cleanX;            // from left edge
+	else       targetReal = realW + v * cleanX;    // from right edge (or realW for v=0)
+	int cs  = GetCVar ("con_scaletext");
+	int cvw = GetCVar ("con_virtualwidth");
+	int cvh = GetCVar ("con_virtualheight");
+	int usr = GetCVar ("con_scaletext_usescreenratio");
+	int gs  = (cs != 0 && cvw > 0 && cvh > 0 && (cvw != realW || cvh != realH));
+	int needCorrect = (gs && !usr && mul != 48);
+	if (!needCorrect)
+		return -((targetReal << 16) / realW);
+	int br = 960;
+	if      (mul == 36) br = 1280; // 16:9
+	else if (mul == 40) br = 1152; // 16:10
+	else if (mul == 37) br = 1224; // 17:10
+	int term = ((targetReal - realW / 2) * br) / 960;
+	return -32768 - ((term << 16) / realW);
 }
 
 // =============================================================================
@@ -190,12 +216,36 @@ function void DisplayStatusHUD (void) {
 	str col = "\cN";
 	if (ConsoleTeam () == TEAM_RED)
 		col = "\cA";
-	
+
+	// [Cata] When con_scaletext is OFF the SmallFont renders at native pixel
+	// size (~24 real px tall) instead of scaled, so the same virtual anchor
+	// puts small text near the panel top with empty space below. Use a
+	// different anchor for OFF mode that's computed in REAL pixels relative
+	// to the panel top (not virtual units, so it scales correctly across
+	// resolutions where cleanY differs).
+	int cs  = GetCVar ("con_scaletext");
+	int cvw = GetCVar ("con_virtualwidth");
+	int cvh = GetCVar ("con_virtualheight");
+	int realW = GetCVar ("vid_defwidth");
+	int realH = GetCVar ("vid_defheight");
+	int gScale = (cs != 0 && cvw > 0 && cvh > 0 && (cvw != realW || cvh != realH));
+
+	// Center the 3-line text vertically inside the IS2_RANK panel rect, where
+	// the text's real height differs by mode (OFF: ~24 native px, ON: scaled
+	// by SCREENHEIGHT/con_virtualheight). +5 bias matches the bar's visual
+	// midline (the panel art isn't perfectly rect-centered).
+	int cleanY    = HudCoord (0, 3);
+	int panelTop  = realH - 46 * cleanY;
+	int panelH    = 17 * cleanY;
+	int textH     = gScale ? (24 * realH / cvh) : 24;
+	int targetY   = panelTop + (panelH - textH) / 2 + 5;
+	int textY_fp  = -((targetY << 16) / realH);
+
 	// [Dusk] We're not in game, display a different HUD
 	if (!PlayerInGame (intHolder[i_consoleplayer])) {
 		HudMessage (s:"Credits: \cQ$\cD----\n",
 			s:"Experience: \cD-\cQ/\cD- XP\n\cJ----";
-			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), HudCoord (-42, 1), 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 		return;
 	}
 	
@@ -221,7 +271,7 @@ function void DisplayStatusHUD (void) {
 		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
 			s:col, s:"Experience: \cD",d:xp, s:"\cQ/\cD", d:xpneed, s:" XP\n",
 			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
-			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), HudCoord (-42, 1), 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 	} else {
 		// [Dusk] We are at highest rank, so a different hud is displayed,
 		// in which there is no experience need shown. Experience also
@@ -229,7 +279,7 @@ function void DisplayStatusHUD (void) {
 		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
 			s:col, s:"Experience: \cJ", d:xp, s:" XP\n",
 			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
-			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), HudCoord (-42, 1), 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 	}
 	
 	// [Cata] Rank icon. Two paths so it works in both HUD modes:
