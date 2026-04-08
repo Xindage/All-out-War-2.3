@@ -48,6 +48,7 @@ CATABLDG
 	] STCFN093
 	N STCFN078
 	+ STCFN043
+	- STCFN045
 }
 
 // [Cata] Grenade cook indicator: 21 frames, A=empty .. U=full (20 segments)
