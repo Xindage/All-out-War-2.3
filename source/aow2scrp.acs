@@ -818,6 +818,7 @@ global int 63:deathtoll;
 #include "a_functions.acs"
 #include "a_sync.acs"
 #include "a_credits.acs"
+#include "a_damagetypes.acs"
 #include "a_xp.acs"
 //#include "a_hax.acs"
 

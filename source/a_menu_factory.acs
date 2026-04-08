@@ -27,22 +27,35 @@ script 706 (void) CLIENTSIDE {
 // MENU DRAW
 script 707 (int m0, int m1, int y) CLIENTSIDE {
 	int hid = MENU_HID + 21;
-	
-	// [Cata] Price first, then health
-	int Cost = Mechs_int[MenuMechs[m0][m1]][MK_COST];
+	int mechIdx = MenuMechs[m0][m1];
+
+	// [Cata] Price (shared FormatPriceBlock)
+	int Cost = Mechs_int[mechIdx][MK_COST];
 	HudMessage (s:FormatPriceBlock(Cost);
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
 	y -= MENU_SPACING; hid++;
 
 	// Health
-	HudMessage (s:"Health: \cd", d:Mechs_int[MenuMechs[m0][m1]][MK_HEALTH], s:" \cqHP";
+	HudMessage (s:"Health: \cd", d:Mechs_int[mechIdx][MK_HEALTH], s:" \cqHP";
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
-		y -= MENU_SPACING; hid++;
-	
+	y -= MENU_SPACING; hid++;
+
+	// [Cata] Weapons with damage types
+	str weapons = ACS_NamedExecuteWithResult("GetMechWeapons", mechIdx);
+	if (StrLen(weapons) > 0) {
+		HudMessage (s:"Weapons:\n", s:weapons;
+			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+		int wlines = 1;
+		for (int ci = 0; ci < StrLen(weapons); ci++)
+			if (GetChar(weapons, ci) == '\n') wlines++;
+		y -= MENU_SPACING * wlines;
+		hid++;
+	}
+
 	// Description - shifted a bit to the left to compensate for tabs
-	HudMessage (s:Mechs_str[MenuMechs[m0][m1]][MK_DESCRIPTION];
+	HudMessage (s:Mechs_str[mechIdx][MK_DESCRIPTION];
 		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4-0.025, y, 0.0);
-		y -= 0.1; hid++;
+	y -= 0.1; hid++;
 	
 	SetResultValue (y);
 }

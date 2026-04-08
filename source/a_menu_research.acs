@@ -25,16 +25,28 @@ script 704 (void) CLIENTSIDE {
 // =============================================================================
 // MENU DRAW
 script 705 (int m0, int m1, int y) CLIENTSIDE {
-	// [Cata] Price first, then description
-	int resCost = Researches_int[MenuResearches[m0][m1]][RCK_COST];
-	HudMessage (s:FormatPriceBlock(resCost);
+	int resIdx = MenuResearches[m0][m1];
+
+	// [Cata] Price (shared FormatPriceBlock)
+	HudMessage (s:FormatPriceBlock(Researches_int[resIdx][RCK_COST]);
 		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
 	y -= MENU_SPACING;
 
-	HudMessage (s:Researches_str[MenuResearches[m0][m1]][RCK_DESCRIPTION];
-		HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+	// [Cata] Damage type if applicable
+	str resDmg = ACS_NamedExecuteWithResult("GetItemInfo", 1, resIdx);
+	if (StrLen(resDmg) > 0) {
+		HudMessage (s:"Type: \cc[", s:resDmg, s:"\cc]";
+			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+		y -= MENU_SPACING;
+	} else
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
+
+	// Description
+	HudMessage (s:Researches_str[resIdx][RCK_DESCRIPTION];
+		HUDMSG_PLAIN, MENU_HID + 23, CR_WHITE, UMENU_X4, y, 0.0);
 	y -= 0.1;
-	
+
+
 	SetResultValue (y);
 }
 
