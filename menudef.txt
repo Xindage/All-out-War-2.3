@@ -20,20 +20,13 @@ OptionMenu "AoWOptions"
 	Title "AOW SETTINGS"
 
 	StaticText ""
-	StaticText "HUD", 1
+	StaticText "Display", 1
 	StaticText ""
 
 	Option "Building HUD style",     "zeta_cl_buildinghud_style", "BuildingHudStyle"
 	Option "Grenade cook indicator", "zeta_cl_cookhud",       "OnOff"
-	Option "  Size",                 "zeta_cl_cookhud_size",  "CookHudSize"
-	Slider "  Opacity",              "zeta_cl_cookhud_alpha", 0.1, 1.0, 0.1, 1
-
-	StaticText ""
-	StaticText "Display", 1
-	StaticText ""
-
-	Option "Graphics level",         "zeta_cl_fx",            "GraphicsLevel"
-	Option "Show killer's health",   "zeta_cl_killerhealth",  "OnOff"
+	Option "Grenade cook size",      "zeta_cl_cookhud_size",  "CookHudSize"
+	Slider "Grenade cook opacity",   "zeta_cl_cookhud_alpha", 0.1, 1.0, 0.1, 1
 	Option "Hide AOW HUD",           "zeta_cl_nohud",         "OnOff"
 	Option "Console font HUD",       "zeta_cl_confonthud",    "OnOff"
 
@@ -41,9 +34,108 @@ OptionMenu "AoWOptions"
 	StaticText "Gameplay", 1
 	StaticText ""
 
+	Option "Always run",             "cl_run",                "OnOff"
+	Option "Autoaim",                "autoaim",               "AutoaimOnOff"
+	Option "Display Allies Through Walls", "names_draw_distance", "PlayerNamesDistance"
+	Option "Graphics level",         "zeta_cl_fx",            "GraphicsLevel"
 	Option "Team radar",             "zeta_cl_alwaysradar",   "OnOff"
+	Option "Show killer's health",   "zeta_cl_killerhealth",  "OnOff"
 	Option "Hide team log",          "zeta_cl_noteamlog",     "OnOff"
 	Slider "Donation amount",        "zeta_cl_donateamount",  0, 1000, 50, 0
+
+	StaticText ""
+	Submenu "Keybinds...", "AoWKeybinds"
+}
+
+OptionMenu "AoWKeybinds"
+{
+	Title "AOW KEYBINDS"
+
+	StaticText ""
+	StaticText "Movement", 1
+	StaticText ""
+
+	Control "Forward",                  "+forward"
+	Control "Back",                     "+back"
+	Control "Strafe left",              "+moveleft"
+	Control "Strafe right",             "+moveright"
+	Control "Jump",                     "+jump"
+	Control "Crouch",                   "+crouch"
+	Control "Toggle crouch",            "crouch"
+	Control "Swim / fly up",            "+moveup"
+	Control "Swim / fly down",          "+movedown"
+	Control "Run",                      "+speed"
+
+	StaticText ""
+	StaticText "Combat", 1
+	StaticText ""
+
+	Control "Fire",                     "+attack"
+	Control "Secondary fire",           "+altattack"
+	Control "Melee attack",             "meleeattack"
+	Control "Reload weapon",            "reloadweapon"
+
+	StaticText ""
+	StaticText "Key Actions", 1
+	StaticText ""
+
+	Control "Interact",                 "+use"
+	Control "Sell current weapon",      "sellweapon"
+
+	StaticText ""
+	StaticText "Inventory", 1
+	StaticText ""
+
+	Control "Next weapon",              "weapnext"
+	Control "Previous weapon",          "weapprev"
+	Control "Next tactical",            "invnext"
+	Control "Previous tactical",        "invprev"
+	Control "Activate tactical",        "invuse"
+
+	StaticText ""
+	StaticText "Quick Actions", 1
+	StaticText ""
+
+	Control "Throw frag grenade",       "usefraggrenade"
+	Control "Throw flashbang",          "useflashbang"
+	Control "Detonate remote C4",       "usedetonator"
+	Control "Eject mech",               "ejectmech"
+	Control "Use self-heal",            "useselfheal"
+	Control "Use timed C4",             "usec4"
+
+	StaticText ""
+	StaticText "Communication", 1
+	StaticText ""
+
+	Control "Global chat",              "messagemode"
+	Control "Team chat",                "messagemode2"
+	Control "Voice chat",               "+voicerecord"
+	Control "Spot enemy",               "spot_enemy"
+
+	StaticText ""
+	StaticText "Intel", 1
+	StaticText ""
+
+	Control "Toggle automap",           "togglemap"
+	Control "Show scoreboard",          "+showscores"
+	Control "Scoreboard scroll up",     "+sb_scrollup"
+	Control "Scoreboard scroll down",   "+sb_scrolldn"
+	Control "Cycle ally name distance", "showplayersnames"
+
+	StaticText ""
+	StaticText "Donation", 1
+	StaticText ""
+
+	Control "Open donation menu",       "donationmenu"
+	Control "Change donation target",   "donationname"
+	Control "Donate to current target", "donationgive"
+
+	StaticText ""
+	StaticText "Match", 1
+	StaticText ""
+
+	Control "Surrender",                "surrender"
+	Control "Switch to weaker team",    "teamswitch"
 }
 
 OptionValue "CookHudSize"
@@ -67,4 +159,19 @@ OptionValue "GraphicsLevel"
 	-1, "Low"
 	 0, "Normal"
 	 1, "High"
+}
+
+OptionValue "AutoaimOnOff"
+{
+	0,    "Off"
+	5000, "On"
+}
+
+OptionValue "PlayerNamesDistance"
+{
+	0,   "Off"
+	50,  "Close (50)"
+	100, "Medium (100)"
+	150, "Far (150)"
+	200, "Very far (200)"
 }
