@@ -350,6 +350,79 @@ function void UpdateHUD (void) {
 }
 
 // =============================================================================
+// [Cata] Hold-to-charge indicator near the crosshair for grenades / cryobow.
+// Reads the existing *Power tokens (FragGrenadePower, FlashbangPower,
+// ChronoBowPower) every tic from SC_HUDDaemon and draws a 10-pip bar that
+// fades from grey -> yellow -> orange -> green as the charge fills.
+#define COOK_HUD_ID 4900
+
+script "CL_DisplayChargeHud" (void) CLIENTSIDE {
+	// Master toggle
+	if (!GetCVar ("zeta_cl_cookhud")) {
+		HudMessage (s:""; HUDMSG_PLAIN, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05);
+		terminate;
+	}
+
+	int charge = 0;
+	if (CheckInventory ("FragGrenadePower") > 0)
+		charge = CheckInventory ("FragGrenadePower");
+	else if (CheckInventory ("FlashbangPower") > 0)
+		charge = CheckInventory ("FlashbangPower");
+	else if (CheckInventory ("ChronoBowPower") > 0)
+		charge = CheckInventory ("ChronoBowPower");
+
+	if (charge <= 0) {
+		HudMessage (s:""; HUDMSG_PLAIN, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05);
+		terminate;
+	}
+
+	int filled = charge / 5;
+	if (filled > 20) filled = 20;
+
+	// 'A' (empty) .. 'U' (full, 20 segments) — colors baked per frame.
+	str glyph;
+	switch (filled) {
+		case 0:  glyph = "A"; break;
+		case 1:  glyph = "B"; break;
+		case 2:  glyph = "C"; break;
+		case 3:  glyph = "D"; break;
+		case 4:  glyph = "E"; break;
+		case 5:  glyph = "F"; break;
+		case 6:  glyph = "G"; break;
+		case 7:  glyph = "H"; break;
+		case 8:  glyph = "I"; break;
+		case 9:  glyph = "J"; break;
+		case 10: glyph = "K"; break;
+		case 11: glyph = "L"; break;
+		case 12: glyph = "M"; break;
+		case 13: glyph = "N"; break;
+		case 14: glyph = "O"; break;
+		case 15: glyph = "P"; break;
+		case 16: glyph = "Q"; break;
+		case 17: glyph = "R"; break;
+		case 18: glyph = "S"; break;
+		case 19: glyph = "T"; break;
+		default: glyph = "U"; break;
+	}
+
+	int alpha = GetCVar ("zeta_cl_cookhud_alpha");
+	if (alpha <= 0) alpha = 1.0;
+
+	// Five discrete sizes via separate font lumps. 0..4 -> rings 1..5.
+	int sizeIdx = GetCVar ("zeta_cl_cookhud_size");
+	if (sizeIdx < 0) sizeIdx = 0;
+	if (sizeIdx > 4) sizeIdx = 4;
+	if      (sizeIdx == 0) SetFont ("CATACOOKRING1");
+	else if (sizeIdx == 1) SetFont ("CATACOOKRING2");
+	else if (sizeIdx == 2) SetFont ("CATACOOKRING3");
+	else if (sizeIdx == 3) SetFont ("CATACOOKRING4");
+	else                   SetFont ("CATACOOKRING5");
+
+	HudMessage (s:glyph;
+		HUDMSG_ALPHA, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05, alpha);
+}
+
+// =============================================================================
 // [Dusk] Script daemon to set up necessary inventory items for HUD display
 script SC_HUDDaemon OPEN CLIENTSIDE {
 	int oldcredits, oldexp;
@@ -384,6 +457,9 @@ script SC_HUDDaemon OPEN CLIENTSIDE {
 			SetInventory ("HUD_HealthBlink", (Timer () % 25 > 18));
 		}
 		
+		// [Cata] Hold-to-charge indicator (grenade cook bar)
+		ACS_NamedExecuteAlways ("CL_DisplayChargeHud", 0);
+
 		// If our credits change, we need to update the hud.
 		if (CheckInventory ("Credit") != oldcredits) {
 			// g_CreditDelta = (CheckInventory ("Credit") - oldcredits);

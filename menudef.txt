@@ -1,0 +1,38 @@
+// [Cata] All Out War options menu
+// Adds an "All Out War" entry directly to the main menu. MainMenu is a
+// LISTMENU (different syntax from OptionMenu). Layout copied from
+// zandronum/wadsrc/static/menudef.txt and the AoW row injected.
+
+LISTMENU "MainMenu"
+{
+	StaticPatch 94, 2, "M_DOOM"
+	Position 97, 64
+	PatchItem "M_NGAME", "n", "PlayerclassMenu"
+	TextItem  "AOW Settings", "a", "AoWOptions"
+	PatchItem "M_OPTION","o", "OptionsMenu"
+	PatchItem "M_LOADG", "l", "LoadGameMenu"
+	PatchItem "M_SAVEG", "s", "SaveGameMenu"
+	PatchItem "M_QUITG", "q", "QuitMenu"
+}
+
+OptionMenu "AoWOptions"
+{
+	Title "AOW SETTINGS"
+
+	StaticText ""
+	StaticText "HUD", 1
+	StaticText ""
+
+	Option "Grenade cook indicator", "zeta_cl_cookhud",       "OnOff"
+	Option "  Size",                 "zeta_cl_cookhud_size",  "CookHudSize"
+	Slider "  Opacity",              "zeta_cl_cookhud_alpha", 0.1, 1.0, 0.1, 1
+}
+
+OptionValue "CookHudSize"
+{
+	0, "Tiny"
+	1, "Small"
+	2, "Medium"
+	3, "Large"
+	4, "Huge"
+}
