@@ -2,12 +2,6 @@
 //               EXPERIENCE
 // --------------------------------------------------
 
-// [Cata] DEBUG: puke 1009 <amount> to give yourself XP for testing rank icons.
-script 1009 (int amt) NET {
-	if (amt <= 0) amt = 500;
-	DoAddExperience (amt, true);
-}
-
 // Experience add
 // TODO: Merge all these AddExperienced into a single Function.
 // There is too much functions already.
