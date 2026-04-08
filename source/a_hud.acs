@@ -160,10 +160,7 @@ function int HudCoord (int v, int axis) {
 		else                 cleanX = cleanY;
 	}
 
-	// axis 0/1 = fixed-point Left/Top for HudMessage. axis 2/3 = raw cleanX/Y
-	// (used by the rank-icon centering math which needs the scale factor).
-	if (axis == 2) return cleanX;
-	if (axis == 3) return cleanY;
+	// axis 0 -> fixed-point Left for HudMessage, axis 1 -> Top.
 	if (axis == 0)
 		return -(((realW + v * cleanX) << 16) / realW);
 	return -(((realH + v * cleanY) << 16) / realH);

@@ -21,11 +21,11 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 		//drawimage "IS2RINTF", 100, 0;
 	}
 
-	// [Cata] Rank icon drawn inside the IS2_RANK panel slot. Each HRANK0X PNG
-	// is a uniform 12x12 RGBA canvas (graphics/hrank0X.png) with the rank art
-	// pre-scaled and centered inside, so all 11 ranks share ONE coordinate and
-	// no per-rank tweaking is needed. To move the whole set, change the (x, y)
-	// pair on every line below (they should always match).
+	// [Cata] Rank icon drawn inside the IS2_RANK panel slot. Each HRANK0X is a
+	// uniform 128x128 RGBA canvas (graphics/hri0X.png) with the rank art
+	// per-rank-sized and centered inside, then scaled down by textures.txt to
+	// fit the panel circle. All 11 ranks share ONE coordinate -- to move the
+	// whole set, change the (x, y) pair on every line below (they must match).
 	InInventory HudRankIconViz1  { drawimage "HRANK01", -31, -50; }
 	InInventory HudRankIconViz2  { drawimage "HRANK02", -31, -50; }
 	InInventory HudRankIconViz3  { drawimage "HRANK03", -31, -50; }
