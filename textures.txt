@@ -999,6 +999,22 @@ Graphic "IS2RINTF", 235, 45
 	Patch "IS2RINTF", 0, 0
 }
 
+// [Cata] Rank icons. Source PNGs are 70x70 RGBA at graphics/hri0X.png with the
+// rank art scaled (aspect-preserved) and centered on a transparent canvas, so
+// every rank shares the same dimensions. Single uniform XScale/YScale brings
+// them to 14x14 virtual units, fitting inside the IS2_RANK panel circle.
+Graphic "HRANK01", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI01", 0, 0 }
+Graphic "HRANK02", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI02", 0, 0 }
+Graphic "HRANK03", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI03", 0, 0 }
+Graphic "HRANK04", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI04", 0, 0 }
+Graphic "HRANK05", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI05", 0, 0 }
+Graphic "HRANK06", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI06", 0, 0 }
+Graphic "HRANK07", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI07", 0, 0 }
+Graphic "HRANK08", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI08", 0, 0 }
+Graphic "HRANK09", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI09", 0, 0 }
+Graphic "HRANK10", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI10", 0, 0 }
+Graphic "HRANK11", 70, 70 { XScale 5.833 YScale 5.833 Patch "HRI11", 0, 0 }
+
 Graphic "A_BULLET", 31, 17
 {
 	XScale 2.000

@@ -47,3 +47,20 @@ Actor MoveBackwardsThreshold : Inventory //Adds or cleats when the momentum is 0
 
 // [Dusk] Is the marine spawned because of compensation?
 actor IsCompensationMarine : Inventory {}
+
+//-----------------------------------------------------------------------
+// [Cata] HUD-only rank icon visibility tokens. Purely visual: SBARINFO uses
+// these to pick which rank icon to draw inside the IS2_RANK panel. Do NOT
+// reference these in gameplay logic -- rank itself is still tracked via the
+// Experience inventory and GetRank()/GetPlayerRank() in a_xp.acs.
+actor HudRankIconViz1  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz2  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz3  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz4  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz5  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz6  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz7  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz8  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz9  : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz10 : Inventory { Inventory.MaxAmount 1 }
+actor HudRankIconViz11 : Inventory { Inventory.MaxAmount 1 }
