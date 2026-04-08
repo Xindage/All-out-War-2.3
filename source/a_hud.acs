@@ -427,10 +427,19 @@ script "CL_DisplayChargeHud" (void) CLIENTSIDE {
 script SC_HUDDaemon OPEN CLIENTSIDE {
 	int oldcredits, oldexp;
 	int hp, shp;
-	
+	int oldBuildHudStyle = -1;
+
 	until (false) {
 		delay (1);
-		
+
+		// [Cata] Track building HUD style cvar - needs to refresh even while
+		// spectating, otherwise cvar changes don't take effect until you respawn.
+		int curStyle = GetCVar ("zeta_cl_buildinghud_style");
+		if (curStyle != oldBuildHudStyle) {
+			CL_DisplayBuildingHud ();
+			oldBuildHudStyle = curStyle;
+		}
+
 		// This all is irrelevant if we're spectating.
 		if (!PlayerInGame (intHolder[i_consoleplayer]))
 			continue;

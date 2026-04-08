@@ -117,10 +117,6 @@ script SC_MENU_SERVERINIT (int menu) {
 	if (menu < 0 || menu > MAX_MENU || !PlayerInGame (PlayerNumber ()) || CheckInventory ("InMenu"))
 		terminate;
 	
-	// Preferences are handled elsewhere
-	if (menu == MENU_PREFERENCES)
-		terminate;
-	
 	// Menu-specific stuff
 	switch (menu) {
 	case MENU_Utility:
@@ -506,7 +502,7 @@ function void BuildMenuMechs (void) {
 // [Cata] Draws menu options
 function void DrawMenu (void) 
 {
-	if (!CheckInventory ("InMenu") || CheckInventory ("InMenu") == MENU_PREFERENCES)
+	if (!CheckInventory ("InMenu"))
 		return;
 	
 	int i;

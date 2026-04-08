@@ -13,6 +13,43 @@ STATUSFONT
 	- STANUM-    
 }
 
+// [Cata] Building HUD icon font.
+// 11 icon glyphs (A..K) plus the digit/symbol glyphs needed by the
+// percent column borrowed straight from SMALLFONT (STCFN0xx).
+// Same single font = identical line height across all rows.
+CATABLDG
+{
+	A CATABLD0
+	B CATABLD1
+	C CATABLD2
+	D CATABLD3
+	E CATABLD4
+	F CATABLD5
+	G CATABLD6
+	H CATABLD7
+	I CATABLD8
+	J CATABLD9
+	K CATABLDA
+	L CATABLDB
+	M CATABLDC
+	0 STCFN048
+	1 STCFN049
+	2 STCFN050
+	3 STCFN051
+	4 STCFN052
+	5 STCFN053
+	6 STCFN054
+	7 STCFN055
+	8 STCFN056
+	9 STCFN057
+	% STCFN037
+	/ STCFN047
+	[ STCFN091
+	] STCFN093
+	N STCFN078
+	+ STCFN043
+}
+
 // [Cata] Grenade cook indicator: 21 frames, A=empty .. U=full (20 segments)
 // Five discrete sizes 1..5
 CATACOOKRING1

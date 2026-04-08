@@ -23,9 +23,27 @@ OptionMenu "AoWOptions"
 	StaticText "HUD", 1
 	StaticText ""
 
+	Option "Building HUD style",     "zeta_cl_buildinghud_style", "BuildingHudStyle"
 	Option "Grenade cook indicator", "zeta_cl_cookhud",       "OnOff"
 	Option "  Size",                 "zeta_cl_cookhud_size",  "CookHudSize"
 	Slider "  Opacity",              "zeta_cl_cookhud_alpha", 0.1, 1.0, 0.1, 1
+
+	StaticText ""
+	StaticText "Display", 1
+	StaticText ""
+
+	Option "Graphics level",         "zeta_cl_fx",            "GraphicsLevel"
+	Option "Show killer's health",   "zeta_cl_killerhealth",  "OnOff"
+	Option "Hide AOW HUD",           "zeta_cl_nohud",         "OnOff"
+	Option "Console font HUD",       "zeta_cl_confonthud",    "OnOff"
+
+	StaticText ""
+	StaticText "Gameplay", 1
+	StaticText ""
+
+	Option "Team radar",             "zeta_cl_alwaysradar",   "OnOff"
+	Option "Hide team log",          "zeta_cl_noteamlog",     "OnOff"
+	Slider "Donation amount",        "zeta_cl_donateamount",  0, 1000, 50, 0
 }
 
 OptionValue "CookHudSize"
@@ -35,4 +53,18 @@ OptionValue "CookHudSize"
 	2, "Medium"
 	3, "Large"
 	4, "Huge"
+}
+
+OptionValue "BuildingHudStyle"
+{
+	0, "Full"
+	1, "Compact"
+	2, "Icons"
+}
+
+OptionValue "GraphicsLevel"
+{
+	-1, "Low"
+	 0, "Normal"
+	 1, "High"
 }
