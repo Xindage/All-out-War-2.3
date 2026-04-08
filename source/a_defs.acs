@@ -97,7 +97,33 @@ str Items_Str[MAX_ITEMS][MAX_ITEMKEYS_str] = {
 	{"Mortar Launcher", "MortarLauncher", "MortarAmmo", ""},*/
 };
 
-int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] = 
+// [Cata] Item info type IDs for the lookup system
+// These are used as packed values in the named script "GetItemInfo"
+// IDs 1-13: damage types, 14+: passive/support effects
+#define DMG_NONE        0
+#define DMG_BULLET      1
+#define DMG_FIRE        2
+#define DMG_CHEM        3
+#define DMG_ENERGY      4
+#define DMG_FLAK        5
+#define DMG_ICE         6
+#define DMG_ANTIMECH    7
+#define DMG_MINE        8
+#define DMG_FLASH       9
+#define DMG_CONTACT     10
+#define DMG_TIME        11
+#define DMG_SUPER       12
+#define DMG_MELEE       13
+// Passive/support effects
+#define EFF_DEFENSE10   14
+#define EFF_REPAIR      15
+#define EFF_HEAL        16
+#define EFF_DISARM      17
+#define EFF_DECON       18
+#define EFF_FIREPROOF   19
+#define EFF_CHEMPROOF   20
+
+int Items_Int[MAX_ITEMS][MAX_ITEMKEYS_int] =
 {
 	// num weps to give, ammo for main fire, ammo for alt fire, resell value
 	{0, 0, 0, 0}, // Mandatory empty entry for no item
@@ -522,14 +548,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		//"0",
 		"		A light VTOL armed with a machine gun and\n
 		rockets. Designed against infantry but\n
-		loses hard against heavier firepower.\n
-		\n
-		\n
-		\n
-		\n
-		Weapons:\n
-		\t- Machine Gun\n
-		\t- Rocket pods"
+		loses hard against heavier firepower."
 	},
 	{
 		"Tortoise", 
@@ -544,11 +563,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		and tear infantry apart. Its very slow\n
 		speed and inability to hit buildings from\n
 		the outside solidifies its role as area\n
-		denial and ambushing in enemy territory.\n
-		\n
-		Weapons:\n
-		\t- Explosive Plasma Rifle\n
-		\t- Impact Grenades"
+		denial and ambushing in enemy territory."
 	},
 	{
 		"Raven", 
@@ -563,11 +578,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		Reports also indicate harvesters using\n
 		Ravens for a safer harvesting trip.\n
 		These mechs can also be built by\n
-		Utility Guys.\n
-		\n
-		Weapons:\n
-		\t- AC-2\n
-		\t- LRM-5"
+		Utility Guys."
 	},
 	{
 		"Mastodon",
@@ -577,11 +588,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		designed for chasing off infantry rushes.\n
 		Armed with dual homing missiles and dual\n
 		exploding flame grenades allows the tank\n
-		to attack from all ranges.\n
-		\n
-		Weapons:\n
-		\t- Dual Homing Missiles\n
-		\t- Dual Flame Grenades"
+		to attack from all ranges."
 	},
 	{
 		"Wolverine", 
@@ -594,14 +601,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		"		A medium, heavier mechs packed with\n
 		heavier anti-infantry firepower at\n
 		the cost of speed. These mechs can\n
-		also be built by Utility Guys.\n
-		\n
-		\n
-		\n
-		Weapons:\n
-		\t- LRM-10\n
-		\t- Pulse Cannon\n
-		\t- Minigun"
+		also be built by Utility Guys."
 	}, 
 	{
 		"Mad Cat", 
@@ -613,12 +613,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		//MF_POWER,
 		"		A heavy all-around mech designed to hold\n
 		its own against both infantry and mechs\n
-		and can also hit on buildings.\n
-		\n
-		Weapons:\n
-		\t- 2x Shock Cannon\n
-		\t- 2x Shock Rifle\n
-		\t- LRM-20"
+		and can also hit on buildings."
 	}, 
 	
 	{
@@ -634,12 +629,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		performs less good at infantry than\n
 		the Mad Cat. However, the 100mm cannon\n
 		has proven its use time and time\n
-		again...\n
-		\n
-		Weapons:\n
-		\t- 100mm Cannon\n
-		\t- 2x Flamer\n
-		\t- LRM-20"
+		again..."
 	}, 
 	
 	{
@@ -649,12 +639,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		"		A medium mech designed for fighting\n
 		and defending against other mechs. Comes armed\n
 		with missiles, a chemical sprayer, and a plasma\n
-		cannon.\n
-		\n
-		Weapons:\n
-		\t- LRM-10\n
-		\t- Plasma Cannon\n
-		\t- Chemical Sprayer"
+		cannon."
 	}, 
 	
 	{
@@ -670,14 +655,7 @@ str Mechs_str[NUM_MECHS][NUM_MECH_KEYS_STR] = {
 		to metal bits before they can even spell\n
 		its name. It is also effective on buildings.\n
 		However, its slow speed and anti-armor\n
-		weapons make it a sitting duck for infantry.\n
-		\n
-		\n
-		Weapons:\n
-		\t- 2x Artillery Cannon 80mm\n
-		\t- 2x Anti-Mech SRM-15\n
-		\t- 2x Flak Cannon\n
-		\t- Mini-Nuke Artillery"
+		weapons make it a sitting duck for infantry."
 	}, 
 };
 

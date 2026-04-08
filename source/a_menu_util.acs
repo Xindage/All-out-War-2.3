@@ -25,27 +25,52 @@ script 700 (void) CLIENTSIDE {
 // MENU DRAW
 script 701 (int m0, int m1, int y) CLIENTSIDE {
 	int x = PF_FindDefByMenuCoords (m0, m1);
-	
+	int hid = MENU_HID + 21;
+
+	// [Cata] Price (shared FormatPriceBlock — handles free case)
+	HudMessage (s:FormatPriceBlock(g_ParticleFuserData_int[x][UK_COST]);
+		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= MENU_SPACING; hid++;
+
+	// [Cata] Damage type / weapons / effect info
+	if (x == PF_RAVEN || x == PF_WOLVERINE) {
+		// Mechs get multi-line weapon lists
+		int mechId = (x == PF_RAVEN) ? MECH_RAVEN : MECH_WOLVERINE;
+		str weapons = ACS_NamedExecuteWithResult("GetMechWeapons", mechId);
+		HudMessage (s:"Weapons:\n", s:weapons;
+			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+		int wlines = 1;
+		for (int ci = 0; ci < StrLen(weapons); ci++)
+			if (GetChar(weapons, ci) == '\n') wlines++;
+		y -= MENU_SPACING * wlines;
+	} else {
+		str utilDmg = ACS_NamedExecuteWithResult("GetItemInfo", 2, x);
+		if (StrLen(utilDmg) > 0) {
+			if (x == PF_FIREPROOF || x == PF_CHEMPROOF)
+				HudMessage (s:utilDmg;
+					HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+			else
+				HudMessage (s:"Type: \cc[", s:utilDmg, s:"\cc]";
+					HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+			y -= MENU_SPACING;
+		} else
+			HudMessage (s:""; HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	}
+	hid++;
+
 	// Description
 	HudMessage (s:g_ParticleFuserData_str[x][UK_DESCRIPTION];
-		HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
-	y -= 0.1;
-	
-	// Price
-	if (g_ParticleFuserData_int[x][UK_COST] > 0)
-		HudMessage (s:"Cost: \cq$\cd", d:g_ParticleFuserData_int[x][UK_COST];
-			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
-	else
-		HudMessage (s:"Cost: \cdfree!";
-			HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
-	y -= MENU_SPACING;
-	
+		HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	y -= 0.1; hid++;
+
 	// Build time
 	if (g_ParticleFuserData_int[x][UK_BUILDTIME] > 0) {
 		HudMessage (s:"Build time: \cd", f:g_ParticleFuserData_int[x][UK_BUILDTIME], s:" \cqseconds";
-			HUDMSG_PLAIN, MENU_HID + 23, CR_WHITE, UMENU_X4, y, 0.0);
+			HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
 		y -= MENU_SPACING;
-	}
+	} else
+		HudMessage (s:""; HUDMSG_PLAIN, hid, CR_WHITE, UMENU_X4, y, 0.0);
+	hid++;
 	
 	// Display the limit, if there is any
 	int lcur, lmax;

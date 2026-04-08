@@ -283,8 +283,8 @@ function void ClearMenu (void) {
 	for (i = 0; i <= MAX_MENU_ITEMS; i++)
 		ClearHudMessage (MENU_HID + 10 + i);
 	
-	// Clear item description and arrow markers
-	for (i = 0; i <= 3; i++) {
+	// [Cata] Clear item description and arrow markers (expanded to +24 for type/weapons/build time lines)
+	for (i = 0; i <= 4; i++) {
 		ClearHudMessage (MENU_HID + 20 + i);
 		ClearHudMessage (MENU_HID + 60 + i);
 	}

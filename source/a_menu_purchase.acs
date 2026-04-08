@@ -1,10 +1,20 @@
+// [Cata] Format weapon name with damage type
+function str FormatWeaponLine (int itemId) {
+	str name = Items_Str[itemId][IK_NAME];
+	if (StrLen(name) == 0) return "";
+	str dmg = ACS_NamedExecuteWithResult("GetItemInfo", 0, itemId);
+	if (StrLen(dmg) > 0)
+		return strparam(s:"\cD", s:name, s:" \cc[", s:dmg, s:"\cc]");
+	return strparam(s:"\cD", s:name);
+}
+
+
 // =============================================================================
 // MENU INIT
 script 702 (void) CLIENTSIDE {
 	// If the menu-class table hasn't been built yet, do so now
 	if (!(MenuTables & MTABLE_CLASSES))
 		BuildMenuClasses ();
-	
 	MenuName = "PURCHASE TERMINAL";
 	MenuCategories[0] = "GENERIC";
 	MenuCategories[1] = "COMBAT";
@@ -43,73 +53,49 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 	switch (m0) {
 	case 0: case 1:
 	case 2: case 3:
-		// Display discount, if any
-		ACS_ExecuteWithResult (330, Classes_int[id][CK_COST]);
-		
-		int armor = Classes_int[id][CK_ARMOR];
-		int armod = Classes_int[id][CK_ARMOD];
-		
-		str item0 = Items_Str[Classes_int[id][CK_ITEM0]][IK_NAME];
-		str item1 = Items_str[Classes_int[id][CK_ITEM1]][IK_NAME];
-		str item2 = Items_str[Classes_int[id][CK_ITEM2]][IK_NAME];
-		str item3 = Items_str[Classes_int[id][CK_ITEM3]][IK_NAME];
-		str item4 = Items_str[Classes_int[id][CK_ITEM4]][IK_NAME];
-		str item5 = Items_str[Classes_int[id][CK_ITEM5]][IK_NAME];
-		
-		// Determine strengths and weaknesses
-		int dtype;
-		int weaktype;
-		str weakness;
-		
-		if (armod == ARMOD_NOCHANGE) {
-			// If we don't have any armor type, we're not really
-			// weak per se towards anything. And if we don't have an
-			// armor type we usually deal bullet damage (unless we're
-			// support, in which case these aren't displayed anyway)
-			// Therefore, our weakness is bullets.
-			dtype = ARMOD_BULLETPROOF;
-			weaktype = ARMOD_BULLETPROOF;
-		} else {
-			dtype = armod;
-			weaktype = ArmorWeaknesses[dtype];
-		}
-		
-		weakness = strparam (s:ArModColor (weaktype), s:ArModName (weaktype));
-		
-		// We're strong against whatever is weak against us.
-		str strength = "";
-		for (int i = 1; i < ARMOD_NONE; i++)
-			if (ArmorWeaknesses[i] == dtype)
-				strength = strparam (s:strength, s:" ", s:ArModColor (i), s:ArModName (i));
-		
-		// TODO: Break this down to individual hudmessages for flexibility
-		str classinfo;
-		classinfo = strparam (s:"Speed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16,
-			s:"\cQ%\nPrice: \cQ$\cD", d:Classes_int[id][CK_COST],
-			s:"\nArmor: \cDGrade ", s:ArmorColor (armor), d:armor, s:" ", s:ArModColor (armod), s:ArModName (armod));
-			
-		// Unless we're a support class, write down strengths and weaknesses
-		if (Classes_int[id][CK_FLAGS] & CF_IsTimeCop) {
-			classinfo = strparam (s:classinfo,
-				s:"\nStrength: ", s:strength,
-				s:"\nWeakness: ", s:weakness);
-		}
-		
+		// [Cata] Format weapon names with damage types
+		str item0 = FormatWeaponLine(Classes_int[id][CK_ITEM0]);
+		str item1 = FormatWeaponLine(Classes_int[id][CK_ITEM1]);
+		str item2 = FormatWeaponLine(Classes_int[id][CK_ITEM2]);
+		str item3 = FormatWeaponLine(Classes_int[id][CK_ITEM3]);
+		str item4 = FormatWeaponLine(Classes_int[id][CK_ITEM4]);
+		str item5 = FormatWeaponLine(Classes_int[id][CK_ITEM5]);
+
+		// [Cata] Price (shared FormatPriceBlock), then stats from named scripts
+		str classinfo = FormatPriceBlock(Classes_int[id][CK_COST]);
+		classinfo = strparam (s:classinfo,
+			s:"\nSpeed: \cD", d:(Classes_int[id][CK_SPEED] * 100) >> 16, s:"\cQ%",
+			s:"\n", s:ACS_NamedExecuteWithResult("GetClassArmor", id));
+
 		// Write down the rest of the info
 		classinfo = strparam (s:classinfo,
 			s:"\nGrenades: \cD", d:Classes_int[id][CK_FRAGS],
 			s:"\nC4: \cD", d:Classes_int[id][CK_C4],
-			s:"\n----\n\cD",
-			s:item0, s:"\n\cD", s:item1, s:"\n\cD", s:item2, s:"\n\cD",
-			s:item3, s:"\n\cD", s:item4, s:"\n\cD", s:item5, s:"\n\cD");
-		
+			s:"\n----");
+		if (StrLen(item0) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item0);
+		if (StrLen(item1) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item1);
+		if (StrLen(item2) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item2);
+		if (StrLen(item3) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item3);
+		if (StrLen(item4) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item4);
+		if (StrLen(item5) > 0) classinfo = strparam(s:classinfo, s:"\n", s:item5);
+
+
 		// Draw it now.
 		HudMessage (s:classinfo; HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 4:
-		ACS_ExecuteWithResult (330, Addons_int[m1][ADK_COST] - CalcDiscount(Addons_int[m1][ADK_COST]));
-		HudMessage (s:"Price: \cQ$\cD", d:Addons_int[m1][ADK_COST];
+		// [Cata] Price (shared) + damage type
+		int addonItem = Addons_int[m1][ADK_ITEM];
+		str addonDmg = ACS_NamedExecuteWithResult("GetItemInfo", 0, addonItem);
+		str addonInfo2 = FormatPriceBlock(Addons_int[m1][ADK_COST]);
+		if (addonItem == ITEM_ArmorUp)
+			addonInfo2 = strparam(s:addonInfo2, s:"\n", s:addonDmg);
+		else if (StrLen(addonDmg) > 0)
+			addonInfo2 = strparam(s:addonInfo2, s:"\nType: \cc[", s:addonDmg, s:"\cc]");
+		HudMessage (s:addonInfo2;
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X4, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 5:
 		// Resign description
@@ -120,6 +106,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"sans add-on weapons and\n",
 				s:"items.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	case 6:
 		// surrender descript
@@ -131,6 +118,7 @@ script 703 (int m0, int m1, int y) CLIENTSIDE {
 				s:"again to cancel your\n",
 				s:"vote.";
 			HUDMSG_PLAIN, MENU_HID + 21, CR_WHITE, UMENU_X3, y, 0.0);
+		HudMessage (s:""; HUDMSG_PLAIN, MENU_HID + 22, CR_WHITE, UMENU_X4, y, 0.0);
 		break;
 	}
 	

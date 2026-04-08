@@ -6,16 +6,6 @@
 // due. Please don't be lame and just copy-paste any of this and call it your own. Thanks!
 
 // What type is weak against what?
-int ArmorWeaknesses[7] = {
-	ARMOD_NOCHANGE, // NOCHANGE
-	ARMOD_CHEM, // FIRE
-	ARMOD_FIRE, // CHEM
-	ARMOD_BULLETPROOF, // ENERGY
-	ARMOD_ENERGY, // EXPLO
-	ARMOD_EXPLO, // BULLETPROOF
-	ARMOD_CRYO, // ICE
-};
-
 function int GetArmorGrade (void) {
 	return GetPlayerArmorGrade (PlayerNumber ());
 }

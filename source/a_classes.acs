@@ -152,6 +152,7 @@ function bool PurchaseClass (int id) {
 function int SetClass (int id, int scflags) {
 	// If we pass CLASS_None, we resign.
 	if (id == CLASS_None) {
+		ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber()); // [Cata]
 		SetActorProperty (0, APROP_DeathSound, "generic/death");
 		SetActorProperty (0, APROP_RenderStyle, STYLE_Normal);
 		SetActorProperty (0, APROP_Alpha, 1.0);
@@ -307,6 +308,9 @@ function int SetClass (int id, int scflags) {
 	GiveInventory ("HasClass", 1);
 	GiveInventory ("Refunds", Classes_int[id][CK_COST] / 2);
 	GiveInventory ("ClassID", id+1);
+
+	// [Cata] Update scoreboard designation
+	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
 	
 	// Speed and armor
 	SetActorProperty (0, APROP_SPEED, Classes_int[id][CK_SPEED]);
@@ -610,8 +614,8 @@ function int CheckClassAvailability (int id) {
 	if (CheckInventory ("HasClass"))
 		return false;
 	
-	// Check cost
-	if (CheckInventory ("Credit") < Classes_int[id][CK_COST])
+	// [Cata] Check cost with discount
+	if (CheckInventory ("Credit") < Classes_int[id][CK_COST] - CalcDiscount(Classes_int[id][CK_COST]))
 		return false;
 	
 	// Check building dependencies
