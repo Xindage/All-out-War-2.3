@@ -169,3 +169,9 @@ user	int		zeta_cl_fullteamlog			=		0;
 user	int		zeta_cl_donateamount		=		100;
 
 user int names_draw_distance = 100;
+
+// [Cata] Grenade cook indicator HUD
+user int   zeta_cl_buildinghud_style = 0;   // 0=Full default, 1=Compact, 2=Icons
+user int   zeta_cl_cookhud         = 1;     // master on/off
+user int   zeta_cl_cookhud_size    = 1;     // 0=tiny .. 4=huge
+user float zeta_cl_cookhud_alpha   = 1.0;   // 0.1..1.0 ring opacity
