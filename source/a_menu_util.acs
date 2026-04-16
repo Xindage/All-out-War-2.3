@@ -141,7 +141,7 @@ script 708 (int m0, int m1) {
 	SetInventory ("MenuSelection2", m1);
 	
 	// Convenience.
-	if (intHolder[i_Developer])
+	if (GetCVar ("zeta_rt_developer")) // [IRX] Read from CVar
 		GiveInventory ("Utility_Percent", 75);
 	
 	SetResultValue (1);

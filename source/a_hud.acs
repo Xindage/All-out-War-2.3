@@ -22,10 +22,6 @@ script SC_CL_HUDINIT (void) NET CLIENTSIDE {
 	CL_DisplayBuildingHud ();
 	DisplayStatusHUD ();
 	
-	// Send the server a request for a snapshot, so
-	// that we get existing player information.
-	CL_RequestSnapshot ();
-	
 	for (int i = 0; i <= 6; i++) {
 		CL_DisplayBuildingHud ();
 		DisplayStatusHUD ();

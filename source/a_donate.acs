@@ -97,7 +97,7 @@ function void DonateCredits (int donatee, int dosh) {
 	}
 	
 	// [Cata] Don't donate to overcapped players.
-	if(Credits[donatee] >= Config[CONFIG_CREDITCAP][PEER_SERVER])
+	if(Credits[donatee] >= GetConfig(CONFIG_CREDITCAP))
 	{
 		DisplayCross ();
 		IntelMessageNoLog ("\cgThat player cannot carry any more credits!", false);

@@ -245,8 +245,8 @@ function void SetTickets (int team, int count) {
 	if (Tickets[team] > GetCVAR("zeta_tickets"))
 		Tickets[team] = GetCVAR("zeta_tickets");*/
 	
-	// Update the new ticket count to clients
-	SYNC_UpdateTicketCount (team);
+	// [IRX] Update the ticket CVar for client sync
+	SYNC_UpdateTicketCVar (team);
 }
 
 // ============================================================================
@@ -524,12 +524,34 @@ function void ReddenSector (int tag) {
 	Sector_SetColor (tag, 255, 150, 150);
 }
 
-// ============================================================================
+// [IRX] GetConfig now reads directly from CVars. Works on both server and client.
 function int GetConfig (int c) {
-	if (c < 0 || c >= MAX_CONFIG)
-		return 0;
-	
-	return Config[c][netstate == NETSTATE_Server];
+	switch (c) {
+	case CONFIG_ALTEXP:				return GetCVar ("zeta_altexp");
+	case CONFIG_STARTTICKETS:		return GetCVar ("zeta_rt_starttickets");
+	case CONFIG_MECHS:				return GetCVar ("zeta_rt_mechs");
+	case CONFIG_ADVTURRETS_BLUE:	return GetCVar ("zeta_rt_advturrets_blue");
+	case CONFIG_ADVTURRETS_RED:		return GetCVar ("zeta_rt_advturrets_red");
+	case CONFIG_MAXTURRETS_BLUE:	return GetCVar ("zeta_rt_maxturrets_blue");
+	case CONFIG_MAXTURRETS_RED:		return GetCVar ("zeta_rt_maxturrets_red");
+	case CONFIG_TOURNAMENTMODE:		return GetCVar ("zeta_rt_tournamentmode");
+	case CONFIG_ENHANCEDREFINING_BLUE: return GetCVar ("zeta_rt_enhancedrefining_blue");
+	case CONFIG_ENHANCEDREFINING_RED: return GetCVar ("zeta_rt_enhancedrefining_red");
+	case CONFIG_ADVMECHS_BLUE:		return GetCVar ("zeta_rt_advmechs_blue");
+	case CONFIG_ADVMECHS_RED:		return GetCVar ("zeta_rt_advmechs_red");
+	case CONFIG_MAXTIMECOPS:		return GetCVar ("zeta_maxtimecopsperteam");
+	case CONFIG_JUGGERNAUTLIMIT:	return GetCVar ("zeta_juggernautlimit");
+	case CONFIG_C4DELAY:			return GetCVar ("zeta_c4delay");
+	case CONFIG_NORADAR:			return GetCVar ("zeta_noradar");
+	case CONFIG_CREDITCAP:			return GetCVar ("zeta_creditcap");
+	case CONFIG_SANDBAGS:			return GetCVar ("zeta_rt_sandbags");
+	case CONFIG_LIGHTMECHS:			return GetCVar ("zeta_rt_lightmechs");
+	case CONFIG_MAXUTILITYGUY:		return GetCVar ("zeta_maxutilityguy");
+	case CONFIG_3DBUILDINGS:		return GetCVar ("zeta_rt_3dbuildings");
+	case CONFIG_ENHANCEDC4_BLUE:	return GetCVar ("zeta_rt_enhancedc4_blue");
+	case CONFIG_ENHANCEDC4_RED:		return GetCVar ("zeta_rt_enhancedc4_red");
+	}
+	return 0;
 }
 
 // ============================================================================
@@ -1090,7 +1112,7 @@ function void BatteryModify (int team, int amount, int mode)
 			}
 		}
 	}
-	// Sync
-	ACS_ExecuteAlways(SC_CL_SYNCCHARGES, 0, RepairCharges[0], RepairCharges[1]);
+	// [IRX] Sync battery via CVars
+	SYNC_UpdateBattery ();
 }
 

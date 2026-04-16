@@ -698,13 +698,35 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define MK_FLAGS 3
 #define NUM_MECH_KEYS_INT 4
 
-// [Dusk] How long must clients wait until they ask for another snapshot?
-#define SNAPSHOT_DELAY 15
+// [IRX] Config values are now stored as server CVars (zeta_rt_* and zeta_*).
+// CONFIG_* integer indices are kept for backwards compatibility with GetConfig()/SetConfig().
+// GetConfig() maps these indices to GetCVar() calls internally.
+#define CONFIG_ALTEXP				0
+#define CONFIG_STARTTICKETS			1
+#define CONFIG_MECHS				2
+#define CONFIG_ADVTURRETS_BLUE		3
+#define CONFIG_ADVTURRETS_RED		4
+#define CONFIG_MAXTURRETS_BLUE		5
+#define CONFIG_MAXTURRETS_RED		6
+#define CONFIG_TOURNAMENTMODE		7
+#define CONFIG_ENHANCEDREFINING_BLUE 8
+#define CONFIG_ENHANCEDREFINING_RED	9
+#define CONFIG_ADVMECHS_BLUE		10
+#define CONFIG_ADVMECHS_RED			11
+#define CONFIG_MAXTIMECOPS			12
+#define CONFIG_JUGGERNAUTLIMIT		13
+#define CONFIG_C4DELAY				14
+#define CONFIG_NORADAR				15
+#define CONFIG_CREDITCAP			16
+#define CONFIG_SANDBAGS				17
+#define CONFIG_LIGHTMECHS			18
+#define CONFIG_MAXUTILITYGUY		19
+#define CONFIG_3DBUILDINGS			20
+#define CONFIG_ENHANCEDC4_BLUE		21
+#define CONFIG_ENHANCEDC4_RED		22
+#define MAX_CONFIG					23
 
 #define SURRENDER_WAIT_TIME 20
-
-#define PEER_CLIENT 0
-#define PEER_SERVER 1
 
 // =============================
 // [Dusk] Team message selectors
