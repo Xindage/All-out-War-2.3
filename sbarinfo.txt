@@ -20,6 +20,23 @@ statusbar fullscreen, forcescaled, fullscreenoffsets {
 		drawimage "IS2RRANK", -115, -46;
 		//drawimage "IS2RINTF", 100, 0;
 	}
+
+	// [Cata] Rank icon drawn inside the IS2_RANK panel slot. Each HRANK0X is a
+	// uniform 128x128 RGBA canvas (graphics/hri0X.png) with the rank art
+	// per-rank-sized and centered inside, then scaled down by textures.txt to
+	// fit the panel circle. All 11 ranks share ONE coordinate -- to move the
+	// whole set, change the (x, y) pair on every line below (they must match).
+	InInventory HudRankIconViz1  { drawimage "HRANK01", -31, -50; }
+	InInventory HudRankIconViz2  { drawimage "HRANK02", -31, -50; }
+	InInventory HudRankIconViz3  { drawimage "HRANK03", -31, -50; }
+	InInventory HudRankIconViz4  { drawimage "HRANK04", -31, -50; }
+	InInventory HudRankIconViz5  { drawimage "HRANK05", -31, -50; }
+	InInventory HudRankIconViz6  { drawimage "HRANK06", -31, -50; }
+	InInventory HudRankIconViz7  { drawimage "HRANK07", -31, -50; }
+	InInventory HudRankIconViz8  { drawimage "HRANK08", -31, -50; }
+	InInventory HudRankIconViz9  { drawimage "HRANK09", -31, -50; }
+	InInventory HudRankIconViz10 { drawimage "HRANK10", -31, -50; }
+	InInventory HudRankIconViz11 { drawimage "HRANK11", -31, -50; }
 	
 	// Health. For admin morph health is not relevant.
 	InInventory Not PowerAdministrator {

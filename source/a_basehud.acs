@@ -2,15 +2,31 @@
 // Some functions could be merged to save functions count, but its necessary to see how it works with zeta_cl_confonthud
 function void CL_DisplayBuildingHud (void) {
 	SetHUDFont ();
-	
+
 	// If we want no hud, clear it
 	if (GetCVar ("zeta_cl_nohud")) {
 		ClearHudMessage (8850);
 		ClearHudMessage (8851);
 		ClearHudMessage (8852);
+		ClearHudMessage (8853);
+		ClearHudMessage (8854);
 		return;
 	}
-	
+
+	// [Cata] Style switch
+	int style = GetCVar ("zeta_cl_buildinghud_style");
+	if (style == 2) {
+		CL_DrawBuildingHudIcons ();
+		return;
+	}
+	if (style == 1) {
+		CL_DrawBuildingHudCompact ();
+		return;
+	}
+	// Style 0 - Full text (existing path). Clear icon-mode leftovers.
+	ClearHudMessage (8853);
+	ClearHudMessage (8854);
+
 	int bluey = 0.44;
 	// [Dusk] {9/23/12} In smaller resolutions, we need to shove the blue
 	// team base HUD a bit up or it will overlap with the red one
@@ -50,8 +66,8 @@ function void CL_DisplayBuildingHud (void) {
 		HUDMSG_PLAIN, 8850, CR_BLUE, 0.012, bluey, 0.0);
 	// Red Team
 	HudMessageBold (
-		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
-		s:"Battery \cc[ ", s:rb, d:redCharges, s:" \cc]\n",
+		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:"Battery \cc[ ", s:rb, d:RepairCharges[1], s:" \cc]\n",
 		s:getBuildingColor (1, 0), s:"Barracks\cc: ",
 		s:ColorCodeHealth(GetActorSpeed (MainTIDs[1][0])), d:GetActorSpeed (MainTIDs[1][0]), s:"\cc%\n",
 		s:getBuildingColor (1, 1), s:"Refinery\cc: ",
@@ -82,7 +98,7 @@ function void CL_DisplayBuildingHud (void) {
 		int startlives = GetConfig (CONFIG_STARTTICKETS);
 		//SetFont ("SMALLFONT");
 		HudMessageBold (
-			s:"\n \n \n \n \n \n \n \n \n \n \n \n \n\cd--------\n",
+			s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\cd--------\n",
 			s:"\cHLives\cC: ", s:FractionColor (bluelives, startlives), d:bluelives,
 			s:"\n\cGLives\cC: ", s:FractionColor (redlives, startlives), d:redlives,
 			s:"\n\cd--------";
@@ -160,6 +176,139 @@ function str getBuildingColor (int team, int target) {
 function str getBuildingColorGreen (int tid) {
 	if (GetActorSpeed (tid) > 0)
 		return "\cD";
-	
+
 	return "\cQ";
+}
+
+// =============================================================================
+// [Cata] Compact mode - same data as full text but with short labels
+function void CL_DrawBuildingHudCompact (void) {
+	// Clear icon-mode leftovers
+	ClearHudMessage (8853);
+	ClearHudMessage (8854);
+
+	int bluey = 0.44;
+	if (GetCVar ("vid_defheight") <= 400)
+		bluey = 0.36;
+
+	str bb = FractionColor (RepairCharges[0], BATTERY_MAX);
+	str rb = FractionColor (RepairCharges[1], BATTERY_MAX);
+
+	HudMessageBold (
+		s:"Bat \cc[", s:bb, d:RepairCharges[0], s:"\cc]\n",
+		s:getBuildingColor(0, 0), s:"Bar ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][0])), d:GetActorSpeed(MainTIDs[0][0]), s:"\cc%\n",
+		s:getBuildingColor(0, 1), s:"Ref ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][1])), d:GetActorSpeed(MainTIDs[0][1]), s:"\cc%\n",
+		s:getBuildingColor(0, 2), s:"Res ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][2])), d:GetActorSpeed(MainTIDs[0][2]), s:"\cc%\n",
+		s:getBuildingColor(0, 3), s:"War ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][3])), d:GetActorSpeed(MainTIDs[0][3]), s:"\cc%\n",
+		s:getBuildingColor(0, 4), s:"Obb ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][4])), d:GetActorSpeed(MainTIDs[0][4]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][5]), s:"+ ", s:getBuildingColor(0, 5), s:"Rep ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][5])), d:GetActorSpeed(MainTIDs[0][5]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][6]), s:"+ ", s:getBuildingColor(0, 6), s:"Hp+ ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][6])), d:GetActorSpeed(MainTIDs[0][6]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][7]), s:"+ ", s:getBuildingColor(0, 7), s:"Am+ ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][7])), d:GetActorSpeed(MainTIDs[0][7]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][8]), s:"+ ", s:getBuildingColor(0, 8), s:"Min ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][8])), d:GetActorSpeed(MainTIDs[0][8]), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_BLUE, 0), s:"+ ", s:PortalLinkColor (TEAM_BLUE, 1), s:"Tel ",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[0][9])), d:PortalHealth (MainTIDs[0][9]), s:"\cc/",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[0][10])), d:PortalHealth (MainTIDs[0][10]), s:"\cc%";
+		HUDMSG_PLAIN, 8850, CR_BLUE, 0.012, bluey, 0.0);
+
+	HudMessageBold (
+		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:"Bat \cc[", s:rb, d:RepairCharges[1], s:"\cc]\n",
+		s:getBuildingColor(1, 0), s:"Bar ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][0])), d:GetActorSpeed(MainTIDs[1][0]), s:"\cc%\n",
+		s:getBuildingColor(1, 1), s:"Ref ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][1])), d:GetActorSpeed(MainTIDs[1][1]), s:"\cc%\n",
+		s:getBuildingColor(1, 2), s:"Res ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][2])), d:GetActorSpeed(MainTIDs[1][2]), s:"\cc%\n",
+		s:getBuildingColor(1, 3), s:"War ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][3])), d:GetActorSpeed(MainTIDs[1][3]), s:"\cc%\n",
+		s:getBuildingColor(1, 4), s:"Obb ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][4])), d:GetActorSpeed(MainTIDs[1][4]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][5]), s:"+ ", s:getBuildingColor(1, 5), s:"Rep ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][5])), d:GetActorSpeed(MainTIDs[1][5]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][6]), s:"+ ", s:getBuildingColor(1, 6), s:"Hp+ ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][6])), d:GetActorSpeed(MainTIDs[1][6]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][7]), s:"+ ", s:getBuildingColor(1, 7), s:"Am+ ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][7])), d:GetActorSpeed(MainTIDs[1][7]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][8]), s:"+ ", s:getBuildingColor(1, 8), s:"Min ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][8])), d:GetActorSpeed(MainTIDs[1][8]), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_RED, 0), s:"+ ", s:PortalLinkColor (TEAM_RED, 1), s:"Tel ",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[1][9])), d:PortalHealth (MainTIDs[1][9]), s:"\cc/",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[1][10])), d:PortalHealth (MainTIDs[1][10]), s:"\cc%";
+		HUDMSG_PLAIN, 8851, CR_RED, 0.012, bluey, 0.0);
+
+	int bluelives = Tickets[TEAM_BLUE];
+	int redlives = Tickets[TEAM_RED];
+	if (GetCVar ("zeta_forcelivehud") || bluelives || redlives) {
+		int startlives = Config[CONFIG_STARTTICKETS][PEER_CLIENT];
+		HudMessageBold (
+			s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\cd--------\n",
+			s:"\cHLives\cC: ", s:FractionColor (bluelives, startlives), d:bluelives,
+			s:"\n\cGLives\cC: ", s:FractionColor (redlives, startlives), d:redlives,
+			s:"\n\cd--------";
+			HUDMSG_PLAIN, 8852, CR_BLUE, 0.012, 0.44, 0.0);
+	}
+}
+
+// =============================================================================
+// [Cata] Icons mode - icons + percentages in a single CATABLDG-font message.
+// CATABLDG inherits SMALLFONT via TEMPLATE so digits/punctuation render in
+// the same line-height as the icon glyphs, eliminating column drift.
+function void CL_DrawBuildingHudIcons (void) {
+	// Clear leftover legacy icon-column messages from prior code
+	ClearHudMessage (8853);
+	ClearHudMessage (8854);
+
+	int bluey = 0.44;
+	if (GetCVar ("vid_defheight") <= 400)
+		bluey = 0.36;
+
+	str bb = FractionColor (RepairCharges[0], BATTERY_MAX);
+	str rb = FractionColor (RepairCharges[1], BATTERY_MAX);
+
+	SetFont ("CATABLDG");
+
+	// Blue: each line starts with the per-building color escape so dead
+	// buildings dim to grey via getBuildingColor's \cM/\cU return.
+	HudMessageBold (
+		s:"L \cc[", s:bb, d:RepairCharges[0], s:"\cc]\n",
+		s:getBuildingColor(0, 0), s:"A ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][0])), d:GetActorSpeed(MainTIDs[0][0]), s:"\cc%\n",
+		s:getBuildingColor(0, 1), s:"B ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][1])), d:GetActorSpeed(MainTIDs[0][1]), s:"\cc%\n",
+		s:getBuildingColor(0, 2), s:"C ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][2])), d:GetActorSpeed(MainTIDs[0][2]), s:"\cc%\n",
+		s:getBuildingColor(0, 3), s:"D ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][3])), d:GetActorSpeed(MainTIDs[0][3]), s:"\cc%\n",
+		s:getBuildingColor(0, 4), s:"E ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][4])), d:GetActorSpeed(MainTIDs[0][4]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][5]), s:"+ ", s:getBuildingColor(0, 5), s:"F ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][5])), d:GetActorSpeed(MainTIDs[0][5]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][6]), s:"+ ", s:getBuildingColor(0, 6), s:"G ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][6])), d:GetActorSpeed(MainTIDs[0][6]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][7]), s:"+ ", s:getBuildingColor(0, 7), s:"H ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][7])), d:GetActorSpeed(MainTIDs[0][7]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[0][8]), s:"+ ", s:getBuildingColor(0, 8), s:"I ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[0][8])), d:GetActorSpeed(MainTIDs[0][8]), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_BLUE, 0), s:"+ ", s:PortalLinkColor (TEAM_BLUE, 1), s:"J ",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[0][9])), d:PortalHealth (MainTIDs[0][9]), s:"\cc/",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[0][10])), d:PortalHealth (MainTIDs[0][10]), s:"\cc%";
+		HUDMSG_PLAIN, 8850, CR_LIGHTBLUE, 0.012, bluey, 0.0);
+
+	// Red
+	HudMessageBold (
+		s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n",
+		s:"L \cc[", s:rb, d:RepairCharges[1], s:"\cc]\n",
+		s:getBuildingColor(1, 0), s:"A ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][0])), d:GetActorSpeed(MainTIDs[1][0]), s:"\cc%\n",
+		s:getBuildingColor(1, 1), s:"B ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][1])), d:GetActorSpeed(MainTIDs[1][1]), s:"\cc%\n",
+		s:getBuildingColor(1, 2), s:"C ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][2])), d:GetActorSpeed(MainTIDs[1][2]), s:"\cc%\n",
+		s:getBuildingColor(1, 3), s:"D ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][3])), d:GetActorSpeed(MainTIDs[1][3]), s:"\cc%\n",
+		s:getBuildingColor(1, 4), s:"E ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][4])), d:GetActorSpeed(MainTIDs[1][4]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][5]), s:"+ ", s:getBuildingColor(1, 5), s:"F ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][5])), d:GetActorSpeed(MainTIDs[1][5]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][6]), s:"+ ", s:getBuildingColor(1, 6), s:"G ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][6])), d:GetActorSpeed(MainTIDs[1][6]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][7]), s:"+ ", s:getBuildingColor(1, 7), s:"H ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][7])), d:GetActorSpeed(MainTIDs[1][7]), s:"\cc%\n",
+		s:getBuildingColorGreen(MainTIDs[1][8]), s:"+ ", s:getBuildingColor(1, 8), s:"I ", s:ColorCodeHealth(GetActorSpeed(MainTIDs[1][8])), d:GetActorSpeed(MainTIDs[1][8]), s:"\cc%\n",
+		s:PortalLinkColor (TEAM_RED, 0), s:"+ ", s:PortalLinkColor (TEAM_RED, 1), s:"J ",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[1][9])), d:PortalHealth (MainTIDs[1][9]), s:"\cc/",
+		s:ColorCodeHealth(PortalHealth (MainTIDs[1][10])), d:PortalHealth (MainTIDs[1][10]), s:"\cc%";
+		HUDMSG_PLAIN, 8851, CR_BRICK, 0.012, bluey, 0.0);
+
+	// Lives counter in CATABLDG so the heart glyph (M) renders inline.
+	// Math: building HUD in CATABLDG (10 px line, 11 rows) ends at
+	// 0.44*avail + 61.6. Lives content at 0.44*avail + 5.6*pad - 17.6
+	// must be >= that → pad >= 14.14 → 15 pads to land just below.
+	int bluelives = Tickets[TEAM_BLUE];
+	int redlives = Tickets[TEAM_RED];
+	if (GetCVar ("zeta_forcelivehud") || bluelives || redlives) {
+		int startlives = Config[CONFIG_STARTTICKETS][PEER_CLIENT];
+		HudMessageBold (
+			s:"\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\cd---\n",
+			s:"\cHM ", s:FractionColor (bluelives, startlives), d:bluelives,
+			s:"\n\cGM ", s:FractionColor (redlives, startlives), d:redlives,
+			s:"\n\cd---";
+			HUDMSG_PLAIN, 8852, CR_BLUE, 0.012, 0.44, 0.0);
+	}
+
+	SetHUDFont ();
 }

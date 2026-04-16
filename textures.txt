@@ -957,7 +957,7 @@ Graphic "IS2_HPI", 202, 24
 	Patch "IS2_HPI", 0, 0
 }
 
-Graphic "IS2_RANK", 220, 38
+Graphic "IS2_RANK", 221, 38
 {
 	XScale 2.000
 	YScale 2.200
@@ -978,7 +978,7 @@ Graphic "IS2RHPI", 202, 24
 	Patch "IS2RHPI", 0, 0
 }
 
-Graphic "IS2RRANK", 220, 38
+Graphic "IS2RRANK", 221, 38
 {
 	XScale 2.000
 	YScale 2.200
@@ -998,6 +998,23 @@ Graphic "IS2RINTF", 235, 45
 	YScale 2.200
 	Patch "IS2RINTF", 0, 0
 }
+
+// [Cata] Rank icons. Source PNGs are 128x128 RGBA at graphics/hri0X.png with
+// the rank art per-rank-sized (aspect-preserved) and centered on a transparent
+// canvas. Uniform XScale/YScale 5.0 brings them to 25.6 virtual units, fitting
+// inside the IS2_RANK panel circle. Patch (-1, -3) is a sub-virtual-unit nudge
+// (1 native pixel = 1 real pixel at the engine scale we use).
+Graphic "HRANK01", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI01", -1, -3 }
+Graphic "HRANK02", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI02", -1, -3 }
+Graphic "HRANK03", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI03", -1, -3 }
+Graphic "HRANK04", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI04", -1, -3 }
+Graphic "HRANK05", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI05", -1, -3 }
+Graphic "HRANK06", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI06", -1, -3 }
+Graphic "HRANK07", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI07", -1, -3 }
+Graphic "HRANK08", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI08", -1, -3 }
+Graphic "HRANK09", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI09", -1, -3 }
+Graphic "HRANK10", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI10", -1, -3 }
+Graphic "HRANK11", 128, 128 { XScale 5.000 YScale 5.000 Patch "HRI11", -1, -3 }
 
 Graphic "A_BULLET", 31, 17
 {

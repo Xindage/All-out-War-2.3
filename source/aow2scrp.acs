@@ -205,9 +205,6 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 // TODO: Populate the 8** range
 #libdefine SC_BerserkSound				800
 #libdefine SC_ConsolePlayerDistance		801
-#libdefine SC_Pref_FreezeCMD			802
-#libdefine SC_Pref_MenuToggle			803
-#libdefine SC_Pref_RequestFreeze		804
 #libdefine SC_Init_crates				805
 #libdefine SC_TargetMessage				806
 #libdefine SC_BombPackItem				807
@@ -481,7 +478,6 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #define MENU_Purchase		2
 #define MENU_Research		3
 #define MENU_Factory		4
-#define MENU_Preferences	5
 #define MENU_OpenDeck		6
 // ----
 #define MAX_MENU			6

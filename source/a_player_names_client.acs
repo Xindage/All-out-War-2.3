@@ -84,15 +84,20 @@ SCRIPT SC_DRAW_ALL_CL ENTER CLIENTSIDE
 {
 	str cvar = strparam (s:"names_draw_distance");
 	ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] = GetCVar(cvar);
-		
+
 	while (true)
 	{
 		delay(1);
+
+		// [Cata] Re-read the cvar each tic so the AOW Settings menu
+		// dropdown takes effect without needing to press the cycle key.
+		ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] = GetCVar(cvar);
+
 		if(ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0] == 0)
 		{
 			continue;
 		}
-		
+
 		ACS_ExecuteWithResult(SC_DRAW_TEAMMATES_CL, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
 		ACS_ExecuteWithResult(SC_DRAW_SPOTTED_ACTORS_CL, ALL_VARS[DRAWING_DISTANCE_CLIENT][0][0]);
 	}

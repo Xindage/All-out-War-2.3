@@ -25,7 +25,6 @@ addmenukey "Switch to weaker team" teamswitch
 addmenukey "Sell Current Weapon" sellweapon
 addmenukey "Use self-heal" useselfheal
 addmenukey "Use timed C4" usec4
-addmenukey "Open preferences" aow_preferences
 addmenukey "Use Frag Grenade" usefraggrenade
 addmenukey "Use Flashbang" useflashbang
 addmenukey "Remote C4 Detonator" usedetonator
@@ -86,9 +85,6 @@ alias updatehud "puke -931"
 // in case something gets screwed up. There's already been problems
 // with credits syncing...
 alias getsnapshot "puke -932"
-
-// Open preferences
-alias aow_preferences "puke -803"
 
 // Version information
 alias aow_versioninfo "puke -813"

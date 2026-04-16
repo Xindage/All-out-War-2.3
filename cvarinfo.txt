@@ -170,9 +170,16 @@ user	int		zeta_cl_donateamount		=		100;
 
 user int names_draw_distance = 100;
 
+// intHolder migration
+server	int		zeta_rt_developer			=		0;
+// [Cata] Grenade cook indicator HUD
+user int   zeta_cl_buildinghud_style = 0;   // 0=Full default, 1=Compact, 2=Icons
+user int   zeta_cl_cookhud         = 1;     // master on/off
+user int   zeta_cl_cookhud_size    = 1;     // 0=tiny .. 4=huge
+user float zeta_cl_cookhud_alpha   = 1.0;   // 0.1..1.0 ring opacity
 
 ////////////////////////////
-// Runtime CVars (managed by ACS via SetCVar - do not change manually)
+// [iarex] Runtime CVars (managed by ACS via SetCVar - do not change manually)
 // These are reset to defaults on each map start by SYNC_ResetRuntimeCVars().
 ////////////////////////////
 
@@ -200,5 +207,3 @@ server	int		zeta_rt_3dbuildings			=		0;
 server	int		zeta_rt_enhancedc4_blue		=		0;
 server	int		zeta_rt_enhancedc4_red		=		0;
 
-// intHolder migration
-server	int		zeta_rt_developer			=		0;

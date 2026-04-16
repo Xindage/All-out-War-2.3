@@ -114,13 +114,78 @@ script SC_HUDINTERPOLATOR (void) NET CLIENTSIDE {
 // ============================================================================
 // [Dusk] This function displays the credits/experience hud to the player
 
-// [Dusk] Calculate widescreen offset.
-function int HUDX (int a) {
-	int xw = (4 * GetCVar ("vid_defheight") / 3);
-	int vw = GetCVar ("vid_defwidth");
-	
-	// [Dusk] Yay, maths
-	return -((xw << 16) - (vw << 16) - (-a * xw)) / (-vw);
+// [Cata] Replicate Zandronum's `forcescaled fullscreenoffsets` SBARINFO math
+// (sbarinfo.cpp:1290+ + V_CalcCleanFacs in v_video.cpp:1402 + CheckRatio at
+// v_video.cpp:1664) so HudMessages land on the same on-screen pixel as a
+// SBARINFO drawimage at the same virtual coordinate. Pass the same negative
+// pixel offsets you'd use in sbarinfo.txt; pass axis=0 for X and axis=1 for Y.
+//
+// In windowed mode where vid_defwidth/defheight differ from the actual
+// viewport size, alignment will drift -- ACS has no public viewport getter,
+// so this is best-effort there. Fullscreen is exact.
+function int HudCoord (int v, int axis) {
+	int realW = GetCVar ("vid_defwidth");
+	int realH = GetCVar ("vid_defheight");
+
+	// CheckRatio: pick aspect-ratio bucket and BaseRatioSizes[][3] multiplier.
+	int mul = 48; // 4:3 default
+	if (abs (realH * 16 / 9 - realW) < 10)
+		mul = 36; // 16:9
+	else if (abs (realH * 17 / 10 - realW) < 10)
+		mul = 37; // 17:10 (48*40/51)
+	else if (abs (realH * 16 / 10 - realW) < 60 &&
+		!(realW == 320 && realH == 200) &&
+		!(realW == 640 && realH == 400))
+		mul = 40; // 16:10
+
+	// V_CalcCleanFacs (ratio & 4 == 0 path).
+	int cwidth  = realW * mul / 48;
+	int cheight = realH;
+	int cx1 = cwidth  / 320; if (cx1 < 1) cx1 = 1;
+	int cy1 = cheight / 200; if (cy1 < 1) cy1 = 1;
+	int cx2 = realW   / 320; if (cx2 < 1) cx2 = 1;
+	int cy2 = realH   / 200; if (cy2 < 1) cy2 = 1;
+	int cleanX, cleanY;
+	if (abs (cx1 - cy1) <= abs (cx2 - cy2)) {
+		cleanX = cx1; cleanY = cy1;
+	} else {
+		cleanX = cx2; cleanY = cy2;
+	}
+	if (cleanX > 1 && cleanY > 1 && cleanX != cleanY) {
+		if (cleanX < cleanY) cleanY = cleanX;
+		else                 cleanX = cleanY;
+	}
+
+	// axis 1 = fixed-point Top, axis 3 = raw cleanY, axis 0 = fixed-point Left.
+	// Y is always linear (5:4 path is ignored as a rare edge case).
+	if (axis == 3) return cleanY;
+	if (axis == 1) return -(((realH + v * cleanY) << 16) / realH);
+
+	// X axis: positive v = from-left-edge, negative v = from-right-edge.
+	// Linear (Left = -target_real/realW) UNLESS the engine will aspect-correct
+	// us. That happens when con_scaletext is ON AND con_scaletext_usescreenratio
+	// is OFF AND we're on a non-4:3 res. In that case, VirtualToRealCoords
+	// pulls X toward screen center via the formula
+	//   real_x = (x_virt - vw/2) * realW * 960 / (vw * BR[ratio][0]) + realW/2
+	// Inverting (and converting to fractional Left for HudMessage) gives:
+	//   Left = -0.5 - (target_real - realW/2) * BR[ratio][0] / (realW * 960)
+	int targetReal;
+	if (v > 0) targetReal = v * cleanX;            // from left edge
+	else       targetReal = realW + v * cleanX;    // from right edge (or realW for v=0)
+	int cs  = GetCVar ("con_scaletext");
+	int cvw = GetCVar ("con_virtualwidth");
+	int cvh = GetCVar ("con_virtualheight");
+	int usr = GetCVar ("con_scaletext_usescreenratio");
+	int gs  = (cs != 0 && cvw > 0 && cvh > 0 && (cvw != realW || cvh != realH));
+	int needCorrect = (gs && !usr && mul != 48);
+	if (!needCorrect)
+		return -((targetReal << 16) / realW);
+	int br = 960;
+	if      (mul == 36) br = 1280; // 16:9
+	else if (mul == 40) br = 1152; // 16:10
+	else if (mul == 37) br = 1224; // 17:10
+	int term = ((targetReal - realW / 2) * br) / 960;
+	return -32768 - ((term << 16) / realW);
 }
 
 // =============================================================================
@@ -147,12 +212,36 @@ function void DisplayStatusHUD (void) {
 	str col = "\cN";
 	if (ConsoleTeam () == TEAM_RED)
 		col = "\cA";
-	
+
+	// [Cata] When con_scaletext is OFF the SmallFont renders at native pixel
+	// size (~24 real px tall) instead of scaled, so the same virtual anchor
+	// puts small text near the panel top with empty space below. Use a
+	// different anchor for OFF mode that's computed in REAL pixels relative
+	// to the panel top (not virtual units, so it scales correctly across
+	// resolutions where cleanY differs).
+	int cs  = GetCVar ("con_scaletext");
+	int cvw = GetCVar ("con_virtualwidth");
+	int cvh = GetCVar ("con_virtualheight");
+	int realW = GetCVar ("vid_defwidth");
+	int realH = GetCVar ("vid_defheight");
+	int gScale = (cs != 0 && cvw > 0 && cvh > 0 && (cvw != realW || cvh != realH));
+
+	// Center the 3-line text vertically inside the IS2_RANK panel rect, where
+	// the text's real height differs by mode (OFF: ~24 native px, ON: scaled
+	// by SCREENHEIGHT/con_virtualheight). +5 bias matches the bar's visual
+	// midline (the panel art isn't perfectly rect-centered).
+	int cleanY    = HudCoord (0, 3);
+	int panelTop  = realH - 46 * cleanY;
+	int panelH    = 17 * cleanY;
+	int textH     = gScale ? (24 * realH / cvh) : 24;
+	int targetY   = panelTop + (panelH - textH) / 2 + 5;
+	int textY_fp  = -((targetY << 16) / realH);
+
 	// [Dusk] We're not in game, display a different HUD
 	if (!PlayerInGame (intHolder[i_consoleplayer])) {
 		HudMessage (s:"Credits: \cQ$\cD----\n",
 			s:"Experience: \cD-\cQ/\cD- XP\n\cJ----";
-			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 		return;
 	}
 	
@@ -178,7 +267,7 @@ function void DisplayStatusHUD (void) {
 		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
 			s:col, s:"Experience: \cD",d:xp, s:"\cQ/\cD", d:xpneed, s:" XP\n",
 			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
-			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 	} else {
 		// [Dusk] We are at highest rank, so a different hud is displayed,
 		// in which there is no experience need shown. Experience also
@@ -186,13 +275,32 @@ function void DisplayStatusHUD (void) {
 		HudMessageBold (s:col, s:"Credits: \cQ$\cD", d:moni, s:"\n",
 			s:col, s:"Experience: \cJ", d:xp, s:" XP\n",
 			s:rankname, s:", \cC", s:DisplayName (intHolder[i_consoleplayer]);
-			HUDMSG_PLAIN, 50, CR_WHITE, HUDX (-0.685), -0.8, 0);
+			HUDMSG_PLAIN, 50, CR_WHITE, HudCoord (-101, 0), textY_fp, 0);
 	}
 	
-	// Display rank pic
-	SetFont (GetRankPic (intHolder[i_consoleplayer]));
-	HudMessage (s:"a";
-		HUDMSG_PLAIN, 5000, CR_LIGHTBLUE, HUDX (-0.922), -0.78, 0);
+	// [Cata] Rank icon. Two paths so it works in both HUD modes:
+	//   Fullscreen HUD (screenblocks >= 11): SBARINFO draws it via the
+	//     HudRankIconVizN tokens we set below. SBARINFO uses the same
+	//     coordinate system as the IS2_RANK panel, so per-rank centering is
+	//     perfect and unaffected by con_scaletext / hud_scale.
+	//   Status bar HUD (screenblocks <= 10): SBARINFO doesn't render the
+	//     fullscreen panel at all, so we fall back to the original HudMessage
+	//     SetFont approach so the rank icon still shows somewhere on screen.
+	// Tokens are PURELY visual -- gameplay logic still uses Experience +
+	// GetRank() in a_xp.acs and never reads HudRankIconVizN.
+	int curRank = GetRank ();
+	for (int ri = 1; ri <= MAX_RANKS; ri++)
+		SetInventory (StrParam (s:"HudRankIconViz", d:ri), (ri == curRank + 1) ? 1 : 0);
+
+	// Always wipe the HudMessage rank pic first so swapping screenblocks
+	// modes never leaves a ghost from the previous mode. The statusbar branch
+	// re-draws it immediately after.
+	ClearHudMessage (5000);
+	if (GetCVar ("screenblocks") <= 10) {
+		SetFont (GetRankPic (intHolder[i_consoleplayer]));
+		HudMessage (s:"a";
+			HUDMSG_PLAIN, 5000, CR_LIGHTBLUE, HudCoord (-25, 0), HudCoord (-45, 1), 0);
+	}
 }
 
 // =============================================================================
@@ -346,14 +454,96 @@ function void UpdateHUD (void) {
 }
 
 // =============================================================================
+// [Cata] Hold-to-charge indicator near the crosshair for grenades / cryobow.
+// Reads the existing *Power tokens (FragGrenadePower, FlashbangPower,
+// ChronoBowPower) every tic from SC_HUDDaemon and draws a 10-pip bar that
+// fades from grey -> yellow -> orange -> green as the charge fills.
+#define COOK_HUD_ID 4900
+
+script "CL_DisplayChargeHud" (void) CLIENTSIDE {
+	// Master toggle
+	if (!GetCVar ("zeta_cl_cookhud")) {
+		HudMessage (s:""; HUDMSG_PLAIN, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05);
+		terminate;
+	}
+
+	int charge = 0;
+	if (CheckInventory ("FragGrenadePower") > 0)
+		charge = CheckInventory ("FragGrenadePower");
+	else if (CheckInventory ("FlashbangPower") > 0)
+		charge = CheckInventory ("FlashbangPower");
+	else if (CheckInventory ("ChronoBowPower") > 0)
+		charge = CheckInventory ("ChronoBowPower");
+
+	if (charge <= 0) {
+		HudMessage (s:""; HUDMSG_PLAIN, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05);
+		terminate;
+	}
+
+	int filled = charge / 5;
+	if (filled > 20) filled = 20;
+
+	// 'A' (empty) .. 'U' (full, 20 segments) — colors baked per frame.
+	str glyph;
+	switch (filled) {
+		case 0:  glyph = "A"; break;
+		case 1:  glyph = "B"; break;
+		case 2:  glyph = "C"; break;
+		case 3:  glyph = "D"; break;
+		case 4:  glyph = "E"; break;
+		case 5:  glyph = "F"; break;
+		case 6:  glyph = "G"; break;
+		case 7:  glyph = "H"; break;
+		case 8:  glyph = "I"; break;
+		case 9:  glyph = "J"; break;
+		case 10: glyph = "K"; break;
+		case 11: glyph = "L"; break;
+		case 12: glyph = "M"; break;
+		case 13: glyph = "N"; break;
+		case 14: glyph = "O"; break;
+		case 15: glyph = "P"; break;
+		case 16: glyph = "Q"; break;
+		case 17: glyph = "R"; break;
+		case 18: glyph = "S"; break;
+		case 19: glyph = "T"; break;
+		default: glyph = "U"; break;
+	}
+
+	int alpha = GetCVar ("zeta_cl_cookhud_alpha");
+	if (alpha <= 0) alpha = 1.0;
+
+	// Five discrete sizes via separate font lumps. 0..4 -> rings 1..5.
+	int sizeIdx = GetCVar ("zeta_cl_cookhud_size");
+	if (sizeIdx < 0) sizeIdx = 0;
+	if (sizeIdx > 4) sizeIdx = 4;
+	if      (sizeIdx == 0) SetFont ("CATACOOKRING1");
+	else if (sizeIdx == 1) SetFont ("CATACOOKRING2");
+	else if (sizeIdx == 2) SetFont ("CATACOOKRING3");
+	else if (sizeIdx == 3) SetFont ("CATACOOKRING4");
+	else                   SetFont ("CATACOOKRING5");
+
+	HudMessage (s:glyph;
+		HUDMSG_ALPHA, COOK_HUD_ID, CR_UNTRANSLATED, 0.5, 0.5, 0.05, alpha);
+}
+
+// =============================================================================
 // [Dusk] Script daemon to set up necessary inventory items for HUD display
 script SC_HUDDaemon OPEN CLIENTSIDE {
 	int oldcredits, oldexp;
 	int hp, shp;
-	
+	int oldBuildHudStyle = -1;
+
 	until (false) {
 		delay (1);
-		
+
+		// [Cata] Track building HUD style cvar - needs to refresh even while
+		// spectating, otherwise cvar changes don't take effect until you respawn.
+		int curStyle = GetCVar ("zeta_cl_buildinghud_style");
+		if (curStyle != oldBuildHudStyle) {
+			CL_DisplayBuildingHud ();
+			oldBuildHudStyle = curStyle;
+		}
+
 		// This all is irrelevant if we're spectating.
 		if (!PlayerInGame (intHolder[i_consoleplayer]))
 			continue;
@@ -380,6 +570,9 @@ script SC_HUDDaemon OPEN CLIENTSIDE {
 			SetInventory ("HUD_HealthBlink", (Timer () % 25 > 18));
 		}
 		
+		// [Cata] Hold-to-charge indicator (grenade cook bar)
+		ACS_NamedExecuteAlways ("CL_DisplayChargeHud", 0);
+
 		// If our credits change, we need to update the hud.
 		if (CheckInventory ("Credit") != oldcredits) {
 			// g_CreditDelta = (CheckInventory ("Credit") - oldcredits);
