@@ -245,8 +245,9 @@ function void SetTickets (int team, int count) {
 	if (Tickets[team] > GetCVAR("zeta_tickets"))
 		Tickets[team] = GetCVAR("zeta_tickets");*/
 	
-	// [IRX] Update the ticket CVar for client sync
+	// [IRX] Update the ticket CVar for client sync and refresh HUD
 	SYNC_UpdateTicketCVar (team);
+	ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
 }
 
 // ============================================================================
