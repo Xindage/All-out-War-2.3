@@ -143,7 +143,7 @@ script SC_DEATH DEATH
 		if (IsInEnemyBase)
 			battery_gain = (battery_gain * 3) / 2;	// Defensive kill, 50% bonus energy.
 		if (battery_gain > 0) // Reverse team is used to prevent suicides.
-			BatteryModify (!PlayerTeam(), battery_gain, BATTERY_ADD);
+			BatteryModify (!(PlayerTeam()), battery_gain, BATTERY_ADD);
 	}
 	
 	// =========================================================================
