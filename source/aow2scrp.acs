@@ -354,8 +354,9 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_Death						994
 //										995
 #libdefine SC_GameOver					996
-#libdefine SC_SuddenDeath				997
-#libdefine SC_SuddenDeathCounter		998
+#libdefine SC_SuddenDeathManager		997
+//#libdefine SC_SuddenDeath				997
+//#libdefine SC_SuddenDeathCounter		998
 #libdefine SC_GAMEINIT					999
 
 // ============================================================================

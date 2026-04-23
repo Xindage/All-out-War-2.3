@@ -891,7 +891,14 @@ script SC_STRUCTUREBTODAMAGE (int tid, int damage)
 			damage += damage / 2;
 	}
 	
-	if (intHolder[i_SuddenDeath]) // SD Double damage
+	// Sudden death phases calculation
+	if (i_SDPhase == -1) // 0.75x
+		damage = (damage * 75) / 100;
+	
+	else if (i_SDPhase == 1) // 1.5x
+		damage = (damage * 150) / 100;
+	
+	else if (i_SDPhase == 2) // 2.0x
 		damage *= 2;
 	
 	Thing_Damage(tid, damage, 0);

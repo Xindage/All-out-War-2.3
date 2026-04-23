@@ -8,6 +8,181 @@
  * of this and call it your own. Thanks!
  */
 
+script SC_SuddenDeathManager OPEN
+{
+	bool earlyApplied = false;
+	bool neutralApplied = false;
+	bool skipearlygame = false;
+	int x; 
+	
+	Delay(35); // Give a second before start so everything can be managed by starting scripts.
+	
+	// Sudden death counter.
+	while (true)
+	{
+		int totalTime = GetCVAR("zeta_suddendeathtime") * MINUTETICS;
+		int oneThird = totalTime / 3;
+		int t = Timer();
+		int timeUntilSuddenDeath = totalTime - t;
+		
+		if (t >= totalTime)
+			break;
+		
+		if (timeUntilSuddenDeath == 5 * MINUTETICS)
+			// Print message to all players at 5 minutes before sudden death.
+			{IntelMessage ("Sudden death will begin in \cg5 \c-minutes!", true);}
+		else if (timeUntilSuddenDeath == MINUTETICS)
+			// Print message to all players at 1 minute before sudden death.
+			{IntelMessage ("Sudden death will begin in \cg1 \c-minutes!", true);}
+		
+		// Safety!!! If SD timer is less than 10 minutes, skip everything!
+		if (timeUntilSuddenDeath <= 10 * MINUTETICS)
+		{earlyApplied = true; neutralApplied = true;}
+		
+		// One third Before sudden death give 25% resistence to all buildings.
+		if (t < oneThird && !earlyApplied)
+		{
+			earlyApplied = true;
+			neutralApplied = false;
+			
+			i_SDPhase = -1; // Phase -1
+			
+			for (x = 0; x < 6; x++)
+			{GiveActorInventory(MainTIDs[TEAM_RED][x], "EarlygameResistence", 1);
+			GiveActorInventory(MainTIDs[TEAM_BLUE][x], "EarlygameResistence", 1);}
+		}
+		
+		// After that phase remove the resistence
+		if (t >= oneThird && !neutralApplied)
+		{
+			neutralApplied = true;
+			earlyApplied = false;
+			
+			i_SDPhase = 0; // Phase 0
+			
+			for (x = 0; x < 6; x++)
+			{
+				TakeActorInventory(MainTIDs[TEAM_RED][x], "EarlygameResistence", 0x7FFFFFFF);
+				TakeActorInventory(MainTIDs[TEAM_BLUE][x], "EarlygameResistence", 0x7FFFFFFF);
+			}
+		}
+	Delay(35);
+	}
+	
+	// ===================
+	// Start Sudden death!
+	// ===================
+	
+	intHolder[i_SuddenDeath] = true;
+	str mus = random (0, 1) ? "razor-ub" : "razorub2";
+	SetMusic (mus);
+	Log (s:"=== Sudden Death begins ===");
+	// [Dusk] Allow maps to take action on sudden death
+	CallEvent (ACTION_SUDDENDEATH, 0);
+	// If not in tournament mode, give everybody beacons
+	if (!GetCVAR("zeta_tournamentmode")) GiveToAll ("BeaconItem", 1);
+	
+	// Big notice
+	SetFont ("BIGFONT");
+	str message = (GetCVar ("zeta_ticketmode")) ?
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nEvery death counts!\nBuildings are taking more damage." :
+	"\cgSUDDEN DEATH!\n\nBatteries are rapidly losing charges!\nBuildings are taking more damage.";
+	HudMessageBold (s:message; HUDMSG_FADEOUT, 15001, CR_YELLOW, INTEL_XPOS, 0.25, 7.0, 1.0);
+	
+	if (GetCVar ("zeta_ticketmode")) // Check if ticket mode is on.
+	{
+		int TicketsAmount = GetCVAR("zeta_tickets");
+		int PC = 0;
+		if (TicketsAmount < 0) TicketsAmount = 0; // Dont go negative!
+		if (TicketsAmount <= 0) // If an arbritary number is choosen by the host skip it.
+		{
+//			for (int p = 0; p < MAXPLAYERS; p++) 
+//			{
+//				if (PlayerInGame(p)) PC++;
+//			}
+			TicketsAmount = (PlayerCount() / 2) * 5;
+		}
+		// Min - Max TODO: Cvar those?
+		if (TicketsAmount < 20) TicketsAmount = 20;
+		if (TicketsAmount > 80) TicketsAmount = 80;
+		
+		SetTickets (TEAM_BLUE, TicketsAmount);
+		SetTickets (TEAM_RED, TicketsAmount);
+	}
+	
+	// At start of sudden death buildings take 50% more damage
+	i_SDPhase = 1;
+	for (x = 0; x < 6; x++)
+	{
+		// Clear leftovers if there is any.
+		TakeActorInventory(MainTIDs[TEAM_RED][x], "EarlygameResistence", 0x7FFFFFFF);
+		TakeActorInventory(MainTIDs[TEAM_BLUE][x], "EarlygameResistence", 0x7FFFFFFF);
+		
+		GiveActorInventory(MainTIDs[TEAM_RED][x], "SuddenDeathInitialVulnerability", 1);
+		GiveActorInventory(MainTIDs[TEAM_BLUE][x], "SuddenDeathInitialVulnerability", 1);
+	}
+	
+	// Sudden death Loop sequence
+	int sdTotalTime = GetCVAR("zeta_suddendeathtime") * MINUTETICS;
+	int sdHalfTime = sdTotalTime / 2;
+	int minUpgradeTime = 10 * MINUTETICS;
+	int upgradeTime = (sdHalfTime < minUpgradeTime) ? minUpgradeTime : sdHalfTime;
+	int elapsedSD = 0;
+	bool upgraded = false;
+	bool msg5 = false;
+	bool msg1 = false;
+	
+	while (true)
+	{
+		Delay(35);
+		elapsedSD += 35;
+		int timeLeft = upgradeTime - elapsedSD;
+		bool criticalMsgThisTick = false;
+		// Similar to how , this loop does almost the same.
+		if (timeLeft <= 5 * MINUTETICS && !msg5 && timeLeft > 1 * MINUTETICS)
+		{
+			msg5 = true;
+			criticalMsgThisTick = true;
+			SetFont("SMALLFONT");
+			IntelMessage("Sudden Death! \caCritical escalation in \c-5 \caminutes!", false);
+		}
+		if (timeLeft <= 1 * MINUTETICS && !msg1 && timeLeft > 0)
+		{
+			msg1 = true;
+			criticalMsgThisTick = true;
+			SetFont("SMALLFONT");
+			IntelMessage("Sudden Death! \caCritical escalation in \c-1 \caminute!", false);
+		}
+		// Double damage.
+		if (elapsedSD >= upgradeTime && !upgraded)
+		{
+			upgraded = true;
+			criticalMsgThisTick = true;
+			// Let players know.
+			SetFont("SMALLFONT");
+			IntelMessage("Sudden Death! \caBuildings now take double damage!", false);
+
+			// Final phase
+			i_SDPhase = 2;
+
+			for (x = 0; x < 6; x++)
+			{
+				TakeActorInventory(MainTIDs[TEAM_RED][x], "SuddenDeathInitialVulnerability", 0x7FFFFFFF);
+				TakeActorInventory(MainTIDs[TEAM_BLUE][x], "SuddenDeathInitialVulnerability", 0x7FFFFFFF);
+				GiveActorInventory(MainTIDs[TEAM_RED][x], "SuddenDeathTotalVulnerability", 1);
+				GiveActorInventory(MainTIDs[TEAM_BLUE][x], "SuddenDeathTotalVulnerability", 1);
+			}
+		}
+		
+		if (!criticalMsgThisTick && (elapsedSD % (35 * 60) == 0))
+		{
+			SetFont("SMALLFONT");
+			IntelMessage("Sudden Death!", false);
+		}
+	}
+}
+
+/*
 script SC_SuddenDeathCounter OPEN
 {
 	int timeUntilSuddenDeath;
@@ -37,7 +212,7 @@ script SC_SuddenDeath (void)
 	Log (s:"=== Sudden Death begins ===");
 	// Give Vulnerability to all main buildings and its BTOs.
 	// I think that giving BTOs Vulnerability does nothing in the end, the damage is fixed.
-	for (int x = 0; x < 20; x++) {GiveActorInventory(SDVulnerabilityArray[x], "SuddenDeathVulnerability", 1);}
+	// for (int x = 0; x < 20; x++) {GiveActorInventory(SDVulnerabilityArray[x], "SuddenDeathVulnerability", 1);}
 	// [Dusk] Allow maps to take action on sudden death
 	CallEvent (ACTION_SUDDENDEATH, 0);
 	// If not in tournament mode, give everybody beacons
@@ -77,4 +252,4 @@ script SC_SuddenDeath (void)
 		SetFont("SMALLFONT");
 		IntelMessage("Sudden Death!", false);
 	}
-}
+}*/

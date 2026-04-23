@@ -61,6 +61,9 @@ int RepairAmounts[5] = {0, 10, 14, 17, 20};
 // Interpolation
 int HUDInterpolationCounter[2];
 
+// [Xindage] Used when building takes damage from outside.
+int i_SDPhase = 0;
+
 str RankTitles[11] = {
 	"Private", "Corporal", "Sergeant", "Master Sgt.",
 	"Officer", "Lieutenant", "Captain", "Major",
