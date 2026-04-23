@@ -15,6 +15,9 @@
 script SC_GAMEINIT OPEN {
 	delay (1);
 	
+	// [IRX] Reset all runtime CVars to defaults before game setup
+	SYNC_ResetRuntimeCVars ();
+	
 	// [Dusk] Network state
 	NetState |= NETSTATE_Server;
 	
@@ -41,6 +44,7 @@ script SC_GAMEINIT OPEN {
 	// Activate developer mode if the proper cvar is set.
 	if (GetCVAR ("zeta_developer")) {
 		intHolder[i_DeveloperSafetyLock] = 0x7FFFFFFF;
+		SetCVar ("zeta_rt_developer", 1); // [IRX] Sync to clients
 		ACS_ExecuteAlways (SC_DEVELOPERMODE, 0);
 	}
 	
@@ -187,19 +191,35 @@ script SC_GAMEINIT OPEN {
 		ConsoleCommand ("netgame");
 }
 
-function void SetConfig (int key, str val) {
-	int changed = (Config[key][PEER_SERVER] != val);
-	Config[key][PEER_SERVER] = val;
-	if (netstate == NETSTATE_Offline) {
-		// Syncing is not done in offline mode. Furthermore, we're
-		// both the "client" and the "server", so just set the values
-		// here.
-		Config[key][PEER_CLIENT] = Config[key][PEER_SERVER];
-	} else if (changed) {
-		// Log (s:name, s:" is now ", d:val);
-		
-		// The value changed, inform clients about it!
-		SYNC_UpdateConfig (key);
+// [IRX] SetConfig now writes directly to CVars. Auto-syncs to clients.
+function void SetConfig (int key, int val) {
+	switch (key) {
+	case CONFIG_ALTEXP:				SetCVar ("zeta_altexp", val); break;
+	case CONFIG_STARTTICKETS:		SetCVar ("zeta_rt_starttickets", val); break;
+	case CONFIG_MECHS:				SetCVar ("zeta_rt_mechs", val); break;
+	case CONFIG_ADVTURRETS_BLUE:	SetCVar ("zeta_rt_advturrets_blue", val); break;
+	case CONFIG_ADVTURRETS_RED:		SetCVar ("zeta_rt_advturrets_red", val); break;
+	case CONFIG_MAXTURRETS_BLUE:	SetCVar ("zeta_rt_maxturrets_blue", val); break;
+	case CONFIG_MAXTURRETS_RED:		SetCVar ("zeta_rt_maxturrets_red", val); break;
+	case CONFIG_TOURNAMENTMODE:		SetCVar ("zeta_rt_tournamentmode", val); break;
+	case CONFIG_ENHANCEDREFINING_BLUE: SetCVar ("zeta_rt_enhancedrefining_blue", val); break;
+	case CONFIG_ENHANCEDREFINING_RED: SetCVar ("zeta_rt_enhancedrefining_red", val); break;
+	case CONFIG_ADVMECHS_BLUE:		SetCVar ("zeta_rt_advmechs_blue", val); break;
+	case CONFIG_ADVMECHS_RED:		SetCVar ("zeta_rt_advmechs_red", val); break;
+	case CONFIG_MAXTIMECOPS:		SetCVar ("zeta_maxtimecopsperteam", val); break;
+	case CONFIG_JUGGERNAUTLIMIT:	SetCVar ("zeta_juggernautlimit", val); break;
+	case CONFIG_C4DELAY:			SetCVar ("zeta_c4delay", val); break;
+	case CONFIG_NORADAR:			SetCVar ("zeta_noradar", val); break;
+	case CONFIG_CREDITCAP:			SetCVar ("zeta_creditcap", val); break;
+	case CONFIG_SANDBAGS:			SetCVar ("zeta_rt_sandbags", val); break;
+	case CONFIG_LIGHTMECHS:			SetCVar ("zeta_rt_lightmechs", val); break;
+	case CONFIG_MAXUTILITYGUY:		SetCVar ("zeta_maxutilityguy", val); break;
+	case CONFIG_3DBUILDINGS:		SetCVar ("zeta_rt_3dbuildings", val); break;
+	case CONFIG_ENHANCEDC4_BLUE:	SetCVar ("zeta_rt_enhancedc4_blue", val); break;
+	case CONFIG_ENHANCEDC4_RED:		SetCVar ("zeta_rt_enhancedc4_red", val); break;
+	default:
+		Log (s:"SetConfig: bad key value ", d:key, s:"!");
+		break;
 	}
 }
 

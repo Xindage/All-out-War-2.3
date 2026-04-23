@@ -166,38 +166,13 @@ str throwBindOldWep[64];
 int Repairing_int[MAX_BUILDINGS * 2][MAXPLAYERS + 1];
 
 
-// [Dusk] CVars that get synced from server to client
-// Index 0 is for the server and 1 is for the client.
-#define CONFIG_ALTEXP					0	// Alternate experience mode
-#define CONFIG_STARTTICKETS				1	// Initial ticket count
-#define CONFIG_MECHS					2	// Are mechs enabled?
-#define CONFIG_ADVTURRETS_BLUE			3	// Does blue team have advanced turrets?
-#define CONFIG_ADVTURRETS_RED			4	// -- red
-#define CONFIG_MAXTURRETS_BLUE			5	// How many turret slots does blue team have?
-#define CONFIG_MAXTURRETS_RED			6	// -- red
-#define CONFIG_TOURNAMENTMODE			7	// Is the game in tournament mode?
-#define CONFIG_ENHANCEDREFINING_BLUE	8	// Does blue team have enhanced refining?
-#define CONFIG_ENHANCEDREFINING_RED		9	// -- red
-#define CONFIG_ADVMECHS_BLUE			10	// Does blue team have advanced mechs?
-#define CONFIG_ADVMECHS_RED				11	// -- red
-#define CONFIG_MAXTIMECOPS				12	// Max timecops per team
-#define CONFIG_JUGGERNAUTLIMIT			13	// Juggernaut limit
-#define CONFIG_C4DELAY					14	// zeta_c4delay
-#define CONFIG_NORADAR					15  // Is the radar forbidden in game?
-#define CONFIG_CREDITCAP				16	// Credit cap
-#define CONFIG_SANDBAGS					17	// Are sandbags allowed?
-#define CONFIG_LIGHTMECHS				18	// Light mechs only?
-#define CONFIG_MAXUTILITYGUY			19
-// 2022/10/11 Xindage - CONFIG_3DBUILDINGS should be temporary until all maps get it by default
-#define CONFIG_3DBUILDINGS				20	// Buildings uses 3d sectors?
-#define MAX_CONFIG						21
-// NOTE: Config and intholder are almost the same thing with a single difference,
-//       config allow it be checked per team, intholder is for a single value.
-//       Some intholders can be moved to here as well since it's per team.
-int Config[MAX_CONFIG][2];
+// [IRX] Config[][] array has been eliminated.
+// All config values are now stored as server CVars (zeta_rt_* and zeta_*).
+// Use GetConfig() to read them (it calls GetCVar internally).
+// Use SetConfig() to write them (it calls SetCVar internally).
 
-// Snapshot stuff
-int SnapshotTime[MAXPLAYERS];
+
+// [IRX] SnapshotTime[] removed — snapshot system eliminated by CVar migration.
 int AIMarineCount; // how many AI marines are there overall?
 
 // Top-level name of the menu

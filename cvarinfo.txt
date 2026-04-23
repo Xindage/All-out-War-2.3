@@ -170,8 +170,40 @@ user	int		zeta_cl_donateamount		=		100;
 
 user int names_draw_distance = 100;
 
+// intHolder migration
+server	int		zeta_rt_developer			=		0;
 // [Cata] Grenade cook indicator HUD
 user int   zeta_cl_buildinghud_style = 0;   // 0=Full default, 1=Compact, 2=Icons
 user int   zeta_cl_cookhud         = 1;     // master on/off
 user int   zeta_cl_cookhud_size    = 1;     // 0=tiny .. 4=huge
 user float zeta_cl_cookhud_alpha   = 1.0;   // 0.1..1.0 ring opacity
+
+////////////////////////////
+// [iarex] Runtime CVars (managed by ACS via SetCVar - do not change manually)
+// These are reset to defaults on each map start by SYNC_ResetRuntimeCVars().
+////////////////////////////
+
+// Team state
+server	int		zeta_rt_tickets_blue		=		0;
+server	int		zeta_rt_tickets_red			=		0;
+server	int		zeta_rt_battery_blue		=		50000;	// BATTERY_CHARGES
+server	int		zeta_rt_battery_red			=		50000;	// BATTERY_CHARGES
+
+// Game config (replaces Config[][] array)
+server	int		zeta_rt_starttickets		=		0;
+server	int		zeta_rt_mechs				=		1;
+server	int		zeta_rt_tournamentmode		=		0;
+server	int		zeta_rt_advturrets_blue		=		0;
+server	int		zeta_rt_advturrets_red		=		0;
+server	int		zeta_rt_maxturrets_blue		=		15;		// MAX_TURRETS
+server	int		zeta_rt_maxturrets_red		=		15;		// MAX_TURRETS
+server	int		zeta_rt_enhancedrefining_blue	=	0;
+server	int		zeta_rt_enhancedrefining_red	=	0;
+server	int		zeta_rt_advmechs_blue		=		0;
+server	int		zeta_rt_advmechs_red		=		0;
+server	int		zeta_rt_sandbags			=		0;
+server	int		zeta_rt_lightmechs			=		0;
+server	int		zeta_rt_3dbuildings			=		0;
+server	int		zeta_rt_enhancedc4_blue		=		0;
+server	int		zeta_rt_enhancedc4_red		=		0;
+

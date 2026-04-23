@@ -366,6 +366,7 @@ Script SC_SuperSpecial (int team)
 				RepairCharges[PlayerTeam()] = BATTERY_MAX;
 			else
 				RepairCharges[PlayerTeam()] += add;
+			SYNC_UpdateBattery (); // [IRX] Sync battery CVar
 		}
 		
 		Xp += 40 * SuperValue;
