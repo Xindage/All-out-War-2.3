@@ -66,10 +66,17 @@ map aow05 "Waste Plant" {
 }
 
 map aow06 "Missile Site" {
-	next = "aow01"
+	next = "aow07"
 	music = "d_aow12"
 	sky1 = "sky14"
 	levelnum = 6
+}
+
+map aow07 "Canyon" {
+	next = "aow01"
+	sky1 = "stsky2"
+	music = "d_aow07"
+	levelnum = 7
 }
 
 skill Normal {
