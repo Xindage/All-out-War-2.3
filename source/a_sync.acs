@@ -59,6 +59,10 @@ function void SYNC_UpdateBattery (void) {
 // ============================================================================
 // Ticket CVar sync helper - call after modifying Tickets[]
 function void SYNC_UpdateTicketCVar (int team) {
+	//Prevent negative tickets
+	if (Tickets[team] < 0)
+		Tickets[team] = 0;
+	
 	if (team == TEAM_BLUE)
 		SetCVar ("zeta_rt_tickets_blue", Tickets[TEAM_BLUE]);
 	else
