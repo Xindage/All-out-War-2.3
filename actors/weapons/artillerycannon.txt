@@ -424,6 +424,7 @@ actor ArtilleryCharge : Ammo {
 Actor ArtilleryCannonpickup : AOWWeaponPickup 21085
 {
 	Inventory.PickupMessage "You got the artillery cannon!"
+	Scale 0.6
 	states
 	{
 	Pickup:
