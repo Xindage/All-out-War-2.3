@@ -38,7 +38,7 @@ function void SYNC_UpdateBuildingHealth (int what, int team) {
 		SetActorSpeed (tid, perc);
 		
 		// Tell clients to update the HUD.
-		ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
+		//ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
 	}
 }
 
