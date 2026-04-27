@@ -125,13 +125,14 @@ Ammo.BackpackMaxAmount 16
 Actor Handgunpickup : AOWWeaponPickup 21041
 {
 	Inventory.Pickupmessage "You got the handgun!"
+	Scale 0.9
 	states
 	{
 	Pickup:
 		TNT1 A 0 ACS_ExecuteWithResult(SC_AutoSellWeapon, handgun)
 		Stop
 	Spawn:
-		PIST A -1
+		PIST X -1
 		stop
 	}
 }
