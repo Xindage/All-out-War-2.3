@@ -17,6 +17,17 @@ script SC_GAMEINIT OPEN {
 	
 	// [IRX] Reset all runtime CVars to defaults before game setup
 	SYNC_ResetRuntimeCVars ();
+
+	// [IRX] Ensure spectators don't see any garbage data in the scoreboard.
+	for (int p = 0; p < MAXPLAYERS; p++) {
+		if(PlayerIsSpectator(p)){
+			SetCustomPlayerValue("PlayerKD", p, "");
+			SetCustomPlayerValue("PlayerXP", p, "");
+			SetCustomPlayerValue("PlayerDesig", p, "");
+			SetCustomPlayerValue("PlayerCredits", p, "");
+			SetCustomPlayerValue("PlayerRank", p, "");
+		}
+	}
 	
 	// [Dusk] Network state
 	NetState |= NETSTATE_Server;
@@ -467,6 +478,8 @@ function void InitPlayer (void) {
 	SetCustomPlayerValue("PlayerXP", PlayerNumber(), 0);
 	SetCustomPlayerValue("PlayerXPAll", PlayerNumber(), 0);
 	SetCustomPlayerValue("PlayerRankAll", PlayerNumber(), strparam(s:"\ci", s:ACS_NamedExecuteWithResult("GetRankAbbr", 0)));
+	SetCustomPlayerValue("PlayerKills", PlayerNumber(), 0);
+	SetCustomPlayerValue("PlayerDeaths", PlayerNumber(), 0);
 	SetCustomPlayerValue("PlayerKD", PlayerNumber(), "0 / 0");
 	ACS_NamedExecuteAlways("UpdateDesig", 0, PlayerNumber());
 	Surrender[PlayerNumber()] = False;
