@@ -54,17 +54,17 @@ script 751 (void) {
 			HUDMSG_FADEOUT, 0, CR_YELLOW, 0.5, 0.3, 2.0, 1.0);
 		FreezeBold();
 		delay(35*2);
-		Thing_Destroy(101);
+		Thing_Destroy(TID_BARRACKS_BLUE);
 		delay(5);
-		Thing_Destroy(103);
+		Thing_Destroy(TID_REFINERY_BLUE);
 		delay(5);
-		Thing_Destroy(105);
+		Thing_Destroy(TID_RESCENTRE_BLUE);
 		delay(5);
-		Thing_Destroy(107);
+		Thing_Destroy(TID_FACTORY_BLUE);
 		delay(5);
-		Thing_Destroy(109);
+		Thing_Destroy(TID_OBELISK_BLUE);
 		delay(5);
-		Thing_Destroy(114);
+		Thing_Destroy(TID_REPAIR_BLUE);
 		Log(s:"Blue team surrenders.");
 	}
    
@@ -76,17 +76,17 @@ script 751 (void) {
 			HUDMSG_FADEOUT, 0, CR_YELLOW, 0.5, 0.3, 2.0, 1.0);
 		FreezeBold();
 		delay(35*2);
-		Thing_Destroy(201);
+		Thing_Destroy(TID_BARRACKS_RED);
 		delay(5);
-		Thing_Destroy(203);
+		Thing_Destroy(TID_REFINERY_RED);
 		delay(5);
-		Thing_Destroy(205);
+		Thing_Destroy(TID_RESCENTRE_RED);
 		delay(5);
-		Thing_Destroy(207);
+		Thing_Destroy(TID_FACTORY_RED);
 		delay(5);
-		Thing_Destroy(209);
+		Thing_Destroy(TID_OBELISK_RED);
 		delay(5);
-		Thing_Destroy(214);
+		Thing_Destroy(TID_REPAIR_RED);
 		Log(s:"Red team surrenders.");
 	}
 }

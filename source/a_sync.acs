@@ -38,7 +38,7 @@ function void SYNC_UpdateBuildingHealth (int what, int team) {
 		SetActorSpeed (tid, perc);
 		
 		// Tell clients to update the HUD.
-		ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
+		//ACS_ExecuteAlways (SC_CL_UPDATEHUD, 0);
 	}
 }
 
@@ -59,6 +59,10 @@ function void SYNC_UpdateBattery (void) {
 // ============================================================================
 // Ticket CVar sync helper - call after modifying Tickets[]
 function void SYNC_UpdateTicketCVar (int team) {
+	//Prevent negative tickets
+	if (Tickets[team] < 0)
+		Tickets[team] = 0;
+	
 	if (team == TEAM_BLUE)
 		SetCVar ("zeta_rt_tickets_blue", Tickets[TEAM_BLUE]);
 	else

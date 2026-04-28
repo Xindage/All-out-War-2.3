@@ -112,8 +112,8 @@ script SC_CCMD_TEAMSWITCH (void) NET {
 		terminate;
 	
 	// Not during warm-up
-	if (CheckMinutes (5)) {
-		GenericError ("Too early to use this!");
+	if (!CheckMinutes(5)) {
+		GenericError (strparam(s:"Too early to use this! Try again in \cf" , d:(Timer() - 5), s:"\c- seconds."));
 		terminate;
 	}
 	else if(checkinventory("isMech"))

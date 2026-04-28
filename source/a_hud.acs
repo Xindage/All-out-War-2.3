@@ -533,6 +533,13 @@ script SC_HUDDaemon OPEN CLIENTSIDE {
 	int hp, shp;
 	int oldBuildHudStyle = -1;
 
+	// [IRX] Array to track the last known health (speed) of all buildings, battery and tickets
+	int oldBuildingHealth[2][MAX_BUILDINGS];	
+	int oldBatteryBlue = -1;
+	int oldBatteryRed = -1;
+	int oldTicketsBlue = -1;
+	int oldTicketsRed = -1;
+
 	until (false) {
 		delay (1);
 
@@ -572,6 +579,38 @@ script SC_HUDDaemon OPEN CLIENTSIDE {
 		
 		// [Cata] Hold-to-charge indicator (grenade cook bar)
 		ACS_NamedExecuteAlways ("CL_DisplayChargeHud", 0);
+
+		// [IRX] Check if any synced state (buildings, battery, tickets) changed
+		bool stateChanged = false;
+		for (int t = 0; t <= 1; t++) {
+			for (int b = 0; b < MAX_BUILDINGS; b++) {
+				int currentHealth = GetActorSpeed(MainTIDs[t][b]);
+				if (currentHealth != oldBuildingHealth[t][b]) {
+					oldBuildingHealth[t][b] = currentHealth;
+					stateChanged = true;
+				}
+			}
+		}
+		
+		int curBatteryBlue = GetCVar ("zeta_rt_battery_blue");
+		int curBatteryRed = GetCVar ("zeta_rt_battery_red");
+		if (curBatteryBlue != oldBatteryBlue || curBatteryRed != oldBatteryRed) {
+			oldBatteryBlue = curBatteryBlue;
+			oldBatteryRed = curBatteryRed;
+			stateChanged = true;
+		}
+
+		int curTicketsBlue = GetCVar ("zeta_rt_tickets_blue");
+		int curTicketsRed = GetCVar ("zeta_rt_tickets_red");
+		if (curTicketsBlue != oldTicketsBlue || curTicketsRed != oldTicketsRed) {
+			oldTicketsBlue = curTicketsBlue;
+			oldTicketsRed = curTicketsRed;
+			stateChanged = true;
+		}
+
+		if (stateChanged) {
+			UpdateHUD();
+		}
 
 		// If our credits change, we need to update the hud.
 		if (CheckInventory ("Credit") != oldcredits) {
