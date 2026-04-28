@@ -681,7 +681,7 @@ script SC_TeleportTestDebug (int team, int type)
 			TeleportOther(impTid, tid, 0);
 			Delay(1);
 			// Xindage an elegant failure.
-			if (!SC_DISTCHECK(true, team, 2048, true))
+			if (!SC_DISTCHECK(false, team, 0, false))
 			{
 				SpawnSpotForced ("MedicationField", 0, 0, 0); 
 				fails++;
