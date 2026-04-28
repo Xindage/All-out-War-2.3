@@ -50,6 +50,9 @@ bool Gravityonce;
 // [Xindage] Used by HellSpawn Crate.
 int HSCrateTimer = 0;
 
+// [Xindage] Used to safely store building status for debug.
+str pair[2][MAX_BUILDINGS];
+
 int RepairPadMechHPStore[MAXPLAYERS];
 
 // Set the charges     {0 BLUE         , 1 RED          };

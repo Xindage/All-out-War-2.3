@@ -250,6 +250,8 @@ int intel_activeMsg[intel_maxMessages];	//States whether or not a message is bei
 #libdefine SC_HellSpawn					847
 #libdefine SC_GetTeleNodeBuildingIndex	848
 #libdefine SC_AutoSellWeapon			849
+#libdefine SC_IntegrityCheck			850
+#libdefine SC_TeleportTestDebug			851
 // [...]
 #libdefine SC_BotEnter					888
 #libdefine SC_BotRespawn				889
