@@ -138,7 +138,7 @@ script SC_DEATH DEATH
 		// =====
 		// Battery Charge award.
 		// Check if the death happens in the enemy base area
-		int battery_gain = 60 * threat_level;	// Base reward.
+		int battery_gain = 40 * threat_level;	// Base reward.
 			
 		if (IsInEnemyBase)
 			battery_gain = (battery_gain * 3) / 2;	// Defensive kill, 50% bonus energy.

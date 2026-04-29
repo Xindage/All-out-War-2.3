@@ -1091,6 +1091,9 @@ function void BatteryModify (int team, int amount, int mode)
 			else if (mode == BATTERY_SUB) // No RF -> 50% extra loss.
 			{finalAmount = (amount * 150) / 100;}
 		}
+		// Sudden Death doubles the repair cost.
+		if (mode == BATTERY_REP && intHolder[i_SuddenDeath])
+			{finalAmount *= 2;}
 		// Apply values
 		switch(mode)
 		{

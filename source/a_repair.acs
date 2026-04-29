@@ -363,7 +363,7 @@ Script "SC_BatteryRegeneration" OPEN
 		// Dont update if sudden death is about to start on the end of this loop.
 		if (Timer() <= GetCVAR("zeta_suddendeathtime") * MINUTETICS - 9 * TICRATE)
 		{
-			Amount = 96;
+			Amount = 80;
 			BatteryModify(-1, Amount, BATTERY_ADD);
 		}
 		Delay(TICRATE * 10);
@@ -371,7 +371,7 @@ Script "SC_BatteryRegeneration" OPEN
 	while (intHolder[i_SuddenDeath] && (RepairCharges[0] > 0 || RepairCharges[1] > 0))
 	{
 		// if(GetCVAR("zeta_batterydegeneration") == 0) terminate; // Server can set it off.
-		Amount = 320;
+		Amount = 460;
 		BatteryModify(-1, Amount, BATTERY_SUB);
 		
 		Delay (TICRATE * 10);
